@@ -7,9 +7,6 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Mattia on 24/06/2017.
- */
 public class SignInPanel extends BasePanel {
 
     private Controller controller;

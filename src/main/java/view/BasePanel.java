@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-class BasePanel extends ImagePanel {
+public class BasePanel extends ImagePanel {
 
     private static final long serialVersionUID = 1L;
     private static final int INSETS = 10;
