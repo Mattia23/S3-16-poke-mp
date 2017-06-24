@@ -8,13 +8,13 @@ import view.View
 trait Controller{
   def newGame: Unit
 
-  def setModel_=(model: Model): Unit
+  def model_=(model: Model): Unit
 
-  def getModelInstance: Model
+  def model: Model
 
-  def setView_=(view: View): Unit
+  def view_=(view: View): Unit
 
-  def getViewInstance: View
+  def view: View
 
   def getGameController: Optional[GameViewObserver]
 
@@ -25,7 +25,7 @@ trait Controller{
 object ControllerImpl {
   private var controllerInstance: ControllerImpl = null
 
-  def getControllerInstance: Controller = synchronized {
+  def getControllerInstance: Controller = {
     if (controllerInstance == null) {
       controllerInstance = new ControllerImpl
     }
@@ -33,9 +33,9 @@ object ControllerImpl {
   }
 }
 
-class ControllerImpl private() extends Controller {
-  private var model: Model = _
-  private var view: View = _
+class ControllerImpl extends Controller {
+  override var model: Model = _
+  override var view: View = _
   private var gameController: GameViewObserver = _
 
   private def checkInitializzation: Unit = {
@@ -54,10 +54,6 @@ class ControllerImpl private() extends Controller {
     this.gameController.startGame
   }
 
-  override def getModelInstance: Model = this.model
-  override def setModel_=(model: Model): Unit = this.model = model
-  override def getViewInstance: View = this.view
-  override def setView_=(view: View):Unit = this.view = view
   override def getGameController: Optional[GameViewObserver] = Optional.ofNullable(this.gameController)
   override def quit: Unit = System.exit(0)
 
