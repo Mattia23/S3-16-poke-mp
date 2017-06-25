@@ -5,6 +5,9 @@ apply plugin: 'scala'
 
 sourceCompatibility = 1.8
 
+sourceSets.main.scala.srcDir "src/main/java"
+sourceSets.main.java.srcDirs = []
+
 repositories {
     mavenCentral()
 }
