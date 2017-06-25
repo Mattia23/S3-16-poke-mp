@@ -25,7 +25,9 @@ trait Controller{
 object ControllerImpl {
   private var controllerInstance: ControllerImpl = null
 
+
   def getControllerInstance: Controller = {
+
     if (controllerInstance == null) {
       controllerInstance = new ControllerImpl
     }
@@ -36,6 +38,7 @@ object ControllerImpl {
 class ControllerImpl extends Controller {
   override var model: Model = _
   override var view: View = _
+
   private var gameController: GameViewObserver = _
 
   private def checkInitializzation: Unit = {

@@ -11,4 +11,5 @@ object Main extends App {
 
   controller.model_=(model)
   controller.view_=(view)
+
 }
