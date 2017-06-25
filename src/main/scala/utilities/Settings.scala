@@ -9,9 +9,9 @@ object Settings {
 
   val SCREEN_HEIGHT: Int = SCREEN_DIMENSION.height
 
-  val TILE_HEIGHT: Int = 30
+  val TILE_HEIGHT: Int = 1
 
-  val TILE_WIDTH: Int = 30
+  val TILE_WIDTH: Int = 1
 
   val POKEMON_CENTER_HEIGHT = 5
 
