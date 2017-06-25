@@ -9,7 +9,7 @@ trait GameMap {
 
   def height_=(height: Int): Unit
 
-  def width: Unit
+  def width: Int
 
   def width_=(width: Int): Unit
 

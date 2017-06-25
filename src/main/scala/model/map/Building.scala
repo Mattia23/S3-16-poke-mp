@@ -1,5 +1,6 @@
 package model.map
 
+import model.environment.Coordinate
 import utilities.Settings
 
 trait Building extends Tile {
