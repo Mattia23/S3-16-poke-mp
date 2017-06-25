@@ -9,6 +9,7 @@ object Main extends App {
   val model: Model = new ModelImpl
   val view: View = new ViewImpl(controller)
 
-  controller.setModel_=(model)
-  controller.setView_=(view)
+  controller.model_=(model)
+  controller.view_=(view)
+
 }
