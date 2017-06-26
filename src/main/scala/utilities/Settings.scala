@@ -21,13 +21,13 @@ object Settings {
 
   val POKEMON_CENTER_DOOR_Y = 4
 
-  val LABORATORY_HEIGHT = 6
+  val LABORATORY_HEIGHT = 4
 
   val LABORATORY_WIDTH = 7
 
-  val LABORATORY_DOOR_X = 2
+  val LABORATORY_DOOR_X = 3
 
-  val LABORATORY_DOOR_Y = 5
+  val LABORATORY_DOOR_Y = 3
 
   val PANELS_FOLDER: String =  "/panels/"
 

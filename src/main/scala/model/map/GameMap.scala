@@ -7,11 +7,7 @@ trait GameMap {
 
   def height: Int
 
-  def height_=(height: Int): Unit
-
   def width: Int
-
-  def width_=(width: Int): Unit
 
   def addTile(coordinate: Coordinate, tile: Tile): Unit
 
@@ -22,7 +18,7 @@ trait GameMap {
   def removeBuilding(coordinate: Coordinate, building: Building): Unit
 }
 
-case class GameMapImpl(override var height: Int, override var width: Int) extends GameMap{
+case class GameMapImpl(override val height: Int, override val width: Int) extends GameMap{
 
   override val map = Array.ofDim[Tile](height,width)
   this.initMap(height,width)
@@ -34,9 +30,9 @@ case class GameMapImpl(override var height: Int, override var width: Int) extend
   override def removeTile(coordinate: Coordinate): Unit = map(coordinate.x)(coordinate.y) = Grass()
 
   override def addBuilding(coordinate: Coordinate, building: Building): Unit =
-    Array.range(coordinate.x, building.width).map(x => Array.range(coordinate.y, building.height).map(y => building))
+    Array.range(coordinate.x, coordinate.x + building.width).map(x => Array.range(coordinate.y, coordinate.y + building.height).map(y => building))
 
   override def removeBuilding(coordinate: Coordinate, building: Building): Unit =
-    Array.range(coordinate.x, building.width).map(x => Array.range(coordinate.y, building.height).map(y => Grass()))
+    Array.range(coordinate.x, coordinate.x + building.width).map(x => Array.range(coordinate.y, coordinate.y + building.height).map(y => Grass()))
 
 }

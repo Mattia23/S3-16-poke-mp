@@ -11,8 +11,15 @@ trait Tile {
 
 case class Grass() extends Tile
 
-case class TallGrass(override val wild: Boolean = true) extends Tile
+case class TallGrass() extends Tile {
+  override val wild: Boolean = true
+}
 
-case class Tree(override val walkable: Boolean = false) extends Tile
+case class Tree() extends Tile {
+  override val walkable: Boolean = false
+}
 
-case class Water(override val walkable: Boolean = false, override val wild: Boolean = true) extends Tile
+case class Water() extends Tile {
+  override val walkable: Boolean = false
+  override val wild: Boolean = true
+}
