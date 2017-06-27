@@ -1,7 +1,7 @@
 package view;
 
 import controller.Controller;
-import database.DBConnect;
+import database.remote.DBConnect;
 import utilities.Settings;
 
 import javax.swing.*;

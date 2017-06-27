@@ -7,5 +7,5 @@ trait Entity {
   def level: Int
 
   def name_=(name: String): Unit
-  
+
 }

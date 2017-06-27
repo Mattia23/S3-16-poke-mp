@@ -12,4 +12,7 @@ object Settings {
   val PANELS_FOLDER: String =  "/panels/"
 
   val IMAGES_FOLDER: String =  "/images/"
+
+  val DATABASE_FOLDER: String =  "/database/"
+
 }

@@ -1,7 +1,8 @@
 package model.entities
 
 import java.util.Optional
-import database.DBConnect
+
+import database.remote.DBConnect
 import org.json.simple.JSONObject
 
 object Owner extends Enumeration {
@@ -11,11 +12,10 @@ object Owner extends Enumeration {
 case class Pokemon(
   id: Int,
   name: String,
-  pokemonType: String,
   attacks: (Int,Int,Int,Int),
   level: Int,
   experiencePoints: Int,
-  idImage: Int
+  imageName: String
 )
 
 object PokemonFactory {
@@ -26,17 +26,17 @@ object PokemonFactory {
       if(optionalJSON.isPresent) {
         var pokemonJSON: JSONObject = optionalJSON.get
         (Pokemon(id = pokemonJSON.get("id").toString.toInt, name = pokemonJSON.get("name").toString,
-          pokemonType = pokemonJSON.get("pokemonType").toString, attacks = pokemonJSON.get("attacks").asInstanceOf[(Int,Int,Int,Int)],
+          attacks = pokemonJSON.get("attacks").asInstanceOf[(Int,Int,Int,Int)],
           level = pokemonJSON.get("level").toString.toInt, experiencePoints = pokemonJSON.get("experiencePoints").toString.toInt,
-          idImage = pokemonJSON.get("idImage").toString.toInt), pokemonJSON.get("lifePoints").toString.toInt)
+          imageName = pokemonJSON.get("idImage").toString), pokemonJSON.get("lifePoints").toString.toInt)
       } else {
-        (Pokemon(id = 4, name = "Pikachu", pokemonType = "Elettricità", attacks = (1,2,3,4),
-          level = 6, experiencePoints = 60, idImage = 4),3)
+        (Pokemon(id = 4, name = "Pikachu", attacks = (1,2,3,4),
+          level = 6, experiencePoints = 60, imageName = "4.png"),3)
       }
     }
     case Owner.WILD => {
-      (Pokemon(id = 4, name = "Pikachu", pokemonType = "Elettricità", attacks = (1,2,3,4),
-        level = 6, experiencePoints = 60, idImage = 4),3)
+      (Pokemon(id = 4, name = "Pikachu", attacks = (1,2,3,4),
+        level = 6, experiencePoints = 60, imageName = "4.png"),3)
     }
   }
 
@@ -47,6 +47,9 @@ object TryPokemon extends App {
   var bulbasaur: (Pokemon,Int) = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(1))
 
   var pikachu: (Pokemon,Int) = PokemonFactory.createPokemon(Owner.WILD,Optional.empty())
+
+  var firstPokemon: PokemonBehaviour = new PokemonBehaviourImpl(bulbasaur)
+  var secondPokemon: PokemonBehaviour = new PokemonBehaviourImpl(pikachu)
 
   val prova: Prova = new Prova(bulbasaur,pikachu)
 
