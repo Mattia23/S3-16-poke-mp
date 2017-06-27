@@ -40,8 +40,7 @@ public class LoginPanel extends BasePanel {
         k.gridy++;
         this.centralPanel.add(submit,k);
         this.submit.addActionListener(e -> {
-            DBConnect connect = new DBConnect();
-            if(!connect.checkCredentials(usernameField.getText(),passwordField.getText())) {
+            if(!DBConnect.checkCredentials(usernameField.getText(),passwordField.getText())) {
                 JOptionPane.showMessageDialog(this,"Wrong username or password","LOGIN FAILED",JOptionPane.ERROR_MESSAGE);
             }
         });

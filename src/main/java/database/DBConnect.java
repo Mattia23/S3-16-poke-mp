@@ -1,34 +1,38 @@
 package database;
 import java.sql.*;
 import java.util.Map;
+import java.util.Optional;
 
 import cryptography.MyEncryptor;
+import org.json.simple.JSONObject;
+import scala.Tuple4;
 import view.AccountData;
 
 import javax.swing.*;
 
-public class DBConnect {
-    private Connection con;
-    private Statement st;
-    private ResultSet rs;
+public final class DBConnect {
+    private static Connection con;
+    private static Statement st;
+    private static ResultSet rs;
     
-    public DBConnect() {
-		 try {
-			 Class.forName("com.mysql.jdbc.Driver").newInstance();
-		     con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
-		     st = con.createStatement();
-		     MyEncryptor.init();
-		 } catch (Exception ex) {
-		     System.out.println("Error: " + ex);
-		     
-		 }
-    }    
-    
-    public Statement getDatabaseInstance() {
-    	return st;
-    }
-    
-    public boolean insertCredentials(Map<String,JTextField> accountData, int id_image) {
+    private DBConnect() {}
+
+    private static void initConnection() {
+    	if(con == null) {
+			try {
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
+				st = con.createStatement();
+				MyEncryptor.init();
+			} catch (Exception ex) {
+				System.out.println("Error: " + ex);
+
+			}
+		}
+	}
+
+    public static boolean insertCredentials(Map<String,JTextField> accountData, int id_image) {
+    	initConnection();
     	try {
     		if(!checkUsername(accountData.get(AccountData.Username.toString()).getText())){
     			return false;
@@ -48,7 +52,7 @@ public class DBConnect {
     	return true;
     }
 
-    private void createTrainer(String username) {
+    private static void createTrainer(String username) {
 		try {
 			String query = "select id from users where username = '"+username+"'";
 			rs = st.executeQuery(query);
@@ -66,30 +70,27 @@ public class DBConnect {
 		} catch(Exception ex) {
 			System.out.println(ex);
 		}
-
-
 	}
     
-    public boolean checkCredentials(String username, String password) {
+    public static boolean checkCredentials(String username, String password) {
+		initConnection();
     	try {
-    		 String query = "select * from users";
+    		 String query = "select password from users where username = '"+username+"'";
 	   	     rs = st.executeQuery(query);
-	   	     while (rs.next()) {
-	   			  String user = rs.getString("username");
+	   	     if (rs.next()) {
 	   			  String pass = rs.getString("password");
 	   			  pass = MyEncryptor.decrypt(pass);
-	   			  if(user.equals(username) && pass.equals(password)) {
+	   			  if(pass.equals(password)) {
 	   				  return true;
 	   			  }
 	   	     }
     	} catch(Exception ex) {
     		System.out.println(ex);
     	}
-    	
     	return false;
     }
     
-    private boolean checkUsername(String username) {
+    private static boolean checkUsername(String username) {
     	try {
     		String query = "select * from users";
 	   	     rs = st.executeQuery(query);
@@ -102,9 +103,36 @@ public class DBConnect {
     	} catch (Exception ex) {
     		System.out.println(ex);
     	}
-    	
     	return true;
     }
-    
-    
+
+    public static Optional<JSONObject> getPokemonFromDB(int databaseId) {
+		initConnection();
+		try {
+			String query = "select * from pokemon where id_db = '"+databaseId+"'";
+			rs = st.executeQuery(query);
+			if (rs.next()) {
+				JSONObject pokemon = new JSONObject();
+				Tuple4<Integer,Integer,Integer,Integer> attacks = 
+						new Tuple4<>(Integer.parseInt(rs.getString("moves1")),
+								Integer.parseInt(rs.getString("moves2")),
+								Integer.parseInt(rs.getString("moves3")),
+								Integer.parseInt(rs.getString("moves4")));
+				pokemon.put("databaseId",databaseId);
+				pokemon.put("id", rs.getString("id_pokemon"));
+				pokemon.put("name", "name");  //DATABASE LOCALE
+				pokemon.put("pokemonType", "tipo");   //DATABASE LOCALE
+				pokemon.put("attacks", attacks);
+				pokemon.put("level", rs.getString("level"));
+				pokemon.put("experiencePoints",rs.getString("points"));
+				pokemon.put("idImage", 1);   //DATABASE LOCALE
+				pokemon.put("lifePoints", rs.getString("life"));
+				return Optional.of(pokemon);
+			}
+		} catch(Exception ex) {
+			System.out.println(ex);
+		}
+		return Optional.empty();
+	}
+
 }

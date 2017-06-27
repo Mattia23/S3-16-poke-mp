@@ -40,8 +40,7 @@ public class SignInPanel extends BasePanel {
                     this.accountData.get(AccountData.Username.toString()).getText().length() > 3 &&
                     this.accountData.get(AccountData.Password.toString()).getText().length() > 7) {
 
-                DBConnect connect = new DBConnect();
-                if(connect.insertCredentials(this.accountData,1)) {
+                if(DBConnect.insertCredentials(this.accountData,1)) {
                     showMessage("You have registered correctly","SIGNIN SUCCEEDED",JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     showMessage("Username not available","SIGNIN FAILED",JOptionPane.ERROR_MESSAGE);
