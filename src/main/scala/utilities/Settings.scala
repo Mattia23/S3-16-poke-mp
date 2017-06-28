@@ -9,6 +9,10 @@ object Settings {
 
   val SCREEN_HEIGHT: Int = SCREEN_DIMENSION.height
 
+  val MAP_WIDTH: Int = 50
+
+  val MAP_HEIGHT: Int = 50
+
   val TILE_HEIGHT: Int = 1
 
   val TILE_WIDTH: Int = 1
