@@ -1,7 +1,6 @@
 package view;
 
 import controller.Controller;
-import model.game.Model;
 
 import javax.swing.*;
 

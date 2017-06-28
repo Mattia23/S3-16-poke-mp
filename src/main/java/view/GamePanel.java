@@ -28,8 +28,11 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         setOpaque(false);
         this.requestFocusInWindow();
-
-
+        for (int x = 0; x < Settings.MAP_WIDTH(); x++) {
+            for (int y = 0; y < Settings.MAP_HEIGHT(); y++) {
+                g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),x*32,y*32,null);
+            }
+        }
     }
 
 /*

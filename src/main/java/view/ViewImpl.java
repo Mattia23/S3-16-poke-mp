@@ -1,6 +1,5 @@
 package view;
 import controller.Controller;
-import model.game.Model;
 import utilities.Settings;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -8,8 +7,8 @@ import javax.swing.JPanel;
 
 public class ViewImpl extends JFrame implements View {
 
-    private static final int FRAME_WIDTH = Settings.SCREEN_WIDTH() / 3;
-    private static final int FRAME_HEIGHT = Settings.SCREEN_HEIGHT() / 3;
+    private static final int FRAME_WIDTH = Settings.SCREEN_WIDTH() / 2;
+    private static final int FRAME_HEIGHT = Settings.SCREEN_HEIGHT() / 2;
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
 

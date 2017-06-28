@@ -17,8 +17,8 @@ public class MenuPanel extends BasePanel {
     private JButton signIn;
     private JButton quit;
 
-    public MenuPanel (View view, Controller ctrl) {
-        this.controller = ctrl;
+    public MenuPanel (View view, Controller controller) {
+        this.controller = controller;
         this.parentView = view;
         this.setLayout(new BorderLayout());
         this.downPanel = new JPanel(new GridBagLayout());
@@ -29,7 +29,6 @@ public class MenuPanel extends BasePanel {
 
         this.newgame.addActionListener(e -> {
             this.controller.newGame();
-            this.parentView.showGame();
         });
         this.login.addActionListener(e -> this.parentView.showLogin());
         this.signIn.addActionListener(e -> this.parentView.showSignIn());
