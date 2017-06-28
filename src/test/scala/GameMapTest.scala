@@ -9,7 +9,7 @@ class GameMapTest extends FunSuite{
       val gameMap = GameMapImpl(10,10)
       val coordinate = CoordinateImpl(0,0)
       val tallGrass =TallGrass()
-      val pokemonCenter = PokemonCenter()
+      val pokemonCenter = PokemonCenter(coordinate)
     }
 
   test("A game map should be filled with grass tile") {
