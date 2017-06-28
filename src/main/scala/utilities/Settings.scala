@@ -36,4 +36,16 @@ object Settings {
   val PANELS_FOLDER: String =  "/panels/"
 
   val IMAGES_FOLDER: String =  "/images/"
+
+  val GRASS_IMAGE_STRING: String = IMAGES_FOLDER + "grass-tile.png"
+
+  val TALL_GRASS_IMAGE_STRING: String = IMAGES_FOLDER + "tall-grass-tile.png"
+
+  val WATER_IMAGE_STRING: String = IMAGES_FOLDER + "water-tile.png"
+
+  val LABORATORY_IMAGE_STRING: String = IMAGES_FOLDER + "laboratory-tile.png"
+
+  val POKEMON_CENTER_IMAGE_STRING: String = IMAGES_FOLDER + "pokemon-center-tile.png"
+
+  val TREE_IMAGE_STRING: String = IMAGES_FOLDER + "tree-tile.png"
 }
