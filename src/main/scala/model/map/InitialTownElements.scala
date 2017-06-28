@@ -9,8 +9,8 @@ case class InitialTownElements() extends MapElementsImpl {
     for (y <- 0 until Settings.MAP_HEIGHT)
       if (x == 0 || x == Settings.MAP_WIDTH - 1 || y == 0 || y == Settings.MAP_HEIGHT - 1) addTile(Tree(), CoordinateImpl(x,y))
 
-  addTile(PokemonCenter(), CoordinateImpl(10,10))
-  addTile(Laboratory(), CoordinateImpl(40,40))
+  addTile(PokemonCenter(CoordinateImpl(10,10)), CoordinateImpl(10,10))
+  addTile(Laboratory(CoordinateImpl(40,40)), CoordinateImpl(40,40))
 
   for (x <- 30 until 40)
     for (y <- 30 until 40)

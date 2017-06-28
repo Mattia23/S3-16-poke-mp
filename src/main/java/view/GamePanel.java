@@ -2,6 +2,7 @@ package view;
 import controller.GameKeyListener;
 import controller.GameViewObserver;
 import model.game.Model;
+import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
 
@@ -26,11 +27,15 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        setOpaque(false);
         this.requestFocusInWindow();
         for (int x = 0; x < Settings.MAP_WIDTH(); x++) {
             for (int y = 0; y < Settings.MAP_HEIGHT(); y++) {
-                g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),x*32,y*32,null);
+                if (!(this.gameMap.map()[x][y] instanceof Building) ||
+                        (this.gameMap.map()[x][y] instanceof Building
+                                && (((Building)this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
+                                && (((Building)this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
+                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),x*Settings.TILE_PIXEL(),y*Settings.TILE_PIXEL(),null);
+                }
             }
         }
     }

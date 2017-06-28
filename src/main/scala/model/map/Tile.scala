@@ -1,7 +1,5 @@
 package model.map
 
-import java.awt.Image
-
 import utilities.Settings
 
 trait Tile {

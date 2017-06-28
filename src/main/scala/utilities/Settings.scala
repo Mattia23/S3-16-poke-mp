@@ -17,6 +17,8 @@ object Settings {
 
   val TILE_WIDTH: Int = 1
 
+  val TILE_PIXEL: Int = 32
+
   val POKEMON_CENTER_HEIGHT = 5
 
   val POKEMON_CENTER_WIDTH = 5
