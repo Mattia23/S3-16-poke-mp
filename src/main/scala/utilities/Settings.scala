@@ -9,6 +9,10 @@ object Settings {
 
   val SCREEN_HEIGHT: Int = SCREEN_DIMENSION.height
 
+  val FRAME_WIDTH: Int = Settings.SCREEN_WIDTH / 2
+
+  val FRAME_HEIGHT: Int = Settings.SCREEN_HEIGHT / 2
+
   val MAP_WIDTH: Int = 50
 
   val MAP_HEIGHT: Int = 50

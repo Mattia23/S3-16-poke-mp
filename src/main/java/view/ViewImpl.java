@@ -7,15 +7,13 @@ import javax.swing.JPanel;
 
 public class ViewImpl extends JFrame implements View {
 
-    private static final int FRAME_WIDTH = Settings.SCREEN_WIDTH() / 2;
-    private static final int FRAME_HEIGHT = Settings.SCREEN_HEIGHT() / 2;
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
 
     public ViewImpl(Controller controller) {
         this.controller = controller;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(ViewImpl.FRAME_WIDTH, ViewImpl.FRAME_WIDTH);
+        this.setSize(Settings.FRAME_WIDTH(), Settings.FRAME_WIDTH());
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);

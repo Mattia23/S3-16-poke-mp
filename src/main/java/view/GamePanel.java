@@ -15,6 +15,8 @@ public class GamePanel extends JPanel {
     private Model model;
     private GameKeyListener keyListener;
     private GameMap gameMap;
+    private int panelCenterX;
+    private int panelCenterY;
 
     public GamePanel(final GameViewObserver gameController, final GameMap gameMap) {
         this.gameMap = gameMap;
@@ -22,6 +24,8 @@ public class GamePanel extends JPanel {
         this.requestFocusInWindow();
         this.keyListener = new GameKeyListener(gameController);
         this.addKeyListener(this.keyListener);
+        this.panelCenterX = (Settings.FRAME_WIDTH() - Settings.MAP_WIDTH())/2;
+        this.panelCenterY = (Settings.FRAME_HEIGHT() - Settings.MAP_HEIGHT())/2;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class GamePanel extends JPanel {
                         (this.gameMap.map()[x][y] instanceof Building
                                 && (((Building)this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                                 && (((Building)this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
-                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),x*Settings.TILE_PIXEL(),y*Settings.TILE_PIXEL(),null);
+                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),x*Settings.TILE_PIXEL() - panelCenterX,y*Settings.TILE_PIXEL() - panelCenterY,null);
                 }
             }
         }
