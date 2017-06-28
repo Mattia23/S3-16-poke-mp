@@ -3,11 +3,11 @@ package view;
 import controller.Controller;
 import model.game.Model;
 
+import javax.swing.*;
+
 public interface View {
 
     void setController(Controller controller);
-
-    void drawModel(Model model);
 
     void showMenu();
 
@@ -15,7 +15,7 @@ public interface View {
 
     void showSignIn();
 
-    void showGame();
+    void showGame(JPanel gamePanel);
 
     void showPause();
 

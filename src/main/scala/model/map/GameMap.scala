@@ -20,7 +20,7 @@ case class GameMapImpl(override val height: Int, override val width: Int) extend
   }
 
   override def addTile(coordinate: Coordinate, tile: Tile): Unit = coordinate match {
-    case CoordinateImpl(x,y) if ( x >= 0 && y >= 0 ) && ( x + tile.width < height && y + tile.height < width) =>
+    case CoordinateImpl(x,y) if ( x >= 0 && y >= 0 ) && ( x + tile.width <= width && y + tile.height <= height) =>
       for (x <- coordinate.x until coordinate.x + tile.width) {
         for (y <- coordinate.y until coordinate.y + tile.height) {
           map(x)(y) = tile

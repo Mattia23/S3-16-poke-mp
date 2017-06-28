@@ -1,11 +1,13 @@
 package controller
 
-import javax.swing.SwingUtilities
+import javax.swing.{JPanel, SwingUtilities}
 
 import model.environment.Direction
 import model.environment.Direction.Direction
 import model.game.Model
-import view.View
+import model.map.{InitialTownElements, MapCreator}
+import utilities.Settings
+import view.{GamePanel, View}
 
 trait GameViewObserver {
   def startGame: Unit
@@ -15,20 +17,26 @@ trait GameViewObserver {
   def resumeGame: Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
+
+  def gamePanel: JPanel
+
+  def gamePanel_=(gamePanel: JPanel): Unit
   //def speakTrainer: Unit
   //def ...
 }
 
 class GameController(private var model: Model, private var view: View) extends GameViewObserver{
   private var agent: GameControllerAgent = _
+  private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+
+  override var gamePanel: JPanel = new GamePanel(this, gameMap);
 
   override def startGame: Unit = {
     this.agent = new GameControllerAgent
 
     try {
       this.model.startGame
-      this.view.showGame
-      this.view.drawModel(this.model)
+      this.view.showGame(gamePanel)
       this.agent.start
     } catch {
       case e: IllegalStateException =>
@@ -43,7 +51,7 @@ class GameController(private var model: Model, private var view: View) extends G
   }
 
   override def resumeGame: Unit = {
-    this.view.showGame
+    this.view.showGame(gamePanel)
     this.agent = new GameControllerAgent
     this.model.resumeGame
     this.agent.start
@@ -55,6 +63,7 @@ class GameController(private var model: Model, private var view: View) extends G
     }
   }
 
+
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false
 
@@ -62,7 +71,7 @@ class GameController(private var model: Model, private var view: View) extends G
       while(model.isInGame && !stopped){
         if(!model.isInPause){
           try
-            SwingUtilities.invokeAndWait(() => view.drawModel(model))
+            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
           catch {
             case e: Exception =>
               System.out.println(e)
