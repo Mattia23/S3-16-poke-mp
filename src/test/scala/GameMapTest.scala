@@ -1,4 +1,4 @@
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.CoordinateImpl
 import model.map.{GameMapImpl, Grass, PokemonCenter, TallGrass}
 import org.scalatest.FunSuite
 
