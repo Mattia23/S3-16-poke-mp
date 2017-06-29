@@ -14,13 +14,17 @@ class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
   private val MOVE_DOWN: Int = KeyEvent.VK_DOWN
   private val PAUSE_BUTTON: Int = KeyEvent.VK_ESCAPE
 
-  override def keyPressed(e: KeyEvent): Unit = e.getKeyCode match {
-    case MOVE_DOWN | MOVE_LEFT | MOVE_RIGHT | MOVE_UP =>
-      this.gameController.trainerIsMoving = true
-      this.lastPressed = e.getKeyCode
-      catchButton(e.getKeyCode)
-      this.gameController.moveTrainer(this.direction)
-    case _ =>
+  override def keyPressed(e: KeyEvent): Unit = {
+    if(!this.gameController.trainerIsMoving) {
+      e.getKeyCode match {
+        case MOVE_DOWN | MOVE_LEFT | MOVE_RIGHT | MOVE_UP =>
+          this.gameController.trainerIsMoving = true
+          this.lastPressed = e.getKeyCode
+          catchButton(e.getKeyCode)
+          this.gameController.moveTrainer(this.direction)
+        case _ =>
+      }
+    }
   }
 
   override def keyReleased(e: KeyEvent): Unit = e.getKeyCode match {

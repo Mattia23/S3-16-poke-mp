@@ -1,6 +1,6 @@
 package controller
 
-import javax.swing.{SwingUtilities}
+import javax.swing.SwingUtilities
 
 import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
@@ -40,7 +40,7 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
 
-  override var gamePanel: GamePanel = new GamePanel(this, gameMap);
+  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
   override var trainerIsMoving: Boolean = false
 
@@ -72,16 +72,19 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!this.model.isInPause) {
-
-        direction match {
-          case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-          case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-          case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-          case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
-        }
-        gamePanel.updateCurrentPosition(trainerPosition)
-        System.out.println("" + direction)
-
+       new Thread(() => {
+          for(i <- 1 to 35) {
+            direction match {
+              case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+              case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+              case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+              case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+            }
+            gamePanel.updateCurrentPosition(trainerPosition)
+            Thread.sleep(7)
+          }
+          this.trainerIsMoving = false
+        }).start()
     }
   }
 
@@ -99,7 +102,7 @@ class GameController(private var model: Model, private var view: View) extends G
         }
 
         try
-          Thread.sleep(10)
+          Thread.sleep(5)
         catch {
           case e: InterruptedException => System.out.println(e)
         }
