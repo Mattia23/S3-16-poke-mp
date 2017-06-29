@@ -30,72 +30,86 @@ case class Water() extends Tile {
   override val wild = true
 }
 
-case class WaterMarginTopLeft() extends Water {
+case class WaterMarginTopLeft() extends Tile {
   override val image = Settings.WATER_MARGIN_TOP_LEFT_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginTopRight() extends Water {
+case class WaterMarginTopRight() extends Tile {
   override val image = Settings.WATER_MARGIN_TOP_RIGHT_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginTop() extends Water {
+case class WaterMarginTop() extends Tile {
   override val image = Settings.WATER_MARGIN_TOP_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginBottom() extends Water {
+case class WaterMarginBottom() extends Tile {
   override val image = Settings.WATER_MARGIN_BOTTOM_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginBottomLeft() extends Water {
+case class WaterMarginBottomLeft() extends Tile {
   override val image = Settings.WATER_MARGIN_BOTTOM_LEFT_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginBottomRight() extends Water {
+case class WaterMarginBottomRight() extends Tile {
   override val image = Settings.WATER_MARGIN_BOTTOM_RIGHT_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginRight() extends Water {
+case class WaterMarginRight() extends Tile {
   override val image = Settings.WATER_MARGIN_RIGHT_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
-case class WaterMarginLeft() extends Water {
+case class WaterMarginLeft() extends Tile {
   override val image = Settings.WATER_MARGIN_LEFT_IMAGE_STRING
+  override val walkable = false
+  override val wild = true
 }
 
 case class Road() extends Tile {
   override val image = Settings.ROAD_IMAGE_STRING
-  override val walkable = true
-  override val wild = false
 }
 
-case class RoadMarginTopLeft() extends Road {
+case class RoadMarginTopLeft() extends Tile {
   override val image = Settings.ROAD_MARGIN_TOP_LEFT_IMAGE_STRING
 }
 
-case class RoadMarginTopRight() extends Road {
+case class RoadMarginTopRight() extends Tile {
   override val image = Settings.ROAD_MARGIN_TOP_RIGHT_IMAGE_STRING
 }
 
-case class RoadMarginTop() extends Road {
+case class RoadMarginTop() extends Tile {
   override val image = Settings.ROAD_MARGIN_TOP_IMAGE_STRING
 }
 
-case class RoadMarginBottom() extends Road {
+case class RoadMarginBottom() extends Tile {
   override val image = Settings.ROAD_MARGIN_BOTTOM_IMAGE_STRING
 }
 
-case class RoadMarginBottomLeft() extends Road {
+case class RoadMarginBottomLeft() extends Tile {
   override val image = Settings.ROAD_MARGIN_BOTTOM_LEFT_IMAGE_STRING
 }
 
-case class RoadMarginBottomRight() extends Road {
+case class RoadMarginBottomRight() extends Tile {
   override val image = Settings.ROAD_MARGIN_BOTTOM_RIGHT_IMAGE_STRING
 }
 
-case class RoadMarginRight() extends Road {
+case class RoadMarginRight() extends Tile {
   override val image = Settings.ROAD_MARGIN_RIGHT_IMAGE_STRING
 }
 
-case class RoadMarginLeft() extends Road {
+case class RoadMarginLeft() extends Tile {
   override val image = Settings.ROAD_MARGIN_LEFT_IMAGE_STRING
 }
