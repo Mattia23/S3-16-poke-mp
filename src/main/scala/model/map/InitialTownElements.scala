@@ -149,8 +149,8 @@ case class InitialTownElements() extends MapElementsImpl {
   }
 
   private def addRoadFromSquareToTopTallGrass(): Unit = {
-    for (y <- 5 to 21)  y match {
-      case 5 =>
+    for (y <- 6 to 21)  y match {
+      case 6 =>
         addTile(RoadMarginTopLeft(),CoordinateImpl(23,y))
         addTile(RoadMarginTop(), CoordinateImpl(24,y))
         addTile(RoadMarginTop(), CoordinateImpl(25,y))
@@ -165,6 +165,24 @@ case class InitialTownElements() extends MapElementsImpl {
         addTile(Road(), CoordinateImpl(24,y))
         addTile(Road(), CoordinateImpl(25,y))
         addTile(RoadMarginRight(), CoordinateImpl(26,y))
+    }
+
+    for (x <- 26 to 36) x match {
+      case 26 =>
+        addTile(RoadMarginTop(), CoordinateImpl(x,6))
+        addTile(Road(), CoordinateImpl(x,7))
+        addTile(Road(), CoordinateImpl(x,8))
+        addTile(Road(), CoordinateImpl(x,9))
+      case 36 =>
+        addTile(RoadMarginTopRight(),CoordinateImpl(x,6))
+        addTile(RoadMarginRight(), CoordinateImpl(x,7))
+        addTile(RoadMarginRight(), CoordinateImpl(x,8))
+        addTile(RoadMarginBottomRight(),CoordinateImpl(x,9))
+      case _ =>
+        addTile(RoadMarginTop(), CoordinateImpl(x,6))
+        addTile(Road(), CoordinateImpl(x,7))
+        addTile(Road(), CoordinateImpl(x,8))
+        addTile(RoadMarginBottom(), CoordinateImpl(x,9))
     }
   }
 
