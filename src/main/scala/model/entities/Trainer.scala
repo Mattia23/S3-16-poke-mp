@@ -37,6 +37,8 @@ trait Trainer {
   def addFavouritePokemon(idNewPokemon: Int): Unit
 
   def addMetPokemon(pokemon: Int): Unit
+
+  def getFirstAvailableFavouritePokemon: Int
 }
 
 class TrainerImpl(val name: String, val image: String, private var _experiencePoints: Int) extends Trainer{
@@ -123,6 +125,15 @@ class TrainerImpl(val name: String, val image: String, private var _experiencePo
     } else {
       println("You have already met this pokemon")
     }
+  }
+
+  override def getFirstAvailableFavouritePokemon: Int = {
+    for(pokemon <- this._favouritePokemons){
+      if(DBConnect.pokemonIsLive(pokemon)){
+        return pokemon
+      }
+    }
+    -1
   }
 }
 

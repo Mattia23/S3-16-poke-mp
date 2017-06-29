@@ -2,8 +2,7 @@ import java.util.Optional
 import javax.swing.JTextField
 
 import database.remote.DBConnect
-import model.entities.TryTrainer.trainer
-import model.entities.{Owner, Pokemon, PokemonFactory, Trainer}
+import model.entities._
 import org.scalatest.FunSuite
 
 class TrainerTest extends FunSuite{
@@ -23,7 +22,7 @@ class TrainerTest extends FunSuite{
       map += "Password" -> password
       DBConnect.insertCredentials(collection.JavaConverters.mapAsJavaMap(map),3)
       val trainer: Trainer = DBConnect.getTrainerFromDB("prova").get()
-      val pokemon: (Pokemon,Int) = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(1))
+      val pokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(1),Optional.empty()).get()
       //val autoIncrementMet = DBConnect.getAutoIncrement("pokemon_met")
       val autoIncrementCaptured = DBConnect.getAutoIncrement("pokemon")
     }
@@ -39,21 +38,8 @@ class TrainerTest extends FunSuite{
     DBConnect.deleteUserAndRelatedData("prova")
   }
 
-  test("New pokemon captured") {
-    val f = fixture
-    f.trainer.addCapturedPokemon(f.pokemon._1)
-    assert(f.trainer.pokedex.pokedex == List(4))
-    assert(f.trainer.capturedPokemons == List((f.autoIncrementCaptured,4)))
-    f.trainer.addCapturedPokemon(f.pokemon._1)
-    assert(f.trainer.pokedex.pokedex == List(4))
-    assert(f.trainer.capturedPokemons == List((f.autoIncrementCaptured,4),(f.autoIncrementCaptured+1,4)))
-    DBConnect.deleteUserAndRelatedData("prova")
-  }
-
   test("New pokemon added to favourite list") {
     val f = fixture
-    f.trainer.addCapturedPokemon(f.pokemon._1)
-    f.trainer.addCapturedPokemon(f.pokemon._1)
     f.trainer.addFavouritePokemon(f.autoIncrementCaptured)
     assert(f.trainer.favouritePokemons == List(f.autoIncrementCaptured,0,0,0,0,0))
     f.trainer.addFavouritePokemon(f.autoIncrementCaptured+1)
@@ -65,8 +51,6 @@ class TrainerTest extends FunSuite{
 
   test("Change pokemon in favourite list") {
     val f = fixture
-    f.trainer.addCapturedPokemon(f.pokemon._1)
-    f.trainer.addCapturedPokemon(f.pokemon._1)
     f.trainer.addFavouritePokemon(f.autoIncrementCaptured)
     f.trainer.changeFavouritePokemon(f.autoIncrementCaptured+1,f.autoIncrementCaptured)
     assert(f.trainer.favouritePokemons == List(f.autoIncrementCaptured+1,0,0,0,0,0))

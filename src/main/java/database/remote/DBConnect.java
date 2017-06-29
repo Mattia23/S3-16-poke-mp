@@ -357,4 +357,18 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+	public static Boolean pokemonIsLive(Int pokemonId){
+		initConnection();
+		String query = "select life from pokemon where id_db =  '" + pokemonId + "'";
+		try {
+			rs = st.executeQuery(query);
+			if(rs.next()){
+				if(rs.getInt("life")>0) return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }
