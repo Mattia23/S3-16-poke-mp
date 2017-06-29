@@ -1,7 +1,21 @@
 package model.game
 
-trait Battle {
-  def startBattle(idTrainer: Int): Unit
+import model.entities.{PokemonFactory, Owner, PokemonWithLife}
 
-  def getTrainerExperiencePoint: Int
+trait Battle {
+  def startBattle: Unit
+
+  def trainerExperiencePoint: Int
+}
+
+class BattleImpl(idTrainer: Int, pokemonTrainedId: Int) extends Battle {
+
+  var trainerExperiencePoint: Int = 0
+  //var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD, )
+
+  override def startBattle: Unit = {
+
+  }
+
+
 }

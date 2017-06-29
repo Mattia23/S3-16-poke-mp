@@ -21,14 +21,14 @@ import view.AccountData;
 import javax.swing.*;
 
 public final class DBConnect {
-    private static Connection con;
-    private static Statement st;
-    private static ResultSet rs;
-    
-    private DBConnect() {}
+	private static Connection con;
+	private static Statement st;
+	private static ResultSet rs;
 
-    private static void initConnection() {
-    	if(con == null) {
+	private DBConnect() {}
+
+	private static void initConnection() {
+		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
@@ -41,28 +41,28 @@ public final class DBConnect {
 		}
 	}
 
-    public static boolean insertCredentials(Map<String,JTextField> accountData, int id_image) {
-    	initConnection();
-    	try {
-    		if(!checkUsername(accountData.get(AccountData.Username.toString()).getText())){
-    			return false;
-    		}
-    		String name = accountData.get(AccountData.Name.toString()).getText();
-    		String surname = accountData.get(AccountData.Surname.toString()).getText();
-    		String email = accountData.get(AccountData.Email.toString()).getText();
-    		String username = accountData.get(AccountData.Username.toString()).getText();
-    		String password = MyEncryptor.encrypt(accountData.get(AccountData.Password.toString()).getText());
-    		String query = "Insert into users (id,name,surname,email,username,password,id_image) " +
+	public static boolean insertCredentials(Map<String,JTextField> accountData, int id_image) {
+		initConnection();
+		try {
+			if(!checkUsername(accountData.get(AccountData.Username.toString()).getText())){
+				return false;
+			}
+			String name = accountData.get(AccountData.Name.toString()).getText();
+			String surname = accountData.get(AccountData.Surname.toString()).getText();
+			String email = accountData.get(AccountData.Email.toString()).getText();
+			String username = accountData.get(AccountData.Username.toString()).getText();
+			String password = MyEncryptor.encrypt(accountData.get(AccountData.Password.toString()).getText());
+			String query = "Insert into users (id,name,surname,email,username,password,id_image) " +
 					"value (NULL,'"+name+"','"+surname+"','"+email+"','"+username+"','"+password+"','"+id_image+"')";
-    		st.executeUpdate(query);
-    		createTrainer(username);
-    	} catch(Exception ex) {
-   	     	System.out.println(ex);
-   	 	}
-    	return true;
-    }
+			st.executeUpdate(query);
+			createTrainer(username);
+		} catch(Exception ex) {
+			System.out.println(ex);
+		}
+		return true;
+	}
 
-    private static void createTrainer(String username) {
+	private static void createTrainer(String username) {
 		try {
 			String query = "select id from users where username = '"+username+"'";
 			rs = st.executeQuery(query);
@@ -81,42 +81,42 @@ public final class DBConnect {
 			System.out.println(ex);
 		}
 	}
-    
-    public static boolean checkCredentials(String username, String password) {
-		initConnection();
-    	try {
-    		 String query = "select password from users where username = '"+username+"'";
-	   	     rs = st.executeQuery(query);
-	   	     if (rs.next()) {
-	   			  String pass = rs.getString("password");
-	   			  pass = MyEncryptor.decrypt(pass);
-	   			  if(pass.equals(password)) {
-	   				  return true;
-	   			  }
-	   	     }
-    	} catch(Exception ex) {
-    		System.out.println(ex);
-    	}
-    	return false;
-    }
-    
-    private static boolean checkUsername(String username) {
-    	try {
-    		String query = "select * from users";
-	   	     rs = st.executeQuery(query);
-	   	     while (rs.next()) {
-	   			  String user = rs.getString("username");
-	   			  if(user.equals(username)) {
-	   				  return false;
-	   			  }
-	   	     }
-    	} catch (Exception ex) {
-    		System.out.println(ex);
-    	}
-    	return true;
-    }
 
-    public static int getAutoIncrement(String tableName){
+	public static boolean checkCredentials(String username, String password) {
+		initConnection();
+		try {
+			String query = "select password from users where username = '"+username+"'";
+			rs = st.executeQuery(query);
+			if (rs.next()) {
+				String pass = rs.getString("password");
+				pass = MyEncryptor.decrypt(pass);
+				if(pass.equals(password)) {
+					return true;
+				}
+			}
+		} catch(Exception ex) {
+			System.out.println(ex);
+		}
+		return false;
+	}
+
+	private static boolean checkUsername(String username) {
+		try {
+			String query = "select * from users";
+			rs = st.executeQuery(query);
+			while (rs.next()) {
+				String user = rs.getString("username");
+				if(user.equals(username)) {
+					return false;
+				}
+			}
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+		return true;
+	}
+
+	public static int getAutoIncrement(String tableName){
 		try {
 			String query = "SELECT `AUTO_INCREMENT`\n" +
 					"FROM  INFORMATION_SCHEMA.TABLES\n" +
@@ -132,7 +132,7 @@ public final class DBConnect {
 		return 0;
 	}
 
-    public static void deleteUserAndRelatedData(String username){
+	public static void deleteUserAndRelatedData(String username){
 		initConnection();
 		int id = getTrainerIdFromUsername(username).get();
 		try{
