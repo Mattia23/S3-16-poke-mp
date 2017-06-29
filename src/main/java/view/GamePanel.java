@@ -24,8 +24,8 @@ public class GamePanel extends JPanel {
         this.requestFocusInWindow();
         this.keyListener = new GameKeyListener(gameController);
         this.addKeyListener(this.keyListener);
-        this.panelCenterX = (Settings.FRAME_WIDTH() - Settings.MAP_WIDTH())/2;
-        this.panelCenterY = (Settings.FRAME_HEIGHT() - Settings.MAP_HEIGHT())/2;
+        this.panelCenterX = (Settings.MAP_WIDTH()*Settings.TILE_PIXEL() - Settings.FRAME_WIDTH())/2;
+        this.panelCenterY = (Settings.MAP_HEIGHT()*Settings.TILE_PIXEL() - Settings.FRAME_WIDTH())/2;
     }
 
     @Override
