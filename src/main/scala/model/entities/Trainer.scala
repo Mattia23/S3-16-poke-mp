@@ -5,7 +5,7 @@ import java.util.Optional
 import database.remote.DBConnect
 import utilities.Settings
 
-trait Trainer extends Entity {
+trait Trainer {
   def experiencePoints: Int
 
   def experiencePoints_= (points: Int) : Unit
@@ -35,8 +35,6 @@ trait Trainer extends Entity {
   def changeFavouritePokemon(idNewPokemon: Int, idOldPokemon: Int): Unit
 
   def addFavouritePokemon(idNewPokemon: Int): Unit
-
-  def addCapturedPokemon(pokemon: Pokemon): Unit
 
   def addMetPokemon(pokemon: Int): Unit
 }
@@ -116,14 +114,6 @@ class TrainerImpl(val name: String, val image: String, private var _experiencePo
     } else if(this.capturedPokemons.toMap.get(idNewPokemon).isEmpty){
       println("Error: you tried to add a pokemon you haven't captured in your favourite list!!!")
     }
-  }
-
-  override def addCapturedPokemon(pokemon: Pokemon): Unit = {
-    if(!this.pokedex.pokedex.contains(pokemon.id)){
-      this.addMetPokemon(pokemon.id)
-    }
-    DBConnect.addCapturedPokemon(this.name,pokemon)
-    this.capturedPokemons_=(DBConnect.getCapturedPokemonList(name).get())
   }
 
   override def addMetPokemon(pokemon: Int): Unit = {
