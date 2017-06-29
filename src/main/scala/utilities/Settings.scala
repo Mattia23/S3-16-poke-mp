@@ -15,4 +15,8 @@ object Settings {
 
   val DATABASE_FOLDER: String =  "/database/"
 
+  val INITIAL_TRAINER_LEVEL: Int = 0
+
+  val LEVEL_STEP: Int = 50
+
 }
