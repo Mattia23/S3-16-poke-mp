@@ -1,7 +1,8 @@
 package controller
 
-import javax.swing.{JPanel, SwingUtilities}
+import javax.swing.{SwingUtilities}
 
+import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
 import model.game.Model
@@ -18,9 +19,17 @@ trait GameViewObserver {
 
   def moveTrainer(direction: Direction.Direction): Unit
 
-  def gamePanel: JPanel
+  def gamePanel: GamePanel
 
-  def gamePanel_=(gamePanel: JPanel): Unit
+  def gamePanel_=(gamePanel: GamePanel): Unit
+
+  def trainerPosition: Coordinate
+
+  def trainerPosition_=(position: Coordinate): Unit
+
+  def trainerIsMoving: Boolean
+
+  def trainerIsMoving_=(isMoving: Boolean): Unit
   //def speakTrainer: Unit
   //def ...
 }
@@ -29,7 +38,11 @@ class GameController(private var model: Model, private var view: View) extends G
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
 
-  override var gamePanel: JPanel = new GamePanel(this, gameMap);
+  override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
+
+  override var gamePanel: GamePanel = new GamePanel(this, gameMap);
+
+  override var trainerIsMoving: Boolean = false
 
   override def startGame: Unit = {
     this.agent = new GameControllerAgent
@@ -59,10 +72,18 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!this.model.isInPause) {
-      this.model.moveTrainer(direction)
+
+        direction match {
+          case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+          case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+          case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+          case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+        }
+        gamePanel.updateCurrentPosition(trainerPosition)
+        System.out.println("" + direction)
+
     }
   }
-
 
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false
@@ -73,16 +94,14 @@ class GameController(private var model: Model, private var view: View) extends G
           try
             SwingUtilities.invokeAndWait(() => gamePanel.repaint())
           catch {
-            case e: Exception =>
-              System.out.println(e)
+            case e: Exception => System.out.println(e)
           }
         }
 
         try
           Thread.sleep(10)
         catch {
-          case e: InterruptedException =>
-            System.out.println(e)
+          case e: InterruptedException => System.out.println(e)
         }
       }
     }
