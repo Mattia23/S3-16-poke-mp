@@ -11,10 +11,7 @@ case class InitialTownElements() extends MapElementsImpl {
 
   addTile(PokemonCenter(CoordinateImpl(15,30)), CoordinateImpl(15,30))
   addTile(Laboratory(CoordinateImpl(15,15)), CoordinateImpl(15,15))
-
-  for (x <- 30 until 40)
-    for (y <- 30 until 40)
-      addTile(Water(), CoordinateImpl(x,y))
+  addLake(CoordinateImpl(15,5), CoordinateImpl(20,10))
 
   for (x <- 20 until 25)
     for (y <- 20 until 25)
