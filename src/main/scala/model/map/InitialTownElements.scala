@@ -10,34 +10,18 @@ case class InitialTownElements() extends MapElementsImpl {
   addTallGrass()
   addTrees()
 
-  square()
-  roadFromSquareToPokemonCenter()
-  roadFromSquareToLaboratory()
+  addCompositeElement(Square(), CoordinateImpl(21,21), CoordinateImpl(28,28))
+  addRoadFromSquareToPokemonCenter()
+  addRoadFromSquareToLaboratory()
+  addRoadFromSquareToBottomLeftLake()
 
-  private def square(): Unit = {
-    for (x <- 21 to 28)
-      for (y <- 21 to 28)
-        (x,y) match {
-          case (21,21) => addTile(RoadMarginTopLeft(), CoordinateImpl(x,y))
-          case (22,21) | (23,21) | (24,21) | (25,21) | (26,21) | (27,21) => addTile(RoadMarginTop(), CoordinateImpl(x,y))
-          case (28,21) => addTile(RoadMarginTopRight(), CoordinateImpl(x,y))
-          case (21,22) | (21,23) | (21,24) | (21,25) | (21,26) | (21,27) => addTile(RoadMarginLeft(), CoordinateImpl(x,y))
-          case (21,28) => addTile(RoadMarginBottomLeft(), CoordinateImpl(x,y))
-          case (28,22) | (28,23) | (28,24) | (28,25) | (28,26) | (28,27) => addTile(RoadMarginRight(), CoordinateImpl(x,y))
-          case (28,28) => addTile(RoadMarginBottomRight(), CoordinateImpl(x,y))
-          case (22,28) | (23,28) | (24,28) | (25,28) | (26,28) | (27,28) => addTile(RoadMarginBottom(), CoordinateImpl(x,y))
-          case (_,32) => addTile(RoadMarginBottom(), CoordinateImpl(x,y))
-          case _ => addTile(Road(), CoordinateImpl(x,y))
-        }
-  }
-
-  private def roadFromSquareToPokemonCenter(): Unit = {
+  private def addRoadFromSquareToPokemonCenter(): Unit = {
     for (x <- 9 to 21)  x match {
       case 9 =>
-        addTile(RoadMarginTopLeft(),CoordinateImpl(9,24))
-        addTile(RoadMarginLeft(), CoordinateImpl(9,25))
-        addTile(RoadMarginLeft(), CoordinateImpl(9,26))
-        addTile(RoadMarginBottomLeft(),CoordinateImpl(9,27))
+        addTile(RoadMarginTopLeft(),CoordinateImpl(x,24))
+        addTile(RoadMarginLeft(), CoordinateImpl(x,25))
+        addTile(RoadMarginLeft(), CoordinateImpl(x,26))
+        addTile(RoadMarginBottomLeft(),CoordinateImpl(x,27))
       case 21 =>
         addTile(Road(), CoordinateImpl(x,24))
         addTile(Road(), CoordinateImpl(x,25))
@@ -51,18 +35,18 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
-  private def roadFromSquareToLaboratory(): Unit = {
-    for (x <- 28 to 48)  x match {
+  private def addRoadFromSquareToLaboratory(): Unit = {
+    for (x <- 28 to 47)  x match {
       case 28 =>
         addTile(Road(), CoordinateImpl(x,24))
         addTile(Road(), CoordinateImpl(x,25))
         addTile(Road(), CoordinateImpl(x,26))
         addTile(Road(), CoordinateImpl(x,27))
       case 47 =>
-        addTile(RoadMarginTopRight(),CoordinateImpl(48,24))
-        addTile(RoadMarginRight(), CoordinateImpl(48,25))
-        addTile(RoadMarginRight(), CoordinateImpl(48,26))
-        addTile(RoadMarginBottomRight(),CoordinateImpl(48,27))
+        addTile(RoadMarginTopRight(),CoordinateImpl(x,24))
+        addTile(RoadMarginRight(), CoordinateImpl(x,25))
+        addTile(RoadMarginRight(), CoordinateImpl(x,26))
+        addTile(RoadMarginBottomRight(),CoordinateImpl(x,27))
       case _ =>
         addTile(RoadMarginTop(), CoordinateImpl(x,24))
         addTile(Road(), CoordinateImpl(x,25))
@@ -110,10 +94,10 @@ case class InitialTownElements() extends MapElementsImpl {
   }
 
   private def addLakes(): Unit ={
-    addLake(CoordinateImpl(4,5), CoordinateImpl(20,10))
-    addLake(CoordinateImpl(40,40), CoordinateImpl(48,48))
-    addLake(CoordinateImpl(10,28), CoordinateImpl(19,30))
-    addLake(CoordinateImpl(10,42), CoordinateImpl(11,44))
+    addCompositeElement(Lake(),CoordinateImpl(4,5), CoordinateImpl(20,10))
+    addCompositeElement(Lake(),CoordinateImpl(40,40), CoordinateImpl(48,48))
+    addCompositeElement(Lake(),CoordinateImpl(10,28), CoordinateImpl(19,30))
+    addCompositeElement(Lake(),CoordinateImpl(10,42), CoordinateImpl(11,44))
   }
 
   private def addTallGrass(): Unit ={
@@ -156,6 +140,44 @@ case class InitialTownElements() extends MapElementsImpl {
     for (x <- 42 to 48)
       for (y <- 11 to 13)
         addTile(TallGrass(), CoordinateImpl(x,y))
+  }
+
+  private def addRoadFromSquareToBottomLeftLake(): Unit = {
+    for (y <- 28 to 46)  y match {
+      case 28 =>
+        addTile(Road(), CoordinateImpl(23,y))
+        addTile(Road(), CoordinateImpl(24,y))
+        addTile(Road(), CoordinateImpl(25,y))
+        addTile(Road(), CoordinateImpl(26,y))
+      case 46 =>
+        addTile(RoadMarginBottomLeft(),CoordinateImpl(23,y))
+        addTile(RoadMarginBottom(), CoordinateImpl(24,y))
+        addTile(RoadMarginBottom(), CoordinateImpl(25,y))
+        addTile(RoadMarginBottomRight(),CoordinateImpl(26,y))
+      case _ =>
+        addTile(RoadMarginLeft(), CoordinateImpl(23,y))
+        addTile(Road(), CoordinateImpl(24,y))
+        addTile(Road(), CoordinateImpl(25,y))
+        addTile(RoadMarginRight(), CoordinateImpl(26,y))
+    }
+
+    for (x <- 26 to 39) x match {
+      case 26 =>
+        addTile(Road(), CoordinateImpl(x,43))
+        addTile(Road(), CoordinateImpl(x,44))
+        addTile(Road(), CoordinateImpl(x,45))
+        addTile(Road(), CoordinateImpl(x,46))
+      case 39 =>
+        addTile(RoadMarginTopRight(),CoordinateImpl(x,43))
+        addTile(RoadMarginRight(), CoordinateImpl(x,44))
+        addTile(RoadMarginRight(), CoordinateImpl(x,45))
+        addTile(RoadMarginBottomRight(),CoordinateImpl(x,46))
+      case _ =>
+        addTile(RoadMarginTop(), CoordinateImpl(x,43))
+        addTile(Road(), CoordinateImpl(x,44))
+        addTile(Road(), CoordinateImpl(x,45))
+        addTile(RoadMarginBottom(), CoordinateImpl(x,46))
+    }
   }
 
 }

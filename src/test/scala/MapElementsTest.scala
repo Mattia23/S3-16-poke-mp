@@ -30,7 +30,7 @@ class MapElementsTest extends FunSuite{
 
   test("A lake is added to the map elements") {
     val f = fixture
-    f.mapElements.addLake(f.coordinate1, f.coordinate3)
+    f.mapElements.addCompositeElement(Lake(), f.coordinate1, f.coordinate3)
     for (x <- f.coordinate1.x to f.coordinate3.x)
       for (y <- f.coordinate1.y to f.coordinate3.y)
         (x, y) match {
