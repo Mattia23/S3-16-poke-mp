@@ -11,6 +11,8 @@ trait MapElements {
 
   def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]): Unit
 
+  def addMultipleElements(tile: Tile, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate): Unit
+
   def addCompositeElement(compositeElement: CompositeElement, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate): Unit
 
 }
@@ -24,8 +26,14 @@ class MapElementsImpl extends MapElements {
 
   override def addTile(tile: Tile, coordinate: Coordinate) = map = map + ((coordinate.x, coordinate.y) -> tile)
 
-  override def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]) ={
+  override def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]) = {
     coordinates foreach(coordinate => addTile(tile, coordinate))
+  }
+
+  override def addMultipleElements(tile: Tile, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate) = {
+    for (x <- topLeftCoordinate.x to bottomRightCoordinate.x)
+      for (y <- topLeftCoordinate.y to bottomRightCoordinate.y)
+        addTile(tile, CoordinateImpl(x,y))
   }
 
   override def addCompositeElement(compositeElement: CompositeElement, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate) = {
