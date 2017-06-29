@@ -10,7 +10,9 @@ trait Battle {
 
 class BattleImpl(idTrainer: Int, pokemonTrainedId: Int) extends Battle {
 
-  var trainerExperiencePoint: Int = 0
+  private var _trainerExperiencePoint: Int = 0
+
+  override def trainerExperiencePoint = this._trainerExperiencePoint
   //var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD, )
 
   override def startBattle: Unit = {

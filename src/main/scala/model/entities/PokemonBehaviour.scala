@@ -25,7 +25,7 @@ trait PokemonBehaviour {
 class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends PokemonBehaviour {
   private val ATTACK_PERCENTAGE: Double = 0.1
   private val EXPERIENCE_PERCENTAGE: Double = 0.75
-  var isAlive: Boolean = true
+  private var _isAlive: Boolean = true
   private var pokemonExperienceGrown = 0
 
   override def launchAttack(attackId: Int): Int = {
@@ -35,8 +35,10 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
 
   override def undergoAttack(damage: Int): Unit = {
     val pokemonStatus: PokemonStatus.Value = pokemonWithLife.loseLifePoints(damage)
-    if(pokemonStatus == PokemonStatus.DEATH) { isAlive = false }
+    if(pokemonStatus == PokemonStatus.DEATH) { _isAlive = false }
   }
+
+  override def isAlive = this._isAlive
 
   override def giveExperiencePoints: Int = {
     (pokemonWithLife.pokemon.experiencePoints * EXPERIENCE_PERCENTAGE).toInt
