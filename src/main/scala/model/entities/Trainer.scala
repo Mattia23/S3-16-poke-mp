@@ -43,7 +43,7 @@ trait Trainer {
 
 class TrainerImpl(val name: String, val image: String, private var _experiencePoints: Int) extends Trainer{
   private var _level: Int = calculateLevel(experiencePoints)
-  //var coordinate: Coordinate
+  //var _coordinate: Coordinate
   private var _pokedex: Pokedex = new PokedexImpl(name)
   private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(name).get()
   private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(name).get()
@@ -76,7 +76,9 @@ class TrainerImpl(val name: String, val image: String, private var _experiencePo
     level.toInt
   }
 
-  //override def coordinate = this.coordinate
+  //override def coordinate = this._coordinate
+
+  //override def coordinate_=(coordinate: Coordinate): Unit = this._coordinate = coordinate
 
   override def updateTrainer(points: Int): Unit = {
     this.experiencePoints_=(this.experiencePoints + points)
