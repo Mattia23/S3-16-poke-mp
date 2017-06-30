@@ -2,10 +2,13 @@ package controller
 
 import javax.swing.SwingUtilities
 
+import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
 import model.game.Model
-import view.View
+import model.map.{InitialTownElements, MapCreator, Tile}
+import utilities.Settings
+import view.{GamePanel, View}
 
 trait GameViewObserver {
   def startGame: Unit
@@ -15,20 +18,38 @@ trait GameViewObserver {
   def resumeGame: Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
+
+  def gamePanel: GamePanel
+
+  def gamePanel_=(gamePanel: GamePanel): Unit
+
+  def trainerPosition: Coordinate
+
+  def trainerPosition_=(position: Coordinate): Unit
+
+  def trainerIsMoving: Boolean
+
+  def trainerIsMoving_=(isMoving: Boolean): Unit
   //def speakTrainer: Unit
   //def ...
 }
 
 class GameController(private var model: Model, private var view: View) extends GameViewObserver{
   private var agent: GameControllerAgent = _
+  private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+
+  override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
+
+  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
+
+  override var trainerIsMoving: Boolean = false
 
   override def startGame: Unit = {
     this.agent = new GameControllerAgent
 
     try {
       this.model.startGame
-      this.view.showGame
-      this.view.drawModel(this.model)
+      this.view.showGame(gamePanel)
       this.agent.start
     } catch {
       case e: IllegalStateException =>
@@ -43,7 +64,7 @@ class GameController(private var model: Model, private var view: View) extends G
   }
 
   override def resumeGame: Unit = {
-    this.view.showGame
+    this.view.showGame(gamePanel)
     this.agent = new GameControllerAgent
     this.model.resumeGame
     this.agent.start
@@ -51,8 +72,37 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!this.model.isInPause) {
-      this.model.moveTrainer(direction)
+      new Thread(() => {
+        var actualX: Double = trainerPosition.x
+        var actualY: Double = trainerPosition.y
+        for(_ <- 1 to 4) {
+          direction match {
+            case Direction.UP =>
+              actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentY(actualY)
+            case Direction.DOWN =>
+              actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentY(actualY)
+            case Direction.RIGHT =>
+              actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentX(actualX)
+            case Direction.LEFT =>
+              actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentX(actualX)
+          }
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
+        }
+        this.updateTrainerPosition(direction)
+        this.trainerIsMoving = false
+      }).start()
     }
+  }
+
+  private def updateTrainerPosition(direction: Direction): Unit = direction match {
+    case Direction.UP => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    case Direction.DOWN => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    case Direction.RIGHT => this.trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    case Direction.LEFT => this.trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
   }
 
   private class GameControllerAgent extends Thread {
@@ -62,18 +112,16 @@ class GameController(private var model: Model, private var view: View) extends G
       while(model.isInGame && !stopped){
         if(!model.isInPause){
           try
-            SwingUtilities.invokeAndWait(() => view.drawModel(model))
+            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
           catch {
-            case e: Exception =>
-              System.out.println(e)
+            case e: Exception => System.out.println(e)
           }
         }
 
         try
-          Thread.sleep(10)
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
         catch {
-          case e: InterruptedException =>
-            System.out.println(e)
+          case e: InterruptedException => System.out.println(e)
         }
       }
     }
