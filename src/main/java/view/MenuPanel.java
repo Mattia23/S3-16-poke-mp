@@ -33,7 +33,10 @@ public class MenuPanel extends BasePanel {
         });
         this.login.addActionListener(e -> this.parentView.showLogin());
         this.signIn.addActionListener(e -> this.parentView.showSignIn());
-        this.quit.addActionListener(e -> this.controller.quit());
+        this.quit.addActionListener(e -> {
+            this.controller.newGame();
+            this.parentView.showPokemonCenterMap();
+        });
 
         k = new GridBagConstraints();
         k.gridy = 0;
