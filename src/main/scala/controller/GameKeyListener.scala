@@ -27,10 +27,7 @@ class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
     }
   }
 
-  override def keyReleased(e: KeyEvent): Unit = e.getKeyCode match {
-    case (MOVE_DOWN | MOVE_LEFT | MOVE_RIGHT | MOVE_UP) if e.getKeyCode == lastPressed => this.gameController.trainerIsMoving = false
-    case _ =>
-  }
+  override def keyReleased(e: KeyEvent): Unit = {}
 
   def catchButton(button: Int): Unit = {
     button match {

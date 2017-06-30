@@ -73,15 +73,15 @@ class GameController(private var model: Model, private var view: View) extends G
   override def moveTrainer(direction: Direction): Unit = {
     if (!this.model.isInPause) {
        new Thread(() => {
-          for(i <- 1 to 35) {
+          for(_ <- 1 to 4) {
             direction match {
-              case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-              case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-              case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-              case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+              case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - (Settings.TILE_PIXEL / 4))
+              case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + (Settings.TILE_PIXEL / 4))
+              case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + (Settings.TILE_PIXEL / 4), trainerPosition.y)
+              case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - (Settings.TILE_PIXEL / 4), trainerPosition.y)
             }
             gamePanel.updateCurrentPosition(trainerPosition)
-            Thread.sleep(7)
+            Thread.sleep(Settings.GAME_REFRESH_TIME)
           }
           this.trainerIsMoving = false
         }).start()
@@ -102,7 +102,7 @@ class GameController(private var model: Model, private var view: View) extends G
         }
 
         try
-          Thread.sleep(5)
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
         catch {
           case e: InterruptedException => System.out.println(e)
         }

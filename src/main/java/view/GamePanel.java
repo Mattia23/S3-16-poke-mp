@@ -24,7 +24,7 @@ public class GamePanel extends JPanel{
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
+    protected synchronized void paintComponent(final Graphics g) {
         super.paintComponent(g);
         this.requestFocusInWindow();
         for (int x = 0; x < Settings.MAP_WIDTH(); x++) {
@@ -39,7 +39,7 @@ public class GamePanel extends JPanel{
         }
     }
 
-    public void updateCurrentPosition(Coordinate position) {
+    public synchronized void  updateCurrentPosition(Coordinate position) {
         this.currentPosition = position;
     }
 }
