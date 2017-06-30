@@ -113,3 +113,12 @@ case class RoadMarginRight() extends Tile {
 case class RoadMarginLeft() extends Tile {
   override val image = Settings.ROAD_MARGIN_LEFT_IMAGE_STRING
 }
+
+case class BasicTile() extends Tile{
+  override val image = null
+}
+
+case class Barrier() extends Tile {
+  override val image = null
+  override val walkable: Boolean = false
+}

@@ -9,6 +9,8 @@ public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
+    private GamePanel gamePanel;
+    private BuildingPanel buildingPanel;
 
     public ViewImpl(Controller controller) {
         this.controller = controller;
@@ -58,5 +60,13 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showError(final String error, final String title) {
         JOptionPane.showMessageDialog(this, error, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void showPokemonCenterMap() {
+        if(this.controller.getGameController().isPresent()){
+            this.buildingPanel = new BuildingPanel(this.controller.getGameController().get());
+            this.setPanel(this.buildingPanel);
+        }
     }
 }
