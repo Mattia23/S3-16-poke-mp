@@ -1,7 +1,6 @@
 package view;
 import controller.GameKeyListener;
 import controller.GameViewObserver;
-import model.environment.Coordinate;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
@@ -12,7 +11,8 @@ import java.awt.*;
 public class GamePanel extends JPanel{
 
     private GameMap gameMap;
-    private Coordinate currentPosition;
+    private int currentX;
+    private int currentY;
 
     public GamePanel(final GameViewObserver gameController, final GameMap gameMap) {
         this.gameMap = gameMap;
@@ -20,7 +20,8 @@ public class GamePanel extends JPanel{
         this.requestFocusInWindow();
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
-        this.currentPosition = gameController.trainerPosition();
+        this.currentX = gameController.trainerPosition().x() * Settings.TILE_PIXEL();
+        this.currentY = gameController.trainerPosition().y() * Settings.TILE_PIXEL();
     }
 
     @Override
@@ -33,13 +34,17 @@ public class GamePanel extends JPanel{
                         (this.gameMap.map()[x][y] instanceof Building
                                 && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                                 && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
-                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()), x * Settings.TILE_PIXEL() - this.currentPosition.x(), y * Settings.TILE_PIXEL() - this.currentPosition.y(), null);
+                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()), ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_WIDTH() / 2 , ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_WIDTH() / 2 , null);
                 }
             }
         }
     }
 
-    public synchronized void  updateCurrentPosition(Coordinate position) {
-        this.currentPosition = position;
+    public synchronized void updateCurrentX(double x) {
+        this.currentX = (int)(x * Settings.TILE_PIXEL());
+    }
+
+    public synchronized void updateCurrentY(double y) {
+        this.currentY = (int)(y * Settings.TILE_PIXEL());
     }
 }

@@ -6,7 +6,7 @@ import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
 import model.game.Model
-import model.map.{InitialTownElements, MapCreator}
+import model.map.{InitialTownElements, MapCreator, Tile}
 import utilities.Settings
 import view.{GamePanel, View}
 
@@ -72,20 +72,38 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!this.model.isInPause) {
-       new Thread(() => {
-          for(_ <- 1 to 4) {
-            direction match {
-              case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - (Settings.TILE_PIXEL / 4))
-              case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + (Settings.TILE_PIXEL / 4))
-              case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + (Settings.TILE_PIXEL / 4), trainerPosition.y)
-              case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - (Settings.TILE_PIXEL / 4), trainerPosition.y)
-            }
-            gamePanel.updateCurrentPosition(trainerPosition)
-            Thread.sleep(Settings.GAME_REFRESH_TIME)
+      new Thread(() => {
+        var actualX: Double = trainerPosition.x
+        var actualY: Double = trainerPosition.y
+        for(_ <- 1 to 4) {
+          direction match {
+            case Direction.UP =>
+              actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentY(actualY)
+            case Direction.DOWN =>
+              actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentY(actualY)
+            case Direction.RIGHT =>
+              actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentX(actualX)
+            case Direction.LEFT =>
+              actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentX(actualX)
           }
-          this.trainerIsMoving = false
-        }).start()
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
+        }
+        this.updateTrainerPosition(direction)
+        System.out.println("position " + this.trainerPosition.x + " " + this.trainerPosition.y)
+        this.trainerIsMoving = false
+      }).start()
     }
+  }
+
+  private def updateTrainerPosition(direction: Direction): Unit = direction match {
+    case Direction.UP => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    case Direction.DOWN => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    case Direction.RIGHT => this.trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    case Direction.LEFT => this.trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
   }
 
   private class GameControllerAgent extends Thread {
