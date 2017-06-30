@@ -1,6 +1,7 @@
 package utilities
 
 import java.awt.{Dimension, Toolkit}
+import java.util
 
 object Settings {
   val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
@@ -96,5 +97,15 @@ object Settings {
   val INITIAL_TRAINER_LEVEL: Int = 0
 
   val LEVEL_STEP: Int = 50
+
+  val MAP_IMAGES_FOLDER = "/images/maps/"
+
+  val CHARACTER_IMAGES_FOLDER = "/images/characters/"
+
+  val OK_BUTTON: util.List[String] = util.Arrays.asList("ok")
+
+  val YES_NO_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
+
+  val TRAINER_BUTTON: util.List[String] = util.Arrays.asList("fight", "change", "bye")
 
 }

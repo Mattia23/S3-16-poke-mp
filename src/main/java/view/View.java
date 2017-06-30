@@ -20,4 +20,5 @@ public interface View {
 
     void showError(final String error, final String title);
 
+    void showPokemonCenterMap();
 }
