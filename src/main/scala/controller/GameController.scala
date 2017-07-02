@@ -2,6 +2,7 @@ package controller
 
 import javax.swing.SwingUtilities
 
+import model.entities._
 import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
@@ -35,16 +36,20 @@ trait GameViewObserver {
   def trainerIsMoving: Boolean
 
   def trainerIsMoving_=(isMoving: Boolean): Unit
+
+  def trainerSprite: String
   //def speakTrainer: Unit
 }
 
 class GameController(private var view: View) extends GameViewObserver{
   private var agent: GameControllerAgent = _
-  private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var inGame = false
   private var inPause = false
+  private val gameMap: GameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+  private val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
+  private var _trainerSprite: Sprite = trainer.sprites.frontS
 
-  override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
+  override var trainerPosition: Coordinate = trainer.coordinate
 
   override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
@@ -98,6 +103,38 @@ class GameController(private var view: View) extends GameViewObserver{
     }
   }
 
+  override def trainerSprite: String = _trainerSprite.image
+
+  private def updateTrainerSprite(direction: Direction): Unit = {
+    if (trainerIsMoving) {
+      direction match {
+        case Direction.UP => _trainerSprite match {
+          case Back1(_) => _trainerSprite = trainer.sprites.back2
+          case _ => _trainerSprite = trainer.sprites.back1
+        }
+        case Direction.DOWN => _trainerSprite match {
+          case Front1(_) => _trainerSprite = trainer.sprites.front2
+          case _ => _trainerSprite = trainer.sprites.front1
+        }
+        case Direction.LEFT => _trainerSprite match {
+          case Left1(_) => _trainerSprite = trainer.sprites.left2
+          case _ => _trainerSprite = trainer.sprites.left1
+        }
+        case Direction.RIGHT => _trainerSprite match {
+          case Right1(_) => _trainerSprite = trainer.sprites.right2
+          case _ => _trainerSprite = trainer.sprites.right1
+        }
+      }
+    } else {
+      direction match {
+        case Direction.UP => _trainerSprite = trainer.sprites.backS
+        case Direction.DOWN => _trainerSprite = trainer.sprites.frontS
+        case Direction.LEFT => _trainerSprite = trainer.sprites.leftS
+        case Direction.RIGHT => _trainerSprite = trainer.sprites.rightS
+      }
+    }
+  }
+
   private def enterInBuilding(building: Building): Unit = {
     println("Entro dentro "+ building.toString)
     trainerIsMoving = false
@@ -122,10 +159,12 @@ class GameController(private var view: View) extends GameViewObserver{
             actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
             gamePanel.updateCurrentX(actualX)
         }
+        updateTrainerSprite(direction)
         Thread.sleep(Settings.GAME_REFRESH_TIME)
       }
       updateTrainerPosition(nextPosition)
       trainerIsMoving = false
+      updateTrainerSprite(direction)
     }).start()
   }
 
@@ -168,5 +207,4 @@ class GameController(private var view: View) extends GameViewObserver{
     }
 
   }
-
 }
