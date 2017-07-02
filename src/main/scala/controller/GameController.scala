@@ -11,11 +11,11 @@ import utilities.Settings
 import view.{GamePanel, View}
 
 trait GameViewObserver {
-  def startGame: Unit
+  def startGame(): Unit
 
-  def pauseButton: Unit
+  def pauseButton(): Unit
 
-  def resumeGame: Unit
+  def resumeGame(): Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
 
@@ -44,71 +44,82 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override var trainerIsMoving: Boolean = false
 
-  override def startGame: Unit = {
-    this.agent = new GameControllerAgent
+  override def startGame(): Unit = {
+    agent = new GameControllerAgent
 
     try {
-      this.model.startGame
-      this.view.showGame(gamePanel)
-      this.agent.start
+      model.startGame
+      view.showGame(gamePanel)
+      agent.start()
     } catch {
       case e: IllegalStateException =>
-        this.view.showError(e.toString, "Not initialized")
+        view.showError(e.toString, "Not initialized")
     }
   }
 
-  override def pauseButton: Unit = {
-    this.agent.terminate
-    this.model.pause
-    this.view.showPause
+  override def pauseButton(): Unit = {
+    agent.terminate()
+    model.pause
+    view.showPause()
   }
 
-  override def resumeGame: Unit = {
-    this.view.showGame(gamePanel)
-    this.agent = new GameControllerAgent
-    this.model.resumeGame
-    this.agent.start
+  override def resumeGame(): Unit = {
+    view.showGame(gamePanel)
+    agent = new GameControllerAgent
+    model.resumeGame
+    agent.start()
   }
 
   override def moveTrainer(direction: Direction): Unit = {
-    if (!this.model.isInPause) {
-      new Thread(() => {
-        var actualX: Double = trainerPosition.x
-        var actualY: Double = trainerPosition.y
-        for(_ <- 1 to 4) {
-          direction match {
-            case Direction.UP =>
-              actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentY(actualY)
-            case Direction.DOWN =>
-              actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentY(actualY)
-            case Direction.RIGHT =>
-              actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentX(actualX)
-            case Direction.LEFT =>
-              actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentX(actualX)
+    if (!model.isInPause) {
+      if (nextTile(direction).walkable) {
+        new Thread(() => {
+          var actualX: Double = trainerPosition.x
+          var actualY: Double = trainerPosition.y
+          for (_ <- 1 to 4) {
+            direction match {
+              case Direction.UP =>
+                actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+                gamePanel.updateCurrentY(actualY)
+              case Direction.DOWN =>
+                actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+                gamePanel.updateCurrentY(actualY)
+              case Direction.RIGHT =>
+                actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+                gamePanel.updateCurrentX(actualX)
+              case Direction.LEFT =>
+                actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+                gamePanel.updateCurrentX(actualX)
+            }
+            Thread.sleep(Settings.GAME_REFRESH_TIME)
           }
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
-        }
-        this.updateTrainerPosition(direction)
-        this.trainerIsMoving = false
-      }).start()
+          updateTrainerPosition(direction)
+          trainerIsMoving = false
+        }).start()
+      }else {
+        trainerIsMoving = false
+      }
     }
   }
 
   private def updateTrainerPosition(direction: Direction): Unit = direction match {
-    case Direction.UP => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-    case Direction.DOWN => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-    case Direction.RIGHT => this.trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-    case Direction.LEFT => this.trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+    case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+  }
+
+  private def nextTile(direction: Direction): Tile = direction match {
+    case Direction.UP => gameMap.map(trainerPosition.x)(trainerPosition.y - 1)
+    case Direction.DOWN => gameMap.map(trainerPosition.x)(trainerPosition.y + 1)
+    case Direction.RIGHT => gameMap.map(trainerPosition.x + 1)(trainerPosition.y)
+    case Direction.LEFT => gameMap.map(trainerPosition.x - 1)(trainerPosition.y)
   }
 
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false
 
-    override def run: Unit = {
+    override def run(): Unit = {
       while(model.isInGame && !stopped){
         if(!model.isInPause){
           try
@@ -126,7 +137,7 @@ class GameController(private var model: Model, private var view: View) extends G
       }
     }
 
-    def terminate: Unit = {
+    def terminate(): Unit = {
       stopped = true
     }
 
