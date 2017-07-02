@@ -6,7 +6,7 @@ import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
 import model.game.Model
-import model.map.{InitialTownElements, MapCreator, Tile}
+import model.map._
 import utilities.Settings
 import view.{GamePanel, View}
 
@@ -72,49 +72,62 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!model.isInPause) {
-      if (nextTile(direction).walkable) {
-        new Thread(() => {
-          var actualX: Double = trainerPosition.x
-          var actualY: Double = trainerPosition.y
-          for (_ <- 1 to 4) {
-            direction match {
-              case Direction.UP =>
-                actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-                gamePanel.updateCurrentY(actualY)
-              case Direction.DOWN =>
-                actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-                gamePanel.updateCurrentY(actualY)
-              case Direction.RIGHT =>
-                actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
-                gamePanel.updateCurrentX(actualX)
-              case Direction.LEFT =>
-                actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
-                gamePanel.updateCurrentX(actualX)
-            }
-            Thread.sleep(Settings.GAME_REFRESH_TIME)
-          }
-          updateTrainerPosition(direction)
-          trainerIsMoving = false
-        }).start()
-      }else {
-        trainerIsMoving = false
+      val nextPosition = nextTrainerPosition(direction)
+      println("x:"+nextPosition.x+" y:"+nextPosition.y)
+      val tile = nextTile(nextPosition)
+      tile match {
+        case tile:Building
+          if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
+            enterInBuilding(tile)
+        case _ if tile.walkable => walk(direction, nextPosition)
+        case _ => trainerIsMoving = false
       }
     }
   }
 
-  private def updateTrainerPosition(direction: Direction): Unit = direction match {
-    case Direction.UP => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-    case Direction.DOWN => trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-    case Direction.RIGHT => trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-    case Direction.LEFT => trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+  private def enterInBuilding(building: Building): Unit = {
+    println("Entro dentro "+ building.toString)
+    trainerIsMoving = false
   }
 
-  private def nextTile(direction: Direction): Tile = direction match {
-    case Direction.UP => gameMap.map(trainerPosition.x)(trainerPosition.y - 1)
-    case Direction.DOWN => gameMap.map(trainerPosition.x)(trainerPosition.y + 1)
-    case Direction.RIGHT => gameMap.map(trainerPosition.x + 1)(trainerPosition.y)
-    case Direction.LEFT => gameMap.map(trainerPosition.x - 1)(trainerPosition.y)
+  private def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
+    new Thread(() => {
+      var actualX: Double = trainerPosition.x
+      var actualY: Double = trainerPosition.y
+      for (_ <- 1 to 4) {
+        direction match {
+          case Direction.UP =>
+            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+            gamePanel.updateCurrentY(actualY)
+          case Direction.DOWN =>
+            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+            gamePanel.updateCurrentY(actualY)
+          case Direction.RIGHT =>
+            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+            gamePanel.updateCurrentX(actualX)
+          case Direction.LEFT =>
+            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+            gamePanel.updateCurrentX(actualX)
+        }
+        Thread.sleep(Settings.GAME_REFRESH_TIME)
+      }
+      updateTrainerPosition(nextPosition)
+      trainerIsMoving = false
+    }).start()
   }
+
+  private def nextTrainerPosition(direction: Direction): Coordinate = direction match {
+    case Direction.UP => CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    case Direction.DOWN => CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    case Direction.RIGHT => CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    case Direction.LEFT => CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+  }
+
+  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
+
+  private def nextTile(coordinate: Coordinate): Tile = gameMap.map(coordinate.x)(coordinate.y)
+
+
 
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false
