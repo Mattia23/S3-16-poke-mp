@@ -1,7 +1,5 @@
 package model.entities
 
-import java.util.Optional
-
 import database.remote.DBConnect
 import utilities.Settings
 
@@ -14,7 +12,7 @@ trait Trainer {
 
   def level_=(level: Int) : Unit
 
-  def image: String
+  def sprites: TrainerSprites
 
   //def coordinate: Coordinate
 
@@ -41,7 +39,7 @@ trait Trainer {
   def getFirstAvailableFavouritePokemon: Int
 }
 
-class TrainerImpl(val name: String, val image: String, private var _experiencePoints: Int) extends Trainer{
+class TrainerImpl(val name: String, val image: String, val sprites: TrainerSprites, private var _experiencePoints: Int) extends Trainer{
   private var _level: Int = calculateLevel(experiencePoints)
   //var _coordinate: Coordinate
   private var _pokedex: Pokedex = new PokedexImpl(name)
