@@ -5,7 +5,6 @@ import javax.swing.SwingUtilities
 import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
-import model.game.Model
 import model.map._
 import utilities.Settings
 import view.{GamePanel, View}
@@ -13,9 +12,15 @@ import view.{GamePanel, View}
 trait GameViewObserver {
   def startGame(): Unit
 
-  def pauseButton(): Unit
+  def pauseGame(): Unit
 
   def resumeGame(): Unit
+
+  def terminateGame(): Unit
+
+  def isInGame: Boolean
+
+  def isInPause: Boolean
 
   def moveTrainer(direction: Direction.Direction): Unit
 
@@ -31,12 +36,13 @@ trait GameViewObserver {
 
   def trainerIsMoving_=(isMoving: Boolean): Unit
   //def speakTrainer: Unit
-  //def ...
 }
 
-class GameController(private var model: Model, private var view: View) extends GameViewObserver{
+class GameController(private var view: View) extends GameViewObserver{
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+  private var inGame = false
+  private var inPause = false
 
   override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
 
@@ -48,7 +54,7 @@ class GameController(private var model: Model, private var view: View) extends G
     agent = new GameControllerAgent
 
     try {
-      model.startGame
+      inGame = true
       view.showGame(gamePanel)
       agent.start()
     } catch {
@@ -57,23 +63,30 @@ class GameController(private var model: Model, private var view: View) extends G
     }
   }
 
-  override def pauseButton(): Unit = {
+  override def pauseGame(): Unit = {
+    inPause = true
     agent.terminate()
-    model.pause
     view.showPause()
   }
 
   override def resumeGame(): Unit = {
+    inPause = false
     view.showGame(gamePanel)
     agent = new GameControllerAgent
-    model.resumeGame
     agent.start()
   }
 
+  override def terminateGame(): Unit = {
+    inGame = false
+    agent.terminate()
+  }
+
+  override def isInGame: Boolean = this.inGame
+  override def isInPause: Boolean = this.inPause
+
   override def moveTrainer(direction: Direction): Unit = {
-    if (!model.isInPause) {
+    if (!isInPause) {
       val nextPosition = nextTrainerPosition(direction)
-      println("x:"+nextPosition.x+" y:"+nextPosition.y)
       val tile = nextTile(nextPosition)
       tile match {
         case tile:Building
@@ -133,8 +146,8 @@ class GameController(private var model: Model, private var view: View) extends G
     var stopped: Boolean = false
 
     override def run(): Unit = {
-      while(model.isInGame && !stopped){
-        if(!model.isInPause){
+      while(isInGame && !stopped){
+        if(!isInPause){
           try
             SwingUtilities.invokeAndWait(() => gamePanel.repaint())
           catch {

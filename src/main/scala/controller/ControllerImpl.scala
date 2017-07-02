@@ -2,15 +2,10 @@ package controller
 
 import java.util.Optional
 
-import model.game.Model
 import view.View
 
 trait Controller{
-  def newGame: Unit
-
-  def model_=(model: Model): Unit
-
-  def model: Model
+  def newGame(): Unit
 
   def view_=(view: View): Unit
 
@@ -18,12 +13,12 @@ trait Controller{
 
   def getGameController: Optional[GameViewObserver]
 
-  def quit: Unit
+  def quit(): Unit
 
 }
 
 object ControllerImpl {
-  private var controllerInstance: ControllerImpl = null
+  private var controllerInstance: ControllerImpl = _
 
 
   def getControllerInstance: Controller = {
@@ -36,29 +31,28 @@ object ControllerImpl {
 }
 
 class ControllerImpl extends Controller {
-  override var model: Model = _
   override var view: View = _
 
   private var gameController: GameViewObserver = _
 
-  private def checkInitializzation: Unit = {
-    if (this.model == null || this.view == null) {
+  private def checkInitializzation(): Unit = {
+    if (this.view == null) {
       throw new IllegalStateException
     }
   }
 
-  override def newGame: Unit = {
-    this.checkInitializzation
+  override def newGame(): Unit = {
+    this.checkInitializzation()
 
     if (this.gameController == null) {
-      this.gameController = new GameController(this.model, this.view)
+      this.gameController = new GameController(this.view)
     }
 
-    this.gameController.startGame
+    this.gameController.startGame()
   }
 
   override def getGameController: Optional[GameViewObserver] = Optional.ofNullable(this.gameController)
-  override def quit: Unit = System.exit(0)
+  override def quit(): Unit = System.exit(0)
 
 }
 
