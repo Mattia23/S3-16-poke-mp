@@ -1,5 +1,6 @@
 package controller
 
+import java.util.Optional
 import javax.swing.SwingUtilities
 
 import model.entities._
@@ -10,7 +11,21 @@ import model.map._
 import utilities.Settings
 import view.{GamePanel, View}
 
+import scala.util.Random
+
 trait GameViewObserver {
+  def trainerPosition: Coordinate
+
+  def trainerPosition_=(position: Coordinate): Unit
+
+  def trainerIsMoving: Boolean
+
+  def trainerIsMoving_=(isMoving: Boolean): Unit
+
+  def gamePanel: GamePanel
+
+  def gamePanel_=(gamePanel: GamePanel): Unit
+
   def startGame(): Unit
 
   def pauseGame(): Unit
@@ -23,25 +38,17 @@ trait GameViewObserver {
 
   def isInPause: Boolean
 
-  def gamePanel: GamePanel
-
-  def gamePanel_=(gamePanel: GamePanel): Unit
-
   def moveTrainer(direction: Direction.Direction): Unit
-
-  def trainerPosition: Coordinate
-
-  def trainerPosition_=(position: Coordinate): Unit
-
-  def trainerIsMoving: Boolean
-
-  def trainerIsMoving_=(isMoving: Boolean): Unit
 
   def trainerSprite: String
   //def speakTrainer: Unit
 }
 
 class GameController(private var view: View) extends GameViewObserver{
+  private final val TRAINER_STEPS = 4
+  private final val RANDOM_MAX_VALUE = 10
+  private final val MIN_VALUE_TO_FIND_POKEMON = 7
+
   private var agent: GameControllerAgent = _
   private var inGame = false
   private var inPause = false
@@ -50,9 +57,14 @@ class GameController(private var view: View) extends GameViewObserver{
   private var _trainerSprite: Sprite = trainer.sprites.frontS
   private var fistStep: Boolean = true
 
+  override var trainerPosition: Coordinate = trainer.coordinate
+
+  override var trainerIsMoving: Boolean = false
+
+  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
+
   override def startGame(): Unit = {
     agent = new GameControllerAgent
-
     try {
       inGame = true
       view.showGame(gamePanel)
@@ -84,7 +96,6 @@ class GameController(private var view: View) extends GameViewObserver{
 
   override def isInPause: Boolean = this.inPause
 
-  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!isInPause) {
@@ -94,15 +105,11 @@ class GameController(private var view: View) extends GameViewObserver{
         case tile:Building
           if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
             enterInBuilding(tile)
-        case _ if tile.walkable => walk(direction, nextPosition)
+        case _ if tile.walkable => walk(direction, nextPosition, tile)
         case _ => trainerIsMoving = false
       }
     }
   }
-
-  override var trainerPosition: Coordinate = trainer.coordinate
-
-  override var trainerIsMoving: Boolean = false
 
   override def trainerSprite: String = _trainerSprite.image
 
@@ -120,23 +127,25 @@ class GameController(private var view: View) extends GameViewObserver{
     trainerIsMoving = false
   }
 
-  private def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
+  private def walk(direction: Direction, nextPosition: Coordinate, tile: Tile) : Unit = {
     new Thread(() => {
       var actualX: Double = trainerPosition.x
       var actualY: Double = trainerPosition.y
-      for (_ <- 1 to 4) {
+      if(tile.isInstanceOf[TallGrass])
+        randomPokemonAppearance()
+      for (_ <- 1 to TRAINER_STEPS) {
         direction match {
           case Direction.UP =>
-            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentY(actualY)
           case Direction.DOWN =>
-            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentY(actualY)
           case Direction.RIGHT =>
-            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentX(actualX)
           case Direction.LEFT =>
-            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentX(actualX)
         }
         updateTrainerSprite(direction)
@@ -146,6 +155,15 @@ class GameController(private var view: View) extends GameViewObserver{
       trainerIsMoving = false
       updateTrainerSprite(direction)
     }).start()
+  }
+
+  private def randomPokemonAppearance(): Unit = {
+    val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
+    if(random > MIN_VALUE_TO_FIND_POKEMON) {
+      val pokemon = PokemonFactory.createPokemon(Owner.WILD, Optional.empty(), Optional.of(trainer.level))
+      if(pokemon.isPresent)
+        println("Trovato il Pokemon: "+ pokemon.get().pokemon.name+" al livello: "+pokemon.get().pokemon.level)
+    }
   }
 
   private def updateTrainerSprite(direction: Direction): Unit = {
@@ -212,6 +230,8 @@ class GameController(private var view: View) extends GameViewObserver{
   
   private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
 
+
+
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false
 
@@ -224,7 +244,6 @@ class GameController(private var view: View) extends GameViewObserver{
             case e: Exception => System.out.println(e)
           }
         }
-
         try
           Thread.sleep(Settings.GAME_REFRESH_TIME)
         catch {
