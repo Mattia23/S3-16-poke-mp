@@ -32,11 +32,11 @@ object CreazionePokemon extends App {
   this.buttonPoke2.setBorder(null)
   val textField: JTextField = new JTextField("Pokemon")
   val button: JButton = new JButton("Crea pokemon")
-  button.setBounds(400,500,200,30)
+  button.setBounds(300,300,200,30)
 
   button.addActionListener((e) => {
-    val p1: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
-    val p2: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
+    val p1: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get()
+    val p2: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get()
     textField.setText(p1.pokemon.name)
     imageIcon = Settings.POKEMON_IMAGES_FRONT_FOLDER + p1.pokemon.id + ".png"
     var myImage: Image = ImageIO.read(getClass.getResource(imageIcon))
