@@ -2,7 +2,7 @@ package model.environment
 
 import java.awt.Image
 
-import model.characters.{Doctor, Oak, StaticCharacter}
+import model.characters._
 import model.map.{Barrier, BasicMap, BasicTile, Tile}
 import utilities.Settings
 import view.LoadImage
@@ -70,6 +70,8 @@ class LaboratoryMap extends BuildingMap{
   override val npc: StaticCharacter = new Oak
 
   override val image: Image = LoadImage.load(Settings.MAP_IMAGES_FOLDER + "laboratory.png")
+
+  val pokemonNcp: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
 
   override val matriciesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),
