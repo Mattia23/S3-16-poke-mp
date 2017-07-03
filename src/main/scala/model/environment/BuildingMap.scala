@@ -11,11 +11,7 @@ trait BuildingMap extends BasicMap{
   def image: Image
   def matriciesNotWalkable: List[MatrixCoordinate]
   def npc: StaticCharacter
-  def npcCoordinate: Coordinate
   def entryCoordinate: Coordinate
-  def userCoordinate: Coordinate
-
-  def userCoordinate_=(coordinate: Coordinate): Unit
 
   protected def setNotWalkableArea(): Unit = {
     for(matrixNotWalkable <- matriciesNotWalkable){
@@ -25,7 +21,7 @@ trait BuildingMap extends BasicMap{
         }
       }
     }
-    map(npcCoordinate.x)(npcCoordinate.y) = Barrier()
+    map(npc.coordinate.x)(npc.coordinate.y) = Barrier()
   }
 
   protected def setBasicTilesInMap(): Unit = {
@@ -54,9 +50,7 @@ class PokemonCenterMap extends BuildingMap{
       new MatrixCoordinate(CoordinateImpl(14,8),CoordinateImpl(14,8)),
       new MatrixCoordinate(CoordinateImpl(11,6),CoordinateImpl(12,7)))
 
-  override val npcCoordinate: Coordinate = CoordinateImpl(7,3)
   override val entryCoordinate: Coordinate = CoordinateImpl(7,8)
-  override var userCoordinate: Coordinate = entryCoordinate
 
   setBasicTilesInMap()
   setNotWalkableArea()
@@ -71,7 +65,7 @@ class LaboratoryMap extends BuildingMap{
 
   override val image: Image = LoadImage.load(Settings.MAP_IMAGES_FOLDER + "laboratory.png")
 
-  val pokemonNcp: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
+  val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
 
   override val matriciesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),
@@ -83,9 +77,7 @@ class LaboratoryMap extends BuildingMap{
       new MatrixCoordinate(CoordinateImpl(0,11),CoordinateImpl(0,12)),
       new MatrixCoordinate(CoordinateImpl(12,11),CoordinateImpl(12,12)))
 
-  override val npcCoordinate: Coordinate = CoordinateImpl(6,4)
   override val entryCoordinate: Coordinate = CoordinateImpl(6,12)
-  override var userCoordinate: Coordinate = CoordinateImpl(6,12)
 
   setBasicTilesInMap()
   setNotWalkableArea()

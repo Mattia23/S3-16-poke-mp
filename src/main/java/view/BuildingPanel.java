@@ -30,7 +30,7 @@ public class BuildingPanel extends JPanel {
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
 
-        this.buildingMap = new PokemonCenterMap();
+        this.buildingMap = new LaboratoryMap();
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
         this.currentX = buildingMap.entryCoordinate().x() * Settings.TILE_PIXEL();
@@ -47,23 +47,19 @@ public class BuildingPanel extends JPanel {
 
     }
 
+
+
     @Override
     protected synchronized void paintComponent(final Graphics g) {
         super.paintComponent(g);
         this.requestFocusInWindow();
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
-        if(currentY> buildingMap.npcCoordinate().y()*Settings.TILE_PIXEL()){
-            g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npcCoordinate().x())* Settings.TILE_PIXEL(),
-                    centerY+(buildingMap.npcCoordinate().y())*Settings.TILE_PIXEL() -
-                            (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
-            g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
-        }else{
-            g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
-            g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npcCoordinate().x())* Settings.TILE_PIXEL(),
-                    centerY+(buildingMap.npcCoordinate().y())*Settings.TILE_PIXEL() -
-                            (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
-        }
+        g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
+        g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.TILE_PIXEL(),
+                centerY+(buildingMap.npc().coordinate().y())*Settings.TILE_PIXEL() -
+                        (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
+
     }
 
     public synchronized void updateCurrentX(double x) {
@@ -74,6 +70,7 @@ public class BuildingPanel extends JPanel {
         this.currentY = (int)(y * Settings.TILE_PIXEL());
     }
 
+    /*
 
     public void keyPressed(KeyEvent e) {
         try {
@@ -101,15 +98,15 @@ public class BuildingPanel extends JPanel {
                 }
             } else if (e.getKeyCode() == KeyEvent.VK_Z) {
                 //TODO dovrà essere controllata anche la direzione del personaggio
-                if (buildingMap.userCoordinate().x() == buildingMap.npcCoordinate().x() &&
-                        buildingMap.userCoordinate().y() - 1 == buildingMap.npcCoordinate().y()) {
+                if (buildingMap.userCoordinate().x() == buildingMap.npc.coordinate.x() &&
+                        buildingMap.userCoordinate().y() - 1 == buildingMap.npc.coordinate.y()) {
                     speak();
                 }
             }
         }catch (ArrayIndexOutOfBoundsException exception){
             //exception.printStackTrace();
         }
-    }
+    }*/
 
 
     private void speak(){

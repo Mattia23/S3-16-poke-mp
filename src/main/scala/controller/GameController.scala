@@ -8,7 +8,7 @@ import model.environment.Direction.Direction
 import model.game.Model
 import model.map.{InitialTownElements, MapCreator, Tile}
 import utilities.Settings
-import view.{BuildingPanel, GamePanel, View}
+import view.{BoxPanel, BuildingPanel, GamePanel, View}
 
 trait GameViewObserver {
   def startGame: Unit
@@ -87,13 +87,16 @@ class GameController(private var model: Model, private var view: View) extends G
             case Direction.UP =>
               if(actualX == 13 && actualY == 25){
                 this.inBuilding = true
-                this.view.showGame(buildingPanel)
+                this.view.showGame(new BoxPanel)
                 actualX = 7
                 actualY = 9
                 this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
               }
               else if(actualX == 44 && actualY == 25){
+                this.inBuilding = true
                 this.view.showGame(buildingPanel)
+                actualX = 6
+                actualY = 13
                 this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
               }
               actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
