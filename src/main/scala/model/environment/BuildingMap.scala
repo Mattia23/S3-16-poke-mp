@@ -54,6 +54,7 @@ class PokemonCenterMap extends BuildingMap{
 
   setBasicTilesInMap()
   setNotWalkableArea()
+
 }
 
 class LaboratoryMap extends BuildingMap{

@@ -116,6 +116,7 @@ case class RoadMarginLeft() extends Tile {
 
 case class Box() extends Tile{
   override val image = null
+  override val walkable = false
 }
 
 case class BasicTile() extends Tile{
@@ -124,5 +125,5 @@ case class BasicTile() extends Tile{
 
 case class Barrier() extends Tile {
   override val image = null
-  override val walkable: Boolean = false
+  override val walkable = false
 }
