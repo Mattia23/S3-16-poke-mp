@@ -8,7 +8,7 @@ import model.environment.Direction.Direction
 import model.game.Model
 import model.map.{InitialTownElements, MapCreator, Tile}
 import utilities.Settings
-import view.{GamePanel, View}
+import view.{BuildingPanel, GamePanel, View}
 
 trait GameViewObserver {
   def startGame: Unit
@@ -22,6 +22,8 @@ trait GameViewObserver {
   def gamePanel: GamePanel
 
   def gamePanel_=(gamePanel: GamePanel): Unit
+
+  def buildingPanel: BuildingPanel
 
   def trainerPosition: Coordinate
 
@@ -38,9 +40,11 @@ class GameController(private var model: Model, private var view: View) extends G
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
 
-  override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
+  override var trainerPosition: Coordinate = CoordinateImpl(13, 25)
 
   override var gamePanel: GamePanel = new GamePanel(this, gameMap)
+
+  var buildingPanel: BuildingPanel = new BuildingPanel(this)
 
   override var trainerIsMoving: Boolean = false
 
@@ -78,6 +82,8 @@ class GameController(private var model: Model, private var view: View) extends G
         for(_ <- 1 to 4) {
           direction match {
             case Direction.UP =>
+              if(trainerPosition.x == 13 && trainerPosition.y == 25) this.view.showGame(buildingPanel)
+              else if(trainerPosition.x == 44 && trainerPosition.y == 25) this.view.showGame(buildingPanel)
               actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentY(actualY)
             case Direction.DOWN =>
@@ -89,6 +95,7 @@ class GameController(private var model: Model, private var view: View) extends G
             case Direction.LEFT =>
               actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentX(actualX)
+              println(trainerPosition)
           }
           Thread.sleep(Settings.GAME_REFRESH_TIME)
         }

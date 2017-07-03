@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import controller.GameKeyListener;
 import controller.GameViewObserver;
 import model.environment.CoordinateImpl;
 import model.environment.BuildingMap;
@@ -26,9 +27,8 @@ public class BuildingPanel extends JPanel implements KeyListener{
     public BuildingPanel(GameViewObserver gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
-        /*this.keyListener = new GameKeyListener(gameController);
-        this.addKeyListener(this.keyListener);*/
-        this.addKeyListener(this);
+        GameKeyListener keyListener = new GameKeyListener(gameController);
+        this.addKeyListener(keyListener);
         this.buildingMap = new PokemonCenterMap();
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;

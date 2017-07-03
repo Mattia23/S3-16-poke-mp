@@ -62,11 +62,4 @@ public class ViewImpl extends JFrame implements View {
         JOptionPane.showMessageDialog(this, error, title, JOptionPane.ERROR_MESSAGE);
     }
 
-    @Override
-    public void showPokemonCenterMap() {
-        if(this.controller.getGameController().isPresent()){
-            this.buildingPanel = new BuildingPanel(this.controller.getGameController().get());
-            this.setPanel(this.buildingPanel);
-        }
-    }
 }
