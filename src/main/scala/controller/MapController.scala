@@ -1,14 +1,20 @@
 package controller
 
+import java.util.Optional
 import javax.swing.SwingUtilities
 
+import model.entities.{Owner, PokemonFactory}
 import model.environment.CoordinateImpl
 import model.environment.Direction.Direction
-import model.map.{Building, InitialTownElements, MapCreator}
+import model.map.{Building, InitialTownElements, MapCreator, TallGrass}
 import utilities.Settings
 import view.{GamePanel, View}
 
+import scala.util.Random
+
 class MapController(private var view: View) extends GameController(view){
+  private final val RANDOM_MAX_VALUE = 10
+  private final val MIN_VALUE_TO_FIND_POKEMON = 7
 
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
@@ -53,7 +59,9 @@ class MapController(private var view: View) extends GameController(view){
         case tile:Building
           if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
           enterInBuilding(tile)
-        case _ if tile.walkable => walk(direction, nextPosition)
+        case _ if tile.walkable =>
+          walk(direction, nextPosition)
+          if(tile.isInstanceOf[TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }
     }
@@ -62,6 +70,15 @@ class MapController(private var view: View) extends GameController(view){
   private def enterInBuilding(building: Building): Unit = {
     println("Entro dentro "+ building.toString)
     trainerIsMoving = false
+  }
+
+  private def randomPokemonAppearance(): Unit = {
+    val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
+    if(random > MIN_VALUE_TO_FIND_POKEMON) {
+      val pokemon = PokemonFactory.createPokemon(Owner.WILD, Optional.empty(), Optional.of(trainer.level))
+      if(pokemon.isPresent)
+        println("Trovato il Pokemon: "+ pokemon.get().pokemon.name+" al livello: "+pokemon.get().pokemon.level)
+    }
   }
 
   private class GameControllerAgent extends Thread {

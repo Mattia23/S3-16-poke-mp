@@ -8,6 +8,18 @@ import utilities.Settings
 import view.{GamePanel, View}
 
 trait GameViewObserver {
+  def trainerPosition: Coordinate
+
+  def trainerPosition_=(position: Coordinate): Unit
+
+  def trainerIsMoving: Boolean
+
+  def trainerIsMoving_=(isMoving: Boolean): Unit
+
+  def gamePanel: GamePanel
+
+  def gamePanel_=(gamePanel: GamePanel): Unit
+
   def startGame(): Unit
 
   def pauseGame(): Unit
@@ -20,28 +32,28 @@ trait GameViewObserver {
 
   def isInPause: Boolean
 
-  def gamePanel: GamePanel
-
-  def gamePanel_=(gamePanel: GamePanel): Unit
-
   def moveTrainer(direction: Direction.Direction): Unit
 
-  def trainerPosition: Coordinate
-
-  def trainerPosition_=(position: Coordinate): Unit
-
-  def trainerIsMoving: Boolean
-
-  def trainerIsMoving_=(isMoving: Boolean): Unit
-
   def trainerSprite: String
+
+  protected def inGame: Boolean
+
+  protected def inGame_=(inGame: Boolean)
+
+  protected def inPause: Boolean
+
+  protected def inPause_=(inPause: Boolean)
+
+  protected def trainer: Trainer
   //def speakTrainer: Unit
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{
-  protected var inGame = false
-  protected var inPause = false
-  private val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
+  private final val TRAINER_STEPS = 4
+
+  override var inGame = false
+  override var inPause = false
+  override val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
   private var _trainerSprite: Sprite = trainer.sprites.frontS
   private var fistStep: Boolean = true
 
@@ -66,19 +78,19 @@ abstract class GameController(private var view: View) extends GameViewObserver{
     new Thread(() => {
       var actualX: Double = trainerPosition.x
       var actualY: Double = trainerPosition.y
-      for (_ <- 1 to 4) {
+      for (_ <- 1 to TRAINER_STEPS) {
         direction match {
           case Direction.UP =>
-            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentY(actualY)
           case Direction.DOWN =>
-            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentY(actualY)
           case Direction.RIGHT =>
-            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentX(actualX)
           case Direction.LEFT =>
-            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
+            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
             gamePanel.updateCurrentX(actualX)
         }
         updateTrainerSprite(direction)
