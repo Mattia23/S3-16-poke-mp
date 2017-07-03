@@ -90,7 +90,7 @@ class GameController(private var model: Model, private var view: View) extends G
                 this.view.showGame(buildingPanel)
                 actualX = 7
                 actualY = 9
-                this.trainerPosition = CoordinateImpl(7 toInt, 9 toInt)
+                this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
               }
               else if(actualX == 44 && actualY == 25){
                 this.view.showGame(buildingPanel)
@@ -107,11 +107,11 @@ class GameController(private var model: Model, private var view: View) extends G
             case Direction.RIGHT =>
               actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentX(actualX)
-              this.buildingPanel.updateCurrentX(actualX)
+              if(inBuilding) this.buildingPanel.updateCurrentX(actualX)
             case Direction.LEFT =>
               actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentX(actualX)
-              this.buildingPanel.updateCurrentX(actualX)
+              if(inBuilding) this.buildingPanel.updateCurrentX(actualX)
           }
           Thread.sleep(Settings.GAME_REFRESH_TIME)
         }

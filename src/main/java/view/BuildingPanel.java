@@ -15,8 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.Semaphore;
 
-public class BuildingPanel extends JPanel implements KeyListener{
-    private Controller controller;
+public class BuildingPanel extends JPanel {
     private int centerX;
     private int centerY;
     private int currentX;
@@ -54,23 +53,17 @@ public class BuildingPanel extends JPanel implements KeyListener{
         this.requestFocusInWindow();
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
-        if(buildingMap.userCoordinate().y()> buildingMap.npcCoordinate().y()){
+        if(currentY> buildingMap.npcCoordinate().y()*Settings.TILE_PIXEL()){
             g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npcCoordinate().x())* Settings.TILE_PIXEL(),
                     centerY+(buildingMap.npcCoordinate().y())*Settings.TILE_PIXEL() -
                             (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
             g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
-            System.out.println(centerX+currentX+"  corretta:"+(centerX+(buildingMap.userCoordinate().x())* Settings.TILE_PIXEL()));
-            System.out.println(centerX+"  currentX:"+currentX);
         }else{
-            g.drawImage(LoadImage.load("/images/characters/oak.png"), centerX+(buildingMap.userCoordinate().x())* Settings.TILE_PIXEL(),
-                    centerY+(buildingMap.userCoordinate().y())*Settings.TILE_PIXEL(), this);
+            g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
             g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npcCoordinate().x())* Settings.TILE_PIXEL(),
                     centerY+(buildingMap.npcCoordinate().y())*Settings.TILE_PIXEL() -
                             (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
         }
-
-
-        System.out.print("ciao2");
     }
 
     public synchronized void updateCurrentX(double x) {
@@ -81,11 +74,7 @@ public class BuildingPanel extends JPanel implements KeyListener{
         this.currentY = (int)(y * Settings.TILE_PIXEL());
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
 
-    @Override
     public void keyPressed(KeyEvent e) {
         try {
             if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -122,9 +111,6 @@ public class BuildingPanel extends JPanel implements KeyListener{
         }
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
 
     private void speak(){
         dialoguePanel.setText(buildingMap.npc().dialogue());
