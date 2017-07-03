@@ -25,6 +25,8 @@ trait GameViewObserver {
 
   def buildingPanel: BuildingPanel
 
+  def buildingPanel_=(buildingPanel: BuildingPanel): Unit
+
   def trainerPosition: Coordinate
 
   def trainerPosition_=(position: Coordinate): Unit
@@ -44,7 +46,8 @@ class GameController(private var model: Model, private var view: View) extends G
 
   override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
-  var buildingPanel: BuildingPanel = new BuildingPanel(this)
+  override var buildingPanel: BuildingPanel = new BuildingPanel(this)
+  var inBuilding: Boolean = false
 
   override var trainerIsMoving: Boolean = false
 
@@ -82,8 +85,14 @@ class GameController(private var model: Model, private var view: View) extends G
         for(_ <- 1 to 4) {
           direction match {
             case Direction.UP =>
-              if(trainerPosition.x == 13 && trainerPosition.y == 25) this.view.showGame(buildingPanel)
-              else if(trainerPosition.x == 44 && trainerPosition.y == 25) this.view.showGame(buildingPanel)
+              if(actualX == 13 && actualY == 25){
+                this.view.showGame(buildingPanel)
+                this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
+              }
+              else if(actualX == 44 && actualY == 25){
+                this.view.showGame(buildingPanel)
+                this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
+              }
               actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentY(actualY)
             case Direction.DOWN =>
@@ -95,14 +104,18 @@ class GameController(private var model: Model, private var view: View) extends G
             case Direction.LEFT =>
               actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentX(actualX)
-              println(trainerPosition)
           }
           Thread.sleep(Settings.GAME_REFRESH_TIME)
         }
+        println(trainerPosition)
         this.updateTrainerPosition(direction)
         this.trainerIsMoving = false
       }).start()
     }
+  }
+
+  private def inBuilding(variable: Boolean): Unit ={
+    inBuilding = variable
   }
 
   private def updateTrainerPosition(direction: Direction): Unit = direction match {
