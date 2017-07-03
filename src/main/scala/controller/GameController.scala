@@ -23,11 +23,11 @@ trait GameViewObserver {
 
   def isInPause: Boolean
 
-  def moveTrainer(direction: Direction.Direction): Unit
-
   def gamePanel: GamePanel
 
   def gamePanel_=(gamePanel: GamePanel): Unit
+
+  def moveTrainer(direction: Direction.Direction): Unit
 
   def trainerPosition: Coordinate
 
@@ -48,12 +48,7 @@ class GameController(private var view: View) extends GameViewObserver{
   private val gameMap: GameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
   private var _trainerSprite: Sprite = trainer.sprites.frontS
-
-  override var trainerPosition: Coordinate = trainer.coordinate
-
-  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
-
-  override var trainerIsMoving: Boolean = false
+  private var fistStep: Boolean = true
 
   override def startGame(): Unit = {
     agent = new GameControllerAgent
@@ -63,8 +58,7 @@ class GameController(private var view: View) extends GameViewObserver{
       view.showGame(gamePanel)
       agent.start()
     } catch {
-      case e: IllegalStateException =>
-        view.showError(e.toString, "Not initialized")
+      case e: IllegalStateException => view.showError(e.toString, "Not initialized")
     }
   }
 
@@ -87,7 +81,10 @@ class GameController(private var view: View) extends GameViewObserver{
   }
 
   override def isInGame: Boolean = this.inGame
+
   override def isInPause: Boolean = this.inPause
+
+  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
   override def moveTrainer(direction: Direction): Unit = {
     if (!isInPause) {
@@ -103,37 +100,20 @@ class GameController(private var view: View) extends GameViewObserver{
     }
   }
 
+  override var trainerPosition: Coordinate = trainer.coordinate
+
+  override var trainerIsMoving: Boolean = false
+
   override def trainerSprite: String = _trainerSprite.image
 
-  private def updateTrainerSprite(direction: Direction): Unit = {
-    if (trainerIsMoving) {
-      direction match {
-        case Direction.UP => _trainerSprite match {
-          case Back1(_) => _trainerSprite = trainer.sprites.back2
-          case _ => _trainerSprite = trainer.sprites.back1
-        }
-        case Direction.DOWN => _trainerSprite match {
-          case Front1(_) => _trainerSprite = trainer.sprites.front2
-          case _ => _trainerSprite = trainer.sprites.front1
-        }
-        case Direction.LEFT => _trainerSprite match {
-          case Left1(_) => _trainerSprite = trainer.sprites.left2
-          case _ => _trainerSprite = trainer.sprites.left1
-        }
-        case Direction.RIGHT => _trainerSprite match {
-          case Right1(_) => _trainerSprite = trainer.sprites.right2
-          case _ => _trainerSprite = trainer.sprites.right1
-        }
-      }
-    } else {
-      direction match {
-        case Direction.UP => _trainerSprite = trainer.sprites.backS
-        case Direction.DOWN => _trainerSprite = trainer.sprites.frontS
-        case Direction.LEFT => _trainerSprite = trainer.sprites.leftS
-        case Direction.RIGHT => _trainerSprite = trainer.sprites.rightS
-      }
-    }
+  private def nextTrainerPosition(direction: Direction): Coordinate = direction match {
+    case Direction.UP => CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    case Direction.DOWN => CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    case Direction.RIGHT => CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    case Direction.LEFT => CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
   }
+
+  private def nextTile(coordinate: Coordinate): Tile = gameMap.map(coordinate.x)(coordinate.y)
 
   private def enterInBuilding(building: Building): Unit = {
     println("Entro dentro "+ building.toString)
@@ -168,18 +148,69 @@ class GameController(private var view: View) extends GameViewObserver{
     }).start()
   }
 
-  private def nextTrainerPosition(direction: Direction): Coordinate = direction match {
-    case Direction.UP => CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-    case Direction.DOWN => CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-    case Direction.RIGHT => CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-    case Direction.LEFT => CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+  private def updateTrainerSprite(direction: Direction): Unit = {
+    if (trainerIsMoving) {
+      direction match {
+        case Direction.UP => _trainerSprite match {
+          case BackS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.back1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.back2
+              fistStep = true
+            }
+          case Back1(_) | Back2(_) => _trainerSprite = trainer.sprites.backS
+          case _ => _trainerSprite = trainer.sprites.back1
+        }
+        case Direction.DOWN => _trainerSprite match {
+          case FrontS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.front1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.front2
+              fistStep = true
+            }
+          case Front1(_) | Front2(_) => _trainerSprite = trainer.sprites.frontS
+          case _ => _trainerSprite = trainer.sprites.front1
+        }
+        case Direction.LEFT => _trainerSprite match {
+          case LeftS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.left1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.left2
+              fistStep = true
+            }
+          case Left1(_) | Left2(_) => _trainerSprite = trainer.sprites.leftS
+          case _ => _trainerSprite = trainer.sprites.left1
+        }
+        case Direction.RIGHT => _trainerSprite match {
+          case RightS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.right1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.right2
+              fistStep = true
+            }
+          case Right1(_) | Right2(_) => _trainerSprite = trainer.sprites.rightS
+          case _ => _trainerSprite = trainer.sprites.right1
+        }
+      }
+    } else {
+      direction match {
+        case Direction.UP => _trainerSprite = trainer.sprites.backS
+        case Direction.DOWN => _trainerSprite = trainer.sprites.frontS
+        case Direction.LEFT => _trainerSprite = trainer.sprites.leftS
+        case Direction.RIGHT => _trainerSprite = trainer.sprites.rightS
+      }
+    }
   }
-
+  
   private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
-
-  private def nextTile(coordinate: Coordinate): Tile = gameMap.map(coordinate.x)(coordinate.y)
-
-
 
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false

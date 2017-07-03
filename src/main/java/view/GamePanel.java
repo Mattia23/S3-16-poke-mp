@@ -47,7 +47,6 @@ public class GamePanel extends JPanel{
                 Settings.FRAME_WIDTH() / 2,
                 Settings.FRAME_WIDTH() / 2,
                 null);
-        System.out.println("x " + this.currentX + "y " + this.currentY);
     }
 
     public synchronized void updateCurrentX(double x) {
