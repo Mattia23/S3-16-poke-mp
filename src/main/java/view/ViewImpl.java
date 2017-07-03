@@ -4,6 +4,7 @@ import utilities.Settings;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import java.awt.*;
 
 public class ViewImpl extends JFrame implements View {
 
@@ -11,11 +12,14 @@ public class ViewImpl extends JFrame implements View {
     private Controller controller;
     private GamePanel gamePanel;
     private BuildingPanel buildingPanel;
+    private Dimension frameDim;
 
     public ViewImpl(Controller controller) {
         this.controller = controller;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(Settings.FRAME_WIDTH(), Settings.FRAME_WIDTH());
+        this.frameDim = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
+        this.setSize(frameDim);
+        this.setMinimumSize(frameDim);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);
