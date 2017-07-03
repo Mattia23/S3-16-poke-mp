@@ -34,7 +34,7 @@ public class GamePanel extends JPanel{
                         (this.gameMap.map()[x][y] instanceof Building
                                 && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                                 && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
-                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()), ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_WIDTH() / 2 , ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_WIDTH() / 2 , null);
+                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()), ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_SIDE() / 2 , ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_SIDE() / 2 , null);
                 }
             }
         }
