@@ -45,7 +45,7 @@ class ControllerImpl extends Controller {
     this.checkInitializzation()
 
     if (this.gameController == null) {
-      this.gameController = new GameController(this.view)
+      this.gameController = new MapController(this.view)
     }
 
     this.gameController.startGame()
