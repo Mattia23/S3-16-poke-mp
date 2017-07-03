@@ -86,26 +86,32 @@ class GameController(private var model: Model, private var view: View) extends G
           direction match {
             case Direction.UP =>
               if(actualX == 13 && actualY == 25){
+                this.inBuilding = true
                 this.view.showGame(buildingPanel)
-                this.trainerPosition = CoordinateImpl(12 toInt, 12 toInt)
+                actualX = 7
+                actualY = 9
+                this.trainerPosition = CoordinateImpl(7 toInt, 9 toInt)
               }
               else if(actualX == 44 && actualY == 25){
                 this.view.showGame(buildingPanel)
                 this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
               }
-              else{
-                actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-                this.gamePanel.updateCurrentY(actualY)
-              }
+              actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+              this.gamePanel.updateCurrentY(actualY)
+              this.buildingPanel.updateCurrentY(actualY)
+
             case Direction.DOWN =>
               actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentY(actualY)
+              this.buildingPanel.updateCurrentY(actualY)
             case Direction.RIGHT =>
               actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentX(actualX)
+              this.buildingPanel.updateCurrentX(actualX)
             case Direction.LEFT =>
               actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentX(actualX)
+              this.buildingPanel.updateCurrentX(actualX)
           }
           Thread.sleep(Settings.GAME_REFRESH_TIME)
         }
@@ -130,8 +136,8 @@ class GameController(private var model: Model, private var view: View) extends G
       while(model.isInGame && !stopped){
         if(!model.isInPause){
           try
-            /*if(!inBuilding)*/ SwingUtilities.invokeAndWait(() => gamePanel.repaint())
-            //else SwingUtilities.invokeAndWait(() => buildingPanel.repaint())
+            if(!inBuilding) SwingUtilities.invokeAndWait(() => gamePanel.repaint())
+            else SwingUtilities.invokeAndWait(() => buildingPanel.repaint())
           catch {
             case e: Exception => System.out.println(e)
           }

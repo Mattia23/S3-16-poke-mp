@@ -30,11 +30,12 @@ public class BuildingPanel extends JPanel implements KeyListener{
         this.requestFocusInWindow();
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
+
         this.buildingMap = new PokemonCenterMap();
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
-        this.currentX = gameController.trainerPosition().x() * Settings.TILE_PIXEL();
-        this.currentY = gameController.trainerPosition().y() * Settings.TILE_PIXEL();
+        this.currentX = buildingMap.entryCoordinate().x() * Settings.TILE_PIXEL();
+        this.currentY = buildingMap.entryCoordinate().y() * Settings.TILE_PIXEL();
         /*this.setLayout(new BorderLayout());
         if(buildingMap instanceof LaboratoryMap){
             dialoguePanel = new DialoguePanel(semaphore, Settings.OK_BUTTON());
@@ -50,7 +51,6 @@ public class BuildingPanel extends JPanel implements KeyListener{
     @Override
     protected synchronized void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        setOpaque(false);//TODO da commentare penso
         this.requestFocusInWindow();
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
@@ -58,11 +58,12 @@ public class BuildingPanel extends JPanel implements KeyListener{
             g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npcCoordinate().x())* Settings.TILE_PIXEL(),
                     centerY+(buildingMap.npcCoordinate().y())*Settings.TILE_PIXEL() -
                             (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
-            g.drawImage(LoadImage.load("/images/characters/oak.png"), centerX+(buildingMap.userCoordinate().x())* Settings.TILE_PIXEL(),
-                    centerY+(buildingMap.userCoordinate().y())*Settings.TILE_PIXEL()-12, this);
+            g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
+            System.out.println(centerX+currentX+"  corretta:"+(centerX+(buildingMap.userCoordinate().x())* Settings.TILE_PIXEL()));
+            System.out.println(centerX+"  currentX:"+currentX);
         }else{
             g.drawImage(LoadImage.load("/images/characters/oak.png"), centerX+(buildingMap.userCoordinate().x())* Settings.TILE_PIXEL(),
-                    centerY+(buildingMap.userCoordinate().y())*Settings.TILE_PIXEL()-12, this);
+                    centerY+(buildingMap.userCoordinate().y())*Settings.TILE_PIXEL(), this);
             g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npcCoordinate().x())* Settings.TILE_PIXEL(),
                     centerY+(buildingMap.npcCoordinate().y())*Settings.TILE_PIXEL() -
                             (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
