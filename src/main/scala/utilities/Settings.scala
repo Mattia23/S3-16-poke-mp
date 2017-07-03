@@ -46,6 +46,10 @@ object Settings {
 
   val IMAGES_FOLDER: String =  "/images/"
 
+  val POKEMON_IMAGES_FRONT_FOLDER: String = IMAGES_FOLDER + "pokemon/front/"
+
+  val POKEMON_IMAGES_BACK_FOLDER: String = IMAGES_FOLDER + "pokemon/back/"
+
   val GRASS_IMAGE_STRING: String = IMAGES_FOLDER + "grass.png"
 
   val TALL_GRASS_IMAGE_STRING: String = IMAGES_FOLDER + "tall-grass.png"
