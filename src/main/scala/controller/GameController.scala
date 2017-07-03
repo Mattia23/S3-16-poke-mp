@@ -87,14 +87,16 @@ class GameController(private var model: Model, private var view: View) extends G
             case Direction.UP =>
               if(actualX == 13 && actualY == 25){
                 this.view.showGame(buildingPanel)
-                this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
+                this.trainerPosition = CoordinateImpl(12 toInt, 12 toInt)
               }
               else if(actualX == 44 && actualY == 25){
                 this.view.showGame(buildingPanel)
                 this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
               }
-              actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentY(actualY)
+              else{
+                actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
+                this.gamePanel.updateCurrentY(actualY)
+              }
             case Direction.DOWN =>
               actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
               this.gamePanel.updateCurrentY(actualY)
@@ -114,10 +116,6 @@ class GameController(private var model: Model, private var view: View) extends G
     }
   }
 
-  private def inBuilding(variable: Boolean): Unit ={
-    inBuilding = variable
-  }
-
   private def updateTrainerPosition(direction: Direction): Unit = direction match {
     case Direction.UP => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
     case Direction.DOWN => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
@@ -132,7 +130,8 @@ class GameController(private var model: Model, private var view: View) extends G
       while(model.isInGame && !stopped){
         if(!model.isInPause){
           try
-            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
+            /*if(!inBuilding)*/ SwingUtilities.invokeAndWait(() => gamePanel.repaint())
+            //else SwingUtilities.invokeAndWait(() => buildingPanel.repaint())
           catch {
             case e: Exception => System.out.println(e)
           }

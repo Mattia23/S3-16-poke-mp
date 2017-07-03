@@ -19,10 +19,11 @@ public class BuildingPanel extends JPanel implements KeyListener{
     private Controller controller;
     private int centerX;
     private int centerY;
+    private int currentX;
+    private int currentY;
     private BuildingMap buildingMap;
     private DialoguePanel dialoguePanel;
     private Semaphore semaphore = new Semaphore(0);
-    private int up = 0;
 
     public BuildingPanel(GameViewObserver gameController) {
         this.setFocusable(true);
@@ -32,7 +33,9 @@ public class BuildingPanel extends JPanel implements KeyListener{
         this.buildingMap = new PokemonCenterMap();
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
-        this.setLayout(new BorderLayout());
+        this.currentX = gameController.trainerPosition().x() * Settings.TILE_PIXEL();
+        this.currentY = gameController.trainerPosition().y() * Settings.TILE_PIXEL();
+        /*this.setLayout(new BorderLayout());
         if(buildingMap instanceof LaboratoryMap){
             dialoguePanel = new DialoguePanel(semaphore, Settings.OK_BUTTON());
         }else{
@@ -40,13 +43,14 @@ public class BuildingPanel extends JPanel implements KeyListener{
         }
         dialoguePanel.setVisible(false);
         this.add(dialoguePanel, BorderLayout.SOUTH);
-        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));
+        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));*/
 
     }
 
     @Override
-    protected void paintComponent(final Graphics g) {
-        setOpaque(false);
+    protected synchronized void paintComponent(final Graphics g) {
+        super.paintComponent(g);
+        setOpaque(false);//TODO da commentare penso
         this.requestFocusInWindow();
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
@@ -64,7 +68,16 @@ public class BuildingPanel extends JPanel implements KeyListener{
                             (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
         }
 
-        super.paintComponent(g);
+
+        System.out.print("ciao2");
+    }
+
+    public synchronized void updateCurrentX(double x) {
+        this.currentX = (int)(x * Settings.TILE_PIXEL());
+    }
+
+    public synchronized void updateCurrentY(double y) {
+        this.currentY = (int)(y * Settings.TILE_PIXEL());
     }
 
     @Override

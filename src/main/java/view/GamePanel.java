@@ -38,6 +38,7 @@ public class GamePanel extends JPanel{
                 }
             }
         }
+        System.out.print("ciao");
     }
 
     public synchronized void updateCurrentX(double x) {
