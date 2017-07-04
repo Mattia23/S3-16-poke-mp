@@ -208,4 +208,8 @@ object Settings {
 
   val TRAINER_BUTTON: util.List[String] = util.Arrays.asList("fight", "change", "bye")
 
+  val AUDIO_FORLDER: String = "/audio/"
+
+  val MAP_SONG: String = AUDIO_FORLDER + "town_theme.wav"
+
 }
