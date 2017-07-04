@@ -75,7 +75,7 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   }
 
   val southPanel: JPanel = new JPanel(new BorderLayout())
-  southPanel.setBounds(0,Settings.FRAME_SIDE-Settings.FRAME_SIDE/3,Settings.FRAME_SIDE,Settings.FRAME_SIDE/3)
+  southPanel.setBounds(Settings.FRAME_SIDE/40,(Settings.FRAME_SIDE*0.72).toInt,(Settings.FRAME_SIDE*0.9).toInt,Settings.FRAME_SIDE/5)
   southPanel.setOpaque(false)
 
   val southWestPanel: JPanel = new JPanel()
@@ -98,6 +98,7 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   gridLayoutEast.setVgap(10)
   gridLayoutEast.setHgap(10)
   southEastPanel.setLayout(gridLayoutEast)
+  southEastPanel.setBounds(Settings.FRAME_SIDE/35,(Settings.FRAME_SIDE*0.72).toInt,Settings.FRAME_SIDE,Settings.FRAME_SIDE/5)
   southEastPanel.setOpaque(false)
 
   val attack1: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._1).get()._1)
@@ -132,27 +133,24 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   this.requestFocusInWindow
   this.addKeyListener(new KeyListener {
     var i: Int = 0
-
     override def keyPressed(e: KeyEvent): Unit = {
       e.getKeyCode match {
-        case KeyEvent.VK_RIGHT => {
-          if (i < provaButtons.size - 1) {
-            i = i + 1
+        case KeyEvent.VK_DOWN => {
+          if(i<provaButtons.size-1){
+            i = i+1
             frame.getRootPane().setDefaultButton(provaButtons(i))
           }
         }
-        case KeyEvent.VK_LEFT => {
-          if (i > 0) {
-            i = i - 1
+        case KeyEvent.VK_UP =>{
+          if(i>0) {
+            i = i-1
             frame.getRootPane().setDefaultButton(provaButtons(i))
           }
         }
         case _ =>
       }
     }
-
     override def keyTyped(e: KeyEvent): Unit = {}
-
     override def keyReleased(e: KeyEvent): Unit = {}
   })
 
