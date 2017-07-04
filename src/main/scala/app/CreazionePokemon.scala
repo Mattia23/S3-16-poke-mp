@@ -14,14 +14,16 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   val imagePokemonSize: Int = Settings.FRAME_SIDE / 4
   val fontSize: Int = (Settings.FRAME_SIDE * 0.034).toInt
   val fontLifeSize: Int = (Settings.FRAME_SIDE * 0.02).toInt
+  val progressBarW: Int = (Settings.FRAME_SIDE * 0.23437).toInt
+  val progressBarH: Int = (Settings.FRAME_SIDE * 0.021648).toInt
   val pokemonImgPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.65).toInt,(Settings.FRAME_SIDE * 0.10).toInt),
                                           new Dimension((Settings.FRAME_SIDE * 0.11).toInt,(Settings.FRAME_SIDE * 0.48).toInt))
   val pokemonNamePose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.08).toInt,(Settings.FRAME_SIDE * 0.165).toInt),
                                             new Dimension((Settings.FRAME_SIDE * 0.57).toInt,(Settings.FRAME_SIDE * 0.565).toInt))
   val pokemonLevelPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.06).toInt,(Settings.FRAME_SIDE * 0.205).toInt),
                                             new Dimension((Settings.FRAME_SIDE * 0.55).toInt,(Settings.FRAME_SIDE * 0.61).toInt))
-  val pokemonProgressBarPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.214).toInt,(Settings.FRAME_SIDE * 0.218).toInt),
-                                            new Dimension((Settings.FRAME_SIDE * 0.7).toInt,(Settings.FRAME_SIDE * 0.612).toInt))
+  val pokemonProgressBarPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.214).toInt,(Settings.FRAME_SIDE * 0.2155).toInt),
+                                            new Dimension((Settings.FRAME_SIDE * 0.7).toInt,(Settings.FRAME_SIDE * 0.613).toInt))
   val pokemonLifePose: Dimension = new Dimension((Settings.FRAME_SIDE * 0.845).toInt,(Settings.FRAME_SIDE * 0.625).toInt)
   val pokemonLevExpPose: Dimension = new Dimension((Settings.FRAME_SIDE * 0.64).toInt,(Settings.FRAME_SIDE * 0.666).toInt)
   var pokemonEntities: Array[PokemonWithLife] = Array(otherPoke,myPoke)
@@ -52,7 +54,7 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
     pokemonImages(i).setContentAreaFilled(false)
     this.add(pokemonImages(i))
 
-    pokemonProgressBar(i).setBounds(pokemonProgressBarPose(i).width,pokemonProgressBarPose(i).height,150,16)
+    pokemonProgressBar(i).setBounds(pokemonProgressBarPose(i).width,pokemonProgressBarPose(i).height,progressBarW,progressBarH)
     pokemonProgressBar(i).setValue(100)
     this.add(pokemonProgressBar(i))
   }
@@ -71,20 +73,28 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
     this.add(jTextField)
   }
 
-  val southPanel: JPanel = new JPanel()
+  val southPanel: JPanel = new JPanel(new BorderLayout())
   southPanel.setBounds(0,Settings.FRAME_SIDE-Settings.FRAME_SIDE/3,Settings.FRAME_SIDE,Settings.FRAME_SIDE/3)
   southPanel.setOpaque(false)
-  southPanel.setLayout(new FlowLayout())
-  this.add(southPanel)
+
+  val southWestPanel: JPanel = new JPanel()
+  val gridLayout: GridLayout = new GridLayout(4,1)
+  gridLayout.setVgap(10)
+  southWestPanel.setLayout(gridLayout)
+  southWestPanel.setOpaque(false)
 
   val b1: JButton = new JButton("Combatti")
   val b2: JButton = new JButton("Cambia pokemon")
   val b3: JButton = new JButton("Pokeball (x3)")
   val b4: JButton = new JButton("Fuga")
-  southPanel.add(b1)
-  southPanel.add(b2)
-  southPanel.add(b3)
-  southPanel.add(b4)
+  southWestPanel.add(b1)
+  southWestPanel.add(b2)
+  southWestPanel.add(b3)
+  southWestPanel.add(b4)
+
+  southPanel.add(southWestPanel,BorderLayout.WEST)
+  this.add(southPanel)
+
   frame.getRootPane().setDefaultButton(b1)
   b1.addActionListener(e => println(b1.getText))
   b2.addActionListener(e => println(b2.getText))
@@ -98,6 +108,8 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   })
   b4.addActionListener(e => println(b4.getText))
   val provaButtons: Array[JButton] = Array(b1,b2,b3,b4)
+
+
   this.setFocusable(true)
   this.requestFocusInWindow
   this.addKeyListener(new KeyListener {
