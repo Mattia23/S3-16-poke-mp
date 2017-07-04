@@ -1,85 +1,186 @@
 package app
 
 import java.awt._
+import java.awt.event.{KeyEvent, KeyListener}
 import java.util.Optional
 import javax.swing._
 import javax.imageio.ImageIO
+
+import database.local.PokedexConnect
 import model.entities.{Owner, PokemonFactory, PokemonWithLife}
 import utilities.Settings
 import view.BattlePanel
 
-object CreazionePokemon extends App {
+class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, frame: JFrame) extends BattlePanel {
   val imagePokemonSize: Int = Settings.FRAME_SIDE / 4
+  val fontSize: Int = (Settings.FRAME_SIDE * 0.034).toInt
+  val fontLifeSize: Int = (Settings.FRAME_SIDE * 0.02).toInt
+  val progressBarW: Int = (Settings.FRAME_SIDE * 0.23437).toInt
+  val progressBarH: Int = (Settings.FRAME_SIDE * 0.021648).toInt
   val pokemonImgPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.65).toInt,(Settings.FRAME_SIDE * 0.10).toInt),
                                           new Dimension((Settings.FRAME_SIDE * 0.11).toInt,(Settings.FRAME_SIDE * 0.48).toInt))
   val pokemonNamePose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.08).toInt,(Settings.FRAME_SIDE * 0.165).toInt),
-                                                new Dimension((Settings.FRAME_SIDE * 0.57).toInt,(Settings.FRAME_SIDE * 0.55355555).toInt))
+                                            new Dimension((Settings.FRAME_SIDE * 0.57).toInt,(Settings.FRAME_SIDE * 0.565).toInt))
+  val pokemonLevelPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.06).toInt,(Settings.FRAME_SIDE * 0.205).toInt),
+                                            new Dimension((Settings.FRAME_SIDE * 0.55).toInt,(Settings.FRAME_SIDE * 0.61).toInt))
+  val pokemonProgressBarPose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.214).toInt,(Settings.FRAME_SIDE * 0.2155).toInt),
+                                            new Dimension((Settings.FRAME_SIDE * 0.7).toInt,(Settings.FRAME_SIDE * 0.613).toInt))
+  val pokemonLifePose: Dimension = new Dimension((Settings.FRAME_SIDE * 0.845).toInt,(Settings.FRAME_SIDE * 0.625).toInt)
+  val pokemonLevExpPose: Dimension = new Dimension((Settings.FRAME_SIDE * 0.64).toInt,(Settings.FRAME_SIDE * 0.666).toInt)
+  var pokemonEntities: Array[PokemonWithLife] = Array(otherPoke,myPoke)
+  var pokemonImages: Array[JButton] = Array(new JButton(),new JButton())
+  var pokemonSide: Array[String] = Array(Settings.POKEMON_IMAGES_FRONT_FOLDER,Settings.POKEMON_IMAGES_BACK_FOLDER)
   var pokemonNames: Array[JTextField] = Array(new JTextField(),new JTextField())
-  val pokemonLifes: Array[JProgressBar] = Array(new JProgressBar(0, 100), new JProgressBar(0, 100))
-  val pokemonLifePose: Array[Dimension] = Array(new Dimension((Settings.FRAME_SIDE * 0.21).toInt,(Settings.FRAME_SIDE * 0.22).toInt),
-    new Dimension((Settings.FRAME_SIDE * 0.70).toInt,(Settings.FRAME_SIDE * 0.61).toInt))
+  var pokemonLevels: Array[JTextField] = Array(new JTextField(),new JTextField())
+  var pokemonProgressBar: Array[JProgressBar] = Array(new JProgressBar(0, 100),new JProgressBar(0, 100))
+  var myPokemonLife: JTextField = new JTextField()
+  val pokemonLevExpBar: JProgressBar = new JProgressBar(0, 100)
+  var pokeball: Int = 3
 
-  val frame: JFrame = new JFrame()
-  val mainPanel: BattlePanel = new BattlePanel()
-  var imageIcon: String = new String
-  var imageIcon2: String = new String
+  this.setLayout(null)
 
-  val firstPokemonImage: JButton = new JButton()
-  firstPokemonImage.setContentAreaFilled(false)
-  firstPokemonImage.setBorder(null)
-  firstPokemonImage.setBounds(pokemonImgPose(0).width,pokemonImgPose(0).height,imagePokemonSize,imagePokemonSize)
+  for(i <- pokemonImages.indices) {
+    createJTextField(pokemonNames(i),pokemonEntities(i).pokemon.name.toUpperCase)
+    pokemonNames(i).setBounds(pokemonNamePose(i).width,pokemonNamePose(i).height,200,30)
+    pokemonNames(i).setFont(new Font("Verdana", Font.BOLD, fontSize))
+    createJTextField(pokemonLevels(i),"L."+pokemonEntities(i).pokemon.level)
+    pokemonLevels(i).setBounds(pokemonLevelPose(i).width,pokemonLevelPose(i).height,70,30)
+    pokemonLevels(i).setFont(new Font("Verdana", Font.PLAIN, fontSize))
 
-  val secondPokemonImage: JButton = new JButton()
-  secondPokemonImage.setContentAreaFilled(false)
-  secondPokemonImage.setBorder(null)
-  secondPokemonImage.setBounds(pokemonImgPose(1).width,pokemonImgPose(1).height,imagePokemonSize,imagePokemonSize)
-
-  frame.setSize(Settings.FRAME_SIDE, Settings.FRAME_SIDE)
-  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-  mainPanel.setLayout(null)
-  val button: JButton = new JButton("Crea pokemon")
-  button.setBounds(30,30,200,30)
-
-  button.addActionListener((e) => {
-    val p1: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
-    val p2: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
-    pokemonNames(0).setText(p1.pokemon.name.toUpperCase)
-    pokemonNames(0).setBounds(pokemonNamePose(0).width,pokemonNamePose(0).height,160,30)
-    pokemonNames(0).setFont(new Font("Verdana", Font.BOLD, (Settings.FRAME_SIDE*0.0325).toInt))
-    pokemonNames(0).setOpaque(false)
-    pokemonNames(0).setBorder(null)
-    mainPanel.add(pokemonNames(0))
-    pokemonNames(1).setText(p2.pokemon.name.toUpperCase)
-    pokemonNames(1).setBounds(pokemonNamePose(1).width,pokemonNamePose(1).height,160,30)
-    println(pokemonNamePose(1).width,pokemonNamePose(1).height)
-    pokemonNames(1).setFont(new Font("Verdana", Font.BOLD, (Settings.FRAME_SIDE*0.033).toInt))
-    pokemonNames(1).setOpaque(false)
-    pokemonNames(1).setBorder(null)
-    mainPanel.add(pokemonNames(1))
-
-    pokemonLifes(0).setValue(p1.pokemonLife%100)
-    pokemonLifes(0).setForeground(Color.green)
-    pokemonLifes(0).setBounds(pokemonLifePose(0).width,pokemonLifePose(0).height,90, 10)
-    mainPanel.add(pokemonLifes(0))
-    pokemonLifes(1).setValue(p2.pokemonLife%100)
-    pokemonLifes(1).setForeground(Color.green)
-    pokemonLifes(1).setBounds(pokemonLifePose(1).width,pokemonLifePose(1).height,90, 10)
-    mainPanel.add(pokemonLifes(1))
-
-    var myImage: Image = ImageIO.read(getClass.getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER + p1.pokemon.id + ".png"))
+    var myImage: Image = ImageIO.read(getClass.getResource(pokemonSide(i) + pokemonEntities(i).pokemon.id + ".png"))
     var myImageIcon: ImageIcon = new ImageIcon(myImage.getScaledInstance(imagePokemonSize,imagePokemonSize,java.awt.Image.SCALE_SMOOTH))
-    firstPokemonImage.setIcon(myImageIcon)
+    pokemonImages(i).setIcon(myImageIcon)
+    pokemonImages(i).setBounds(pokemonImgPose(i).width,pokemonImgPose(i).height,imagePokemonSize,imagePokemonSize)
+    pokemonImages(i).setBorder(null)
+    pokemonImages(i).setContentAreaFilled(false)
+    this.add(pokemonImages(i))
 
-    var myImage2: Image = ImageIO.read(getClass.getResource(Settings.POKEMON_IMAGES_BACK_FOLDER + p2.pokemon.id + ".png"))
-    var myImageIcon2: ImageIcon = new ImageIcon(myImage2.getScaledInstance(imagePokemonSize,imagePokemonSize,java.awt.Image.SCALE_SMOOTH))
-    secondPokemonImage.setIcon(myImageIcon2)
+    pokemonProgressBar(i).setBounds(pokemonProgressBarPose(i).width,pokemonProgressBarPose(i).height,progressBarW,progressBarH)
+    pokemonProgressBar(i).setValue(100)
+    this.add(pokemonProgressBar(i))
+  }
+  createJTextField(myPokemonLife,pokemonEntities(1).pokemonLife+"/"+pokemonEntities(1).pokemon.experiencePoints)
+  myPokemonLife.setBounds(pokemonLifePose.width,pokemonLifePose.height,100,30)
+  myPokemonLife.setFont(new Font("Verdana", Font.PLAIN, fontLifeSize))
+  this.add(myPokemonLife)
+  pokemonLevExpBar.setValue(23)
+  pokemonLevExpBar.setBounds(pokemonLevExpPose.width,pokemonLevExpPose.height,170,8)
+  this.add(pokemonLevExpBar)
 
+  private def createJTextField(jTextField: JTextField,text: String): Unit = {
+    jTextField.setText(text)
+    jTextField.setOpaque(false)
+    jTextField.setBorder(null)
+    this.add(jTextField)
+  }
+
+  val southPanel: JPanel = new JPanel(new BorderLayout())
+  southPanel.setBounds(0,Settings.FRAME_SIDE-Settings.FRAME_SIDE/3,Settings.FRAME_SIDE,Settings.FRAME_SIDE/3)
+  southPanel.setOpaque(false)
+
+  val southWestPanel: JPanel = new JPanel()
+  val gridLayout: GridLayout = new GridLayout(4,1)
+  gridLayout.setVgap(10)
+  southWestPanel.setLayout(gridLayout)
+  southWestPanel.setOpaque(false)
+
+  val b1: JButton = new JButton("Combatti")
+  val b2: JButton = new JButton("Cambia pokemon")
+  val b3: JButton = new JButton("Pokeball (x3)")
+  val b4: JButton = new JButton("Fuga")
+  southWestPanel.add(b1)
+  southWestPanel.add(b2)
+  southWestPanel.add(b3)
+  southWestPanel.add(b4)
+
+  val southEastPanel: JPanel = new JPanel()
+  val gridLayoutEast: GridLayout = new GridLayout(2,2)
+  gridLayoutEast.setVgap(10)
+  gridLayoutEast.setHgap(10)
+  southEastPanel.setLayout(gridLayoutEast)
+  southEastPanel.setOpaque(false)
+
+  val attack1: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._1).get()._1)
+  val attack2: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._2).get()._1)
+  val attack3: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._3).get()._1)
+  val attack4: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._4).get()._1)
+  southEastPanel.add(attack1)
+  southEastPanel.add(attack2)
+  southEastPanel.add(attack3)
+  southEastPanel.add(attack4)
+
+  southPanel.add(southWestPanel,BorderLayout.WEST)
+  southPanel.add(southEastPanel,BorderLayout.EAST)
+  this.add(southPanel)
+
+  frame.getRootPane().setDefaultButton(b1)
+  b1.addActionListener(e => println(b1.getText))
+  b2.addActionListener(e => println(b2.getText))
+  b3.addActionListener(e => {
+    println(b3.getText)
+    pokeball = pokeball - 1
+    b3.setText("Pokeball (x"+pokeball+")")
+    if(pokeball == 0){
+      b3.setEnabled(false)
+    }
   })
-  mainPanel.add(firstPokemonImage)
-  mainPanel.add(secondPokemonImage)
-  mainPanel.add(button)
+  b4.addActionListener(e => println(b4.getText))
+  val provaButtons: Array[JButton] = Array(b1,b2,b3,b4)
 
-  frame.add(mainPanel)
-  frame.setVisible(true)
+
+  this.setFocusable(true)
+  this.requestFocusInWindow
+  this.addKeyListener(new KeyListener {
+    var i: Int = 0
+
+    override def keyPressed(e: KeyEvent): Unit = {
+      e.getKeyCode match {
+        case KeyEvent.VK_RIGHT => {
+          if (i < provaButtons.size - 1) {
+            i = i + 1
+            frame.getRootPane().setDefaultButton(provaButtons(i))
+          }
+        }
+        case KeyEvent.VK_LEFT => {
+          if (i > 0) {
+            i = i - 1
+            frame.getRootPane().setDefaultButton(provaButtons(i))
+          }
+        }
+        case _ =>
+      }
+    }
+
+    override def keyTyped(e: KeyEvent): Unit = {}
+
+    override def keyReleased(e: KeyEvent): Unit = {}
+  })
+
+  def setPokemonLife(life: Int): Unit = {
+    myPokemonLife.setText(pokemonEntities(1).pokemonLife+"/"+pokemonEntities(1).pokemon.experiencePoints)
+  }
+
+  def setPokemonLifeProgressBar(life: Int, owner: Owner.Value): Unit = {
+    if (owner == Owner.TRAINER) pokemonProgressBar(1).setValue(life) else pokemonProgressBar(0).setValue(life)
+  }
+
+}
+
+
+object CreazionePokemonMain extends App {
+  val frame: JFrame = new JFrame()
+  frame.setSize(Settings.FRAME_SIDE, Settings.FRAME_SIDE)
   frame.setResizable(false)
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+  var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get()
+  val panel: CreazionePokemon = new CreazionePokemon(myPokemon,
+    PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get(),frame)
+  frame.add(panel)
+  myPokemon.loseLifePoints(30)
+  panel.setPokemonLife(myPokemon.pokemonLife)
+  val lifeRatio: Double = myPokemon.pokemonLife.toDouble/myPokemon.pokemon.experiencePoints.toDouble
+  panel.setPokemonLifeProgressBar((lifeRatio*100).toInt,Owner.TRAINER)
+  frame.setVisible(true)
+  panel.requestFocusInWindow()
+
 }
