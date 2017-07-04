@@ -101,17 +101,17 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   southEastPanel.setBounds(Settings.FRAME_SIDE/35,(Settings.FRAME_SIDE*0.72).toInt,Settings.FRAME_SIDE,Settings.FRAME_SIDE/5)
   southEastPanel.setOpaque(false)
 
-  val attack1: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._1).get()._1)
-  val attack2: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._2).get()._1)
-  val attack3: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._3).get()._1)
-  val attack4: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._4).get()._1)
+  val attack1: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._1).get()._1.toUpperCase)
+  val attack2: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._2).get()._1.toUpperCase)
+  val attack3: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._3).get()._1.toUpperCase)
+  val attack4: JButton = new JButton(PokedexConnect.getPokemonAttack(pokemonEntities(1).pokemon.attacks._4).get()._1.toUpperCase)
   southEastPanel.add(attack1)
   southEastPanel.add(attack2)
   southEastPanel.add(attack3)
   southEastPanel.add(attack4)
 
   southPanel.add(southWestPanel,BorderLayout.WEST)
-  southPanel.add(southEastPanel,BorderLayout.EAST)
+  southPanel.add(southEastPanel,BorderLayout.CENTER)
   this.add(southPanel)
 
   frame.getRootPane().setDefaultButton(b1)

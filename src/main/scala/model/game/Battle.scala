@@ -1,23 +1,26 @@
 package model.game
 
-import model.entities.{PokemonFactory, Owner, PokemonWithLife}
+import java.util.Optional
+
+import model.entities.{Owner, PokemonFactory, PokemonWithLife, Trainer}
 
 trait Battle {
-  def startBattle: Unit
+  def startBattleRound(pokemonId: Int): Unit
 
-  def trainerExperiencePoint: Int
+  def battleFinished(won: Boolean): Unit
+
+  def pokeballLaunched(): Unit
 }
 
-class BattleImpl(idTrainer: Int, pokemonTrainedId: Int) extends Battle {
+class BattleImpl(trainer: Trainer) extends Battle {
+  var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(trainer.level)).get()
 
-  private var _trainerExperiencePoint: Int = 0
-
-  override def trainerExperiencePoint = this._trainerExperiencePoint
-  //var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD, )
-
-  override def startBattle: Unit = {
-
+  override def startBattleRound(pokemonId: Int): Unit = {
+    var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(pokemonId),Optional.empty()).get()
+    var round: BattleRound = new BattleRoundImpl(myPokemon, wildPokemon, this)
   }
 
+  override def battleFinished(won: Boolean): Unit = ???
 
+  override def pokeballLaunched(): Unit = ???
 }
