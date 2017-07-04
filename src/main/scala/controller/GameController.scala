@@ -8,6 +8,10 @@ import utilities.Settings
 import view.{GamePanel, View}
 
 trait GameViewObserver {
+  def gamePanel: GamePanel
+
+  def gamePanel_=(gamePanel: GamePanel): Unit
+
   def trainerPosition: Coordinate
 
   def trainerPosition_=(position: Coordinate): Unit
@@ -16,26 +20,21 @@ trait GameViewObserver {
 
   def trainerIsMoving_=(isMoving: Boolean): Unit
 
-  def gamePanel: GamePanel
+  def isInGame: Boolean
 
-  def gamePanel_=(gamePanel: GamePanel): Unit
+  def isInPause: Boolean
+
+  def trainerSprite: String
 
   def startGame(): Unit
+
+  def terminateGame(): Unit
 
   def pauseGame(): Unit
 
   def resumeGame(): Unit
 
-  def terminateGame(): Unit
-
-  def isInGame: Boolean
-
-  def isInPause: Boolean
-
   def moveTrainer(direction: Direction.Direction): Unit
-
-  def trainerSprite: String
-  //def speakTrainer: Unit
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{
@@ -56,6 +55,37 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override def isInPause: Boolean = this.inPause
 
   override def trainerSprite: String = _trainerSprite.image
+
+  override final def startGame(): Unit = {
+    inGame = true
+    doStart()
+    view.showGame(gamePanel)
+  }
+
+  protected def doStart(): Unit
+
+  override final def terminateGame(): Unit = {
+    inGame = false
+    doTerminate()
+  }
+
+  protected def doTerminate(): Unit
+
+  override final def pauseGame(): Unit = {
+    inPause = true
+    doPause()
+    view.showPause()
+  }
+
+  protected def doPause(): Unit
+
+  override final def resumeGame(): Unit = {
+    inPause = false
+    doResume()
+    view.showGame(gamePanel)
+  }
+
+  protected def doResume(): Unit
 
   override final def moveTrainer(direction: Direction): Unit = doMove(direction)
 
