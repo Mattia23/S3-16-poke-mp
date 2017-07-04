@@ -51,7 +51,7 @@ class MapController(private var view: View) extends GameController(view){
     agent.terminate()
   }
 
-  override def moveTrainer(direction: Direction): Unit = {
+  override def doMove(direction: Direction): Unit = {
     if (!isInPause) {
       val nextPosition = nextTrainerPosition(direction)
       val tile = gameMap.map(nextPosition.x)(nextPosition.y)
