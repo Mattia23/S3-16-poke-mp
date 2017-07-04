@@ -87,6 +87,10 @@ abstract class GameController(private var view: View) extends GameViewObserver{
 
   protected def doResume(): Unit
 
+  override final def moveTrainer(direction: Direction): Unit = doMove(direction)
+
+  protected def doMove(direction: Direction): Unit
+
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP => CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
     case Direction.DOWN => CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
@@ -121,8 +125,6 @@ abstract class GameController(private var view: View) extends GameViewObserver{
       updateTrainerSprite(direction)
     }).start()
   }
-
-  override def moveTrainer(direction: Direction): Unit
 
   private def updateTrainerSprite(direction: Direction): Unit = {
     if (trainerIsMoving) {
