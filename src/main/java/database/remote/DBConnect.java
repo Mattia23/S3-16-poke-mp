@@ -236,7 +236,7 @@ public final class DBConnect {
 			String query2 = "select * from trainers where id = '"+id+"'";
 			rs = st.executeQuery(query2);
 			if (rs.next()) {
-				Trainer trainer = new TrainerImpl(username, id_image+".png", rs.getInt("exp_points"));
+				Trainer trainer = new TrainerImpl(username, id_image, rs.getInt("exp_points"));
 				return Optional.of(trainer);
 			}
 		} catch(Exception ex) {

@@ -4,12 +4,12 @@ import utilities.Settings;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import java.awt.*;
 
 public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
-    private GamePanel gamePanel;
     private BuildingPanel buildingPanel;
 
     public ViewImpl(Controller controller) {
@@ -22,12 +22,12 @@ public class ViewImpl extends JFrame implements View {
         this.getContentPane().add(new MenuPanel(this, this.controller));
         this.validate();
         this.setVisible(true);
-        
     }
 
     private void setPanel(final JPanel panel) {
         this.getContentPane().removeAll();
         this.getContentPane().add(panel);
+        panel.setBackground(Color.black);
         this.revalidate();
         this.repaint();
     }
