@@ -78,6 +78,7 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   southPanel.setOpaque(false)
 
   val southWestPanel: JPanel = new JPanel()
+  southPanel.setBounds(Settings.FRAME_SIDE/25,(Settings.FRAME_SIDE*0.72).toInt,Settings.FRAME_SIDE,Settings.FRAME_SIDE/5)
   val gridLayout: GridLayout = new GridLayout(4,1)
   gridLayout.setVgap(10)
   southWestPanel.setLayout(gridLayout)
@@ -116,13 +117,13 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
     var i: Int = 0
     override def keyPressed(e: KeyEvent): Unit = {
       e.getKeyCode match {
-        case KeyEvent.VK_RIGHT => {
+        case KeyEvent.VK_DOWN => {
           if(i<provaButtons.size-1){
             i = i+1
             frame.getRootPane().setDefaultButton(provaButtons(i))
           }
         }
-        case KeyEvent.VK_LEFT =>{
+        case KeyEvent.VK_UP =>{
           if(i>0) {
             i = i-1
             frame.getRootPane().setDefaultButton(provaButtons(i))
