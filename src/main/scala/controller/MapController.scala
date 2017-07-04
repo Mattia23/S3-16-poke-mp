@@ -14,7 +14,7 @@ import scala.util.Random
 
 class MapController(private var view: View) extends GameController(view){
   private final val RANDOM_MAX_VALUE = 10
-  private final val MIN_VALUE_TO_FIND_POKEMON = 7
+  private final val MIN_VALUE_TO_FIND_POKEMON = 8
 
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
@@ -74,7 +74,7 @@ class MapController(private var view: View) extends GameController(view){
 
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
-    if(random > MIN_VALUE_TO_FIND_POKEMON) {
+    if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       val pokemon = PokemonFactory.createPokemon(Owner.WILD, Optional.empty(), Optional.of(trainer.level))
       if(pokemon.isPresent)
         println("Trovato il Pokemon: "+ pokemon.get().pokemon.name+" al livello: "+pokemon.get().pokemon.level)

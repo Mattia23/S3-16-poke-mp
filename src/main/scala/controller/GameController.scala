@@ -35,25 +35,15 @@ trait GameViewObserver {
   def moveTrainer(direction: Direction.Direction): Unit
 
   def trainerSprite: String
-
-  protected def inGame: Boolean
-
-  protected def inGame_=(inGame: Boolean)
-
-  protected def inPause: Boolean
-
-  protected def inPause_=(inPause: Boolean)
-
-  protected def trainer: Trainer
   //def speakTrainer: Unit
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{
   private final val TRAINER_STEPS = 4
 
-  override var inGame = false
-  override var inPause = false
-  override val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
+  protected var inGame = false
+  protected var inPause = false
+  protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
   private var _trainerSprite: Sprite = trainer.sprites.frontS
   private var fistStep: Boolean = true
 
@@ -101,6 +91,8 @@ abstract class GameController(private var view: View) extends GameViewObserver{
       updateTrainerSprite(direction)
     }).start()
   }
+
+  override def moveTrainer(direction: Direction): Unit
 
   private def updateTrainerSprite(direction: Direction): Unit = {
     if (trainerIsMoving) {
