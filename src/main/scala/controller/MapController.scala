@@ -4,7 +4,7 @@ import java.util.Optional
 import javax.swing.SwingUtilities
 
 import model.entities.{Owner, PokemonFactory}
-import model.environment.CoordinateImpl
+import model.environment.{Audio, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map.{Building, InitialTownElements, MapCreator, TallGrass}
 import utilities.Settings
@@ -18,11 +18,13 @@ class MapController(private var view: View) extends GameController(view){
 
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+  private val audio = Audio(Settings.MAP_SONG)
 
   override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
   override def doStart(): Unit = {
     agent = new GameControllerAgent
+    audio.loop()
     try {
       agent.start()
     } catch {
