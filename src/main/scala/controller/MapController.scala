@@ -21,33 +21,25 @@ class MapController(private var view: View) extends GameController(view){
 
   override var gamePanel: GamePanel = new GamePanel(this, gameMap)
 
-  override def startGame(): Unit = {
+  override def doStart(): Unit = {
     agent = new GameControllerAgent
-
     try {
-      inGame = true
-      view.showGame(gamePanel)
       agent.start()
     } catch {
       case e: IllegalStateException => view.showError(e.toString, "Not initialized")
     }
   }
 
-  override def pauseGame(): Unit = {
-    inPause = true
+  override def doPause(): Unit = {
     agent.terminate()
-    view.showPause()
   }
 
-  override def resumeGame(): Unit = {
-    inPause = false
-    view.showGame(gamePanel)
+  override def doResume(): Unit = {
     agent = new GameControllerAgent
     agent.start()
   }
 
-  override def terminateGame(): Unit = {
-    inGame = false
+  override def doTerminate(): Unit = {
     agent.terminate()
   }
 

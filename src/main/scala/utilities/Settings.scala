@@ -6,7 +6,7 @@ import java.util
 object Settings {
   val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
 
-  val GAME_REFRESH_TIME: Int = 16
+  val GAME_REFRESH_TIME: Int = 100
 
   val SCREEN_WIDTH: Int = SCREEN_DIMENSION.width
 
