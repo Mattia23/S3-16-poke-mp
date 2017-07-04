@@ -8,7 +8,7 @@ import model.entities.{Owner, PokemonFactory, PokemonWithLife}
 import utilities.Settings
 import view.BattlePanel
 
-class CreazionePokemon(val myPoke: PokemonWithLife, val otherPoke: PokemonWithLife) extends BattlePanel {
+class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife) extends BattlePanel {
   val imagePokemonSize: Int = Settings.FRAME_SIDE / 4
   val fontSize: Int = (Settings.FRAME_SIDE * 0.034).toInt
   val fontLifeSize: Int = (Settings.FRAME_SIDE * 0.02).toInt
@@ -68,6 +68,13 @@ class CreazionePokemon(val myPoke: PokemonWithLife, val otherPoke: PokemonWithLi
     this.add(jTextField)
   }
 
+  def setPokemonLife(life: Int): Unit = {
+    myPokemonLife.setText(pokemonEntities(1).pokemonLife+"/"+pokemonEntities(1).pokemon.experiencePoints)
+  }
+
+  def setPokemonLifeProgressBar(life: Int, owner: Owner.Value): Unit = {
+    if (owner == Owner.TRAINER) pokemonProgressBar(1).setValue(life) else pokemonProgressBar(0).setValue(life)
+  }
 
 }
 
@@ -75,8 +82,14 @@ object CreazionePokemonMain extends App {
   val frame: JFrame = new JFrame()
   frame.setSize(Settings.FRAME_SIDE, Settings.FRAME_SIDE)
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-  frame.add(new CreazionePokemon(PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get(),
-                                PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()))
+  var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
+  val panel: CreazionePokemon = new CreazionePokemon(myPokemon,
+    PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get())
+  frame.add(panel)
+  myPokemon.loseLifePoints(30)
+  panel.setPokemonLife(myPokemon.pokemonLife)
+  val lifeRatio: Double = myPokemon.pokemonLife.toDouble/myPokemon.pokemon.experiencePoints.toDouble
+  panel.setPokemonLifeProgressBar((lifeRatio*100).toInt,Owner.TRAINER)
   frame.setVisible(true)
   frame.setResizable(false)
 }
