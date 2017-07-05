@@ -37,15 +37,15 @@ public class GamePanel extends JPanel{
                                 && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                                 && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
                     g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),
-                            ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_WIDTH() / 2 ,
-                            ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_WIDTH() / 2 ,
+                            ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_SIDE() / 2 ,
+                            ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_SIDE() / 2 ,
                             null);
                 }
             }
         }
         g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
-                Settings.FRAME_WIDTH() / 2,
-                Settings.FRAME_WIDTH() / 2,
+                Settings.FRAME_SIDE() / 2,
+                Settings.FRAME_SIDE() / 2,
                 null);
     }
 
