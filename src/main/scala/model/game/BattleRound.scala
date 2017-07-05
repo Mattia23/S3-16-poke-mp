@@ -17,21 +17,30 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemo
   var wildPokemonBehaviour: PokemonBehaviour = new PokemonBehaviourImpl(wildPokemon)
 
   override def pokeballLaunched(): Boolean = {
-    (wildPokemon.pokemonLife * wildPokemon.pokemon.experiencePoints) / battle.trainer.level < Random.nextInt(100) + 400
+    if((wildPokemon.pokemonLife * wildPokemon.pokemon.experiencePoints) / battle.trainer.level < Random.nextInt(100) + 400) {
+      wildPokemonBehaviour.insertPokemonIntoDB(battle.trainer.id)
+      return true
+    }
+    false
   }
 
   override def myPokemonAttack(idAttack: Int): Unit = {
+    println("Il mio pokemon attacca")
     val damage: Int = myPokemonBehaviour.launchAttack(idAttack)
     wildPokemonBehaviour.undergoAttack(damage)
     if(wildPokemonBehaviour.isAlive){
+      println("Wild pokemon vivo")
       wildPokemonAttack(Random.nextInt(4))
     } else {
+      println("Wild pokemon morto")
+      myPokemonBehaviour.growExperiencePoints(wildPokemonBehaviour.giveExperiencePoints)
       myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
       battle.battleFinished(true)
     }
   }
 
   private def wildPokemonAttack(attack: Int): Unit ={
+    println("Il selvatico attacca")
     new Thread(() => {
       Thread.sleep(4000)
       val damage: Int = wildPokemonBehaviour.launchAttack(attack)

@@ -11,8 +11,8 @@ trait Pokedex {
 
 }
 
-class PokedexImpl(val name: String) extends Pokedex {
-  private var _pokedex: List[Int] = _//DBConnect.getMetPokemonList(name).get()
+class PokedexImpl(val id: Int) extends Pokedex {
+  private var _pokedex: List[Int] = DBConnect.getMetPokemonList(id).get()
 
   override def pokedex: List[Int] = this._pokedex
 

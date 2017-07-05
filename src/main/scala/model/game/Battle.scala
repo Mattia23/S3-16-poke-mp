@@ -7,6 +7,8 @@ import model.entities.{Owner, PokemonFactory, PokemonWithLife, Trainer}
 trait Battle {
   def trainer: Trainer
 
+  def round: BattleRound
+
   def startBattleRound(pokemonId: Int): Unit
 
   def battleFinished(won: Boolean): Unit
@@ -16,13 +18,16 @@ trait Battle {
 
 class BattleImpl(_trainer: Trainer) extends Battle {
   var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(this._trainer.level)).get()
-  var round: BattleRound = _
+  var _round: BattleRound = _
 
   override def trainer: Trainer = _trainer
 
+  override def round: BattleRound = _round
+
   override def startBattleRound(pokemonId: Int): Unit = {
+    _trainer.addMetPokemon(wildPokemon.pokemon.id)
     var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(pokemonId),Optional.empty()).get()
-    round = new BattleRoundImpl(myPokemon, pokemonId, wildPokemon, this)
+    _round = new BattleRoundImpl(myPokemon, pokemonId, wildPokemon, this)
   }
 
   override def battleFinished(won: Boolean): Unit = {
@@ -37,12 +42,12 @@ class BattleImpl(_trainer: Trainer) extends Battle {
       } else {
         pointsEarned = 30
         _trainer.updateTrainer(pointsEarned)
-        //tornare al centro pokemon
+        println("torno al centro pokemon")
       }
     }
   }
 
   override def pokeballLaunched(): Boolean = {
-    round.pokeballLaunched()
+    _round.pokeballLaunched()
   }
 }

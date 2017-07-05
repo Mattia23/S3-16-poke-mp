@@ -7,6 +7,7 @@ import javax.swing._
 import javax.imageio.ImageIO
 
 import database.local.PokedexConnect
+import database.remote.DBConnect
 import model.entities.{Owner, PokemonFactory, PokemonWithLife}
 import utilities.Settings
 import view.BattlePanel
@@ -38,7 +39,7 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
   var pokeball: Int = 3
 
   this.setLayout(null)
-  println(this.otherPoke.pokemonLife, this.otherPoke.pokemon.experiencePoints)
+
   for(i <- pokemonImages.indices) {
     createJTextField(pokemonNames(i),pokemonEntities(i).pokemon.name.toUpperCase)
     pokemonNames(i).setBounds(pokemonNamePose(i).width,pokemonNamePose(i).height,200,30)
