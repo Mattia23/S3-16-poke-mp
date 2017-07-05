@@ -1,24 +1,13 @@
 package controller
 
-import javax.swing.SwingUtilities
-
+import model.entities._
 import model.environment.{Coordinate, CoordinateImpl}
 import model.environment.Direction
 import model.environment.Direction.Direction
-import model.game.Model
-import model.map.{InitialTownElements, MapCreator, Tile}
 import utilities.Settings
 import view.{GamePanel, View}
 
 trait GameViewObserver {
-  def startGame: Unit
-
-  def pauseButton: Unit
-
-  def resumeGame: Unit
-
-  def moveTrainer(direction: Direction.Direction): Unit
-
   def gamePanel: GamePanel
 
   def gamePanel_=(gamePanel: GamePanel): Unit
@@ -30,106 +19,175 @@ trait GameViewObserver {
   def trainerIsMoving: Boolean
 
   def trainerIsMoving_=(isMoving: Boolean): Unit
-  //def speakTrainer: Unit
-  //def ...
+
+  def isInGame: Boolean
+
+  def isInPause: Boolean
+
+  def trainerSprite: String
+
+  def startGame(): Unit
+
+  def terminateGame(): Unit
+
+  def pauseGame(): Unit
+
+  def resumeGame(): Unit
+
+  def moveTrainer(direction: Direction.Direction): Unit
 }
 
-class GameController(private var model: Model, private var view: View) extends GameViewObserver{
-  private var agent: GameControllerAgent = _
-  private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+abstract class GameController(private var view: View) extends GameViewObserver{
+  private final val TRAINER_STEPS = 4
 
-  override var trainerPosition: Coordinate = CoordinateImpl(Settings.MAP_WIDTH / 2, Settings.MAP_HEIGHT / 2)
+  protected var inGame = false
+  protected var inPause = false
+  protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
+  private var _trainerSprite: Sprite = trainer.sprites.frontS
+  private var fistStep: Boolean = true
 
-  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
+  override var trainerPosition: Coordinate = trainer.coordinate
 
   override var trainerIsMoving: Boolean = false
 
-  override def startGame: Unit = {
-    this.agent = new GameControllerAgent
+  override def isInGame: Boolean = this.inGame
 
-    try {
-      this.model.startGame
-      this.view.showGame(gamePanel)
-      this.agent.start
-    } catch {
-      case e: IllegalStateException =>
-        this.view.showError(e.toString, "Not initialized")
-    }
+  override def isInPause: Boolean = this.inPause
+
+  override def trainerSprite: String = _trainerSprite.image
+
+  override final def startGame(): Unit = {
+    inGame = true
+    doStart()
+    view.showGame(gamePanel)
   }
 
-  override def pauseButton: Unit = {
-    this.agent.terminate
-    this.model.pause
-    this.view.showPause
+  protected def doStart(): Unit
+
+  override final def terminateGame(): Unit = {
+    inGame = false
+    doTerminate()
   }
 
-  override def resumeGame: Unit = {
-    this.view.showGame(gamePanel)
-    this.agent = new GameControllerAgent
-    this.model.resumeGame
-    this.agent.start
+  protected def doTerminate(): Unit
+
+  override final def pauseGame(): Unit = {
+    inPause = true
+    doPause()
+    view.showPause()
   }
 
-  override def moveTrainer(direction: Direction): Unit = {
-    if (!this.model.isInPause) {
-      new Thread(() => {
-        var actualX: Double = trainerPosition.x
-        var actualY: Double = trainerPosition.y
-        for(_ <- 1 to 4) {
-          direction match {
-            case Direction.UP =>
-              actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentY(actualY)
-            case Direction.DOWN =>
-              actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentY(actualY)
-            case Direction.RIGHT =>
-              actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentX(actualX)
-            case Direction.LEFT =>
-              actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / 4)
-              this.gamePanel.updateCurrentX(actualX)
-          }
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
+  protected def doPause(): Unit
+
+  override final def resumeGame(): Unit = {
+    inPause = false
+    doResume()
+    view.showGame(gamePanel)
+  }
+
+  protected def doResume(): Unit
+
+  override final def moveTrainer(direction: Direction): Unit = doMove(direction)
+
+  protected def doMove(direction: Direction): Unit
+
+  protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
+    case Direction.UP => CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    case Direction.DOWN => CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    case Direction.RIGHT => CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    case Direction.LEFT => CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+  }
+
+  protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
+    new Thread(() => {
+      var actualX: Double = trainerPosition.x
+      var actualY: Double = trainerPosition.y
+      for (_ <- 1 to TRAINER_STEPS) {
+        direction match {
+          case Direction.UP =>
+            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
+            gamePanel.updateCurrentY(actualY)
+          case Direction.DOWN =>
+            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
+            gamePanel.updateCurrentY(actualY)
+          case Direction.RIGHT =>
+            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
+            gamePanel.updateCurrentX(actualX)
+          case Direction.LEFT =>
+            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
+            gamePanel.updateCurrentX(actualX)
         }
-        this.updateTrainerPosition(direction)
-        this.trainerIsMoving = false
-      }).start()
-    }
+        updateTrainerSprite(direction)
+        Thread.sleep(Settings.GAME_REFRESH_TIME)
+      }
+      updateTrainerPosition(nextPosition)
+      trainerIsMoving = false
+      updateTrainerSprite(direction)
+    }).start()
   }
 
-  private def updateTrainerPosition(direction: Direction): Unit = direction match {
-    case Direction.UP => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-    case Direction.DOWN => this.trainerPosition = CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-    case Direction.RIGHT => this.trainerPosition = CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-    case Direction.LEFT => this.trainerPosition = CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
-  }
-
-  private class GameControllerAgent extends Thread {
-    var stopped: Boolean = false
-
-    override def run: Unit = {
-      while(model.isInGame && !stopped){
-        if(!model.isInPause){
-          try
-            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
-          catch {
-            case e: Exception => System.out.println(e)
-          }
+  private def updateTrainerSprite(direction: Direction): Unit = {
+    if (trainerIsMoving) {
+      direction match {
+        case Direction.UP => _trainerSprite match {
+          case BackS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.back1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.back2
+              fistStep = true
+            }
+          case Back1(_) | Back2(_) => _trainerSprite = trainer.sprites.backS
+          case _ => _trainerSprite = trainer.sprites.back1
         }
-
-        try
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
-        catch {
-          case e: InterruptedException => System.out.println(e)
+        case Direction.DOWN => _trainerSprite match {
+          case FrontS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.front1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.front2
+              fistStep = true
+            }
+          case Front1(_) | Front2(_) => _trainerSprite = trainer.sprites.frontS
+          case _ => _trainerSprite = trainer.sprites.front1
+        }
+        case Direction.LEFT => _trainerSprite match {
+          case LeftS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.left1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.left2
+              fistStep = true
+            }
+          case Left1(_) | Left2(_) => _trainerSprite = trainer.sprites.leftS
+          case _ => _trainerSprite = trainer.sprites.left1
+        }
+        case Direction.RIGHT => _trainerSprite match {
+          case RightS(_) =>
+            if (fistStep) {
+              _trainerSprite = trainer.sprites.right1
+              fistStep = false
+            } else {
+              _trainerSprite = trainer.sprites.right2
+              fistStep = true
+            }
+          case Right1(_) | Right2(_) => _trainerSprite = trainer.sprites.rightS
+          case _ => _trainerSprite = trainer.sprites.right1
         }
       }
+    } else {
+      direction match {
+        case Direction.UP => _trainerSprite = trainer.sprites.backS
+        case Direction.DOWN => _trainerSprite = trainer.sprites.frontS
+        case Direction.LEFT => _trainerSprite = trainer.sprites.leftS
+        case Direction.RIGHT => _trainerSprite = trainer.sprites.rightS
+      }
     }
-
-    def terminate: Unit = {
-      stopped = true
-    }
-
   }
+
+  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
 
 }

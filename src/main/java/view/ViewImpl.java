@@ -10,7 +10,6 @@ public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
-    private GamePanel gamePanel;
     private BuildingPanel buildingPanel;
     private Dimension frameDim;
 
@@ -26,12 +25,12 @@ public class ViewImpl extends JFrame implements View {
         this.getContentPane().add(new MenuPanel(this, this.controller));
         this.validate();
         this.setVisible(true);
-        
     }
 
     private void setPanel(final JPanel panel) {
         this.getContentPane().removeAll();
         this.getContentPane().add(panel);
+        panel.setBackground(Color.black);
         this.revalidate();
         this.repaint();
     }

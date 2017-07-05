@@ -13,11 +13,13 @@ public class GamePanel extends JPanel{
     private GameMap gameMap;
     private int currentX;
     private int currentY;
+    private GameViewObserver gameController;
 
     public GamePanel(final GameViewObserver gameController, final GameMap gameMap) {
         this.gameMap = gameMap;
         this.setFocusable(true);
         this.requestFocusInWindow();
+        this.gameController = gameController;
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
         this.currentX = gameController.trainerPosition().x() * Settings.TILE_PIXEL();
@@ -34,10 +36,17 @@ public class GamePanel extends JPanel{
                         (this.gameMap.map()[x][y] instanceof Building
                                 && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                                 && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
-                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()), ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_SIDE() / 2 , ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_SIDE() / 2 , null);
+                    g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),
+                            ((x * Settings.TILE_PIXEL()) - this.currentX) + Settings.FRAME_WIDTH() / 2 ,
+                            ((y  * Settings.TILE_PIXEL()) - this.currentY) + Settings.FRAME_WIDTH() / 2 ,
+                            null);
                 }
             }
         }
+        g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
+                Settings.FRAME_WIDTH() / 2,
+                Settings.FRAME_WIDTH() / 2,
+                null);
     }
 
     public synchronized void updateCurrentX(double x) {
