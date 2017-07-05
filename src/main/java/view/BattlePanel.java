@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,6 +37,8 @@ public class BattlePanel extends ImagePanel {
     private Map<String,JButton> trainerChoices = new LinkedHashMap<>();
     private String[] myPokemonAttacks = new String[4];
     private Map<String,JButton> attacks = new LinkedHashMap<>();
+    private int index = 0;
+    private boolean attacksAreVisible = false;
 
     public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "battle.png");
@@ -98,6 +99,7 @@ public class BattlePanel extends ImagePanel {
         trainerChoices.put("Pokeball",new JButton("Pokeball (x3)"));
         trainerChoices.put("Escape",new JButton("Escape"));
         for(String s : trainerChoices.keySet()) {
+            trainerChoices.get(s).setFocusable(false);
             southWestPanel.add(trainerChoices.get(s));
         }
         JPanel southEastPanel = new JPanel();
@@ -112,6 +114,7 @@ public class BattlePanel extends ImagePanel {
         for(int i=0;i<4;i++) {
             this.myPokemonAttacks[i] = PokedexConnect.getPokemonAttack(pokemonAttacks[i]).get()._1().toUpperCase();
             attacks.put(myPokemonAttacks[i],new JButton(myPokemonAttacks[i]));
+            attacks.get(myPokemonAttacks[i]).setFocusable(false);
             southEastPanel.add(attacks.get(myPokemonAttacks[i]));
             attacks.get(myPokemonAttacks[i]).setVisible(false);
         }
@@ -123,45 +126,54 @@ public class BattlePanel extends ImagePanel {
     private void catchTrainerChoices(JFrame frame) {
         frame.getRootPane().setDefaultButton(trainerChoices.get(trainerChoices.entrySet().iterator().next().getKey()));
         trainerChoices.get("Attack").addActionListener(e -> {
-            showAttacks(true);
+            attacksAreVisible = true;
+            changeButtons();
+            index = 0;
+            Object[] names = attacks.keySet().toArray();
+            frame.getRootPane().setDefaultButton(attacks.get(names[index].toString()));
         });
-        trainerChoices.get("Change pokemon").addActionListener(e -> {System.out.println("2");});
-        trainerChoices.get("Pokeball").addActionListener(e -> {System.out.println("3");});
-        trainerChoices.get("Escape").addActionListener(e -> {System.out.println("4");});
+        trainerChoices.get("Change pokemon").addActionListener(e -> {System.out.println("CAMBIA POKEMON");});
+        trainerChoices.get("Pokeball").addActionListener(e -> {System.out.println("LANCIA POKEBALL");});
+        trainerChoices.get("Escape").addActionListener(e -> {System.out.println("ESCAPE");});
         for(String att : attacks.keySet()) {
             attacks.get(att).addActionListener(e -> {
                 //passa l'attacco al controller
-                showAttacks(false);
+                attacksAreVisible = false;
+                changeButtons();
+                index = 0;
+                Object[] names = trainerChoices.keySet().toArray();
+                frame.getRootPane().setDefaultButton(trainerChoices.get(names[index].toString()));
             });
         }
         this.addKeyListener(new KeyListener() {
-            int i = 0;
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
             @Override
             public void keyPressed(KeyEvent e) {
                 switch(e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
-                        if(i<trainerChoices.size()-1){
-                            i++;
+                        if(index<trainerChoices.size()-1){
+                            index++;
                         }
                         break;
                     case KeyEvent.VK_UP:
-                        if(i>0) {
-                            i--;
+                        if(index>0) {
+                            index--;
                         }
                         break;
                     default: break;
                 }
-                Object[] choices = trainerChoices.keySet().toArray();
-                frame.getRootPane().setDefaultButton(trainerChoices.get(choices[i].toString()));
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
+                if(!attacksAreVisible) {
+                    Object[] choices = trainerChoices.keySet().toArray();
+                    frame.getRootPane().setDefaultButton(trainerChoices.get(choices[index].toString()));
+                } else {
+                    Object[] names = attacks.keySet().toArray();
+                    frame.getRootPane().setDefaultButton(attacks.get(names[index].toString()));
+                }
 
             }
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyReleased(KeyEvent e) {}
         });
     }
 
@@ -176,12 +188,12 @@ public class BattlePanel extends ImagePanel {
         this.add(jTextField);
     }
 
-    private void showAttacks(boolean flag) {
+    private void changeButtons() {
         for(String c : trainerChoices.keySet()) {
-            trainerChoices.get(c).setVisible(!flag);
+            trainerChoices.get(c).setVisible(!attacksAreVisible);
         }
         for(String att : attacks.keySet()) {
-            attacks.get(att).setVisible(flag);
+            attacks.get(att).setVisible(attacksAreVisible);
         }
     }
 
