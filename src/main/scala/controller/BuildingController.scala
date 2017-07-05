@@ -12,7 +12,7 @@ abstract class BuildingController(private var view: View) extends GameController
 
   private var agent: GameControllerAgent = _
   protected var buildingMap: BuildingMap
-  private val audio = Audio(Settings.MAP_SONG)
+  protected var audio: Audio = _
 
   this.setTrainerSpriteBack()
 
@@ -66,10 +66,35 @@ abstract class BuildingController(private var view: View) extends GameController
   }
 }
 
+class PokemonCenterController(private var view: View) extends BuildingController(view){
+  override protected var buildingMap: BuildingMap = new PokemonCenterMap
+  this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
+  override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
+
+  this.audio = Audio(Settings.POKEMONCENTER_SONG)
+
+  override protected def doMove(direction: Direction): Unit = {
+    if (!isInPause) {
+      val nextPosition = nextTrainerPosition(direction)
+      val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
+      tile match {
+        case tile:Box =>{}
+        //if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
+
+        case _ if tile.walkable =>
+          walk(direction, nextPosition)
+        case _ => trainerIsMoving = false
+      }
+    }
+  }
+}
+
 class LaboratoryController(private var view: View) extends BuildingController(view){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
+
+  this.audio = Audio(Settings.LABORATORY_SONG)
 
   override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
@@ -86,26 +111,4 @@ class LaboratoryController(private var view: View) extends BuildingController(vi
     }
   }
 }
-
-class PokemonCenterController(private var view: View) extends BuildingController(view){
-  override protected var buildingMap: BuildingMap = new PokemonCenterMap
-  this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
-  override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
-
-  override protected def doMove(direction: Direction): Unit = {
-    if (!isInPause) {
-      val nextPosition = nextTrainerPosition(direction)
-      val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
-      tile match {
-        case tile:Box =>
-          //if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
-
-        case _ if tile.walkable =>
-          walk(direction, nextPosition)
-        case _ => trainerIsMoving = false
-      }
-    }
-  }
-}
-
 
