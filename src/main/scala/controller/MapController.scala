@@ -8,7 +8,7 @@ import model.environment.{Audio, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map._
 import utilities.Settings
-import view.{BuildingPanel, GamePanel, MapPanel, View}
+import view._
 
 import scala.util.Random
 
@@ -63,15 +63,15 @@ class MapController(private var view: View) extends GameController(view){
 
   private def enterInBuilding(building: Building): Unit = {
     println("Entro dentro "+ building.toString)
-    //var buildingPanel: BuildingPanel = ???
+    var buildingPanel: BuildingPanel = null
     building match{
-      case _:PokemonCenter => {
-        print("ciao")
-        //view.showGame(buildingPanel)
+      case _: PokemonCenter => {
+        buildingPanel = new PokemonCenterPanel(new BuildingController(this.view))
+        view.showGame(buildingPanel)
       }
       case _: Laboratory => {
-        print("laboratory")
-        //view.showGame(buildingPanel)
+        buildingPanel = new LaboratoryPanel(new BuildingController(this.view))
+        view.showGame(buildingPanel)
       }
     }
 

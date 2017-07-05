@@ -10,7 +10,7 @@ import view.{BuildingPanel, GamePanel, View}
 class BuildingController(private var view: View) extends GameController(view){
 
   private var agent: GameControllerAgent = _
-  private val buildingMap: BuildingMap = ???
+  private val buildingMap: BuildingMap = null
   private val audio = Audio(Settings.MAP_SONG)
 
   override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
@@ -79,6 +79,10 @@ class BuildingController(private var view: View) extends GameController(view){
 }
 
 class LaboratoryController(private var view: View) extends BuildingController(view){
+
+}
+
+class PokemonCenterController(private var view: View) extends BuildingController(view){
 
 }
 
