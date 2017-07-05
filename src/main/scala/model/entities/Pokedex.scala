@@ -12,7 +12,7 @@ trait Pokedex {
 }
 
 class PokedexImpl(val name: String) extends Pokedex {
-  private var _pokedex: List[Int] = DBConnect.getMetPokemonList(name).get()
+  private var _pokedex: List[Int] = _//DBConnect.getMetPokemonList(name).get()
 
   override def pokedex: List[Int] = this._pokedex
 
