@@ -30,7 +30,7 @@ public class BuildingPanel extends JPanel {
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
 
-        this.buildingMap = new LaboratoryMap();
+        this.buildingMap = new PokemonCenterMap();
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
         this.currentX = buildingMap.entryCoordinate().x() * Settings.TILE_PIXEL();

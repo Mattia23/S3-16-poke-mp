@@ -3,7 +3,7 @@ package model.environment
 import java.awt.Image
 
 import model.characters._
-import model.map.{Barrier, BasicMap, BasicTile, Tile}
+import model.map._
 import utilities.Settings
 import view.LoadImage
 
@@ -55,6 +55,9 @@ class PokemonCenterMap extends BuildingMap{
   setBasicTilesInMap()
   setNotWalkableArea()
 
+  val boxCoordinate: Coordinate = CoordinateImpl(11, 1)
+  map(boxCoordinate.x)(boxCoordinate.y) = Box()
+
 }
 
 class LaboratoryMap extends BuildingMap{
@@ -65,8 +68,6 @@ class LaboratoryMap extends BuildingMap{
   override val npc: StaticCharacter = new Oak
 
   override val image: Image = LoadImage.load(Settings.MAP_IMAGES_FOLDER + "laboratory.png")
-
-  val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
 
   override val matriciesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),
@@ -82,4 +83,6 @@ class LaboratoryMap extends BuildingMap{
 
   setBasicTilesInMap()
   setNotWalkableArea()
+
+  val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
 }

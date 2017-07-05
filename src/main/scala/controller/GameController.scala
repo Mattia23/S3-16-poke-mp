@@ -87,7 +87,8 @@ class GameController(private var model: Model, private var view: View) extends G
             case Direction.UP =>
               if(actualX == 13 && actualY == 25){
                 this.inBuilding = true
-                this.view.showGame(new BoxPanel)
+                //this.view.showGame(new BoxPanel(this))
+                this.view.showGame(buildingPanel)
                 actualX = 7
                 actualY = 9
                 this.trainerPosition = CoordinateImpl(actualX toInt, actualY toInt)
