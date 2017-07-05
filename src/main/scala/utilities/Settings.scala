@@ -44,13 +44,13 @@ object Settings {
 
   val IMAGES_FOLDER: String =  "/images/"
 
+  val MAP_ELEMENTS_IMAGES_FOLDER: String = IMAGES_FOLDER + "mapElements/"
+
   val POKEMON_IMAGES: String = IMAGES_FOLDER + "pokemon/"
 
   val POKEMON_IMAGES_FRONT_FOLDER: String = POKEMON_IMAGES + "front/"
 
   val POKEMON_IMAGES_BACK_FOLDER: String = POKEMON_IMAGES + "back/"
-
-  val MAP_ELEMENTS_IMAGES_FOLDER: String = IMAGES_FOLDER + "mapElements/"
 
   val TRAINER_IMAGES_FOLDER: String = IMAGES_FOLDER + "trainer/"
 

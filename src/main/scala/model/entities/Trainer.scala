@@ -5,6 +5,8 @@ import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 
 trait Trainer {
+  def name: String
+
   def experiencePoints: Int
 
   def experiencePoints_= (points: Int) : Unit

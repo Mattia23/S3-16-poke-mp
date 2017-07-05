@@ -1,23 +1,48 @@
 package model.game
 
-import model.entities.{PokemonFactory, Owner, PokemonWithLife}
+import java.util.Optional
+
+import model.entities.{Owner, PokemonFactory, PokemonWithLife, Trainer}
 
 trait Battle {
-  def startBattle: Unit
+  def trainer: Trainer
 
-  def trainerExperiencePoint: Int
+  def startBattleRound(pokemonId: Int): Unit
+
+  def battleFinished(won: Boolean): Unit
+
+  def pokeballLaunched(): Boolean
 }
 
-class BattleImpl(idTrainer: Int, pokemonTrainedId: Int) extends Battle {
+class BattleImpl(_trainer: Trainer) extends Battle {
+  var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(this._trainer.level)).get()
+  var round: BattleRound = _
 
-  private var _trainerExperiencePoint: Int = 0
+  override def trainer: Trainer = _trainer
 
-  override def trainerExperiencePoint = this._trainerExperiencePoint
-  //var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD, )
-
-  override def startBattle: Unit = {
-
+  override def startBattleRound(pokemonId: Int): Unit = {
+    var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(pokemonId),Optional.empty()).get()
+    round = new BattleRoundImpl(myPokemon, pokemonId, wildPokemon, this)
   }
 
+  override def battleFinished(won: Boolean): Unit = {
+    var pointsEarned: Int = 0
+    if(won){
+      pointsEarned = (wildPokemon.pokemon.experiencePoints / wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
+      _trainer.updateTrainer(pointsEarned)
+    } else {
+      var newPokemonId = _trainer.getFirstAvailableFavouritePokemon
+      if(newPokemonId > 0){
+        startBattleRound(newPokemonId)
+      } else {
+        pointsEarned = 30
+        _trainer.updateTrainer(pointsEarned)
+        //tornare al centro pokemon
+      }
+    }
+  }
 
+  override def pokeballLaunched(): Boolean = {
+    round.pokeballLaunched()
+  }
 }
