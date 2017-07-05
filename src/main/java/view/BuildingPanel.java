@@ -27,11 +27,6 @@ public class BuildingPanel extends GamePanel {
 
         this.buildingMap = buildingMap;
         this.gameController = gameController;
-        /*this.setFocusable(true);
-        this.requestFocusInWindow();
-        GameKeyListener keyListener = new GameKeyListener(gameController);
-        this.addKeyListener(keyListener);*/
-
 
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
@@ -51,8 +46,6 @@ public class BuildingPanel extends GamePanel {
 
     @Override
     protected synchronized void doPaint(final Graphics g) {
-        super.paintComponent(g);
-        this.requestFocusInWindow();
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
         g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);

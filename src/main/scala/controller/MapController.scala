@@ -66,11 +66,11 @@ class MapController(private var view: View) extends GameController(view){
     var buildingPanel: BuildingPanel = null
     building match{
       case _: PokemonCenter => {
-        buildingPanel = new PokemonCenterPanel(new BuildingController(this.view))
+        buildingPanel = new PokemonCenterPanel(new PokemonCenterController(this.view))
         view.showGame(buildingPanel)
       }
       case _: Laboratory => {
-        buildingPanel = new LaboratoryPanel(new BuildingController(this.view))
+        buildingPanel = new LaboratoryPanel(new LaboratoryController(this.view))
         view.showGame(buildingPanel)
       }
     }

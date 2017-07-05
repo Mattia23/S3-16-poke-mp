@@ -2,18 +2,17 @@ package controller
 
 import javax.swing.SwingUtilities
 
-import model.environment.{Audio, BuildingMap, CoordinateImpl}
 import model.environment.Direction.Direction
+import model.environment._
+import model.map.Box
 import utilities.Settings
 import view.{BuildingPanel, GamePanel, View}
 
-class BuildingController(private var view: View) extends GameController(view){
+abstract class BuildingController(private var view: View) extends GameController(view){
 
   private var agent: GameControllerAgent = _
-  private val buildingMap: BuildingMap = null
+  protected var buildingMap: BuildingMap
   private val audio = Audio(Settings.MAP_SONG)
-
-  override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
 
   override protected def doStart(): Unit = {
     agent = new GameControllerAgent
@@ -34,20 +33,7 @@ class BuildingController(private var view: View) extends GameController(view){
     agent.start()
   }
 
-  override protected def doMove(direction: Direction): Unit = {
-    if (!isInPause) {
-      val nextPosition = nextTrainerPosition(direction)
-      val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
-      tile match {
-        /*case tile:Building
-          if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
-*/
-        case _ if tile.walkable =>
-          walk(direction, nextPosition)
-        case _ => trainerIsMoving = false
-      }
-    }
-  }
+
 
 
   private class GameControllerAgent extends Thread {
@@ -79,11 +65,45 @@ class BuildingController(private var view: View) extends GameController(view){
 }
 
 class LaboratoryController(private var view: View) extends BuildingController(view){
+  override protected var buildingMap: BuildingMap = new LaboratoryMap
+  this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
+  override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
 
+  override protected def doMove(direction: Direction): Unit = {
+    if (!isInPause) {
+      val nextPosition = nextTrainerPosition(direction)
+      val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
+      tile match {
+        /*case tile:Building
+          if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
+        */
+        case _ if tile.walkable =>
+          walk(direction, nextPosition)
+        case _ => trainerIsMoving = false
+      }
+    }
+  }
 }
 
 class PokemonCenterController(private var view: View) extends BuildingController(view){
+  override protected var buildingMap: BuildingMap = new PokemonCenterMap
+  this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
+  override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
 
+  override protected def doMove(direction: Direction): Unit = {
+    if (!isInPause) {
+      val nextPosition = nextTrainerPosition(direction)
+      val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
+      tile match {
+        case tile:Box =>
+          //if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
+
+        case _ if tile.walkable =>
+          walk(direction, nextPosition)
+        case _ => trainerIsMoving = false
+      }
+    }
+  }
 }
 
 
