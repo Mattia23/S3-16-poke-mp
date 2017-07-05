@@ -1,11 +1,12 @@
 package model.entities
 
-import java.util.Optional
-
 import database.remote.DBConnect
+import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 
 trait Trainer {
+  def name: String
+
   def experiencePoints: Int
 
   def experiencePoints_= (points: Int) : Unit
@@ -14,11 +15,11 @@ trait Trainer {
 
   def level_=(level: Int) : Unit
 
-  def image: String
+  def sprites: TrainerSprites
 
-  //def coordinate: Coordinate
+  def coordinate: Coordinate
 
-  //def coordinate_=(coordinate: Coordinate): Unit
+  def coordinate_=(coordinate: Coordinate): Unit
 
   def pokedex: Pokedex
 
@@ -41,12 +42,19 @@ trait Trainer {
   def getFirstAvailableFavouritePokemon: Int
 }
 
-class TrainerImpl(val name: String, val image: String, private var _experiencePoints: Int) extends Trainer{
+class TrainerImpl(val name: String, private val idImage: Int, private var _experiencePoints: Int) extends Trainer{
   private var _level: Int = calculateLevel(experiencePoints)
-  //var _coordinate: Coordinate
+  private var _coordinate: Coordinate = new CoordinateImpl(25,25)
   private var _pokedex: Pokedex = new PokedexImpl(name)
-  private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(name).get()
-  private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(name).get()
+  private var _favouritePokemons: List[Int] = _//DBConnect.getFavouritePokemonList(name).get()
+  private var _capturedPokemons: List[Tuple2[Int,Int]] = _//DBConnect.getCapturedPokemonList(name).get()
+
+  override val sprites =  idImage match {
+    case 1 => Trainer1()
+    case 2 => Trainer2()
+    case 3 => Trainer3()
+    case _ => Trainer4()
+  }
 
   override def experiencePoints: Int = this._experiencePoints
 
@@ -76,9 +84,9 @@ class TrainerImpl(val name: String, val image: String, private var _experiencePo
     level.toInt
   }
 
-  //override def coordinate = this._coordinate
+  override def coordinate = this._coordinate
 
-  //override def coordinate_=(coordinate: Coordinate): Unit = this._coordinate = coordinate
+  override def coordinate_=(coordinate: Coordinate): Unit = this._coordinate = coordinate
 
   override def updateTrainer(points: Int): Unit = {
     this.experiencePoints_=(this.experiencePoints + points)
