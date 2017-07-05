@@ -1,20 +1,15 @@
 package controller
 
 import model.entities._
-import model.environment.{Coordinate, CoordinateImpl}
-import model.environment.Direction
+import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
 import utilities.Settings
-import view.{BoxPanel, BuildingPanel, GamePanel, View}
+import view.{GamePanel, View}
 
 trait GameViewObserver {
   def gamePanel: GamePanel
 
   def gamePanel_=(gamePanel: GamePanel): Unit
-
-  def buildingPanel: BuildingPanel
-
-  def buildingPanel_=(buildingPanel: BuildingPanel): Unit
 
   def trainerPosition: Coordinate
 
@@ -44,7 +39,6 @@ trait GameViewObserver {
 abstract class GameController(private var view: View) extends GameViewObserver{
   private final val TRAINER_STEPS = 4
 
-  override var trainerPosition: Coordinate = CoordinateImpl(13, 25)
   protected var inGame = false
   protected var inPause = false
   protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
@@ -52,9 +46,6 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   private var fistStep: Boolean = true
 
   override var trainerPosition: Coordinate = trainer.coordinate
-
-  override var buildingPanel: BuildingPanel = new BuildingPanel(this)
-  var inBuilding: Boolean = false
 
   override var trainerIsMoving: Boolean = false
 

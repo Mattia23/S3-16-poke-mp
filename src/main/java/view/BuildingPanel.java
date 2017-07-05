@@ -15,25 +15,27 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.Semaphore;
 
-public class BuildingPanel extends JPanel {
+public class BuildingPanel extends GamePanel {
     private int centerX;
     private int centerY;
-    private int currentX;
-    private int currentY;
     private BuildingMap buildingMap;
+    private GameViewObserver gameController;
     private DialoguePanel dialoguePanel;
-    private Semaphore semaphore = new Semaphore(0);
 
-    public BuildingPanel(GameViewObserver gameController) {
-        this.setFocusable(true);
+    public BuildingPanel(final GameViewObserver gameController, final BuildingMap buildingMap) {
+        super(gameController);
+
+        this.buildingMap = buildingMap;
+        this.gameController = gameController;
+        /*this.setFocusable(true);
         this.requestFocusInWindow();
         GameKeyListener keyListener = new GameKeyListener(gameController);
-        this.addKeyListener(keyListener);
+        this.addKeyListener(keyListener);*/
 
-        this.buildingMap = new PokemonCenterMap();
+
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
-        this.currentX = buildingMap.entryCoordinate().x() * Settings.TILE_PIXEL();
+        /*this.currentX = buildingMap.entryCoordinate().x() * Settings.TILE_PIXEL();
         this.currentY = buildingMap.entryCoordinate().y() * Settings.TILE_PIXEL();
         /*this.setLayout(new BorderLayout());
         if(buildingMap instanceof LaboratoryMap){
@@ -47,27 +49,17 @@ public class BuildingPanel extends JPanel {
 
     }
 
-
-
     @Override
-    protected synchronized void paintComponent(final Graphics g) {
+    protected synchronized void doPaint(final Graphics g) {
         super.paintComponent(g);
         this.requestFocusInWindow();
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
-        g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+currentX, centerY+currentY, this);
+        g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
         g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.TILE_PIXEL(),
                 centerY+(buildingMap.npc().coordinate().y())*Settings.TILE_PIXEL() -
                         (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
 
-    }
-
-    public synchronized void updateCurrentX(double x) {
-        this.currentX = (int)(x * Settings.TILE_PIXEL());
-    }
-
-    public synchronized void updateCurrentY(double y) {
-        this.currentY = (int)(y * Settings.TILE_PIXEL());
     }
 
     /*
@@ -106,7 +98,7 @@ public class BuildingPanel extends JPanel {
         }catch (ArrayIndexOutOfBoundsException exception){
             //exception.printStackTrace();
         }
-    }*/
+    }
 
 
     private void speak(){
@@ -124,5 +116,5 @@ public class BuildingPanel extends JPanel {
             }
         }).start();
 
-    }
+    }*/
 }
