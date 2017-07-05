@@ -48,7 +48,7 @@ public class BuildingPanel extends GamePanel {
     protected synchronized void doPaint(final Graphics g) {
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
-        g.drawImage(LoadImage.load("/images/characters/charmander.png"), centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
+        g.drawImage(LoadImage.load(this.gameController.trainerSprite()), centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
         g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.TILE_PIXEL(),
                 centerY+(buildingMap.npc().coordinate().y())*Settings.TILE_PIXEL() -
                         (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);

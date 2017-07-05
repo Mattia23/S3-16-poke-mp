@@ -62,19 +62,20 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   private def enterInBuilding(building: Building): Unit = {
-    println("Entro dentro "+ building.toString)
+    audio.stop()
     var buildingPanel: BuildingPanel = null
+    var buildingController: BuildingController = null
     building match{
       case _: PokemonCenter => {
-        buildingPanel = new PokemonCenterPanel(new PokemonCenterController(this.view))
-        view.showGame(buildingPanel)
+        buildingController = new PokemonCenterController(this.view)
+        buildingPanel = new PokemonCenterPanel(buildingController)
       }
       case _: Laboratory => {
-        buildingPanel = new LaboratoryPanel(new LaboratoryController(this.view))
-        view.showGame(buildingPanel)
+        buildingController = new LaboratoryController(this.view)
+        buildingPanel = new LaboratoryPanel(buildingController)
       }
     }
-
+    buildingController.startGame()
     trainerIsMoving = false
   }
 
