@@ -8,7 +8,7 @@ import model.environment.{Audio, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map.{Building, InitialTownElements, MapCreator, TallGrass}
 import utilities.Settings
-import view.{GamePanel, View}
+import view.{GamePanel, MapPanel, View}
 
 import scala.util.Random
 
@@ -20,7 +20,7 @@ class MapController(private var view: View) extends GameController(view){
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private val audio = Audio(Settings.MAP_SONG)
 
-  override var gamePanel: GamePanel = new GamePanel(this, gameMap)
+  override var gamePanel: GamePanel = new MapPanel(this, gameMap)
 
   override def doStart(): Unit = {
     agent = new GameControllerAgent
