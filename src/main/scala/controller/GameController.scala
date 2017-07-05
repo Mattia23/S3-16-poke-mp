@@ -42,7 +42,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   protected var inGame = false
   protected var inPause = false
   protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
-  private var _trainerSprite: Sprite = trainer.sprites.frontS
+  private var _trainerSprite: Sprite = _
   private var fistStep: Boolean = true
 
   override var trainerPosition: Coordinate = trainer.coordinate
@@ -91,10 +91,22 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   protected def doMove(direction: Direction): Unit
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
-    case Direction.UP => CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-    case Direction.DOWN => CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-    case Direction.RIGHT => CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-    case Direction.LEFT => CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+    case Direction.UP => {
+      _trainerSprite = trainer.sprites.backS
+      CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+    }
+    case Direction.DOWN => {
+      _trainerSprite = trainer.sprites.frontS
+      CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+    }
+    case Direction.RIGHT => {
+      _trainerSprite = trainer.sprites.rightS
+      CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+    }
+    case Direction.LEFT => {
+      _trainerSprite = trainer.sprites.leftS
+      CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+    }
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
@@ -188,5 +200,9 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   }
 
   private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
+
+  protected def setTrainerSpriteFront(): Unit = _trainerSprite = trainer.sprites.frontS
+
+  protected def setTrainerSpriteBack(): Unit = _trainerSprite = trainer.sprites.backS
 
 }

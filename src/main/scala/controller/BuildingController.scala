@@ -14,6 +14,8 @@ abstract class BuildingController(private var view: View) extends GameController
   protected var buildingMap: BuildingMap
   private val audio = Audio(Settings.MAP_SONG)
 
+  this.setTrainerSpriteBack()
+
   override protected def doStart(): Unit = {
     agent = new GameControllerAgent
     audio.loop()

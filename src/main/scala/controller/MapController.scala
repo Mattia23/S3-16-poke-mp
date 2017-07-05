@@ -20,6 +20,8 @@ class MapController(private var view: View) extends GameController(view){
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private val audio = Audio(Settings.MAP_SONG)
 
+  this.setTrainerSpriteFront()
+
   override var gamePanel: GamePanel = new MapPanel(this, gameMap)
 
   override def doStart(): Unit = {
