@@ -47,7 +47,7 @@ trait Trainer {
 class TrainerImpl(val name: String, private val idImage: Int, private var _experiencePoints: Int) extends Trainer{
   val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
   private var _level: Int = calculateLevel(experiencePoints)
-  private var _coordinate: Coordinate = new CoordinateImpl(25,25)
+  private var _coordinate: Coordinate = CoordinateImpl(25,25)
   private var _pokedex: Pokedex = new PokedexImpl(id)
   private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
   private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
