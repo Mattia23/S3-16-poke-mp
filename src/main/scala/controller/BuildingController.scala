@@ -24,14 +24,7 @@ abstract class BuildingController(private var view: View, private var mapControl
         tile match {
           case _ if tile.walkable =>
             walk(direction, nextPosition)
-          case tile:Box =>
-            trainerIsMoving = false
-            this.pauseGame()
-            view.showPanel(new BoxPanel(this))
-          case _ => if(nextPosition equals buildingMap.npc.coordinate){
-            trainerIsMoving = false
-            println("Dialogo")
-          }else if(1==1/*trainer.capturedPokemons.isEmpty*/) {
+          case _ => if(1==1/*trainer.capturedPokemons.isEmpty*/) {
             trainerIsMoving = false
             for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
               view showPanel new PokemonPanel
@@ -107,21 +100,52 @@ abstract class BuildingController(private var view: View, private var mapControl
   }
 }
 
-class PokemonCenterController(private var view: View, private var controller: MapController) extends BuildingController(view, controller){
+class PokemonCenterController(private var view: View, private var mapController: MapController) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
 
   this.audio = Audio(Settings.POKEMONCENTER_SONG)
 
+  override protected def doInteract(direction: Direction): Unit = {
+    if (!isInPause) {
+      val nextPosition = nextTrainerPosition(direction)
+      try{
+        val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
+        if(nextPosition equals buildingMap.npc.coordinate){
+          println("Dialogo")
+        }
+        if(tile.isInstanceOf[Box]){
+          this.pauseGame()
+          view.showPanel(new BoxPanel(this))
+        }
+      }catch{
+        case e: ArrayIndexOutOfBoundsException => e.printStackTrace()
+      }
+    }
+  }
+
 }
 
-class LaboratoryController(private var view: View, private var controller: MapController) extends BuildingController(view, controller){
+class LaboratoryController(private var view: View, private var mapController: MapController) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
 
   this.audio = Audio(Settings.LABORATORY_SONG)
 
+  override protected def doInteract(direction: Direction): Unit = {
+    if (!isInPause) {
+      val nextPosition = nextTrainerPosition(direction)
+      try{
+        val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
+        if(nextPosition equals buildingMap.npc.coordinate){
+          println("Dialogo")
+        }
+      }catch{
+        case e: ArrayIndexOutOfBoundsException => e.printStackTrace()
+      }
+    }
+  }
 }
 

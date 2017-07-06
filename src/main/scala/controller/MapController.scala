@@ -118,4 +118,6 @@ class MapController(private var view: View) extends GameController(view){
     }
 
   }
+
+  override protected def doInteract(direction: Direction): Unit = ???
 }

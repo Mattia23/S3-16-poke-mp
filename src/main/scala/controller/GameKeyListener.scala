@@ -22,6 +22,7 @@ class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
           this.lastPressed = e.getKeyCode
           catchButton(e.getKeyCode)
           this.gameController.moveTrainer(this.direction)
+        case KeyEvent.VK_Z => this.gameController.trainerInteract(this.direction)
         case _ =>
       }
     }

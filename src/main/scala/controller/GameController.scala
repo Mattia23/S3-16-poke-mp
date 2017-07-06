@@ -34,6 +34,8 @@ trait GameViewObserver {
   def resumeGame(): Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
+
+  def trainerInteract(direction: Direction.Direction): Unit
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{
@@ -89,6 +91,10 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override final def moveTrainer(direction: Direction): Unit = doMove(direction)
 
   protected def doMove(direction: Direction): Unit
+
+  override final def trainerInteract(direction: Direction): Unit = doInteract(direction)
+
+  protected def doInteract(direction: Direction) : Unit
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

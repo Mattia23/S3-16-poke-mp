@@ -1,7 +1,6 @@
 package view;
 
 import controller.BuildingController;
-import controller.GameViewObserver;
 import model.entities.Pokemon;
 import utilities.Settings;
 
@@ -16,8 +15,8 @@ import java.util.List;
 public class BoxPanel extends JPanel {
     private final static int POKEMON_NAME = 0;
     private final static int POKEMON_LEVEL = 1;
+    private final static int MIN_POKEMON_IN_TEAM = 1;
     private final static int MAX_POKEMON_IN_TEAM = 6;
-    private int teamCount;
     private final JPanel teamPanel;
     private final JPanel boxPanel;
     private final PokemonPanel pokemonPanel;
@@ -43,12 +42,12 @@ public class BoxPanel extends JPanel {
 
         final JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setSize(new Dimension(Settings.SCREEN_WIDTH()/6, 0));
-        leftPanel.add(new JLabel("TEAM "+teamCount+"/"+MAX_POKEMON_IN_TEAM), BorderLayout.NORTH);
+        leftPanel.add(new JLabel("TEAM "+team.size()+"/"+MAX_POKEMON_IN_TEAM), BorderLayout.NORTH);
         leftPanel.add(teamPanel, BorderLayout.CENTER);
         add(leftPanel, BorderLayout.WEST);
 
         final JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.add(new JLabel("BOX: 15 Pokemon"), BorderLayout.NORTH);
+        rightPanel.add(new JLabel("BOX: "+box.size()+" Pokemon"), BorderLayout.NORTH);
 
         final JPanel orderPanel = new JPanel();
         String[] orderStrings = {"Name", "Level"};
@@ -70,15 +69,13 @@ public class BoxPanel extends JPanel {
         add(pokemonPanel, BorderLayout.CENTER);
 
         final JButton close = new JButton("close");
-        close.addActionListener(e -> {
-            buildingController.resumeGame();
-        });
+        close.addActionListener(e -> buildingController.resumeGame());
         add(close, BorderLayout.SOUTH);
 
-        createBox();
+        paintBox();
     }
 
-    private void createBox(){
+    private void paintBox(){
         teamPanel.removeAll();
         boxPanel.removeAll();
 
@@ -96,11 +93,12 @@ public class BoxPanel extends JPanel {
             final JButton button = new JButton(">>");
             teamPanel.add(button);
             button.addActionListener(e ->{
-                //pokemon. metti la vita al massimo
-                teamCount--;
-                team.remove(pokemon);
-                box.add(pokemon);
-                createBox();
+                if(team.size() > MIN_POKEMON_IN_TEAM) {
+                    //TODO pokemon. metti la vita al massimo
+                    team.remove(pokemon);
+                    box.add(pokemon);
+                    paintBox();
+                }
             });
         }
 
@@ -117,11 +115,10 @@ public class BoxPanel extends JPanel {
             boxPanel.add(pokemonLabel);
             boxPanel.add(button);
             button.addActionListener(e ->{
-                if(teamCount < MAX_POKEMON_IN_TEAM){
-                    teamCount++;
+                if(team.size() < MAX_POKEMON_IN_TEAM){
                     box.remove(pokemon);
                     team.add(pokemon);
-                    createBox();
+                    paintBox();
                 }
             });
         }
