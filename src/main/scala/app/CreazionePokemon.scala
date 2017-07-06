@@ -12,6 +12,8 @@ import model.entities.{Owner, PokemonFactory, PokemonWithLife}
 import utilities.Settings
 import view.BattlePanel
 
+<<<<<<< HEAD
+=======
 class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, frame: JFrame) extends BattlePanel {
   val imagePokemonSize: Int = Settings.FRAME_SIDE / 4
   val fontSize: Int = (Settings.FRAME_SIDE * 0.034).toInt
@@ -166,19 +168,20 @@ class CreazionePokemon(myPoke: PokemonWithLife, otherPoke: PokemonWithLife, fram
 }
 
 
+>>>>>>> 5fa76150d8b9a4fcb4c8703cfdf660c66b30b777
 object CreazionePokemonMain extends App {
   val frame: JFrame = new JFrame()
   frame.setSize(Settings.FRAME_SIDE, Settings.FRAME_SIDE)
   frame.setResizable(false)
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get()
-  val panel: CreazionePokemon = new CreazionePokemon(myPokemon,
+  val panel: BattlePanel = new BattlePanel(myPokemon,
     PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get(),frame)
   frame.add(panel)
   myPokemon.loseLifePoints(30)
-  panel.setPokemonLife(myPokemon.pokemonLife)
+  panel.setPokemonLife()
   val lifeRatio: Double = myPokemon.pokemonLife.toDouble/myPokemon.pokemon.experiencePoints.toDouble
-  panel.setPokemonLifeProgressBar((lifeRatio*100).toInt,Owner.TRAINER)
+  panel.setPokemonLifeProgressBar((lifeRatio*100).toInt,Owner.TRAINER.id)
   frame.setVisible(true)
   panel.requestFocusInWindow()
 
