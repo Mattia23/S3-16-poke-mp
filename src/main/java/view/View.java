@@ -16,6 +16,8 @@ public interface View {
 
     void showGame(JPanel gamePanel);
 
+    void showPokemonChoice();
+
     void showPause();
 
     void showError(final String error, final String title);

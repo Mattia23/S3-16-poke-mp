@@ -1,4 +1,4 @@
-package app
+/*package app
 
 import java.util.Optional
 import javax.swing._
@@ -23,4 +23,4 @@ object CreazionePokemonMain extends App {
   frame.setVisible(true)
   panel.requestFocusInWindow()
 
-}
+}*/
