@@ -46,6 +46,8 @@ public class BattlePanel extends ImagePanel {
     private int pokeballX = 0;
     private int pokeballY = 0;
     private Image pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
+    private JPanel displayPanel = new JPanel(new BorderLayout());
+    private JLabel attackExplanation = new JLabel();
 
     public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "battle.png");
@@ -93,6 +95,12 @@ public class BattlePanel extends ImagePanel {
     }
 
     private void createTrainerChoicesGraphic() {
+        displayPanel.setBounds(Settings.FRAME_SIDE()/40,(int)(Settings.FRAME_SIDE()*0.72),(int)(Settings.FRAME_SIDE()*0.9),Settings.FRAME_SIDE()/5);
+        displayPanel.setBackground(Color.white);
+        attackExplanation.setHorizontalAlignment(JLabel.CENTER);
+        displayPanel.add(attackExplanation,BorderLayout.CENTER);
+        this.add(displayPanel);
+        displayPanel.setVisible(false);
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.setBounds(Settings.FRAME_SIDE()/40,(int)(Settings.FRAME_SIDE()*0.72),(int)(Settings.FRAME_SIDE()*0.9),Settings.FRAME_SIDE()/5);
         southPanel.setOpaque(false);
@@ -188,12 +196,41 @@ public class BattlePanel extends ImagePanel {
         trainerChoices.get("Escape").addActionListener(e -> {System.out.println("ESCAPE");});
         for(String att : attacks.keySet()) {
             attacks.get(att).addActionListener(e -> {
-                //passa l'attacco al controller
-                attacksAreVisible = false;
-                changeButtons();
-                index = 0;
-                Object[] names = trainerChoices.keySet().toArray();
-                frame.getRootPane().setDefaultButton(trainerChoices.get(names[index].toString()));
+                Object[] atts = attacks.keySet().toArray();
+                for(int j=0;j<4;j++){
+                    if(atts[j].toString().toUpperCase() == att) {
+                        switch (j) {
+                            case 0 : //controller.attack(j+1) break
+                            case 1 : //controller.attack(j+1) break
+                            case 2 : //controller.attack(j+1) break
+                            case 3 : //controller.attack(j+1) break
+                        }
+                    }
+                }
+                Thread t = new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            attacksAreVisible = false;
+                            displayPanel.setVisible(true);
+                            attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" UTILIZZA " + att +"!");
+                            Thread.sleep(3000);
+                            attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" UTILIZZA " +
+                            PokedexConnect.getPokemonAttack((int)pokemonEntities[0].pokemon().attacks()._3()).get()._1().toUpperCase()+"!");
+                            Thread.sleep(3000);
+                            displayPanel.setVisible(false);
+                            changeButtons();
+                            index = 0;
+                            Object[] names = trainerChoices.keySet().toArray();
+                            frame.getRootPane().setDefaultButton(trainerChoices.get(names[index].toString()));
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                };
+                t.start();
+
             });
         }
         this.addKeyListener(new KeyListener() {
