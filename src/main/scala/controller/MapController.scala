@@ -4,7 +4,7 @@ import java.util.Optional
 import javax.swing.SwingUtilities
 
 import model.entities.{Owner, PokemonFactory}
-import model.environment.{Audio, CoordinateImpl}
+import model.environment.{Audio, CoordinateImpl, LaboratoryMap, PokemonCenterMap}
 import model.environment.Direction.Direction
 import model.map._
 import utilities.Settings
@@ -69,15 +69,12 @@ class MapController(private var view: View) extends GameController(view){
 
   private def enterInBuilding(building: Building): Unit = {
     this.pauseGame()
-    var buildingPanel: BuildingPanel = null
     var buildingController: BuildingController = null
     building match{
       case _: PokemonCenter =>
         buildingController = new PokemonCenterController(this.view, this)
-        buildingPanel = new PokemonCenterPanel(buildingController)
       case _: Laboratory =>
         buildingController = new LaboratoryController(this.view, this)
-        buildingPanel = new LaboratoryPanel(buildingController)
     }
     buildingController.startGame()
     trainerIsMoving = false

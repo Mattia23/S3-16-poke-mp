@@ -1,14 +1,15 @@
 package view;
 
 import controller.GameViewObserver;
+import model.characters.PokemonCharacter;
 import model.environment.BuildingMap;
 import utilities.Settings;
 
 import java.awt.*;
 
 public class BuildingPanel extends GamePanel {
-    private int centerX;
-    private int centerY;
+    protected int centerX;
+    protected int centerY;
     private BuildingMap buildingMap;
     private GameViewObserver gameController;
     private DialoguePanel dialoguePanel;
@@ -39,11 +40,12 @@ public class BuildingPanel extends GamePanel {
     protected synchronized void doPaint(final Graphics g) {
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
-        g.drawImage(LoadImage.load(this.gameController.trainerSprite()), centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
+        g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
+                centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
+
         g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.TILE_PIXEL(),
                 centerY+(buildingMap.npc().coordinate().y())*Settings.TILE_PIXEL() -
                         (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
-
     }
 /*
     private void speak(){
