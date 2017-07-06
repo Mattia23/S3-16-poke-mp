@@ -210,7 +210,9 @@ object Settings {
 
   val AUDIO_FOLDER: String = "/audio/"
 
-  val MAP_SONG: String = AUDIO_FOLDER + "town_theme.wav"
+  val MAP_SONG2: String = AUDIO_FOLDER + "town_theme.wav"
+
+  val MAP_SONG: String = AUDIO_FOLDER + "base-music.wav"
 
   val POKEMONCENTER_SONG = AUDIO_FOLDER + "pokemoncenter.wav"
 

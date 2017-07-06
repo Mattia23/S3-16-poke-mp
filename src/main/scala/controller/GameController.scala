@@ -91,22 +91,18 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   protected def doMove(direction: Direction): Unit
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
-    case Direction.UP => {
+    case Direction.UP =>
       _trainerSprite = trainer.sprites.backS
       CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
-    }
-    case Direction.DOWN => {
+    case Direction.DOWN =>
       _trainerSprite = trainer.sprites.frontS
       CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
-    }
-    case Direction.RIGHT => {
+    case Direction.RIGHT =>
       _trainerSprite = trainer.sprites.rightS
       CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
-    }
-    case Direction.LEFT => {
+    case Direction.LEFT =>
       _trainerSprite = trainer.sprites.leftS
       CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
-    }
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {

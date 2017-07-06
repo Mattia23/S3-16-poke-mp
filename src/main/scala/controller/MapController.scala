@@ -35,15 +35,19 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   override def doPause(): Unit = {
+    audio.stop()
     agent.terminate()
   }
 
   override def doResume(): Unit = {
+    setTrainerSpriteFront()
     agent = new GameControllerAgent
     agent.start()
+    audio.loop()
   }
 
   override def doTerminate(): Unit = {
+    audio.stop()
     agent.terminate()
   }
 
@@ -64,18 +68,16 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   private def enterInBuilding(building: Building): Unit = {
-    audio.stop()
+    this.doPause()
     var buildingPanel: BuildingPanel = null
     var buildingController: BuildingController = null
     building match{
-      case _: PokemonCenter => {
-        buildingController = new PokemonCenterController(this.view)
+      case _: PokemonCenter =>
+        buildingController = new PokemonCenterController(this.view, this)
         buildingPanel = new PokemonCenterPanel(buildingController)
-      }
-      case _: Laboratory => {
-        buildingController = new LaboratoryController(this.view)
+      case _: Laboratory =>
+        buildingController = new LaboratoryController(this.view, this)
         buildingPanel = new LaboratoryPanel(buildingController)
-      }
     }
     buildingController.startGame()
     trainerIsMoving = false

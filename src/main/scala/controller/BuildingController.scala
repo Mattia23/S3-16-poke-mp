@@ -8,7 +8,7 @@ import model.map.Box
 import utilities.Settings
 import view._
 
-abstract class BuildingController(private var view: View) extends GameController(view){
+abstract class BuildingController(private var view: View, private var controller: MapController) extends GameController(view){
 
   private var agent: GameControllerAgent = _
   protected var buildingMap: BuildingMap
@@ -25,19 +25,26 @@ abstract class BuildingController(private var view: View) extends GameController
           case _ if tile.walkable =>
             walk(direction, nextPosition)
           case tile:Box =>
-            view.showGame(new BoxPanel(null))
+            view.showGame(new BoxPanel(this))
+            view showGame new PokemonPanel
+            view showGame new PokemonCenterPanel(new PokemonCenterController(view, controller))
           case _ if nextPosition equals buildingMap.npc.coordinate =>
             trainerIsMoving = false
             println("Dialogo")
           case _ if 1==1/*trainer.capturedPokemons.isEmpty*/ =>
             trainerIsMoving = false
-            for (pokemon <- buildingMap.pokemonNpc) if(nextPosition equals pokemon.coordinate) view showGame new PokemonPanel
+            for (pokemon <- buildingMap.pokemonNpc) if(nextPosition equals pokemon.coordinate){
+              view showGame new PokemonPanel
+            }
           case _ => trainerIsMoving = false
         }
       }catch{
         case e: ArrayIndexOutOfBoundsException =>
           trainerIsMoving = false
-          if(trainerPosition equals buildingMap.entryCoordinate) println("Sei uscito")
+          if(trainerPosition equals buildingMap.entryCoordinate){
+            this.terminateGame()
+            controller.resumeGame()
+          }
         case e2: NullPointerException => trainerIsMoving = false
       }
     }
@@ -53,13 +60,20 @@ abstract class BuildingController(private var view: View) extends GameController
     }
   }
 
-  override protected def doTerminate(): Unit = agent.terminate()
+  override protected def doTerminate(): Unit = {
+    audio.stop()
+    agent.terminate()
+  }
 
-  override protected def doPause(): Unit = agent.terminate()
+  override protected def doPause(): Unit = {
+    audio.stop()
+    agent.terminate()
+  }
 
   override protected def doResume(): Unit = {
     agent = new GameControllerAgent
     agent.start()
+    audio.loop()
   }
 
 
@@ -93,7 +107,7 @@ abstract class BuildingController(private var view: View) extends GameController
   }
 }
 
-class PokemonCenterController(private var view: View) extends BuildingController(view){
+class PokemonCenterController(private var view: View, private var controller: MapController) extends BuildingController(view, controller){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
@@ -102,7 +116,7 @@ class PokemonCenterController(private var view: View) extends BuildingController
 
 }
 
-class LaboratoryController(private var view: View) extends BuildingController(view){
+class LaboratoryController(private var view: View, private var controller: MapController) extends BuildingController(view, controller){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new BuildingPanel(this, buildingMap)
