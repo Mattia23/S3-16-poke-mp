@@ -8,7 +8,7 @@ import model.map.Box
 import utilities.Settings
 import view._
 
-abstract class BuildingController(private var view: View, private var controller: MapController) extends GameController(view){
+abstract class BuildingController(private var view: View, private var mapController: MapController) extends GameController(view){
 
   private var agent: GameControllerAgent = _
   protected var buildingMap: BuildingMap
@@ -25,25 +25,27 @@ abstract class BuildingController(private var view: View, private var controller
           case _ if tile.walkable =>
             walk(direction, nextPosition)
           case tile:Box =>
-            view.showGame(new BoxPanel(this))
-            view showGame new PokemonPanel
-            view showGame new PokemonCenterPanel(new PokemonCenterController(view, controller))
-          case _ if nextPosition equals buildingMap.npc.coordinate =>
+            trainerIsMoving = false
+            this.pauseGame()
+            view.showPanel(new BoxPanel(this))
+          case _ => if(nextPosition equals buildingMap.npc.coordinate){
             trainerIsMoving = false
             println("Dialogo")
-          case _ if 1==1/*trainer.capturedPokemons.isEmpty*/ =>
+          }else if(1==1/*trainer.capturedPokemons.isEmpty*/) {
             trainerIsMoving = false
-            for (pokemon <- buildingMap.pokemonNpc) if(nextPosition equals pokemon.coordinate){
-              view showGame new PokemonPanel
+            for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
+              view showPanel new PokemonPanel
             }
-          case _ => trainerIsMoving = false
+          }else {
+            trainerIsMoving = false
+          }
         }
       }catch{
         case e: ArrayIndexOutOfBoundsException =>
           trainerIsMoving = false
           if(trainerPosition equals buildingMap.entryCoordinate){
             this.terminateGame()
-            controller.resumeGame()
+            mapController.resumeGame()
           }
         case e2: NullPointerException => trainerIsMoving = false
       }
@@ -66,14 +68,12 @@ abstract class BuildingController(private var view: View, private var controller
   }
 
   override protected def doPause(): Unit = {
-    audio.stop()
     agent.terminate()
   }
 
   override protected def doResume(): Unit = {
     agent = new GameControllerAgent
     agent.start()
-    audio.loop()
   }
 
 

@@ -35,12 +35,12 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   override def doPause(): Unit = {
+    setTrainerSpriteFront()
     audio.stop()
     agent.terminate()
   }
 
   override def doResume(): Unit = {
-    setTrainerSpriteFront()
     agent = new GameControllerAgent
     agent.start()
     audio.loop()
@@ -68,7 +68,7 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   private def enterInBuilding(building: Building): Unit = {
-    this.doPause()
+    this.pauseGame()
     var buildingPanel: BuildingPanel = null
     var buildingController: BuildingController = null
     building match{

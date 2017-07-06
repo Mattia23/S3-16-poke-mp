@@ -1,19 +1,10 @@
 package view;
 
-import controller.Controller;
-import controller.GameKeyListener;
 import controller.GameViewObserver;
-import model.environment.CoordinateImpl;
 import model.environment.BuildingMap;
-import model.environment.LaboratoryMap;
-import model.environment.PokemonCenterMap;
 import utilities.Settings;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.concurrent.Semaphore;
 
 public class BuildingPanel extends GamePanel {
     private int centerX;
@@ -54,46 +45,7 @@ public class BuildingPanel extends GamePanel {
                         (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
 
     }
-
-    /*
-
-    public void keyPressed(KeyEvent e) {
-        try {
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-                if (buildingMap.map()[buildingMap.userCoordinate().x()][buildingMap.userCoordinate().y() - 1].walkable()) {
-                    buildingMap.userCoordinate_$eq(new CoordinateImpl(buildingMap.userCoordinate().x(), buildingMap.userCoordinate().y() - 1));
-                    this.repaint();
-                }
-            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                if (buildingMap.userCoordinate().equals(buildingMap.entryCoordinate())) {
-                    System.out.println("Sei uscito!");
-                } else if (buildingMap.map()[buildingMap.userCoordinate().x()][buildingMap.userCoordinate().y() + 1].walkable()) {
-                    buildingMap.userCoordinate_$eq(new CoordinateImpl(buildingMap.userCoordinate().x(), buildingMap.userCoordinate().y() + 1));
-                    this.repaint();
-                }
-            } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                if (buildingMap.map()[buildingMap.userCoordinate().x() - 1][buildingMap.userCoordinate().y()].walkable()) {
-                    buildingMap.userCoordinate_$eq(new CoordinateImpl(buildingMap.userCoordinate().x() - 1, buildingMap.userCoordinate().y()));
-                    this.repaint();
-                }
-            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                if (buildingMap.map()[buildingMap.userCoordinate().x() + 1][buildingMap.userCoordinate().y()].walkable()) {
-                    buildingMap.userCoordinate_$eq(new CoordinateImpl(buildingMap.userCoordinate().x() + 1, buildingMap.userCoordinate().y()));
-                    this.repaint();
-                }
-            } else if (e.getKeyCode() == KeyEvent.VK_Z) {
-                //TODO dovrà essere controllata anche la direzione del personaggio
-                if (buildingMap.userCoordinate().x() == buildingMap.npc.coordinate.x() &&
-                        buildingMap.userCoordinate().y() - 1 == buildingMap.npc.coordinate.y()) {
-                    speak();
-                }
-            }
-        }catch (ArrayIndexOutOfBoundsException exception){
-            //exception.printStackTrace();
-        }
-    }
-
-
+/*
     private void speak(){
         dialoguePanel.setText(buildingMap.npc().dialogue());
         dialoguePanel.setVisible(true);

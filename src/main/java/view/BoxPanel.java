@@ -1,5 +1,6 @@
 package view;
 
+import controller.BuildingController;
 import controller.GameViewObserver;
 import model.entities.Pokemon;
 import utilities.Settings;
@@ -24,7 +25,7 @@ public class BoxPanel extends JPanel {
     private List<Pokemon> team = new ArrayList<>();
     private List<Pokemon> box = new ArrayList<>();
 
-    public BoxPanel(GameViewObserver gameController){
+    public BoxPanel(BuildingController buildingController){
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         JLabel title = new JLabel("Pokémon Box");
@@ -70,8 +71,7 @@ public class BoxPanel extends JPanel {
 
         final JButton close = new JButton("close");
         close.addActionListener(e -> {
-            //torna nell'altro panel
-            //qualcosa tipo gameController.returnFromBox()
+            buildingController.resumeGame();
         });
         add(close, BorderLayout.SOUTH);
 

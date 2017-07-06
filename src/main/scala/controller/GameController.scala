@@ -58,7 +58,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override final def startGame(): Unit = {
     inGame = true
     doStart()
-    view.showGame(gamePanel)
+    view.showPanel(gamePanel)
   }
 
   protected def doStart(): Unit
@@ -81,7 +81,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override final def resumeGame(): Unit = {
     inPause = false
     doResume()
-    view.showGame(gamePanel)
+    view.showPanel(gamePanel)
   }
 
   protected def doResume(): Unit

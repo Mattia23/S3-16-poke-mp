@@ -14,7 +14,7 @@ public interface View {
 
     void showSignIn();
 
-    void showGame(JPanel gamePanel);
+    void showPanel(JPanel gamePanel);
 
     void showPause();
 
