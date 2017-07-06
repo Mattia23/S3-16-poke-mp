@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class BattlePanel extends ImagePanel {
+public class BattlePanel extends ImagePanel implements BattleView {
     private final static int IMAGE_POKEMON_SIZE = Settings.FRAME_SIDE() / 4;
     private final static int FONT_SIZE = (int)(Settings.FRAME_SIDE() * 0.034);
     private final static int FONT_LIFE_SIZE = (int)(Settings.FRAME_SIDE() * 0.02);

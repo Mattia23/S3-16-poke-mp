@@ -1,6 +1,7 @@
 package view;
 import controller.Controller;
 import database.remote.DBConnect;
+import model.entities.PokemonWithLife;
 import utilities.Settings;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -54,6 +55,11 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showGame(JPanel gamePanel) {
         this.setPanel(gamePanel);
+    }
+
+    @Override
+    public void showBattle (PokemonWithLife myPokemon, PokemonWithLife otherPokemon) {
+        this.setPanel(new BattlePanel(myPokemon,otherPokemon,this));
     }
 
     @Override
