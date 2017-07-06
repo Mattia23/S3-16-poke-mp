@@ -18,7 +18,7 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemo
   var wildPokemonBehaviour: PokemonBehaviour = new PokemonBehaviourImpl(wildPokemon)
 
   override def pokeballLaunched(): Boolean = {
-    if((wildPokemon.pokemonLife * wildPokemon.pokemon.experiencePoints) / battle.trainer.level < Random.nextInt(100) + 400) {
+    if((wildPokemon.pokemonLife * wildPokemon.pokemon.experiencePoints) / battle.trainer.level < Random.nextInt(300) + 600) {
       wildPokemonBehaviour.insertPokemonIntoDB(battle.trainer.id)
       return true
     }
