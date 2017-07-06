@@ -13,6 +13,8 @@ trait BuildingMap extends BasicMap{
   def npc: StaticCharacter
   def entryCoordinate: Coordinate
 
+  def pokemonNpc: List[PokemonCharacter]
+
   protected def setNotWalkableArea(): Unit = {
     for(matrixNotWalkable <- matriciesNotWalkable){
       for( i <- matrixNotWalkable.startCoordinate.x to matrixNotWalkable.endCoordiante.x){
@@ -58,6 +60,7 @@ class PokemonCenterMap extends BuildingMap{
   val boxCoordinate: Coordinate = CoordinateImpl(11, 1)
   map(boxCoordinate.x)(boxCoordinate.y) = Box()
 
+  override def pokemonNpc: List[PokemonCharacter] = null
 }
 
 class LaboratoryMap extends BuildingMap{
@@ -73,7 +76,7 @@ class LaboratoryMap extends BuildingMap{
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),
       new MatrixCoordinate(CoordinateImpl(0,3),CoordinateImpl(2,4)),
       new MatrixCoordinate(CoordinateImpl(1,5),CoordinateImpl(2,5)),
-      new MatrixCoordinate(CoordinateImpl(8,4),CoordinateImpl(10,5)),
+      new MatrixCoordinate(CoordinateImpl(8,4),CoordinateImpl(10,4)),
       new MatrixCoordinate(CoordinateImpl(0,7),CoordinateImpl(4,8)),
       new MatrixCoordinate(CoordinateImpl(8,7),CoordinateImpl(12,8)),
       new MatrixCoordinate(CoordinateImpl(0,11),CoordinateImpl(0,12)),
@@ -84,5 +87,5 @@ class LaboratoryMap extends BuildingMap{
   setBasicTilesInMap()
   setNotWalkableArea()
 
-  val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
+  override val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
 }

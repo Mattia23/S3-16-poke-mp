@@ -6,7 +6,7 @@ import model.environment.Direction.Direction
 import model.environment._
 import model.map.Box
 import utilities.Settings
-import view.{BoxPanel, BuildingPanel, GamePanel, View}
+import view._
 
 abstract class BuildingController(private var view: View) extends GameController(view){
 
@@ -22,19 +22,23 @@ abstract class BuildingController(private var view: View) extends GameController
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         tile match {
+          case _ if tile.walkable =>
+            walk(direction, nextPosition)
           case tile:Box =>
             view.showGame(new BoxPanel(null))
           case _ if nextPosition equals buildingMap.npc.coordinate =>
             trainerIsMoving = false
             println("Dialogo")
-          case _ if tile.walkable =>
-            walk(direction, nextPosition)
+          case _ if 1==1/*trainer.capturedPokemons.isEmpty*/ =>
+            trainerIsMoving = false
+            for (pokemon <- buildingMap.pokemonNpc) if(nextPosition equals pokemon.coordinate) view showGame new PokemonPanel
           case _ => trainerIsMoving = false
         }
       }catch{
-        case foo: ArrayIndexOutOfBoundsException =>
+        case e: ArrayIndexOutOfBoundsException =>
           trainerIsMoving = false
           if(trainerPosition equals buildingMap.entryCoordinate) println("Sei uscito")
+        case e2: NullPointerException => trainerIsMoving = false
       }
     }
   }
