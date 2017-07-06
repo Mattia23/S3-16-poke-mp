@@ -21,7 +21,7 @@ object CreazionePokemonMain extends App {
     PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get(),frame)
   frame.add(panel)
   myPokemon.loseLifePoints(30)
-  panel.setPokemonLife(myPokemon.pokemonLife)
+  panel.setPokemonLife()
   val lifeRatio: Double = myPokemon.pokemonLife.toDouble/myPokemon.pokemon.experiencePoints.toDouble
   panel.setPokemonLifeProgressBar((lifeRatio*100).toInt,Owner.TRAINER.id)
   frame.setVisible(true)

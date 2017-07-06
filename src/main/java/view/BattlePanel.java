@@ -8,6 +8,7 @@ import utilities.Settings;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
@@ -39,6 +40,12 @@ public class BattlePanel extends ImagePanel {
     private Map<String,JButton> attacks = new LinkedHashMap<>();
     private int index = 0;
     private boolean attacksAreVisible = false;
+    private boolean pokeballAnimation = false;
+    private boolean pokemonIsInThePokeball = false;
+    private Timer t;
+    private int pokeballX = 0;
+    private int pokeballY = 0;
+    private Image pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
 
     public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "battle.png");
@@ -133,7 +140,51 @@ public class BattlePanel extends ImagePanel {
             frame.getRootPane().setDefaultButton(attacks.get(names[index].toString()));
         });
         trainerChoices.get("Change pokemon").addActionListener(e -> {System.out.println("CAMBIA POKEMON");});
-        trainerChoices.get("Pokeball").addActionListener(e -> {System.out.println("LANCIA POKEBALL");});
+        trainerChoices.get("Pokeball").addActionListener(e -> {
+            trainerChoices.get("Pokeball").setEnabled(false);
+            pokeballAnimation = true;
+            pokemonIsInThePokeball = false;
+            pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
+            pokeballX = (int)(POKEMON_IMG_POSE[1].width+Settings.FRAME_SIDE()*0.1);
+            pokeballY = POKEMON_IMG_POSE[1].height;
+            t = new Timer(10,(ActionEvent ex) -> {
+                if(pokeballY > POKEMON_IMG_POSE[0].height && !pokemonIsInThePokeball){
+                    pokeballX += 5;
+                    pokeballY -= 5;
+                } else if (pokeballY <= POKEMON_IMG_POSE[0].height && !pokemonIsInThePokeball) {
+                    pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballOpen.png");
+                    pokemonIsInThePokeball = true;
+                    Thread animation = new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                Thread.sleep(1000);
+                                pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
+                                pokemonImages[0].setVisible(false);
+                                Thread.sleep(1500);
+                                if(1==1) {                       //METODO DEL CONTROLLER CHE RESTITUISCE TRUE SE IL POKEMON è CATTURATO
+                                    pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballRed.png");
+                                    Thread.sleep(1000);
+                                                                                        //termina questo panel e chiama il ViewImpl!!!!
+                                } else {
+                                    pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballOpen.png");
+                                    pokemonImages[0].setVisible(true);
+                                    Thread.sleep(1000);
+                                    pokeballAnimation = false;
+                                    trainerChoices.get("Pokeball").setEnabled(true);
+                                }
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    };
+                    animation.start();
+                }
+                repaint();
+            });
+            t.start();
+        });
         trainerChoices.get("Escape").addActionListener(e -> {System.out.println("ESCAPE");});
         for(String att : attacks.keySet()) {
             attacks.get(att).addActionListener(e -> {
@@ -185,6 +236,8 @@ public class BattlePanel extends ImagePanel {
         jTextField.setText(text);
         jTextField.setOpaque(false);
         jTextField.setBorder(null);
+        jTextField.setEnabled(false);
+        jTextField.setDisabledTextColor(Color.black);
         this.add(jTextField);
     }
 
@@ -197,12 +250,20 @@ public class BattlePanel extends ImagePanel {
         }
     }
 
-    public void setPokemonLife(int life) {
+    public void setPokemonLife() {
         myPokemonLife.setText(pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
     }
 
     public void setPokemonLifeProgressBar(int life, int owner) {
         if (owner == Owner.TRAINER().id()) { pokemonProgressBar[1].setValue(life); }
         else { pokemonProgressBar[0].setValue(life); }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(pokeballAnimation){
+            g.drawImage(pokeballImage,pokeballX,pokeballY,this);
+        }
     }
 }
