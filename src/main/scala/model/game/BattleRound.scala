@@ -11,6 +11,7 @@ trait BattleRound {
 
   def myPokemonAttack(idAttack: Int): Unit
 
+  def wildPokemonAttack(attack: Int): Unit
 }
 
 class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemon: PokemonWithLife, battle: Battle) extends  BattleRound{
@@ -29,27 +30,21 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemo
     println("Il mio pokemon attacca")
     val damage: Int = myPokemonBehaviour.launchAttack(idAttack)
     wildPokemonBehaviour.undergoAttack(damage)
-    if(wildPokemonBehaviour.isAlive){
-      println("Wild pokemon vivo")
-      val executorService = Executors.newSingleThreadScheduledExecutor
-      executorService.scheduleAtFixedRate(() => {
-        wildPokemonAttack(Random.nextInt(4))
-      }, 5, 5, TimeUnit.SECONDS)
-    } else {
+    if(!wildPokemonBehaviour.isAlive){
       println("Wild pokemon morto")
       myPokemonBehaviour.growExperiencePoints(wildPokemonBehaviour.giveExperiencePoints)
       myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
-      battle.battleFinished(true)
+      battle.myPokemonKillsWildPokemon(true)
     }
   }
 
-  private def wildPokemonAttack(attack: Int): Unit ={
+  override def wildPokemonAttack(attack: Int): Unit ={
     println("Il selvatico attacca")
     val damage: Int = wildPokemonBehaviour.launchAttack(attack)
     myPokemonBehaviour.undergoAttack(damage)
     if(!myPokemonBehaviour.isAlive){
       myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
-      battle.battleFinished(false)
+      battle.myPokemonKillsWildPokemon(false)
     }
   }
 }

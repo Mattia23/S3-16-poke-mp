@@ -35,6 +35,10 @@ trait GameViewObserver {
   def resumeGame(): Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
+
+  def battleController: BattleController
+
+  def battleController_=(battleController: BattleController): Unit
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{

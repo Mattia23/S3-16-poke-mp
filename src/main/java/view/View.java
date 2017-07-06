@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import model.entities.PokemonWithLife;
 
 import javax.swing.*;
 
@@ -15,6 +16,8 @@ public interface View {
     void showSignIn();
 
     void showGame(JPanel gamePanel);
+
+    void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon);
 
     void showPokemonChoice();
 

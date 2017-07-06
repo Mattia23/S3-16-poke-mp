@@ -11,26 +11,37 @@ trait Battle {
 
   def startBattleRound(pokemonId: Int): Unit
 
-  def battleFinished(won: Boolean): Unit
+  def myPokemon: PokemonWithLife
+
+  def myPokemon_=(myPokemon:PokemonWithLife): Unit
+
+  def wildPokemon: PokemonWithLife
+
+  def myPokemonKillsWildPokemon(won: Boolean): Unit
 
   def pokeballLaunched(): Boolean
+
+  def battleFinished: Boolean
+
+  def battleFinished_=(battleFinished: Boolean): Unit
 }
 
 class BattleImpl(_trainer: Trainer) extends Battle {
-  var wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(this._trainer.level)).get()
   var _round: BattleRound = _
-
+  override var battleFinished: Boolean = false
   override def trainer: Trainer = _trainer
-
   override def round: BattleRound = _round
+  override var myPokemon: PokemonWithLife = _
+  override val wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(this._trainer.level)).get()
 
   override def startBattleRound(pokemonId: Int): Unit = {
     _trainer.addMetPokemon(wildPokemon.pokemon.id)
-    var myPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(pokemonId),Optional.empty()).get()
+    myPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(pokemonId),Optional.empty()).get()
     _round = new BattleRoundImpl(myPokemon, pokemonId, wildPokemon, this)
   }
 
-  override def battleFinished(won: Boolean): Unit = {
+  override def myPokemonKillsWildPokemon(won: Boolean): Unit = {
+    battleFinished = true
     var pointsEarned: Int = 0
     if(won){
       pointsEarned = (wildPokemon.pokemon.experiencePoints / wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
