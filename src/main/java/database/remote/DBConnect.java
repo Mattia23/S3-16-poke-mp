@@ -149,6 +149,22 @@ public final class DBConnect {
 		}
 	}
 
+	public static Boolean pokemonHasLife(int pokemonId){
+		initConnection();
+		String query = "select life from pokemon where id_db =  '" + pokemonId + "'";
+		try {
+			rs = st.executeQuery(query);
+			if(rs.next()){
+				if(rs.getInt("life")>0){
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	public static Optional<Map> getPokemonFromDB(int databaseId) {
 		initConnection();
 		try {
@@ -167,6 +183,7 @@ public final class DBConnect {
 				pokemon.put("attacks", attacks);
 				pokemon.put("level", rs.getString("level"));
 				pokemon.put("experiencePoints",rs.getString("points"));
+				pokemon.put("levelExperience",rs.getString("level_exp"));
 				pokemon.put("idImage", rs.getString("id_pokemon")+".png");   //DATABASE LOCALE
 				pokemon.put("lifePoints", rs.getString("life"));
 				return Optional.of(pokemon);
@@ -232,7 +249,9 @@ public final class DBConnect {
 			int id_image = 0;
 			String query = "select id_image from users where id = '"+id+"'";
 			ResultSet rs2 = st.executeQuery(query);
-			if(rs2.next()) id_image = rs2.getInt("id_image");
+			if(rs2.next()){
+				id_image = rs2.getInt("id_image");
+			}
 			String query2 = "select * from trainers where id = '"+id+"'";
 			rs = st.executeQuery(query2);
 			if (rs.next()) {
@@ -245,9 +264,8 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
-	public static void updateTrainer(String username, int experiencePoints, List<Int> pokemon){
+	public static void updateTrainer(int id, int experiencePoints, List<Int> pokemon){
 		initConnection();
-		int id = getTrainerIdFromUsername(username).get();
 		try {
 			String pokemonQuery = "";
 			int n = 0;
@@ -262,9 +280,8 @@ public final class DBConnect {
 		}
 	}
 
-	public static void addCapturedPokemon(String username, Pokemon pokemon){
+	public static void addCapturedPokemon(int trainerId, Pokemon pokemon){
 		initConnection();
-		int trainerId = getTrainerIdFromUsername(username).get();
 		String q = "Insert into pokemon (id_db,id_pokemon,id_trainer,level,points,life,moves1,moves2,moves3,moves4) " +
 				"value (NULL,'"+pokemon.id()+"','"+trainerId+"','"+pokemon.level()+"','"+pokemon.experiencePoints()+"'," +
 				"100,'"+pokemon.attacks()._1().toString()+"','"+pokemon.attacks()._2().toString()+"','"+pokemon.attacks()._3().toString()+"'," +
@@ -276,9 +293,8 @@ public final class DBConnect {
 		}
 	}
 
-	public static void addMetPokemon(String username, int pokemon){
+	public static void addMetPokemon(int trainerId, int pokemon){
 		initConnection();
-		int trainerId = getTrainerIdFromUsername(username).get();
 		String q = "Insert into pokemon_met (id,id_trainer,id_pokemon) " +
 				"value (NULL,'"+trainerId+"','"+pokemon+"')";
 		try {
@@ -288,9 +304,8 @@ public final class DBConnect {
 		}
 	}
 
-	public static void addFavouritePokemon(String username, int pokemonId, int pos){
+	public static void addFavouritePokemon(int trainerId, int pokemonId, int pos){
 		initConnection();
-		int trainerId = getTrainerIdFromUsername(username).get();
 		String q = "update trainers set id_pokemon"+pos+" = '"+pokemonId+"' where id = '"+trainerId+"'";
 		try {
 			st.executeUpdate(q);
@@ -299,9 +314,8 @@ public final class DBConnect {
 		}
 	}
 
-	public static Optional<List<Int>> getFavouritePokemonList(String name){
+	public static Optional<List<Int>> getFavouritePokemonList(int trainerId){
 		initConnection();
-		int trainerId = getTrainerIdFromUsername(name).get();
 
 		String query = "select * from trainers where id =  '" + trainerId + "'";
 		try {
@@ -320,9 +334,8 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
-	public static Optional<List<scala.Tuple2<Int,Int>>> getCapturedPokemonList(String name){
+	public static Optional<List<scala.Tuple2<Int,Int>>> getCapturedPokemonList(int trainerId){
 		initConnection();
-		int trainerId = getTrainerIdFromUsername(name).get();
 		String query = "select * from pokemon where id_trainer =  '" + trainerId + "'";
 		java.util.List<scala.Tuple2<Integer,Integer>> pokemonList = new ArrayList<>();
 		try {
@@ -339,9 +352,8 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
-	public static Optional<List<Int>> getMetPokemonList(String name){
+	public static Optional<List<Int>> getMetPokemonList(int trainerId){
 		initConnection();
-		int trainerId = getTrainerIdFromUsername(name).get();
 		String query = "select id_pokemon from pokemon_met where id_trainer =  '" + trainerId + "'";
 		java.util.List<Integer> pokemonList = new ArrayList<>();
 		try {
@@ -355,20 +367,6 @@ public final class DBConnect {
 			e.printStackTrace();
 		}
 		return Optional.empty();
-	}
-
-	public static Boolean pokemonIsLive(Int pokemonId){
-		initConnection();
-		String query = "select life from pokemon where id_db =  '" + pokemonId + "'";
-		try {
-			rs = st.executeQuery(query);
-			if(rs.next()){
-				if(rs.getInt("life")>0) return true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 }
