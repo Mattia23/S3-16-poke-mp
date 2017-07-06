@@ -24,7 +24,6 @@ class BattleControllerImpl(val trainer: Trainer, val view: View) extends BattleC
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
     view.getBattlePanel.setPokemonLifeProgressBar(battle.wildPokemon.pokemonLife,Owner.WILD.id)
-    println(battle.wildPokemon.pokemonLife,battle.wildPokemon.pokemon.experiencePoints)
     if(!battle.battleFinished) {/*
       val executorService = Executors.newSingleThreadScheduledExecutor
       executorService.scheduleAtFixedRate(() => {
@@ -44,7 +43,6 @@ class BattleControllerImpl(val trainer: Trainer, val view: View) extends BattleC
 
   override def pokemonWildAttacks(): Unit = {
     battle.round.wildPokemonAttack(Random.nextInt(4))
-    println(battle.myPokemon.pokemonLife,battle.myPokemon.pokemon.experiencePoints)
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
     if(battle.battleFinished) {

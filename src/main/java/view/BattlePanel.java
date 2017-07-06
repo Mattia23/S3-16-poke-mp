@@ -85,7 +85,8 @@ public class BattlePanel extends ImagePanel implements BattleView {
             pokemonImages[i].setContentAreaFilled(false);
             this.add(pokemonImages[i]);
             pokemonProgressBar[i].setBounds(POKEMON_PROGRESS_BAR_POSE[i].width,POKEMON_PROGRESS_BAR_POSE[i].height,PROGRESS_BAR_W,PROGRESS_BAR_H);
-            pokemonProgressBar[i].setValue(100);
+            pokemonProgressBar[i].setMaximum(pokemonEntities[i].pokemon().experiencePoints());
+            pokemonProgressBar[i].setValue(pokemonEntities[i].pokemonLife());
             this.add(pokemonProgressBar[i]);
         }
         createJTextField(myPokemonLife,pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
