@@ -1,5 +1,6 @@
 package view;
 import controller.Controller;
+import database.remote.DBConnect;
 import utilities.Settings;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -54,6 +55,9 @@ public class ViewImpl extends JFrame implements View {
     public void showGame(JPanel gamePanel) {
         this.setPanel(gamePanel);
     }
+
+    @Override
+    public void showPokemonChoice() { this.setPanel(new PokemonChoicePanel(this, this.controller, DBConnect.getTrainerFromDB("prova").get())); }
 
     @Override
     public void showPause() {

@@ -30,7 +30,7 @@ public class MenuPanel extends BasePanel {
         this.newgame.addActionListener(e -> {
             this.controller.newGame();
         });
-        this.login.addActionListener(e -> this.parentView.showLogin());
+        this.login.addActionListener(e -> this.parentView.showPokemonChoice());
         this.signIn.addActionListener(e -> this.parentView.showSignIn());
         this.quit.addActionListener(e -> {
             this.controller.newGame();

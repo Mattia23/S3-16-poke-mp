@@ -1,4 +1,4 @@
-package app
+/*package app
 
 import java.awt._
 import java.awt.event.{KeyEvent, KeyListener}
@@ -185,4 +185,4 @@ object CreazionePokemonMain extends App {
   frame.setVisible(true)
   panel.requestFocusInWindow()
 
-}
+}*/
