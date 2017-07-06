@@ -2,13 +2,14 @@ package controller
 
 import javax.swing.SwingUtilities
 
+import model.entities.Pokemon
 import model.environment.Direction.Direction
 import model.environment._
 import model.map.Box
 import utilities.Settings
 import view._
 
-abstract class BuildingController(private var view: View, private var mapController: MapController) extends GameController(view){
+abstract class BuildingController(private var view: View, private var mapController: GameController) extends GameController(view){
 
   private var agent: GameControllerAgent = _
   protected var buildingMap: BuildingMap
@@ -93,7 +94,7 @@ abstract class BuildingController(private var view: View, private var mapControl
   }
 }
 
-class PokemonCenterController(private var view: View, private var mapController: MapController) extends BuildingController(view, mapController){
+class PokemonCenterController(private var view: View, private var mapController: GameController) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new PokemonCenterPanel(this, buildingMap)
@@ -120,7 +121,7 @@ class PokemonCenterController(private var view: View, private var mapController:
 
 }
 
-class LaboratoryController(private var view: View, private var mapController: MapController) extends BuildingController(view, mapController){
+class LaboratoryController(private var view: View, private var mapController: GameController) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new LaboratoryPanel(this, buildingMap, true/*this.trainer.capturedPokemons.isEmpty*/)
@@ -135,10 +136,10 @@ class LaboratoryController(private var view: View, private var mapController: Ma
         if(nextPosition equals buildingMap.npc.coordinate){
           println("Dialogo")
         }
-        if(1==1/*trainer.capturedPokemons.isEmpty*/) {
+        if(true/*trainer.capturedPokemons.isEmpty*/) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
             this.pauseGame()
-            view.showPanel(new PokemonPanel)
+            view.showPanel(new InitialPokemonPanel(this, Pokemon(1,"ciao",(1,2,3,4),5,0,0,null)/*pokemon.pokemon*/))
           }
         }
       }catch{

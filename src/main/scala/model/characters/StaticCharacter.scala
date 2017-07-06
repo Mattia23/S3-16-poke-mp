@@ -21,7 +21,7 @@ trait StaticCharacter {
 
 class Oak extends StaticCharacter{
 
-  override val HEIGHT: Int = 44
+  override val HEIGHT: Int = 40
 
   override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "oak.png")
 

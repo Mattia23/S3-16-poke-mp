@@ -214,8 +214,8 @@ object Settings {
 
   val MAP_SONG: String = AUDIO_FOLDER + "base-music.wav"
 
-  val POKEMONCENTER_SONG = AUDIO_FOLDER + "pokemoncenter.wav"
+  val POKEMONCENTER_SONG: String = AUDIO_FOLDER + "pokemoncenter.wav"
 
-  val LABORATORY_SONG = AUDIO_FOLDER + "laboratory.wav"
+  val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
 
 }

@@ -67,7 +67,7 @@ public class BoxPanel extends JPanel {
         add(rightPanel, BorderLayout.EAST);
 
         add(pokemonPanel, BorderLayout.CENTER);
-
+        pokemonPanel.setVisible(false);
         final JButton close = new JButton("close");
         close.addActionListener(e -> buildingController.resumeGame());
         add(close, BorderLayout.SOUTH);
@@ -86,6 +86,7 @@ public class BoxPanel extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     pokemonPanel.setPokemon(pokemon);
+                    if(!pokemonPanel.isVisible()) pokemonPanel.setVisible(true);
                 }
 
             });
@@ -110,6 +111,7 @@ public class BoxPanel extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     pokemonPanel.setPokemon(pokemon);
+                    if(!pokemonPanel.isVisible()) pokemonPanel.setVisible(true);
                 }
             });
             boxPanel.add(pokemonLabel);

@@ -4,12 +4,13 @@ import model.entities.Pokemon;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class PokemonPanel extends JPanel {
-    private JLabel pokemonLabel;
+    //private JLabel pokemonLabel;
     private final JLabel pokemonName;
     private final JLabel pokemonLevel;
     private final JLabel[] pokemonAttacks;
@@ -17,6 +18,7 @@ public class PokemonPanel extends JPanel {
     private final JLabel pokemonLevelExperience;
 
     public PokemonPanel(){
+        setLayout(new GridLayout(0,2));
         //pokemonLabel = new JLabel();
         pokemonName = new JLabel();
         pokemonLevel = new JLabel();
@@ -26,19 +28,28 @@ public class PokemonPanel extends JPanel {
         }
         pokemonExperiencePoints = new JLabel();
         pokemonLevelExperience = new JLabel();
+        add(pokemonName);
+        add(pokemonLevel);
+        final JPanel attackPanel = new JPanel();
+        attackPanel.setLayout(new GridLayout(4,0));
+        for (final JLabel pokemonAttack : pokemonAttacks) {
+            attackPanel.add(pokemonAttack);
+        }
+        add(new JLabel("Attacks:"));
+        add(attackPanel);
     }
 
     public void setPokemon(Pokemon pokemon){
-        BufferedImage myPicture = null;
+        /*BufferedImage myPicture = null;
         try {
             myPicture = ImageIO.read(new File(pokemon.imageName()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        pokemonLabel = new JLabel(new ImageIcon(myPicture));
-        add(pokemonLabel);
+        final JLabel pokemonLabel = new JLabel(new ImageIcon(myPicture));
+        add(pokemonLabel);*/
         pokemonName.setText(pokemon.name());
-        pokemonLevel.setText(""+pokemon.level());
+        pokemonLevel.setText(" Lv."+pokemon.level());
         for(int i = 0; i < 4; i++){
             //qui c'è solo un numero e non l'attacco, si deve accedere al db
             pokemonAttacks[i].setText(pokemon.attacks()+"");
