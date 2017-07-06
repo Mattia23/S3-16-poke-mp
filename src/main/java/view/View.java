@@ -1,5 +1,6 @@
 package view;
 
+import controller.BattleController;
 import controller.Controller;
 import model.entities.PokemonWithLife;
 
@@ -17,7 +18,9 @@ public interface View {
 
     void showGame(JPanel gamePanel);
 
-    void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon);
+    void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController);
+
+    BattleView getBattlePanel();
 
     void showPokemonChoice();
 

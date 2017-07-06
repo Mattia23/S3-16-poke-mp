@@ -18,7 +18,6 @@ class MapController(private var view: View) extends GameController(view){
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private val audio = Audio(Settings.MAP_SONG)
-  override var battleController: BattleController = _
 
   override var gamePanel: GamePanel = new MapPanel(this, gameMap)
 
@@ -69,7 +68,7 @@ class MapController(private var view: View) extends GameController(view){
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      battleController = new BattleControllerImpl(trainer: Trainer,view: View)
+      new BattleControllerImpl(trainer: Trainer,view: View)
     }
   }
 

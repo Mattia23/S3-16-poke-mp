@@ -1,5 +1,6 @@
 package view;
 
+import controller.BattleController;
 import database.local.PokedexConnect;
 import model.entities.Owner;
 import model.entities.PokemonWithLife;
@@ -48,8 +49,10 @@ public class BattlePanel extends ImagePanel implements BattleView {
     private Image pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
     private JPanel displayPanel = new JPanel(new BorderLayout());
     private JLabel attackExplanation = new JLabel();
+    private BattleController controller;
 
-    public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame) {
+    public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame, BattleController controller) {
+        this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "battle.png");
         this.pokemonEntities = new PokemonWithLife[]{otherPokemon, myPokemon};
         this.setLayout(null);
@@ -171,10 +174,9 @@ public class BattlePanel extends ImagePanel implements BattleView {
                                 pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
                                 pokemonImages[0].setVisible(false);
                                 Thread.sleep(1500);
-                                if(1==1) {                       //METODO DEL CONTROLLER CHE RESTITUISCE TRUE SE IL POKEMON è CATTURATO
+                                if(controller.trainerThrowPokeball()) {
                                     pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballRed.png");
                                     Thread.sleep(1000);
-                                                                                        //termina questo panel e chiama il ViewImpl!!!!
                                 } else {
                                     pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballOpen.png");
                                     pokemonImages[0].setVisible(true);
@@ -200,10 +202,18 @@ public class BattlePanel extends ImagePanel implements BattleView {
                 for(int j=0;j<4;j++){
                     if(atts[j].toString().toUpperCase() == att) {
                         switch (j) {
-                            case 0 : //controller.attack(j+1) break
-                            case 1 : //controller.attack(j+1) break
-                            case 2 : //controller.attack(j+1) break
-                            case 3 : //controller.attack(j+1) break
+                            case 0 :
+                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._1());
+                                break;
+                            case 1 :
+                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._2());
+                                break;
+                            case 2 :
+                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._3());
+                                break;
+                            case 3 :
+                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._4());
+                                break;
                         }
                     }
                 }

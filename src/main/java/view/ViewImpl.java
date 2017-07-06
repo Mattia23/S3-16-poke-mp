@@ -1,4 +1,5 @@
 package view;
+import controller.BattleController;
 import controller.Controller;
 import database.remote.DBConnect;
 import model.entities.PokemonWithLife;
@@ -14,6 +15,7 @@ public class ViewImpl extends JFrame implements View {
     private Controller controller;
     private BuildingPanel buildingPanel;
     private Dimension frameDim;
+    private BattleView battlePanel;
 
     public ViewImpl(Controller controller) {
         this.controller = controller;
@@ -58,8 +60,15 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showBattle (PokemonWithLife myPokemon, PokemonWithLife otherPokemon) {
-        this.setPanel(new BattlePanel(myPokemon,otherPokemon,this));
+    public void showBattle (PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController) {
+        this.battlePanel = new BattlePanel(myPokemon,otherPokemon,this,battleController);
+        BattlePanel panel = (BattlePanel) this.battlePanel;
+        this.setPanel(panel);
+    }
+
+    @Override
+    public  BattleView getBattlePanel(){
+        return this.battlePanel;
     }
 
     @Override
