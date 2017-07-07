@@ -1,9 +1,8 @@
 package controller
 
-import java.util.Optional
 import javax.swing.SwingUtilities
 
-import model.entities.{Owner, PokemonFactory}
+import model.entities.{Owner, PokemonFactory, Trainer}
 import model.environment.{Audio, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map._
@@ -83,9 +82,7 @@ class MapController(private var view: View) extends GameController(view){
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      val pokemon = PokemonFactory.createPokemon(Owner.WILD, Optional.empty(), Optional.of(trainer.level))
-      if(pokemon.isPresent)
-        println("Trovato il Pokemon: "+ pokemon.get().pokemon.name+" al livello: "+pokemon.get().pokemon.level)
+      new BattleControllerImpl(trainer: Trainer,view: View)
     }
   }
 

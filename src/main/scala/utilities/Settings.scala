@@ -12,9 +12,7 @@ object Settings {
 
   val SCREEN_HEIGHT: Int = SCREEN_DIMENSION.height
 
-  val FRAME_WIDTH: Int = SCREEN_WIDTH / 3
-
-  val FRAME_HEIGHT: Int = SCREEN_HEIGHT / 3
+  val FRAME_SIDE: Int = SCREEN_WIDTH / 3
 
   val MAP_WIDTH: Int = 50
 
@@ -47,6 +45,16 @@ object Settings {
   val IMAGES_FOLDER: String =  "/images/"
 
   val MAP_ELEMENTS_IMAGES_FOLDER: String = IMAGES_FOLDER + "mapElements/"
+
+  val POKEMON_IMAGES: String = IMAGES_FOLDER + "pokemon/"
+
+  val POKEBALL_IMAGES: String = IMAGES_FOLDER + "pokeball/"
+
+  val POKEMON_IMAGES_FRONT_FOLDER: String = POKEMON_IMAGES + "front/"
+
+  val POKEMON_IMAGES_BACK_FOLDER: String = POKEMON_IMAGES + "back/"
+
+  val POKEMON_IMAGES_ICON_FOLDER: String = POKEMON_IMAGES + "icon/"
 
   val TRAINER_IMAGES_FOLDER: String = IMAGES_FOLDER + "trainer/"
 
@@ -194,7 +202,7 @@ object Settings {
 
   val DATABASE_FOLDER: String =  "/database/"
 
-  val INITIAL_TRAINER_LEVEL: Int = 0
+  val INITIAL_TRAINER_LEVEL: Int = 1
 
   val LEVEL_STEP: Int = 50
 

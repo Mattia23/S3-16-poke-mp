@@ -30,21 +30,23 @@ object PokemonFactory {
       }
     }
     case Owner.WILD => {
-      val pokemonId: Int = generateCasualPokemon(trainerLevel.get())
+      val pokemonId: Int = generateCasualPokemonId(trainerLevel.get())
+      val level: Int = generateLevelPokemon(trainerLevel.get(),pokemonId)
+      val exp: Int = generateExperiencePokemon(pokemonId, level)
       val pokemon: PokemonWithLife =
         new PokemonWithLifeImpl(Pokemon(id = pokemonId,
                                         name = PokedexConnect.getPokemonName(pokemonId).get(),
                                         attacks = (1,2,3,4),
-                                        level = generateLevelPokemon(trainerLevel.get(),pokemonId),
-                                        experiencePoints = 60,
-                                        levelExperience = 0,
+                                        level = level,
+                                        experiencePoints = exp,
+                                        levelExperience = Random.nextInt(exp),
                                         imageName = pokemonId+".png"),
-                                60)
+                                exp)
       Optional.of(pokemon)
     }
   }
 
-  private def generateCasualPokemon(trainerLevel: Int): Int = {
+  private def generateCasualPokemonId(trainerLevel: Int): Int = {
     var indexRandomList: mutable.Map[Range,Int] = mutable.HashMap()
     if(trainerLevel < LEVEL_STEP_ONE) {
       indexRandomList = indexRandomList += ((0 until 40) -> 1) += ((40 until 70) -> 5) += ((70 until 90) -> 10) +=
@@ -78,6 +80,11 @@ object PokemonFactory {
     } else {
       min + 2*x + Random.nextInt(x)
     }
+  }
+
+  private def generateExperiencePokemon(id: Int, level: Int): Int = {
+    val baseExp: Int = PokedexConnect.getBaseExperiencePokemon(id).get()
+    baseExp + level*4 - 4
   }
 
 }

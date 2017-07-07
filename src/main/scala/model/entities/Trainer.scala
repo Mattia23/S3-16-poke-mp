@@ -5,6 +5,10 @@ import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 
 trait Trainer {
+  def name: String
+
+  def id: Int
+
   def experiencePoints: Int
 
   def experiencePoints_= (points: Int) : Unit
@@ -41,11 +45,12 @@ trait Trainer {
 }
 
 class TrainerImpl(val name: String, private val idImage: Int, private var _experiencePoints: Int) extends Trainer{
+  val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
   private var _level: Int = calculateLevel(experiencePoints)
-  private var _coordinate: Coordinate = new CoordinateImpl(25,25)
-  private var _pokedex: Pokedex = new PokedexImpl(name)
-  private var _favouritePokemons: List[Int] = _//DBConnect.getFavouritePokemonList(name).get()
-  private var _capturedPokemons: List[Tuple2[Int,Int]] = _//DBConnect.getCapturedPokemonList(name).get()
+  private var _coordinate: Coordinate = CoordinateImpl(25,25)
+  private var _pokedex: Pokedex = new PokedexImpl(id)
+  private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
+  private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
 
   override val sprites =  idImage match {
     case 1 => Trainer1()
@@ -82,14 +87,14 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
     level.toInt
   }
 
-  override def coordinate = this._coordinate
+  override def coordinate: Coordinate = this._coordinate
 
   override def coordinate_=(coordinate: Coordinate): Unit = this._coordinate = coordinate
 
   override def updateTrainer(points: Int): Unit = {
     this.experiencePoints_=(this.experiencePoints + points)
     this.level_=(calculateLevel(this.experiencePoints))
-    DBConnect.updateTrainer(this.name, this.experiencePoints, this.favouritePokemons)
+    DBConnect.updateTrainer(this.id, this.experiencePoints, this.favouritePokemons)
   }
 
   override def changeFavouritePokemon(idNewPokemon: Int, idOldPokemon: Int): Unit = {
@@ -98,10 +103,10 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
       for(pokemon <- this.favouritePokemons){
         pos += 1
         if(pokemon == idOldPokemon){
-          DBConnect.addFavouritePokemon(name,idNewPokemon,pos)
+          DBConnect.addFavouritePokemon(id,idNewPokemon,pos)
         }
       }
-      this.favouritePokemons_=(DBConnect.getFavouritePokemonList(name).get())
+      this.favouritePokemons_=(DBConnect.getFavouritePokemonList(id).get())
     } else {
       println("Error: you tried to add a pokemon you haven't captured in your favourite list!!!")
     }
@@ -114,11 +119,11 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
       for(pokemon <- this.favouritePokemons){
         pos += 1
         if(pokemon == 0 && found != 1){
-          DBConnect.addFavouritePokemon(name,idNewPokemon,pos)
+          DBConnect.addFavouritePokemon(id,idNewPokemon,pos)
           found = 1
         }
       }
-      this.favouritePokemons_=(DBConnect.getFavouritePokemonList(name).get())
+      this.favouritePokemons_=(DBConnect.getFavouritePokemonList(id).get())
     } else if(this.favouritePokemons.contains(idNewPokemon)){
       println("you already have this pokemon in your list")
     } else if(this.capturedPokemons.toMap.get(idNewPokemon).isEmpty){
@@ -128,8 +133,8 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
 
   override def addMetPokemon(pokemon: Int): Unit = {
     if(!this.pokedex.checkIfAlreadyMet(pokemon)){
-      DBConnect.addMetPokemon(this.name,pokemon)
-      this.pokedex.pokedex_=(DBConnect.getMetPokemonList(name).get())
+      DBConnect.addMetPokemon(this.id,pokemon)
+      this.pokedex.pokedex_=(DBConnect.getMetPokemonList(id).get())
     } else {
       println("You have already met this pokemon")
     }
@@ -137,7 +142,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
 
   override def getFirstAvailableFavouritePokemon: Int = {
     for(pokemon <- this._favouritePokemons){
-      if(DBConnect.pokemonIsLive(pokemon)){
+      if(DBConnect.pokemonHasLife(pokemon)){
         return pokemon
       }
     }

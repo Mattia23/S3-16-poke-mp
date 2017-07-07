@@ -7,7 +7,6 @@ import java.util.*;
 
 public final class PokedexConnect {
     private static final int LAST_POKEMON_ID = 151;
-    private static final int ZERO = 0;
     private static Connection con;
 
     private PokedexConnect() {}
@@ -98,12 +97,26 @@ public final class PokedexConnect {
     public static int getMinLevelWildPokemon(int id) {
         String sql = "SELECT minimum_level FROM pokemon_evolution WHERE evolved_species_id = "+id;
         Optional<?> result = executeTheQuery(sql,Type.Integer, Collections.singletonList("minimum_level"));
-        return result.isPresent() ? (((Optional<Integer>)result).get()) : 1;
+        return result.isPresent() ?  (((Optional<Integer>)result).get()) : 1;
     }
 
     public static int getMaxLevelWildPokemon(int id) {
         String sql = "SELECT id FROM pokemon_species WHERE evolves_from_species_id = "+id;
         Optional<?> res = executeTheQuery(sql,Type.Integer, Collections.singletonList("id"));
-        return res.isPresent() ? getMinLevelWildPokemon((((Optional<Integer>)res).get())) : 70;
+        return res.isPresent() ? getMinLevelWildPokemon(((Optional<Integer>)res).get()) : 70;
     }
+
+    public static int getFirstStagePokemon(int id) {
+        String sql = "SELECT first_stage FROM pokemon_species WHERE id = "+ id;
+        Optional<?> result = executeTheQuery(sql,Type.Integer, Collections.singletonList("first_stage"));
+        return ((Optional<Integer>)result).get();
+    }
+
+    public static Optional<Integer> getBaseExperiencePokemon(int id) {
+        String sql = "SELECT base_experience FROM pokemon WHERE id = "+ getFirstStagePokemon(id);
+        Optional<?> result = executeTheQuery(sql,Type.Integer, Collections.singletonList("base_experience"));
+        return result.isPresent() ? ((Optional<Integer>)result) : Optional.empty();
+    }
+
+
 }
