@@ -1,20 +1,19 @@
 package view;
 import controller.Controller;
 import utilities.Settings;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+
+import javax.swing.*;
 import java.awt.*;
 
 public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
-    private BuildingPanel buildingPanel;
 
     public ViewImpl(Controller controller) {
         this.controller = controller;
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle(WINDOW_TITLE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(Settings.FRAME_WIDTH(), Settings.FRAME_WIDTH());
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -28,6 +27,14 @@ public class ViewImpl extends JFrame implements View {
         this.getContentPane().removeAll();
         this.getContentPane().add(panel);
         panel.setBackground(Color.black);
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void setDialogue(final JPanel panel){
+        final DialoguePanel dialoguePanel = (DialoguePanel) panel;
+        this.getContentPane().add(dialoguePanel, BorderLayout.SOUTH);
+        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));
         this.revalidate();
         this.repaint();
     }
@@ -48,8 +55,13 @@ public class ViewImpl extends JFrame implements View {
     public void showSignIn() { this.setPanel(new SignInPanel(this, this.controller)); }
 
     @Override
-    public void showGame(JPanel gamePanel) {
+    public void showPanel(JPanel gamePanel) {
         this.setPanel(gamePanel);
+    }
+
+    @Override
+    public void showDialogue(JPanel dialoguePanel){
+        this.setDialogue(dialoguePanel);
     }
 
     @Override
@@ -62,11 +74,4 @@ public class ViewImpl extends JFrame implements View {
         JOptionPane.showMessageDialog(this, error, title, JOptionPane.ERROR_MESSAGE);
     }
 
-    @Override
-    public void showPokemonCenterMap() {
-        if(this.controller.getGameController().isPresent()){
-            this.buildingPanel = new BuildingPanel(this.controller.getGameController().get());
-            this.setPanel(this.buildingPanel);
-        }
-    }
 }

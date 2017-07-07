@@ -2,8 +2,8 @@ package model.environment
 
 import java.awt.Image
 
-import model.characters.{Doctor, Oak, StaticCharacter}
-import model.map.{Barrier, BasicMap, BasicTile, Tile}
+import model.characters._
+import model.map._
 import utilities.Settings
 import view.LoadImage
 
@@ -11,11 +11,9 @@ trait BuildingMap extends BasicMap{
   def image: Image
   def matriciesNotWalkable: List[MatrixCoordinate]
   def npc: StaticCharacter
-  def npcCoordinate: Coordinate
   def entryCoordinate: Coordinate
-  def userCoordinate: Coordinate
 
-  def userCoordinate_=(coordinate: Coordinate): Unit
+  def pokemonNpc: List[PokemonCharacter]
 
   protected def setNotWalkableArea(): Unit = {
     for(matrixNotWalkable <- matriciesNotWalkable){
@@ -25,7 +23,7 @@ trait BuildingMap extends BasicMap{
         }
       }
     }
-    map(npcCoordinate.x)(npcCoordinate.y) = Barrier()
+    map(npc.coordinate.x)(npc.coordinate.y) = Barrier()
   }
 
   protected def setBasicTilesInMap(): Unit = {
@@ -54,12 +52,15 @@ class PokemonCenterMap extends BuildingMap{
       new MatrixCoordinate(CoordinateImpl(14,8),CoordinateImpl(14,8)),
       new MatrixCoordinate(CoordinateImpl(11,6),CoordinateImpl(12,7)))
 
-  override val npcCoordinate: Coordinate = CoordinateImpl(7,3)
   override val entryCoordinate: Coordinate = CoordinateImpl(7,8)
-  override var userCoordinate: Coordinate = entryCoordinate
 
   setBasicTilesInMap()
   setNotWalkableArea()
+
+  val boxCoordinate: Coordinate = CoordinateImpl(11, 1)
+  map(boxCoordinate.x)(boxCoordinate.y) = Box()
+
+  override def pokemonNpc: List[PokemonCharacter] = null
 }
 
 class LaboratoryMap extends BuildingMap{
@@ -75,16 +76,16 @@ class LaboratoryMap extends BuildingMap{
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),
       new MatrixCoordinate(CoordinateImpl(0,3),CoordinateImpl(2,4)),
       new MatrixCoordinate(CoordinateImpl(1,5),CoordinateImpl(2,5)),
-      new MatrixCoordinate(CoordinateImpl(8,4),CoordinateImpl(10,5)),
+      new MatrixCoordinate(CoordinateImpl(8,4),CoordinateImpl(10,4)),
       new MatrixCoordinate(CoordinateImpl(0,7),CoordinateImpl(4,8)),
       new MatrixCoordinate(CoordinateImpl(8,7),CoordinateImpl(12,8)),
       new MatrixCoordinate(CoordinateImpl(0,11),CoordinateImpl(0,12)),
       new MatrixCoordinate(CoordinateImpl(12,11),CoordinateImpl(12,12)))
 
-  override val npcCoordinate: Coordinate = CoordinateImpl(6,4)
   override val entryCoordinate: Coordinate = CoordinateImpl(6,12)
-  override var userCoordinate: Coordinate = CoordinateImpl(6,12)
 
   setBasicTilesInMap()
   setNotWalkableArea()
+
+  override val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
 }

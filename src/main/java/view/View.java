@@ -14,11 +14,12 @@ public interface View {
 
     void showSignIn();
 
-    void showGame(JPanel gamePanel);
+    void showPanel(JPanel gamePanel);
+
+    void showDialogue(JPanel dialoguePanel);
 
     void showPause();
 
     void showError(final String error, final String title);
 
-    void showPokemonCenterMap();
 }

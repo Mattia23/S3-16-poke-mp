@@ -10,49 +10,43 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class DialoguePanel extends JPanel implements KeyListener{
+public abstract class DialoguePanel extends JPanel implements KeyListener{
     private final JLabel dialogueLabel;
-    private String response;
-    private int currentButton = 0;
-    private final List<JButton> buttons = new ArrayList<>();
+    protected String response;
+    protected int currentButton = 0;
+    private int currentDialogue = 0;
+    protected final List<JButton> buttons = new ArrayList<>();
+    protected final JPanel buttonPanel = new JPanel();
 
-    public DialoguePanel(Semaphore semaphore, List<String> buttonText){
+    public DialoguePanel(final List<String> dialogues){
+        setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(10, 10, 10, 10));
         dialogueLabel = new JLabel();
+        if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(0));
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-        setLayout(new BorderLayout());
         add(dialogueLabel, BorderLayout.WEST);
 
-
-        final JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
-
-        for(String text: buttonText){
-            final JButton button = new JButton(text);
-            button.setBackground(Color.WHITE);
-            button.addActionListener(e -> {
-                        response = button.getText();
-                        semaphore.release();
-                    }
-            );
-            button.addKeyListener(this);
-            buttonPanel.add(button);
-            buttons.add(button);
-        }
+        final JButton buttonNext = new JButton("next");
+        buttonNext.addActionListener(e -> {
+            if (dialogues.size() > currentDialogue) {
+                currentDialogue++;
+                dialogueLabel.setText(dialogues.get(currentDialogue));
+            }
+            if (dialogues.size() - 1 == currentDialogue) {
+                currentDialogue++;
+                setFinalButtons();
+            }
+        });
+        buttons.add(buttonNext);
+        buttonNext.addKeyListener(this);
+        buttonPanel.add(buttonNext);
         add(buttonPanel, BorderLayout.EAST);
+        buttonNext.requestFocus();
     }
 
-    @Override
-    public void setVisible(boolean visible){
-        super.setVisible(visible);
-        currentButton = 0;
-        buttons.get(currentButton).requestFocus();
-    }
-
-    public void setText(String dialogue){
-        dialogueLabel.setText(dialogue);
-    }
+    protected abstract void setFinalButtons();
 
     public String getValue(){
         return response;

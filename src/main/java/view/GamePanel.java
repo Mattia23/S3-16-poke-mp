@@ -5,6 +5,8 @@ import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
 
 public abstract class GamePanel extends JPanel{
 

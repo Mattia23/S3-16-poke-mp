@@ -202,14 +202,20 @@ object Settings {
 
   val CHARACTER_IMAGES_FOLDER = "/images/characters/"
 
-  val OK_BUTTON: util.List[String] = util.Arrays.asList("ok")
+  val CLASSIC_DIALOGUE: util.List[String] = util.Arrays.asList("next")
 
-  val YES_NO_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
+  val DOCTOR_DIALOGUE: util.List[String] = util.Arrays.asList("yes", "no")
 
-  val TRAINER_BUTTON: util.List[String] = util.Arrays.asList("fight", "change", "bye")
+  val TRAINER_DIALOGUE: util.List[String] = util.Arrays.asList("fight", "change", "bye")
 
-  val AUDIO_FORLDER: String = "/audio/"
+  val AUDIO_FOLDER: String = "/audio/"
 
-  val MAP_SONG: String = AUDIO_FORLDER + "town_theme.wav"
+  val MAP_SONG2: String = AUDIO_FOLDER + "town_theme.wav"
+
+  val MAP_SONG: String = AUDIO_FOLDER + "base-music.wav"
+
+  val POKEMONCENTER_SONG: String = AUDIO_FOLDER + "pokemoncenter.wav"
+
+  val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
 
 }

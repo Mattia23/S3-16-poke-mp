@@ -6,9 +6,9 @@ import javax.swing.SwingUtilities
 import model.entities.{Owner, PokemonFactory}
 import model.environment.{Audio, CoordinateImpl}
 import model.environment.Direction.Direction
-import model.map.{Building, InitialTownElements, MapCreator, TallGrass}
+import model.map._
 import utilities.Settings
-import view.{GamePanel, MapPanel, View}
+import view._
 
 import scala.util.Random
 
@@ -19,6 +19,8 @@ class MapController(private var view: View) extends GameController(view){
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private val audio = Audio(Settings.MAP_SONG)
+
+  this.setTrainerSpriteFront()
 
   override var gamePanel: GamePanel = new MapPanel(this, gameMap)
 
@@ -33,15 +35,19 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   override def doPause(): Unit = {
+    setTrainerSpriteFront()
+    audio.stop()
     agent.terminate()
   }
 
   override def doResume(): Unit = {
     agent = new GameControllerAgent
     agent.start()
+    audio.loop()
   }
 
   override def doTerminate(): Unit = {
+    audio.stop()
     agent.terminate()
   }
 
@@ -62,7 +68,15 @@ class MapController(private var view: View) extends GameController(view){
   }
 
   private def enterInBuilding(building: Building): Unit = {
-    println("Entro dentro "+ building.toString)
+    this.pauseGame()
+    var buildingController: BuildingController = null
+    building match{
+      case _: PokemonCenter =>
+        buildingController = new PokemonCenterController(this.view, this)
+      case _: Laboratory =>
+        buildingController = new LaboratoryController(this.view, this)
+    }
+    buildingController.startGame()
     trainerIsMoving = false
   }
 
@@ -101,4 +115,6 @@ class MapController(private var view: View) extends GameController(view){
     }
 
   }
+
+  override protected def doInteract(direction: Direction): Unit = ???
 }
