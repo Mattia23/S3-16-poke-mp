@@ -82,7 +82,8 @@ class MapController(private var view: View) extends GameController(view){
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      new BattleControllerImpl(trainer: Trainer,view: View)
+      this.pauseGame()
+      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }
 

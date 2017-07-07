@@ -16,7 +16,7 @@ trait BattleController {
   def trainerThrowPokeball(): Boolean
 }
 
-class BattleControllerImpl(val trainer: Trainer, val view: View) extends BattleController {
+class BattleControllerImpl(val controller: GameController, val trainer: Trainer, val view: View) extends BattleController {
   val battle: Battle = new BattleImpl(trainer)
   battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
   view.showBattle(battle.myPokemon,battle.wildPokemon,this)
@@ -37,7 +37,7 @@ class BattleControllerImpl(val trainer: Trainer, val view: View) extends BattleC
       }
       t.start()
     } else {
-      //qualcosa
+      controller.resumeGame()
     }
   }
 
