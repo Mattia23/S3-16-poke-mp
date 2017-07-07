@@ -4,7 +4,7 @@ import java.util.Optional
 import javax.swing.SwingUtilities
 
 import model.entities.{Owner, PokemonFactory}
-import model.environment.{Audio, CoordinateImpl, LaboratoryMap, PokemonCenterMap}
+import model.environment.{Audio, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map._
 import utilities.Settings

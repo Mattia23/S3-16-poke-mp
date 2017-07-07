@@ -108,8 +108,6 @@ class PokemonCenterController(private var view: View, private var mapController:
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
-          println("Dialogo")
-          gamePanel.setFocusable(false)
           this.view.showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(tile.isInstanceOf[Box]){
@@ -137,8 +135,6 @@ class LaboratoryController(private var view: View, private var mapController: Ga
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
-          println("Dialogo")
-          //this.gamePanel.setFocusable(false)
           this.view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(true/*trainer.capturedPokemons.isEmpty*/) {
