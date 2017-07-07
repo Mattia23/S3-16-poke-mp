@@ -202,11 +202,11 @@ object Settings {
 
   val CHARACTER_IMAGES_FOLDER = "/images/characters/"
 
-  val OK_BUTTON: util.List[String] = util.Arrays.asList("ok")
+  val CLASSIC_DIALOGUE: util.List[String] = util.Arrays.asList("next")
 
-  val YES_NO_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
+  val DOCTOR_DIALOGUE: util.List[String] = util.Arrays.asList("yes", "no")
 
-  val TRAINER_BUTTON: util.List[String] = util.Arrays.asList("fight", "change", "bye")
+  val TRAINER_DIALOGUE: util.List[String] = util.Arrays.asList("fight", "change", "bye")
 
   val AUDIO_FOLDER: String = "/audio/"
 

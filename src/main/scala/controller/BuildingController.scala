@@ -108,6 +108,8 @@ class PokemonCenterController(private var view: View, private var mapController:
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
           println("Dialogo")
+          gamePanel.setFocusable(false)
+          this.view.showDialogue(new ClassicDialoguePanel(null, Settings.DOCTOR_DIALOGUE))
         }
         if(tile.isInstanceOf[Box]){
           this.pauseGame()
@@ -135,6 +137,7 @@ class LaboratoryController(private var view: View, private var mapController: Ga
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
           println("Dialogo")
+
         }
         if(true/*trainer.capturedPokemons.isEmpty*/) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {

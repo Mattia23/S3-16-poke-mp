@@ -10,20 +10,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class DialoguePanel extends JPanel implements KeyListener{
+public abstract class DialoguePanel extends JPanel implements KeyListener{
     private final JLabel dialogueLabel;
-    private String response;
+    protected String response;
     private int currentButton = 0;
-    private final List<JButton> buttons = new ArrayList<>();
+    private int currentDialogue = 0;
+    protected final List<JButton> buttons = new ArrayList<>();
 
-    public DialoguePanel(Semaphore semaphore, List<String> buttonText){
+    public DialoguePanel(final Semaphore semaphore, final List<String> dialogues, final List<String> buttonText){
+        setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(10, 10, 10, 10));
         dialogueLabel = new JLabel();
+        if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(0));
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-        setLayout(new BorderLayout());
         add(dialogueLabel, BorderLayout.WEST);
-
 
         final JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
@@ -32,27 +33,22 @@ public class DialoguePanel extends JPanel implements KeyListener{
             final JButton button = new JButton(text);
             button.setBackground(Color.WHITE);
             button.addActionListener(e -> {
-                        response = button.getText();
-                        semaphore.release();
-                    }
-            );
+                if (dialogues.size() > currentDialogue) {
+                    dialogueLabel.setText(dialogues.get(++currentDialogue));
+                }
+                if (dialogues.size() == currentDialogue) {
+                    setFinalButtons();
+                }
+            });
             button.addKeyListener(this);
             buttonPanel.add(button);
             buttons.add(button);
+            buttons.get(currentButton).requestFocus();
         }
         add(buttonPanel, BorderLayout.EAST);
     }
 
-    @Override
-    public void setVisible(boolean visible){
-        super.setVisible(visible);
-        currentButton = 0;
-        buttons.get(currentButton).requestFocus();
-    }
-
-    public void setText(String dialogue){
-        dialogueLabel.setText(dialogue);
-    }
+    protected abstract void setFinalButtons();
 
     public String getValue(){
         return response;

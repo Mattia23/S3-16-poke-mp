@@ -12,7 +12,6 @@ public class BuildingPanel extends GamePanel {
     protected int centerY;
     private BuildingMap buildingMap;
     private GameViewObserver gameController;
-    private DialoguePanel dialoguePanel;
 
     public BuildingPanel(final GameViewObserver gameController, final BuildingMap buildingMap) {
         super(gameController);
@@ -22,17 +21,6 @@ public class BuildingPanel extends GamePanel {
 
         centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
         centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
-        /*this.currentX = buildingMap.entryCoordinate().x() * Settings.TILE_PIXEL();
-        this.currentY = buildingMap.entryCoordinate().y() * Settings.TILE_PIXEL();
-        /*this.setLayout(new BorderLayout());
-        if(buildingMap instanceof LaboratoryMap){
-            dialoguePanel = new DialoguePanel(semaphore, Settings.OK_BUTTON());
-        }else{
-            dialoguePanel = new DialoguePanel(semaphore, Settings.YES_NO_BUTTON());
-        }
-        dialoguePanel.setVisible(false);
-        this.add(dialoguePanel, BorderLayout.SOUTH);
-        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));*/
 
     }
 
