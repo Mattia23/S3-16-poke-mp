@@ -8,6 +8,7 @@ import model.environment._
 import model.map.Box
 import utilities.Settings
 import view._
+import scala.collection.JavaConverters._
 
 abstract class BuildingController(private var view: View, private var mapController: GameController) extends GameController(view){
 
@@ -109,7 +110,7 @@ class PokemonCenterController(private var view: View, private var mapController:
         if(nextPosition equals buildingMap.npc.coordinate){
           println("Dialogo")
           gamePanel.setFocusable(false)
-          this.view.showDialogue(new ClassicDialoguePanel(null, Settings.DOCTOR_DIALOGUE))
+          this.view.showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(tile.isInstanceOf[Box]){
           this.pauseGame()
@@ -137,7 +138,8 @@ class LaboratoryController(private var view: View, private var mapController: Ga
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
           println("Dialogo")
-
+          //this.gamePanel.setFocusable(false)
+          this.view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(true/*trainer.capturedPokemons.isEmpty*/) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {

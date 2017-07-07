@@ -15,7 +15,7 @@ trait StaticCharacter {
 
   def coordinate: Coordinate
 
-  def dialogue: String
+  def dialogue: List[String]
 
 }
 
@@ -27,7 +27,8 @@ class Oak extends StaticCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(6, 4)
 
-  override val dialogue: String = "Ciao bello!"
+  override val dialogue: List[String] = List("Ciao bell!", "Benvenuto nel mondo dei Pokémon.",
+    "Se non l'hai ancora fatto, puoi scegliere uno dei 3 Pokémon sulla mia scrivania.", "Buon avventura!")
 
 }
 
@@ -39,7 +40,7 @@ class Doctor extends StaticCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(7, 3)
 
-  override val dialogue: String = "Uuuuuuuuè ragazzi come va? Vuoi che ti curi i Pokemon?"
+  override val dialogue: List[String] = List("Ciao ragazzo.", "Vuoi che curi i tuoi Pokemon?")
 }
 
 abstract class PokemonCharacter extends StaticCharacter{
@@ -47,8 +48,6 @@ abstract class PokemonCharacter extends StaticCharacter{
   override def HEIGHT: Int = 32
 
   def image: Image
-
-  def dialogue: String
 
   def pokemon: Pokemon
 }
@@ -60,7 +59,7 @@ class Bulbasaur extends PokemonCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(8, 4)
 
-  override def dialogue: String = "Bulbasaaaaur"
+  override def dialogue: List[String] = List("Bulbasaaaaur")
 }
 
 class Charmander extends PokemonCharacter{
@@ -70,7 +69,7 @@ class Charmander extends PokemonCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(9, 4)
 
-  override def dialogue: String = "Chaaaarmandeeer"
+  override def dialogue: List[String] = List("Chaaaarmandeeer")
 }
 
 class Squirtle extends PokemonCharacter{
@@ -80,5 +79,5 @@ class Squirtle extends PokemonCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(10, 4)
 
-  override def dialogue: String = "Squeroo squerooo"
+  override def dialogue: List[String] = List("Squeroo squerooo")
 }

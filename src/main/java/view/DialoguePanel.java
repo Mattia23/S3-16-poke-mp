@@ -13,11 +13,12 @@ import java.util.concurrent.Semaphore;
 public abstract class DialoguePanel extends JPanel implements KeyListener{
     private final JLabel dialogueLabel;
     protected String response;
-    private int currentButton = 0;
+    protected int currentButton = 0;
     private int currentDialogue = 0;
     protected final List<JButton> buttons = new ArrayList<>();
+    protected final JPanel buttonPanel = new JPanel();
 
-    public DialoguePanel(final Semaphore semaphore, final List<String> dialogues, final List<String> buttonText){
+    public DialoguePanel(final List<String> dialogues){
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -26,25 +27,22 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
         add(dialogueLabel, BorderLayout.WEST);
 
-        final JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
-
-        for(String text: buttonText){
-            final JButton button = new JButton(text);
-            button.setBackground(Color.WHITE);
-            button.addActionListener(e -> {
-                if (dialogues.size() > currentDialogue) {
-                    dialogueLabel.setText(dialogues.get(++currentDialogue));
-                }
-                if (dialogues.size() == currentDialogue) {
-                    setFinalButtons();
-                }
-            });
-            button.addKeyListener(this);
-            buttonPanel.add(button);
-            buttons.add(button);
-            buttons.get(currentButton).requestFocus();
-        }
+        final JButton buttonNext = new JButton("next");
+        buttonNext.addActionListener(e -> {
+            if (dialogues.size() > currentDialogue) {
+                currentDialogue++;
+                dialogueLabel.setText(dialogues.get(currentDialogue));
+            }
+            if (dialogues.size() - 1 == currentDialogue) {
+                currentDialogue++;
+                setFinalButtons();
+            }
+        });
+        buttonPanel.add(buttonNext);
+        buttons.add(buttonNext);
+        buttons.get(currentButton).addKeyListener(this);
+        buttons.get(currentButton).requestFocus();
         add(buttonPanel, BorderLayout.EAST);
     }
 
