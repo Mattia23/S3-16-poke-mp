@@ -28,7 +28,7 @@ class Oak extends StaticCharacter{
   override def coordinate: Coordinate = CoordinateImpl(6, 4)
 
   override val dialogue: List[String] = List("Ciao bell!", "Benvenuto nel mondo dei Pokémon.",
-    "Se non l'hai ancora fatto, puoi scegliere uno dei 3 Pokémon sulla mia scrivania.", "Buon avventura!")
+    "Puoi scegliere uno dei 3 Pokémon sulla mia scrivania.", "Buon avventura!")
 
 }
 

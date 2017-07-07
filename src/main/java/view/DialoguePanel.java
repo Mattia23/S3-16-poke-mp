@@ -39,11 +39,12 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
                 setFinalButtons();
             }
         });
-        buttonPanel.add(buttonNext);
         buttons.add(buttonNext);
-        buttons.get(currentButton).addKeyListener(this);
-        buttons.get(currentButton).requestFocus();
+        buttonNext.addKeyListener(this);
+        buttonPanel.add(buttonNext);
         add(buttonPanel, BorderLayout.EAST);
+        buttonNext.requestFocus();
+        buttonNext.requestFocusInWindow();
     }
 
     protected abstract void setFinalButtons();
