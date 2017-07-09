@@ -33,6 +33,8 @@ trait GameViewObserver {
 
   def resumeGame(): Unit
 
+  def resumeGameAtPokemonCenter(): Unit
+
   def moveTrainer(direction: Direction.Direction): Unit
 
   def trainerInteract(direction: Direction.Direction): Unit
@@ -84,6 +86,11 @@ abstract class GameController(private var view: View) extends GameViewObserver{
     inPause = false
     doResume()
     view.showPanel(gamePanel)
+  }
+
+  override def resumeGameAtPokemonCenter(): Unit = {
+    //SPOSTA L'ALLENATORE DAVANTI AL CENTRO POKEMON
+    resumeGame()
   }
 
   protected def doResume(): Unit

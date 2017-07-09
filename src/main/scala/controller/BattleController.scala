@@ -1,7 +1,6 @@
 package controller
 
-import java.util.concurrent.{Executors, TimeUnit}
-
+import database.remote.DBConnect
 import model.entities.{Owner, Trainer}
 import model.game.{Battle, BattleImpl}
 import view.View
@@ -13,7 +12,7 @@ trait BattleController {
 
   def pokemonWildAttacks(): Unit
 
-  def getPokeballAvailableNumber(): Int
+  def getPokeballAvailableNumber: Int
 
   def trainerThrowPokeball(): Boolean
 
@@ -22,13 +21,17 @@ trait BattleController {
   def pokemonToChangeIsSelected(id: Int): Unit
 
   def trainerCanQuit(): Boolean
+
+  def resumeGameAtPokemonCenter(): Unit
 }
 
 class BattleControllerImpl(val controller: GameController, val trainer: Trainer, val view: View) extends BattleController {
   val battle: Battle = new BattleImpl(trainer,this)
-  battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
-  showNewView
   private var timer: Thread = _
+  private var battleFinished = false
+  battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
+  showNewView()
+
 
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
@@ -62,11 +65,11 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
     battle.updatePokemon()
     battle.startBattleRound(id)
-    showNewView
+    showNewView()
     pokemonWildAttacksAfterTrainerChoice()
   }
 
-  override def getPokeballAvailableNumber(): Int = {
+  override def getPokeballAvailableNumber: Int = {
     battle.pokeball
   }
 
@@ -99,6 +102,12 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
     }
   }
 
+  override def resumeGameAtPokemonCenter(): Unit = {
+    battleFinished = true
+    controller.resumeGameAtPokemonCenter()
+    DBConnect.rechangeAllTrainerPokemon(trainer.id)
+  }
+
   private def showNewView(): Unit = {
     view.showBattle(battle.myPokemon,battle.wildPokemon,this)
   }
@@ -108,8 +117,8 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
       override def run() {
         view.getBattlePanel.pokemonIsDead(index)
         Thread.sleep(2000)
-        if(index==1) {
-          showNewView
+        if(index==1 && !battleFinished) {
+          showNewView()
         } else if (index==0) {
           controller.resumeGame()
         }

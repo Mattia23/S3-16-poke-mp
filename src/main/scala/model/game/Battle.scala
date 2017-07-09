@@ -61,7 +61,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
       } else {
         pointsEarned = 30
         _trainer.updateTrainer(pointsEarned)
-        println("torno al centro pokemon")
+        controller.resumeGameAtPokemonCenter
       }
     }
   }

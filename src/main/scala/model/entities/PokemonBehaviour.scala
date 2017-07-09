@@ -58,10 +58,14 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
           this.pokemonWithLife.pokemon.level+1,
           this.pokemonWithLife.pokemon.experiencePoints+4,
           newExpPoints - levelExp + 4)
+      } else {
+        (this.pokemonWithLife.pokemon.id,this.pokemonWithLife.pokemon.level,this.pokemonWithLife.pokemon.experiencePoints,newExpPoints)
       }
+    } else {
+      (this.pokemonWithLife.pokemon.id, this.pokemonWithLife.pokemon.level, this.pokemonWithLife.pokemon.experiencePoints,
+        this.pokemonWithLife.pokemon.levelExperience)
     }
-    (this.pokemonWithLife.pokemon.id, this.pokemonWithLife.pokemon.level, this.pokemonWithLife.pokemon.experiencePoints,
-      this.pokemonWithLife.pokemon.levelExperience)
+
   }
 
   private def checkEvolution(newLevel: Int): Int = {
@@ -74,11 +78,12 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
   }
 
   override def updatePokemonTrainer(databaseId: Int): Unit = {
+    val pokemonData = checkIfLevelGrows
     val pokemon = HashMap(
-      "id" -> checkIfLevelGrows._1.toString,
-      "level" -> checkIfLevelGrows._2.toString,
-      "points" -> checkIfLevelGrows._3.toString,
-      "level_exp" -> checkIfLevelGrows._4.toString,
+      "id" -> pokemonData._1.toString,
+      "level" -> pokemonData._2.toString,
+      "points" -> pokemonData._3.toString,
+      "level_exp" -> pokemonData._4.toString,
       "life" -> this.pokemonWithLife.pokemonLife.toString
     )
     DBConnect.updatePokemon(pokemon,databaseId)
