@@ -24,7 +24,7 @@ public interface View {
 
     BattleView getBattlePanel();
 
-    void showPokemonChoice();
+    void showPokemonChoice(BattleController battleController);
 
     void showPause();
 

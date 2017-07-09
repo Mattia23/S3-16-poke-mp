@@ -115,7 +115,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
         southWestPanel.setOpaque(false);
         trainerChoices.put("Attack",new JButton("Attack"));
         trainerChoices.put("Change pokemon",new JButton("Change Pokemon"));
-        trainerChoices.put("Pokeball",new JButton("Pokeball (x3)"));
+        trainerChoices.put("Pokeball",new JButton("Pokeball (x"+controller.getPokeballAvailableNumber()+")"));
         trainerChoices.put("Escape",new JButton("Escape"));
         for(String s : trainerChoices.keySet()) {
             trainerChoices.get(s).setFocusable(false);
@@ -151,7 +151,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
             Object[] names = attacks.keySet().toArray();
             frame.getRootPane().setDefaultButton(attacks.get(names[index].toString()));
         });
-        trainerChoices.get("Change pokemon").addActionListener(e -> {System.out.println("CAMBIA POKEMON");});
+        trainerChoices.get("Change pokemon").addActionListener(e -> controller.changePokemon());
         trainerChoices.get("Pokeball").addActionListener(e -> {
             trainerChoices.get("Pokeball").setEnabled(false);
             pokeballAnimation = true;
@@ -183,7 +183,10 @@ public class BattlePanel extends ImagePanel implements BattleView {
                                     pokemonImages[0].setVisible(true);
                                     Thread.sleep(1000);
                                     pokeballAnimation = false;
-                                    trainerChoices.get("Pokeball").setEnabled(true);
+                                    trainerChoices.get("Pokeball").setText("Pokeball (x"+controller.getPokeballAvailableNumber()+")");
+                                    if(controller.getPokeballAvailableNumber()>0) {
+                                        trainerChoices.get("Pokeball").setEnabled(true);
+                                    }
                                 }
                             } catch (InterruptedException e1) {
                                 e1.printStackTrace();
@@ -196,7 +199,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
             });
             t.start();
         });
-        trainerChoices.get("Escape").addActionListener(e -> {System.out.println("ESCAPE");});
+        trainerChoices.get("Escape").addActionListener(e -> {if (!controller.trainerCanQuit()) System.out.println("non posso uscire");});
         for(String att : attacks.keySet()) {
             attacks.get(att).addActionListener(e -> {
                 Object[] atts = attacks.keySet().toArray();
@@ -297,14 +300,22 @@ public class BattlePanel extends ImagePanel implements BattleView {
             attacks.get(att).setVisible(attacksAreVisible);
         }
     }
-
+    @Override
     public void setPokemonLife() {
         myPokemonLife.setText(pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
     }
-
+    @Override
     public void setPokemonLifeProgressBar(int life, int owner) {
         if (owner == Owner.TRAINER().id()) { pokemonProgressBar[1].setValue(life); }
         else { pokemonProgressBar[0].setValue(life); }
+    }
+    @Override
+    public void pokemonIsDead(int i) {
+        pokemonImages[i].setVisible(false);
+    }
+    @Override
+    public void pokemonWildAttacksAfterTrainerChoice() {
+        System.out.println("Pokemon wild use ATTACCO");
     }
 
     @Override

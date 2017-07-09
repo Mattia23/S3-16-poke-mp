@@ -17,7 +17,7 @@ class MapController(private var view: View) extends GameController(view){
 
   private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
-  private val audio = Audio(Settings.MAP_SONG)
+  //private val audio = Audio(Settings.MAP_SONG)
 
   this.setTrainerSpriteFront()
 
@@ -25,7 +25,7 @@ class MapController(private var view: View) extends GameController(view){
 
   override def doStart(): Unit = {
     agent = new GameControllerAgent
-    audio.loop()
+    //audio.loop()
     try {
       agent.start()
     } catch {
@@ -35,18 +35,18 @@ class MapController(private var view: View) extends GameController(view){
 
   override def doPause(): Unit = {
     setTrainerSpriteFront()
-    audio.stop()
+    //audio.stop()
     agent.terminate()
   }
 
   override def doResume(): Unit = {
     agent = new GameControllerAgent
     agent.start()
-    audio.loop()
+    //audio.loop()
   }
 
   override def doTerminate(): Unit = {
-    audio.stop()
+    //audio.stop()
     agent.terminate()
   }
 

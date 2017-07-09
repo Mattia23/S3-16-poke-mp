@@ -135,8 +135,6 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
     if(!this.pokedex.checkIfAlreadyMet(pokemon)){
       DBConnect.addMetPokemon(this.id,pokemon)
       this.pokedex.pokedex_=(DBConnect.getMetPokemonList(id).get())
-    } else {
-      println("You have already met this pokemon")
     }
   }
 

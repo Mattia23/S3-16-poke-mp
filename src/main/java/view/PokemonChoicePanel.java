@@ -1,6 +1,6 @@
 package view;
 
-import controller.Controller;
+import controller.BattleController;
 import database.remote.DBConnect;
 import model.entities.Trainer;
 import scala.Tuple2;
@@ -14,21 +14,18 @@ import java.util.*;
 import java.util.List;
 
 public class PokemonChoicePanel extends BasePanel{
-    private View parentView;
-    private Controller controller;
+    private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
+    private BattleController controller;
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
     private List<Tuple2<JRadioButton,Integer>> buttonList = new ArrayList<>();
     private JButton submit;
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1077);
 
 
-    public PokemonChoicePanel(View view, Controller controller, Trainer trainer) {
-
-        int fontSize = (int) (Settings.FRAME_SIDE() * 0.034);
-        this.parentView = view;
+    public PokemonChoicePanel(BattleController controller, Trainer trainer) {
         this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
-        this.backButton.addActionListener(e -> this.parentView.showMenu());
+        this.backButton.setVisible(false);
         this.submit = new JButton("Choose!");
         List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
         Boolean first = true;
@@ -49,7 +46,7 @@ public class PokemonChoicePanel extends BasePanel{
 
                 JRadioButton radioButton = new JRadioButton(s,myImageIcon);
                 radioButton.setOpaque(false);
-                radioButton.setFont(new Font("Verdana", Font.PLAIN, fontSize));
+                radioButton.setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
                 if(Integer.parseInt(pokemonMap.get("lifePoints").toString()) == 0){
                     radioButton.setEnabled(false);
                 }
@@ -68,8 +65,7 @@ public class PokemonChoicePanel extends BasePanel{
         this.submit.addActionListener(e -> {
             for(Tuple2<JRadioButton,Integer> radioButton: buttonList){
                 if(radioButton._1().isSelected()){
-                    JOptionPane.showMessageDialog(this,"You choose id:" + radioButton._2(),
-                            "GOOD CHOICE",JOptionPane.INFORMATION_MESSAGE);
+                    controller.pokemonToChangeIsSelected(radioButton._2());
                 }
             }
         });
