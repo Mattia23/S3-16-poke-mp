@@ -1,7 +1,9 @@
 package controller
 
+import javax.swing.SwingUtilities
+
 import model.entities._
-import model.environment.{Coordinate, CoordinateImpl, Direction}
+import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
 import utilities.Settings
 import view.{GamePanel, View}
@@ -41,11 +43,13 @@ trait GameController {
 abstract class GameControllerImpl(private var view: View) extends GameController{
   private final val TRAINER_STEPS = 4
 
+  private var agent: GameControllerAgent = _
+  private var _trainerSprite: Sprite = _
+  private var fistStep: Boolean = true
   protected var inGame = false
   protected var inPause = false
   protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
-  private var _trainerSprite: Sprite = _
-  private var fistStep: Boolean = true
+  protected var audio: Audio = _
 
   override var trainerPosition: Coordinate = trainer.coordinate
 
@@ -58,8 +62,14 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   override def trainerSprite: String = _trainerSprite.image
 
   override final def startGame(): Unit = {
-    inGame = true
     doStart()
+    inGame = true
+    agent = new GameControllerAgent
+    try {
+      agent.start()
+    } catch {
+      case e: IllegalStateException => view.showError(e.toString, "Not initialized")
+    }
     view.showPanel(gamePanel)
   }
 
@@ -67,22 +77,26 @@ abstract class GameControllerImpl(private var view: View) extends GameController
 
   override final def terminateGame(): Unit = {
     inGame = false
-    doTerminate()
+    audio.stop()
+    agent.terminate()
   }
 
   protected def doTerminate(): Unit
 
   override final def pauseGame(): Unit = {
-    inPause = true
     doPause()
+    inPause = true
+    agent.terminate()
     view.showPause()
   }
 
   protected def doPause(): Unit
 
   override final def resumeGame(): Unit = {
-    inPause = false
     doResume()
+    inPause = false
+    agent = new GameControllerAgent
+    agent.start()
     view.showPanel(gamePanel)
   }
 
@@ -206,5 +220,34 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   protected def setTrainerSpriteFront(): Unit = _trainerSprite = trainer.sprites.frontS
 
   protected def setTrainerSpriteBack(): Unit = _trainerSprite = trainer.sprites.backS
+
+
+
+  private class GameControllerAgent extends Thread {
+    var stopped: Boolean = false
+
+    override def run(): Unit = {
+      while(isInGame && !stopped){
+        if(!isInPause){
+          try
+            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
+          catch {
+            case e: Exception => System.out.println(e)
+          }
+        }
+
+        try
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
+        catch {
+          case e: InterruptedException => System.out.println(e)
+        }
+      }
+    }
+
+    def terminate(): Unit = {
+      stopped = true
+    }
+
+  }
 
 }
