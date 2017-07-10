@@ -24,7 +24,7 @@ public class BuildingPanel extends GamePanel {
     }
 
     @Override
-    protected synchronized void doPaint(final Graphics g) {
+    protected void doPaint(final Graphics g) {
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
         g.drawImage(LoadImage.load(this.gameController.trainerSprite()),

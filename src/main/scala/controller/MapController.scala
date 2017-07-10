@@ -56,7 +56,7 @@ class MapController(private var view: View) extends GameControllerImpl(view){
   override protected def doInteract(direction: Direction): Unit = ???
 
   private def enterInBuilding(building: Building): Unit = {
-    this.pauseGame()
+    this.pause()
     var buildingController: BuildingController = null
     building match{
       case _: PokemonCenter =>
@@ -64,7 +64,7 @@ class MapController(private var view: View) extends GameControllerImpl(view){
       case _: Laboratory =>
         buildingController = new LaboratoryController(this.view, this)
     }
-    buildingController.startGame()
+    buildingController.start()
     trainerIsMoving = false
   }
 

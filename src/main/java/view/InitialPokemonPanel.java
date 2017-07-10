@@ -22,9 +22,9 @@ public class InitialPokemonPanel extends JPanel {
         yes.addActionListener(e ->{
             //TODO correggere più avanti
             buildingController.trainer().addFavouritePokemon(pokemon.id());
-            buildingController.resumeGame();
+            buildingController.resume();
         });
-        no.addActionListener(e -> buildingController.resumeGame());
+        no.addActionListener(e -> buildingController.resume());
         buttonPanel.add(new JLabel("Do you choose this Pokémon?"), buttonPanel);
         buttonPanel.add(yes, buttonPanel);
         buttonPanel.add(no, buttonPanel);

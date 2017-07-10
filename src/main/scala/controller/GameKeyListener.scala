@@ -36,7 +36,7 @@ class GameKeyListener(val gameController: GameController) extends KeyListener{
       case MOVE_RIGHT => direction = Direction.RIGHT
       case MOVE_UP => direction = Direction.UP
       case MOVE_DOWN => direction = Direction.DOWN
-      case PAUSE_BUTTON => gameController.pauseGame
+      case PAUSE_BUTTON => gameController.pause
     }
   }
 

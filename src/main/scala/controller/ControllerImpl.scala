@@ -48,7 +48,7 @@ class ControllerImpl extends Controller {
       this.gameController = new MapController(this.view)
     }
 
-    this.gameController.startGame()
+    this.gameController.start()
   }
 
   override def getGameController: Optional[GameController] = Optional.ofNullable(this.gameController)

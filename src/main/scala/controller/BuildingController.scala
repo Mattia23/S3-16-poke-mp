@@ -27,9 +27,9 @@ abstract class BuildingController(private var view: View, private var mapControl
       } catch {
         case _: ArrayIndexOutOfBoundsException =>
           trainerIsMoving = false
-          if (trainerPosition equals buildingMap.entryCoordinate) {
-            this.terminateGame()
-            mapController.resumeGame()
+          if (trainer.coordinate equals buildingMap.entryCoordinate) {
+            this.terminate()
+            mapController.resume()
           }
         case _: NullPointerException => trainerIsMoving = false
       }
@@ -52,7 +52,7 @@ abstract class BuildingController(private var view: View, private var mapControl
 
 class PokemonCenterController(private var view: View, private var mapController: GameControllerImpl) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
-  this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
+  this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new PokemonCenterPanel(this, buildingMap)
 
   audio = Audio(Settings.POKEMONCENTER_SONG)
@@ -66,7 +66,7 @@ class PokemonCenterController(private var view: View, private var mapController:
           this.view.showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(tile.isInstanceOf[Box]){
-          this.pauseGame()
+          this.pause()
           view.showPanel(new BoxPanel(this))
         }
       }catch{
@@ -78,7 +78,7 @@ class PokemonCenterController(private var view: View, private var mapController:
 
 class LaboratoryController(private var view: View, private var mapController: GameControllerImpl) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
-  this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
+  this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
   override var gamePanel: GamePanel = new LaboratoryPanel(this, buildingMap, true/*this.trainer.capturedPokemons.isEmpty*/)
 
   audio = Audio(Settings.LABORATORY_SONG)
@@ -93,7 +93,7 @@ class LaboratoryController(private var view: View, private var mapController: Ga
         }
         if(true/*trainer.capturedPokemons.isEmpty*/) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
-            this.pauseGame()
+            this.pause()
             view.showPanel(new InitialPokemonPanel(this, Pokemon(1,"ciao",(1,2,3,4),5,0,0,null)/*pokemon.pokemon*/))
           }
         }

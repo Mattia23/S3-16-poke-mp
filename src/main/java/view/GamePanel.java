@@ -16,8 +16,8 @@ public abstract class GamePanel extends JPanel{
         this.requestFocusInWindow();
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
-        this.currentX = gameController.trainerPosition().x() * Settings.TILE_PIXEL();
-        this.currentY = gameController.trainerPosition().y() * Settings.TILE_PIXEL();
+        this.currentX = gameController.trainer().coordinate().x() * Settings.TILE_PIXEL();
+        this.currentY = gameController.trainer().coordinate().y() * Settings.TILE_PIXEL();
     }
 
     @Override

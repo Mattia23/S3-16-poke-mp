@@ -69,7 +69,7 @@ public class BoxPanel extends JPanel {
         add(pokemonPanel, BorderLayout.CENTER);
         pokemonPanel.setVisible(false);
         final JButton close = new JButton("close");
-        close.addActionListener(e -> buildingController.resumeGame());
+        close.addActionListener(e -> buildingController.resume());
         add(close, BorderLayout.SOUTH);
 
         paintBox();

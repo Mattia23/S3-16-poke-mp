@@ -13,9 +13,7 @@ trait GameController {
 
   def gamePanel_=(gamePanel: GamePanel): Unit
 
-  def trainerPosition: Coordinate
-
-  def trainerPosition_=(position: Coordinate): Unit
+  def trainer: Trainer
 
   def trainerIsMoving: Boolean
 
@@ -27,13 +25,13 @@ trait GameController {
 
   def trainerSprite: String
 
-  def startGame(): Unit
+  def start(): Unit
 
-  def terminateGame(): Unit
+  def terminate(): Unit
 
-  def pauseGame(): Unit
+  def pause(): Unit
 
-  def resumeGame(): Unit
+  def resume(): Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
 
@@ -48,10 +46,9 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   private var fistStep: Boolean = true
   protected var inGame = false
   protected var inPause = false
-  protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
   protected var audio: Audio = _
 
-  override var trainerPosition: Coordinate = trainer.coordinate
+  override val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
 
   override var trainerIsMoving: Boolean = false
 
@@ -61,7 +58,7 @@ abstract class GameControllerImpl(private var view: View) extends GameController
 
   override def trainerSprite: String = _trainerSprite.image
 
-  override final def startGame(): Unit = {
+  override final def start(): Unit = {
     doStart()
     inGame = true
     agent = new GameControllerAgent
@@ -70,20 +67,20 @@ abstract class GameControllerImpl(private var view: View) extends GameController
     } catch {
       case e: IllegalStateException => view.showError(e.toString, "Not initialized")
     }
-    view.showPanel(gamePanel)
+    view showPanel gamePanel
   }
 
   protected def doStart(): Unit
 
-  override final def terminateGame(): Unit = {
+  override final def terminate(): Unit = {
+    doTerminate()
     inGame = false
-    audio.stop()
     agent.terminate()
   }
 
   protected def doTerminate(): Unit
 
-  override final def pauseGame(): Unit = {
+  override final def pause(): Unit = {
     doPause()
     inPause = true
     agent.terminate()
@@ -92,12 +89,12 @@ abstract class GameControllerImpl(private var view: View) extends GameController
 
   protected def doPause(): Unit
 
-  override final def resumeGame(): Unit = {
+  override final def resume(): Unit = {
     doResume()
     inPause = false
     agent = new GameControllerAgent
     agent.start()
-    view.showPanel(gamePanel)
+    view showPanel gamePanel
   }
 
   protected def doResume(): Unit
@@ -113,22 +110,22 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
       _trainerSprite = trainer.sprites.backS
-      CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+      CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y - 1)
     case Direction.DOWN =>
       _trainerSprite = trainer.sprites.frontS
-      CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+      CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y + 1)
     case Direction.RIGHT =>
       _trainerSprite = trainer.sprites.rightS
-      CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+      CoordinateImpl(trainer.coordinate.x + 1, trainer.coordinate.y)
     case Direction.LEFT =>
       _trainerSprite = trainer.sprites.leftS
-      CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+      CoordinateImpl(trainer.coordinate.x - 1, trainer.coordinate.y)
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
     new Thread(() => {
-      var actualX: Double = trainerPosition.x
-      var actualY: Double = trainerPosition.y
+      var actualX: Double = trainer.coordinate.x
+      var actualY: Double = trainer.coordinate.y
       for (_ <- 1 to TRAINER_STEPS) {
         direction match {
           case Direction.UP =>
@@ -215,7 +212,7 @@ abstract class GameControllerImpl(private var view: View) extends GameController
     }
   }
 
-  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
+  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainer.coordinate = CoordinateImpl(coordinate.x, coordinate.y)
 
   protected def setTrainerSpriteFront(): Unit = _trainerSprite = trainer.sprites.frontS
 
