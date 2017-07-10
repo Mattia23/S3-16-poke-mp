@@ -1,10 +1,12 @@
 package controller
 
+import java.util
+
 import model.entities._
 import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
 import utilities.Settings
-import view.{GameMenuPanel, GamePanel, View}
+import view.{ClassicDialoguePanel, GameMenuPanel, GamePanel, View}
 
 trait GameViewObserver {
 
@@ -66,6 +68,12 @@ abstract class GameController(private var view: View) extends GameViewObserver{
     inGame = true
     doStart()
     view.showPanel(gamePanel)
+    if(trainer.favouritePokemons.isEmpty){
+      view.showDialogue(new ClassicDialoguePanel(this,
+        util.Arrays.asList("Heyy ragazzo!","E' pericoloso gironzolare senza Pokémon!",
+          "Vieni a sceglierne uno!",
+          "(questa voce sembra provenire dal laboratorio laggiù a destra)")))
+    }
   }
 
   protected def doStart(): Unit
