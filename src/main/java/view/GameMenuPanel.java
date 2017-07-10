@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class GameMenuPanel extends JPanel {
 
+
     public GameMenuPanel(GameController gameController){
         gameController.gamePanel().setFocusable(false);
         setLayout(new GridLayout(0,1));
