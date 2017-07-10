@@ -16,13 +16,14 @@ public class BasePanel extends ImagePanel {
     private static final int INSETS = 10;
     protected JButton backButton;
     protected JPanel centralPanel;
+    protected JPanel downPanel;
     protected GridBagConstraints k;
 
     public BasePanel() {
 
         this.setLayout(new BorderLayout());
         this.centralPanel = new JPanel(new GridBagLayout());
-        final JPanel downPanel = new JPanel(new BorderLayout());
+        this.downPanel = new JPanel(new BorderLayout());
 
         final ImageIcon icon = new ImageIcon(BasePanel.class.getResource(Settings.IMAGES_FOLDER()
                 + "arrow-back.png"));
