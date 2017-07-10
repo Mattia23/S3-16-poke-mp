@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import controller.SignInController;
 import database.remote.DBConnect;
 import utilities.Settings;
 
@@ -10,18 +11,14 @@ import java.util.Map;
 
 public class SignInPanel extends BasePanel {
 
-    private Controller controller;
-    private View parentView;
-    private JButton submit;
-    private Map<String,JTextField> accountData;
+    private SignInController controller;
 
-    public SignInPanel(View view, Controller ctrl) {
-        this.parentView = view;
-        this.controller = ctrl;
+    public SignInPanel(SignInController controller) {
+        this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "sign-in.png");
-        this.backButton.addActionListener(e -> this.parentView.showMenu());
-        this.submit  = new JButton("Submit");
-        this.accountData = new HashMap<>();
+        this.backButton.addActionListener(e -> this.controller.back());
+        JButton submit  = new JButton(Settings.SUBMIT_BUTTON());
+        Map<String,JTextField> accountData = new HashMap<>();
 
         for(AccountData data : AccountData.values()) {
             this.centralPanel.add(new JLabel(data.toString()), k);
@@ -29,31 +26,12 @@ public class SignInPanel extends BasePanel {
             JTextField textField = new JTextField(20);
             this.centralPanel.add(textField,k);
             k.gridy++;
-            this.accountData.put(data.toString(),textField);
+            accountData.put(data.toString(),textField);
         }
-        this.centralPanel.add(this.submit, k);
+        this.centralPanel.add(submit, k);
 
-        this.submit.addActionListener(e -> {
-            if(this.accountData.get(AccountData.Name.toString()).getText().length() > 2  &&
-                    this.accountData.get(AccountData.Surname.toString()).getText().length() > 2 &&
-                    this.accountData.get(AccountData.Email.toString()).getText().contains(String.valueOf('@'))  &&
-                    this.accountData.get(AccountData.Username.toString()).getText().length() > 3 &&
-                    this.accountData.get(AccountData.Password.toString()).getText().length() > 7) {
+        submit.addActionListener(e -> this.controller.signIn(accountData));
 
-                if(DBConnect.insertCredentials(this.accountData,1)) {
-                    showMessage("You have registered correctly","SIGNIN SUCCEEDED",JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    showMessage("Username not available","SIGNIN FAILED",JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                this.parentView.showError("Error in entering data", "WRONG SINGIN");
-            }
-        });
-
-    }
-
-    private void showMessage(final String msg, final String title, final int msgType) {
-        JOptionPane.showMessageDialog(this,msg,title,msgType);
     }
 
 }

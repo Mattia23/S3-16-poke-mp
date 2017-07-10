@@ -12,21 +12,20 @@ public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
-    private BuildingPanel buildingPanel;
-    private Dimension frameDim;
+    private Dimension frameDiminsion;
     private BattleView battlePanel;
 
-    public ViewImpl(Controller controller) {
-        this.controller = controller;
+    public ViewImpl() {
+       // this.controller = controller;
         this.setTitle(WINDOW_TITLE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frameDim = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
-        this.setSize(frameDim);
-        this.setMinimumSize(frameDim);
+        this.frameDiminsion = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
+        this.setSize(frameDiminsion);
+        this.setMinimumSize(frameDiminsion);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);
-        this.getContentPane().add(new MenuPanel(this, this.controller));
+     //   this.getContentPane().add(new InitialMenuPanel(this, this.controller));
         this.validate();
         this.setVisible(true);
     }
@@ -48,23 +47,13 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void setController(Controller controller) { this.controller = controller; }
-    
-
-    @Override
     public void showMenu() {
-        this.setPanel(new MenuPanel(this, this.controller));
+        /*this.setPanel(new InitialMenuPanel(this, this.controller));*/
     }
 
     @Override
-    public void showLogin() { this.setPanel(new LoginPanel(this, this.controller)); }
-
-    @Override
-    public void showSignIn() { this.setPanel(new SignInPanel(this, this.controller)); }
-
-    @Override
-    public void showPanel(JPanel gamePanel) {
-        this.setPanel(gamePanel);
+    public void showPanel(JPanel panel) {
+        this.setPanel(panel);
     }
 
     @Override
