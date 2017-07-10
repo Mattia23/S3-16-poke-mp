@@ -52,12 +52,6 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showLogin() { /*this.setPanel(new LoginPanel(this, this.controller)); */}
-
-    @Override
-    public void showSignIn() { /*this.setPanel(new SignInPanel(this, this.controller));*/ }
-
-    @Override
     public void showPanel(JPanel panel) {
         this.setPanel(panel);
     }

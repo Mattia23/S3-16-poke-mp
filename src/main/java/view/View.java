@@ -9,10 +9,6 @@ import javax.swing.*;
 public interface View {
     void showMenu();
 
-    void showLogin();
-
-    void showSignIn();
-
     void showPanel(JPanel panel);
 
     void showDialogue(JPanel dialoguePanel);

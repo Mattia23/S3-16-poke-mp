@@ -3,32 +3,24 @@ package view;
 import controller.LoginController;
 import utilities.Settings;
 
+import javax.security.sasl.SaslException;
 import javax.swing.*;
 import java.awt.*;
 
 public class LoginPanel extends BasePanel {
-   // private View parentView;
     private LoginController controller;
-   // private DBController dbController;
-    private JLabel usernameLabel;
-    private JLabel passwordLabel;
-    private JTextField usernameField;
-    private JTextField passwordField;
-    private JButton submit;
-
 
     public LoginPanel(LoginController controller) {
-       // this.parentView = view;
         this.controller = controller;
-        this.usernameLabel = new JLabel("Username");
-        this.passwordLabel = new JLabel("Password");
-        this.usernameField = new JTextField(20);
-        this.passwordField = new JTextField(20);
-        this.submit = new JButton(Settings.SUBMIT_BUTTON());
+        JLabel usernameLabel = new JLabel(Settings.USERNAME());
+        JLabel passwordLabel = new JLabel(Settings.PASSWORD());
+        JTextField usernameField = new JTextField(20);
+        JTextField passwordField = new JTextField(20);
+        JButton submit = new JButton(Settings.SUBMIT_BUTTON());
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "log-in.png");
         this.backButton.addActionListener(e -> this.controller.back());
-        this.usernameLabel.setForeground(Color.WHITE);
-        this.passwordLabel.setForeground(Color.WHITE);
+        usernameLabel.setForeground(Color.WHITE);
+        passwordLabel.setForeground(Color.WHITE);
 
         this.centralPanel.add(usernameLabel, k);
         k.gridy++;
@@ -39,7 +31,7 @@ public class LoginPanel extends BasePanel {
         this.centralPanel.add(passwordField, k);
         k.gridy++;
         this.centralPanel.add(submit,k);
-        this.submit.addActionListener(e -> this.controller.login(usernameField.getText(), passwordField.getText()));
+        submit.addActionListener(e -> this.controller.login(usernameField.getText(), passwordField.getText()));
     }
 
 }

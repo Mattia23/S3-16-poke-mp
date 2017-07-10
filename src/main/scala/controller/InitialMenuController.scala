@@ -28,4 +28,5 @@ class InitialMenuControllerImpl(override val view: View) extends InitialMenuCont
       }
     }).start()
   }
+
 }

@@ -1,6 +1,5 @@
 package view;
 
-import controller.Controller;
 import controller.InitialMenuController;
 import utilities.Settings;
 
@@ -14,16 +13,14 @@ public class InitialMenuPanel extends BasePanel implements ActionListener {
 
     private final static int INSETS = 10;
     private InitialMenuController controller;
-   // private View parentView;
     private JPanel downPanel;
    // private JButton newgame;
     private JButton login;
     private JButton signIn;
     private JButton quit;
 
-    public InitialMenuPanel(/*View view,*/ InitialMenuController controller) {
+    public InitialMenuPanel(InitialMenuController controller) {
         this.controller = controller;
-     //   this.parentView = view;
         this.setLayout(new BorderLayout());
         this.downPanel = new JPanel(new GridBagLayout());
        // this.newgame = new JButton("gioca (prova)");
@@ -31,18 +28,10 @@ public class InitialMenuPanel extends BasePanel implements ActionListener {
         this.signIn = new JButton(Settings.SIGN_IN_BUTTON());
         this.quit = new JButton(Settings.QUIT_BUTTON());
 
-        /*  this.newgame.addActionListener(e -> {
-            this.controller.newGame();
-        });*/
-
         this.login.addActionListener(this);
         this.signIn.addActionListener(this);
         this.quit.addActionListener(this);
 
-      /*  this.login.addActionListener(e -> this.parentView.showLogin());
-        this.signIn.addActionListener(e -> this.parentView.showSignIn());
-        this.quit.addActionListener(e -> System.exit(0));
-       */
         k = new GridBagConstraints();
         k.gridy = 0;
         k.insets = new Insets(INSETS, INSETS, INSETS, INSETS);
