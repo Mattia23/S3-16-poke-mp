@@ -4,9 +4,10 @@ import model.entities._
 import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
 import utilities.Settings
-import view.{GamePanel, View}
+import view.{GameMenuPanel, GamePanel, View}
 
 trait GameViewObserver {
+
   def gamePanel: GamePanel
 
   def gamePanel_=(gamePanel: GamePanel): Unit
@@ -38,6 +39,8 @@ trait GameViewObserver {
   def moveTrainer(direction: Direction.Direction): Unit
 
   def trainerInteract(direction: Direction.Direction): Unit
+
+  def showMenu(): Unit
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{
@@ -102,6 +105,8 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override final def trainerInteract(direction: Direction): Unit = doInteract(direction)
 
   protected def doInteract(direction: Direction) : Unit
+
+  override def showMenu(): Unit = view.showGameMenuPanel(new GameMenuPanel(this))
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

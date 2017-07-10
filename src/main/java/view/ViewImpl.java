@@ -1,6 +1,7 @@
 package view;
 import controller.BattleController;
 import controller.Controller;
+import controller.GameController;
 import database.remote.DBConnect;
 import model.entities.PokemonWithLife;
 import utilities.Settings;
@@ -47,6 +48,12 @@ public class ViewImpl extends JFrame implements View {
         this.repaint();
     }
 
+    private void setGameMenuPanel(JPanel gameMenuPanel) {
+        this.getContentPane().add(gameMenuPanel, BorderLayout.EAST);
+        this.revalidate();
+        this.repaint();
+    }
+
     @Override
     public void setController(Controller controller) { this.controller = controller; }
     
@@ -85,6 +92,11 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showDialogue(JPanel dialoguePanel){
         this.setDialogue(dialoguePanel);
+    }
+
+    @Override
+    public void showGameMenuPanel(JPanel gameMenuPanel) {
+        this.setGameMenuPanel(gameMenuPanel);
     }
 
     @Override

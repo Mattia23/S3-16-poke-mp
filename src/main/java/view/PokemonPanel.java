@@ -1,6 +1,9 @@
 package view;
 
+import database.remote.DBConnect;
 import model.entities.Pokemon;
+import scala.Tuple4;
+import utilities.Settings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 public class PokemonPanel extends JPanel {
     //private JLabel pokemonLabel;
@@ -40,6 +44,17 @@ public class PokemonPanel extends JPanel {
     }
 
     public void setPokemon(Pokemon pokemon){
+        Map pokemonMap = DBConnect.getPokemonFromDB(Integer.parseInt(pokemon.toString())).get();
+        /*String s = pokemonMap.get("name").toString().toUpperCase() + "   Life: " + pokemonMap.get("lifePoints").toString() + "/" +
+                pokemonMap.get("experiencePoints").toString() + "   Lv:  " + pokemonMap.get("level").toString();
+        Image myImage;
+        ImageIcon myImageIcon = null;
+        try {
+            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonMap.get("id").toString() + ".png"));
+            myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         /*BufferedImage myPicture = null;
         try {
             myPicture = ImageIO.read(new File(pokemon.imageName()));
@@ -48,13 +63,12 @@ public class PokemonPanel extends JPanel {
         }
         final JLabel pokemonLabel = new JLabel(new ImageIcon(myPicture));
         add(pokemonLabel);*/
-        pokemonName.setText(pokemon.name());
-        pokemonLevel.setText(" Lv."+pokemon.level());
+        pokemonName.setText(pokemonMap.get("name").toString().toUpperCase());
+        pokemonLevel.setText(" Lv."+pokemonMap.get("level").toString());
+        /*Tuple4 moves = pokemonMap.get("attacks");
         for(int i = 0; i < 4; i++){
             //qui c'è solo un numero e non l'attacco, si deve accedere al db
             pokemonAttacks[i].setText(pokemon.attacks()+"");
-        }
-        pokemonExperiencePoints.setText(""+pokemon.experiencePoints());
-        pokemonLevelExperience.setText(""+pokemon.levelExperience());
+        }*/
     }
 }
