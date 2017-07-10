@@ -7,6 +7,7 @@ import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 import view.LoadImage
 
+
 trait StaticCharacter {
 
   def HEIGHT: Int

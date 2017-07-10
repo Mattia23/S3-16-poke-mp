@@ -68,12 +68,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
     inGame = true
     doStart()
     view.showPanel(gamePanel)
-    if(trainer.favouritePokemons.isEmpty){
-      view.showDialogue(new ClassicDialoguePanel(this,
-        util.Arrays.asList("Heyy ragazzo!","E' pericoloso gironzolare senza Pokémon!",
-          "Vieni a sceglierne uno!",
-          "(questa voce sembra provenire dal laboratorio laggiù a destra)")))
-    }
+    if(trainer.favouritePokemons.isEmpty) view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))
   }
 
   protected def doStart(): Unit

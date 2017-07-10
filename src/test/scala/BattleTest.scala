@@ -35,7 +35,7 @@ class BattleTest extends FunSuite{
       trainer.addFavouritePokemon(autoIncrementCaptured+1)
     }
 
-  test("Battle simulation") {
+  /*test("Battle simulation") {
     val f = fixture
     var battle: Battle = new BattleImpl(f.trainer)
     battle.startBattleRound(battle.trainer.getFirstAvailableFavouritePokemon)
@@ -43,6 +43,6 @@ class BattleTest extends FunSuite{
     battle.round.myPokemonAttack(1)
     println("pokemon catturato: " + battle.round.pokeballLaunched())
 
-  }
+  }*/
 
 }
