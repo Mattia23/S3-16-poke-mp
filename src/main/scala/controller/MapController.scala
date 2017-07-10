@@ -16,7 +16,7 @@ class MapController(private var view: View) extends GameControllerImpl(view){
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   audio = Audio(Settings.MAP_SONG)
 
-  this.setTrainerSpriteFront()
+  setTrainerSpriteFront()
 
   override var gamePanel: GamePanel = new MapPanel(this, gameMap)
 
@@ -56,7 +56,7 @@ class MapController(private var view: View) extends GameControllerImpl(view){
   override protected def doInteract(direction: Direction): Unit = ???
 
   private def enterInBuilding(building: Building): Unit = {
-    this.pause()
+    pause()
     var buildingController: BuildingController = null
     building match{
       case _: PokemonCenter =>
