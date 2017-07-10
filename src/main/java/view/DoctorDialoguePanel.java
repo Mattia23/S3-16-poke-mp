@@ -1,11 +1,10 @@
 package view;
 
 import controller.GameController;
-import model.entities.Pokemon;
+import database.remote.DBConnect;
 import utilities.Settings;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 public class DoctorDialoguePanel extends DialoguePanel {
@@ -33,12 +32,6 @@ public class DoctorDialoguePanel extends DialoguePanel {
             buttons.add(button);
         }
         buttons.get(currentButton).requestFocus();
-        buttons.get(0).addActionListener(e ->{
-            /*TODO cura tutti i pokemon della squadra
-            for(Object pokemon: gameController.trainer().favouritePokemons()){
-
-            }*/
-
-        });
+        buttons.get(0).addActionListener(e -> DBConnect.rechangeAllTrainerPokemon(gameController.trainer().id()));
     }
 }

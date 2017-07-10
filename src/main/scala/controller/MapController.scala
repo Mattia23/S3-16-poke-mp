@@ -11,7 +11,11 @@ import view._
 
 import scala.util.Random
 
-class MapController(private var view: View) extends GameController(view){
+trait MapTrait extends GameViewObserver{
+  def showPokedex(): Unit
+}
+
+class MapController(private var view: View) extends GameController(view) with MapTrait{
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
 
@@ -66,6 +70,11 @@ class MapController(private var view: View) extends GameController(view){
     }
   }
 
+  override def showPokedex(): Unit = {
+    this.pauseGame()
+    view.showPokedex(trainer,this)
+  }
+
   private def enterInBuilding(building: Building): Unit = {
     this.pauseGame()
     var buildingController: BuildingController = null
@@ -83,8 +92,7 @@ class MapController(private var view: View) extends GameController(view){
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       this.pauseGame()
-      view.showPokedex(trainer)
-      //new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
+      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }
 

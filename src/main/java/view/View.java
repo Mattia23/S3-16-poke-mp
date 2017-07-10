@@ -2,6 +2,8 @@ package view;
 
 import controller.BattleController;
 import controller.Controller;
+import controller.GameController;
+import controller.GameViewObserver;
 import model.entities.PokemonWithLife;
 import model.entities.Trainer;
 
@@ -21,13 +23,15 @@ public interface View {
 
     void showDialogue(JPanel dialoguePanel);
 
+    void showGameMenuPanel(JPanel gameMenuPanel);
+
     void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController);
 
     BattleView getBattlePanel();
 
     void showPokemonChoice(BattleController battleController);
 
-    void showPokedex(Trainer trainer);
+    void showPokedex(Trainer trainer, GameViewObserver gameController);
 
     void showPause();
 

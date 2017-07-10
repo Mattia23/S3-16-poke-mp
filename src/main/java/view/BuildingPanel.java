@@ -1,7 +1,6 @@
 package view;
 
 import controller.GameViewObserver;
-import model.characters.PokemonCharacter;
 import model.environment.BuildingMap;
 import utilities.Settings;
 
@@ -35,21 +34,5 @@ public class BuildingPanel extends GamePanel {
                 centerY+(buildingMap.npc().coordinate().y())*Settings.TILE_PIXEL() -
                         (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
     }
-/*
-    private void speak(){
-        dialoguePanel.setText(buildingMap.npc().dialogue());
-        dialoguePanel.setVisible(true);
-        this.setFocusable(false);
-        new Thread(() -> {
-            try {
-                semaphore.acquire();
-                dialoguePanel.setVisible(false);
-                setFocusable(true);
-                System.out.println(dialoguePanel.getValue());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
 
-    }*/
 }

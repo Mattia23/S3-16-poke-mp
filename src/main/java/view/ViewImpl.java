@@ -1,6 +1,8 @@
 package view;
 import controller.BattleController;
 import controller.Controller;
+import controller.GameController;
+import controller.GameViewObserver;
 import database.remote.DBConnect;
 import model.entities.PokemonWithLife;
 import model.entities.Trainer;
@@ -48,6 +50,12 @@ public class ViewImpl extends JFrame implements View {
         this.repaint();
     }
 
+    private void setGameMenuPanel(JPanel gameMenuPanel) {
+        this.getContentPane().add(gameMenuPanel, BorderLayout.EAST);
+        this.revalidate();
+        this.repaint();
+    }
+
     @Override
     public void setController(Controller controller) { this.controller = controller; }
     
@@ -89,8 +97,13 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokedex(Trainer trainer) {
-        this.setPanel(new PokedexPanel(trainer));
+    public void showPokedex(Trainer trainer, GameViewObserver gameController) {
+        this.setPanel(new PokedexPanel(trainer, gameController));
+    }
+
+    @Override
+    public void showGameMenuPanel(JPanel gameMenuPanel) {
+        this.setGameMenuPanel(gameMenuPanel);
     }
 
     @Override

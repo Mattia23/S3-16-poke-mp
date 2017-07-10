@@ -1,5 +1,6 @@
 package view;
 
+import controller.GameViewObserver;
 import database.local.PokedexConnect;
 import model.entities.Trainer;
 import utilities.Settings;
@@ -11,10 +12,8 @@ import java.io.IOException;
 
 public class PokedexPanel extends  BasePanel{
     private JPanel northPanel;
-    private Trainer trainer;
 
-    PokedexPanel(Trainer trainer){
-        this.trainer = trainer;
+    PokedexPanel(Trainer trainer, GameViewObserver gameController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
         northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
@@ -68,6 +67,7 @@ public class PokedexPanel extends  BasePanel{
             k.gridy++;
         }
 
+        this.backButton.addActionListener(e -> {gameController.resumeGame();});
         JScrollPane scroll = new JScrollPane(centralPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
