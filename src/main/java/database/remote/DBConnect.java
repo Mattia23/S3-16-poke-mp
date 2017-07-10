@@ -339,6 +339,23 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+	public static Optional<List<Int>> getCapturedPokemonIdList(int trainerId){
+		initConnection();
+		String query = "select * from pokemon where id_trainer =  '" + trainerId + "'";
+		java.util.List<Integer> pokemonList = new ArrayList<>();
+		try {
+			rs = st.executeQuery(query);
+			while(rs.next()){
+				pokemonList.add(rs.getInt("id_pokemon"));
+			}
+			List list = JavaConverters.asScalaBuffer(pokemonList).toList();
+			return Optional.of(list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return Optional.empty();
+	}
+
 	public static Optional<List<Int>> getMetPokemonList(int trainerId){
 		initConnection();
 		String query = "select id_pokemon from pokemon_met where id_trainer =  '" + trainerId + "'";

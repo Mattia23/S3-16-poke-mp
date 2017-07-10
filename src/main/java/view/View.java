@@ -3,6 +3,7 @@ package view;
 import controller.BattleController;
 import controller.Controller;
 import model.entities.PokemonWithLife;
+import model.entities.Trainer;
 
 import javax.swing.*;
 
@@ -25,6 +26,8 @@ public interface View {
     BattleView getBattlePanel();
 
     void showPokemonChoice(BattleController battleController);
+
+    void showPokedex(Trainer trainer);
 
     void showPause();
 

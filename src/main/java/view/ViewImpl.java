@@ -3,6 +3,7 @@ import controller.BattleController;
 import controller.Controller;
 import database.remote.DBConnect;
 import model.entities.PokemonWithLife;
+import model.entities.Trainer;
 import utilities.Settings;
 
 import javax.swing.*;
@@ -85,6 +86,11 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showDialogue(JPanel dialoguePanel){
         this.setDialogue(dialoguePanel);
+    }
+
+    @Override
+    public void showPokedex(Trainer trainer) {
+        this.setPanel(new PokedexPanel(trainer));
     }
 
     @Override
