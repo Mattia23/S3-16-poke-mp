@@ -6,7 +6,7 @@ import model.environment.Direction.Direction
 import utilities.Settings
 import view.{GamePanel, View}
 
-trait GameViewObserver {
+trait GameController {
   def gamePanel: GamePanel
 
   def gamePanel_=(gamePanel: GamePanel): Unit
@@ -38,7 +38,7 @@ trait GameViewObserver {
   def trainerInteract(direction: Direction.Direction): Unit
 }
 
-abstract class GameController(private var view: View) extends GameViewObserver{
+abstract class GameControllerImpl(private var view: View) extends GameController{
   private final val TRAINER_STEPS = 4
 
   protected var inGame = false

@@ -1,19 +1,17 @@
 package view;
 import controller.GameKeyListener;
-import controller.GameViewObserver;
+import controller.GameController;
 import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.concurrent.Semaphore;
 
 public abstract class GamePanel extends JPanel{
 
     private int currentX;
     private int currentY;
 
-    protected GamePanel(final GameViewObserver gameController) {
+    protected GamePanel(final GameController gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
         GameKeyListener keyListener = new GameKeyListener(gameController);

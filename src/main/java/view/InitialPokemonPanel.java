@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameController;
+import controller.GameControllerImpl;
 import model.entities.Pokemon;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class InitialPokemonPanel extends JPanel {
 
-    public InitialPokemonPanel(final GameController buildingController, final Pokemon pokemon){
+    public InitialPokemonPanel(final GameControllerImpl buildingController, final Pokemon pokemon){
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10,100,10,100));
         final PokemonPanel pokemonPanel = new PokemonPanel();

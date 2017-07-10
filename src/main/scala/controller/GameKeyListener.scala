@@ -4,7 +4,7 @@ import java.awt.event.{KeyEvent, KeyListener}
 
 import model.environment.Direction
 
-class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
+class GameKeyListener(val gameController: GameController) extends KeyListener{
   private var direction: Direction.Direction = _
   private var lastPressed: Int = _
 

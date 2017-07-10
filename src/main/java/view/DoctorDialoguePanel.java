@@ -1,17 +1,15 @@
 package view;
 
-import controller.GameController;
-import model.entities.Pokemon;
+import controller.GameControllerImpl;
 import utilities.Settings;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 public class DoctorDialoguePanel extends DialoguePanel {
-    private GameController gameController;
+    private GameControllerImpl gameController;
 
-    public DoctorDialoguePanel(GameController gameController, List<String> dialogues) {
+    public DoctorDialoguePanel(GameControllerImpl gameController, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
         this.gameController.gamePanel().setFocusable(false);
