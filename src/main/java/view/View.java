@@ -7,16 +7,13 @@ import model.entities.PokemonWithLife;
 import javax.swing.*;
 
 public interface View {
-
-    void setController(Controller controller);
-
     void showMenu();
 
     void showLogin();
 
     void showSignIn();
 
-    void showPanel(JPanel gamePanel);
+    void showPanel(JPanel panel);
 
     void showDialogue(JPanel dialoguePanel);
 

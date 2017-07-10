@@ -1,15 +1,15 @@
 package view;
 
-import controller.Controller;
-import database.remote.DBConnect;
+import controller.LoginController;
 import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LoginPanel extends BasePanel {
-    private View parentView;
-    private Controller controller;
+   // private View parentView;
+    private LoginController controller;
+   // private DBController dbController;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
     private JTextField usernameField;
@@ -17,16 +17,16 @@ public class LoginPanel extends BasePanel {
     private JButton submit;
 
 
-    public LoginPanel(View view, Controller controller) {
-        this.parentView = view;
+    public LoginPanel(LoginController controller) {
+       // this.parentView = view;
         this.controller = controller;
         this.usernameLabel = new JLabel("Username");
         this.passwordLabel = new JLabel("Password");
         this.usernameField = new JTextField(20);
         this.passwordField = new JTextField(20);
-        this.submit = new JButton("Submit");
+        this.submit = new JButton(Settings.SUBMIT_BUTTON());
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "log-in.png");
-        this.backButton.addActionListener(e -> this.parentView.showMenu());
+        this.backButton.addActionListener(e -> this.controller.back());
         this.usernameLabel.setForeground(Color.WHITE);
         this.passwordLabel.setForeground(Color.WHITE);
 
@@ -39,11 +39,7 @@ public class LoginPanel extends BasePanel {
         this.centralPanel.add(passwordField, k);
         k.gridy++;
         this.centralPanel.add(submit,k);
-        this.submit.addActionListener(e -> {
-            if(!DBConnect.checkCredentials(usernameField.getText(),passwordField.getText())) {
-                JOptionPane.showMessageDialog(this,"Wrong username or password","LOGIN FAILED",JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        this.submit.addActionListener(e -> this.controller.login(usernameField.getText(), passwordField.getText()));
     }
 
 }

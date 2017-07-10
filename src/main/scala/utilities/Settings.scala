@@ -226,4 +226,15 @@ object Settings {
 
   val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
 
+  val LOGIN_BUTTON: String =  "Login"
+
+  val SIGN_IN_BUTTON: String =  "Sign in"
+
+  val QUIT_BUTTON: String =  "Quit"
+
+  val SUBMIT_BUTTON: String =  "Submit"
+
+  val USERNAME: String =  "Username"
+
+  val PASSWORD: String =  "Password"
 }
