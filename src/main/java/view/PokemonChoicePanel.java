@@ -24,8 +24,8 @@ public class PokemonChoicePanel extends BasePanel{
     private BattleController controller;
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
     private List<Tuple2<JRadioButton,Integer>> buttonList = new ArrayList<>();
-    private JButton submit;
     private JButton info;
+    private JLabel infoText;
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
 
@@ -34,9 +34,9 @@ public class PokemonChoicePanel extends BasePanel{
         this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
         this.backButton.setVisible(false);
-        this.setRequestFocusEnabled(true);
-        this.requestFocusInWindow();
-        this.submit = new JButton("Choose!");
+        this.infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
+        this.infoText.setVisible(false);
+        this.downPanel.add(this.infoText, BorderLayout.CENTER);
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
@@ -48,13 +48,16 @@ public class PokemonChoicePanel extends BasePanel{
         this.info = new JButton(myImageIcon);
         this.info.setBorderPainted(false);
         this.info.setContentAreaFilled(false);
-        this.info.setFocusPainted(false);
         this.info.setOpaque(false);
         this.info.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,"Use arrow keys to select your Pokemon, then Enter to choose it.","How To choose",JOptionPane.INFORMATION_MESSAGE);
+            if(!this.infoText.isVisible()){
+                this.infoText.setVisible(true);
+            } else {
+                this.infoText.setVisible(false);
+            }
         });
         this.info.setToolTipText("Use arrow keys to select your Pokemon, then Enter to choose it.");
-        this.downPanel.add(this.info,BorderLayout.EAST);
+        this.downPanel.add(this.info,BorderLayout.WEST);
         List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
         Boolean first = true;
         k.insets = new Insets(1,1,1,1);
