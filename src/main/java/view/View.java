@@ -29,7 +29,7 @@ public interface View {
 
     BattleView getBattlePanel();
 
-    void showPokemonChoice(BattleController battleController);
+    void showPokemonChoice(BattleController battleController, Trainer trainer);
 
     void showPokedex(Trainer trainer, GameViewObserver gameController);
 

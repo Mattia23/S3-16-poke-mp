@@ -1,5 +1,6 @@
 package controller
 
+import database.remote.DBConnect
 import model.entities._
 import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
@@ -50,7 +51,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
 
   protected var inGame = false
   protected var inPause = false
-  protected val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
+  protected val trainer: Trainer = DBConnect.getTrainerFromDB("Ash").get()
   private var _trainerSprite: Sprite = _
   private var fistStep: Boolean = true
 
