@@ -89,7 +89,7 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokemonChoice(BattleController battleController) { this.setPanel(new PokemonChoicePanel(battleController, DBConnect.getTrainerFromDB("Ash").get())); }
+    public void showPokemonChoice(BattleController battleController, Trainer trainer) { this.setPanel(new PokemonChoicePanel(battleController, trainer)); }
 
     @Override
     public void showDialogue(JPanel dialoguePanel){
