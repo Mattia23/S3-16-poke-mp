@@ -24,7 +24,9 @@ public class GameMenuPanel extends JPanel {
         menuButtons[1].addActionListener(e ->{});
         menuButtons[2].addActionListener(e ->{});
         menuButtons[3].addActionListener(e ->{});
-        menuButtons[4].addActionListener(e ->{});
+        menuButtons[4].addActionListener(e ->{
+            gameController.showKeyboardExplanation();
+        });
         menuButtons[5].addActionListener(e ->{
             this.setVisible(false);
             gameController.gamePanel().setFocusable(true);

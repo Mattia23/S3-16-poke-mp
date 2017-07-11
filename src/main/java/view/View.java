@@ -33,6 +33,8 @@ public interface View {
 
     void showPokedex(Trainer trainer, GameViewObserver gameController);
 
+    void showKeyboardPanel(GameViewObserver gameController);
+
     void showPause();
 
     void showError(final String error, final String title);
