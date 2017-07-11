@@ -13,7 +13,7 @@ trait LoginController{
 
 class LoginControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends LoginController{
 
-  private def loginPanel: LoginPanel = new LoginPanel(this)
+  private val loginPanel: LoginPanel = new LoginPanel(this)
   view showPanel loginPanel
 
   override def login(username: String, password: String): Unit = {
@@ -31,7 +31,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
   }
 
   private def newGame(): Unit = {
-    new MapController(view).startGame()
+    new MapController(view).start()
   }
 
   override def back(): Unit = initialMenuController.show()

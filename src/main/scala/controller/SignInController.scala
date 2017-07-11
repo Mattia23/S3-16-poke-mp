@@ -1,7 +1,7 @@
 package controller
 
 import java.util
-import javax.swing.{JOptionPane, JTextField}
+import javax.swing.{JFrame, JOptionPane, JTextField, SwingUtilities}
 
 import database.remote.DBConnect
 import view.{AccountData, SignInPanel, View}
@@ -14,7 +14,7 @@ trait SignInController{
 
 class SignInControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends SignInController{
 
-  private def signInPanel: SignInPanel = new SignInPanel(this)
+  private val signInPanel: SignInPanel = new SignInPanel(this)
   view showPanel signInPanel
 
   override def signIn(accountData: util.Map[String, JTextField]): Unit = {

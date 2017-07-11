@@ -21,8 +21,9 @@ public class SignInPanel extends BasePanel {
         Map<String,JTextField> accountData = new HashMap<>();
 
         for(AccountData data : AccountData.values()) {
+            k.gridx = 0;
             this.centralPanel.add(new JLabel(data.toString()), k);
-            k.gridy++;
+            k.gridx++;
             JTextField textField = new JTextField(20);
             this.centralPanel.add(textField,k);
             k.gridy++;
