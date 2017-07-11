@@ -11,11 +11,7 @@ import view._
 
 import scala.util.Random
 
-trait MapTrait extends GameViewObserver{
-  def showPokedex(): Unit
-}
-
-class MapController(private var view: View) extends GameController(view) with MapTrait{
+class MapController(private var view: View) extends GameController(view) {
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
 
@@ -68,11 +64,6 @@ class MapController(private var view: View) extends GameController(view) with Ma
         case _ => trainerIsMoving = false
       }
     }
-  }
-
-  override def showPokedex(): Unit = {
-    this.pauseGame()
-    view.showPokedex(trainer,this)
   }
 
   private def enterInBuilding(building: Building): Unit = {

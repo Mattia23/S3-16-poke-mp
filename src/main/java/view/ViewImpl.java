@@ -102,8 +102,8 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showGameMenuPanel(JPanel gameMenuPanel) {
-        this.setGameMenuPanel(gameMenuPanel);
+    public void showGameMenuPanel(GameViewObserver controller) {
+        this.setGameMenuPanel(new GameMenuPanel(controller));
     }
 
     @Override

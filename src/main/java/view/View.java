@@ -23,7 +23,7 @@ public interface View {
 
     void showDialogue(JPanel dialoguePanel);
 
-    void showGameMenuPanel(JPanel gameMenuPanel);
+    void showGameMenuPanel(GameViewObserver controller);
 
     void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController);
 
