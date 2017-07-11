@@ -76,7 +76,6 @@ abstract class GameControllerImpl(private var view: View) extends GameController
     doPause()
     inPause = true
     agent.terminate()
-    view.showPause()
   }
 
   protected def doPause(): Unit
