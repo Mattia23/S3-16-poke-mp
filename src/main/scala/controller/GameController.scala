@@ -9,10 +9,6 @@ import utilities.Settings
 import view.{GamePanel, View}
 
 trait GameController {
-  def gamePanel: GamePanel
-
-  def gamePanel_=(gamePanel: GamePanel): Unit
-
   def trainer: Trainer
 
   def trainerIsMoving: Boolean
@@ -47,6 +43,7 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   protected var inGame = false
   protected var inPause = false
   protected var audio: Audio = _
+  protected var gamePanel: GamePanel = _
 
   override val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
 
@@ -62,12 +59,7 @@ abstract class GameControllerImpl(private var view: View) extends GameController
     doStart()
     inGame = true
     agent = new GameControllerAgent
-    try {
-      agent.start()
-    } catch {
-      case e: IllegalStateException => view.showError(e.toString, "Not initialized")
-    }
-    view showPanel gamePanel
+    agent.start()
   }
 
   protected def doStart(): Unit
@@ -94,7 +86,6 @@ abstract class GameControllerImpl(private var view: View) extends GameController
     inPause = false
     agent = new GameControllerAgent
     agent.start()
-    view showPanel gamePanel
   }
 
   protected def doResume(): Unit

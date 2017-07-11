@@ -13,10 +13,9 @@ trait InitialMenuController {
 
 class InitialMenuControllerImpl(override val view: View) extends InitialMenuController{
 
-  private val initialMenuPanel: InitialMenuPanel = new InitialMenuPanel(this)
   show()
 
-  override def show(): Unit = view showPanel initialMenuPanel
+  override def show(): Unit = view showInitialMenu this
 
   override def processEvent(event: String): Unit = {
     new Thread(() => {

@@ -28,7 +28,7 @@ public class PokemonChoicePanel extends BasePanel{
         this.parentView = view;
         this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
-        this.backButton.addActionListener(e -> this.parentView.showMenu());
+       // this.backButton.addActionListener(e -> this.parentView.showMenu());
         this.submit = new JButton("Choose!");
         List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
         Boolean first = true;

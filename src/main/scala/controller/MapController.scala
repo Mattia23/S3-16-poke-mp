@@ -16,25 +16,28 @@ class MapController(private var view: View) extends GameControllerImpl(view){
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   audio = Audio(Settings.MAP_SONG)
 
-  setTrainerSpriteFront()
-
-  override var gamePanel: GamePanel = new MapPanel(this, gameMap)
-
   override protected def doStart(): Unit = {
+    initView()
     audio.loop()
   }
 
   override protected def doPause(): Unit = {
-    setTrainerSpriteFront()
     audio.stop()
   }
 
   override protected def doResume(): Unit = {
+    initView()
     audio.loop()
   }
 
   override protected def doTerminate(): Unit = {
     audio.stop()
+  }
+
+  private def initView(): Unit = {
+    setTrainerSpriteFront()
+    view.showMap(this, gameMap)
+    gamePanel = view.getMapPanel
   }
 
   override protected def doMove(direction: Direction): Unit = {
