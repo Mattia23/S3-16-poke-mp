@@ -41,6 +41,8 @@ trait GameViewObserver {
   def trainerInteract(direction: Direction.Direction): Unit
 
   def showMenu(): Unit
+
+  def showPokedex(): Unit = {}
 }
 
 abstract class GameController(private var view: View) extends GameViewObserver{
@@ -106,7 +108,8 @@ abstract class GameController(private var view: View) extends GameViewObserver{
 
   protected def doInteract(direction: Direction) : Unit
 
-  override def showMenu(): Unit = view.showGameMenuPanel(new GameMenuPanel(this))
+  override def showMenu(): Unit = view.showGameMenuPanel(this)
+  override def showPokedex(): Unit = view.showPokedex(trainer,this)
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

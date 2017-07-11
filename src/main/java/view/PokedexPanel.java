@@ -67,7 +67,10 @@ public class PokedexPanel extends  BasePanel{
             k.gridy++;
         }
 
-        this.backButton.addActionListener(e -> {gameController.resumeGame();});
+        this.backButton.addActionListener(e -> {
+            gameController.resumeGame();
+            gameController.gamePanel().setFocusable(true);
+        });
         JScrollPane scroll = new JScrollPane(centralPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);

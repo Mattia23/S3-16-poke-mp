@@ -1,7 +1,6 @@
 package view;
 
-import controller.GameController;
-import controller.MapTrait;
+import controller.GameViewObserver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +8,7 @@ import java.awt.*;
 public class GameMenuPanel extends JPanel {
 
 
-    public GameMenuPanel(MapTrait gameController){
+    public GameMenuPanel(GameViewObserver gameController){
         gameController.gamePanel().setFocusable(false);
         setLayout(new GridLayout(0,1));
         final JButton[] menuButtons = new JButton[6];
