@@ -1,14 +1,15 @@
 package controller
 
-import model.entities.Pokemon
+import model.entities.{Pokemon, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
 import model.map.Box
 import utilities.Settings
 import view._
+
 import scala.collection.JavaConverters._
 
-abstract class BuildingController(private var view: View, private var mapController: GameControllerImpl) extends GameControllerImpl(view) {
+abstract class BuildingController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
 
   protected var buildingMap: BuildingMap
 
@@ -50,7 +51,7 @@ abstract class BuildingController(private var view: View, private var mapControl
 
 }
 
-class PokemonCenterController(private var view: View, private var mapController: GameControllerImpl) extends BuildingController(view, mapController){
+class PokemonCenterController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
@@ -90,7 +91,7 @@ class PokemonCenterController(private var view: View, private var mapController:
   }
 }
 
-class LaboratoryController(private var view: View, private var mapController: GameControllerImpl) extends BuildingController(view, mapController){
+class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 

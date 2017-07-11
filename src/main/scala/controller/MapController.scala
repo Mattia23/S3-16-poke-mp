@@ -1,7 +1,7 @@
 package controller
 
 import model.entities.Trainer
-import model.environment.{Audio, CoordinateImpl}
+import model.environment.{Audio, Coordinate, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map._
 import utilities.Settings
@@ -9,11 +9,12 @@ import view._
 
 import scala.util.Random
 
-class MapController(private var view: View) extends GameControllerImpl(view){
+class MapController(private val view: View, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer){
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+  private var lastCoordinates: Coordinate = _
   audio = Audio(Settings.MAP_SONG)
 
   override protected def doStart(): Unit = {
@@ -22,10 +23,12 @@ class MapController(private var view: View) extends GameControllerImpl(view){
   }
 
   override protected def doPause(): Unit = {
+    lastCoordinates = trainer.coordinate
     audio.stop()
   }
 
   override protected def doResume(): Unit = {
+    trainer.coordinate = lastCoordinates
     initView()
     audio.loop()
   }
@@ -63,9 +66,9 @@ class MapController(private var view: View) extends GameControllerImpl(view){
     var buildingController: BuildingController = null
     building match{
       case _: PokemonCenter =>
-        buildingController = new PokemonCenterController(this.view, this)
+        buildingController = new PokemonCenterController(this.view, this, trainer)
       case _: Laboratory =>
-        buildingController = new LaboratoryController(this.view, this)
+        buildingController = new LaboratoryController(this.view, this, trainer)
     }
     buildingController.start()
     trainerIsMoving = false
@@ -74,7 +77,7 @@ class MapController(private var view: View) extends GameControllerImpl(view){
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      new BattleControllerImpl(trainer: Trainer,view: View)
+      new BattleControllerImpl(trainer,view)
     }
   }
 

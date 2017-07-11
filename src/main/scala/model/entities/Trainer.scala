@@ -52,7 +52,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
   private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
   private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
 
-  override val sprites =  idImage match {
+  override val sprites: TrainerSprites = idImage match {
     case 1 => Trainer1()
     case 2 => Trainer2()
     case 3 => Trainer3()
