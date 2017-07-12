@@ -81,13 +81,7 @@ public class BoxPanel extends JPanel {
         pokemonPanel.setVisible(false);
         final JButton close = new JButton("close");
         close.addActionListener(e -> {
-            for(int i = 0; i < favoritePokemon.size(); i++){
-                buildingController.trainer().changeFavouritePokemon(0, 0);
-            }
-            for(Object pokemonObject: this.favoritePokemon){
-                Integer pokemonId = Integer.parseInt(pokemonObject.toString());
-                buildingController.trainer().addFavouritePokemon(pokemonId);
-            }
+            buildingController.trainer().setAllFavouritePokemon(this.favoritePokemon);
             buildingController.resumeGame();
         });
         add(close, BorderLayout.SOUTH);

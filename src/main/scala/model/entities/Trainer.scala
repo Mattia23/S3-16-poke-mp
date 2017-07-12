@@ -104,6 +104,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
 
   override def setAllFavouritePokemon(list: java.util.List[Object]): Unit = {
     DBConnect.setAllFavouritePokemon(id, list)
+    _favouritePokemons = DBConnect.getFavouritePokemonList(id).get()
   }
 
   override def addFavouritePokemon(idNewPokemon: Int): Unit = {
