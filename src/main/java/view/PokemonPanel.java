@@ -43,8 +43,7 @@ public class PokemonPanel extends JPanel {
         add(attackPanel);
     }
 
-    public void setPokemon(Pokemon pokemon){
-        Map pokemonMap = DBConnect.getPokemonFromDB(Integer.parseInt(pokemon.toString())).get();
+    public void setPokemon(Map pokemon){
         /*String s = pokemonMap.get("name").toString().toUpperCase() + "   Life: " + pokemonMap.get("lifePoints").toString() + "/" +
                 pokemonMap.get("experiencePoints").toString() + "   Lv:  " + pokemonMap.get("level").toString();
         Image myImage;
@@ -63,8 +62,8 @@ public class PokemonPanel extends JPanel {
         }
         final JLabel pokemonLabel = new JLabel(new ImageIcon(myPicture));
         add(pokemonLabel);*/
-        pokemonName.setText(pokemonMap.get("name").toString().toUpperCase());
-        pokemonLevel.setText(" Lv."+pokemonMap.get("level").toString());
+        pokemonName.setText(pokemon.get("name").toString().toUpperCase());
+        pokemonLevel.setText(" Lv."+pokemon.get("level").toString());
         /*Tuple4 moves = pokemonMap.get("attacks");
         for(int i = 0; i < 4; i++){
             //qui c'è solo un numero e non l'attacco, si deve accedere al db

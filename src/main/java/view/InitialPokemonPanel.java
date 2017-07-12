@@ -13,7 +13,7 @@ public class InitialPokemonPanel extends JPanel {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10,100,10,100));
         final PokemonPanel pokemonPanel = new PokemonPanel();
-        pokemonPanel.setPokemon(pokemon);
+        pokemonPanel.setPokemon(null);
         add(pokemonPanel, BorderLayout.CENTER);
 
         final JPanel buttonPanel = new JPanel();

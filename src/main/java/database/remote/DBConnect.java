@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import cryptography.MyEncryptor;
 import database.local.PokedexConnect;
-import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
 import model.entities.Trainer;
 import model.entities.TrainerImpl;
@@ -32,7 +31,7 @@ public final class DBConnect {
 		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
+				con = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/pokemp_1", "pokemp", "viroliRules12CFU");
 				st = con.createStatement();
 				MyEncryptor.init();
 			} catch (Exception ex) {

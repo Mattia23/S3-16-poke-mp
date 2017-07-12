@@ -104,7 +104,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
 
   override def changeFavouritePokemon(idNewPokemon: Int, idOldPokemon: Int): Unit = {
     var pos = 0
-    if(this.capturedPokemons.toMap.get(idNewPokemon).isDefined){
+    if(idNewPokemon==0 || this.capturedPokemons.toMap.get(idNewPokemon).isDefined){
       for(pokemon <- this.favouritePokemons){
         pos += 1
         if(pokemon == idOldPokemon){
