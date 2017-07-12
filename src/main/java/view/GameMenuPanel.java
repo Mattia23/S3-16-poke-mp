@@ -22,7 +22,9 @@ public class GameMenuPanel extends JPanel {
             gameController.showPokedex();
         });
         menuButtons[1].addActionListener(e ->{});
-        menuButtons[2].addActionListener(e ->{});
+        menuButtons[2].addActionListener(e ->{
+            gameController.showTeam();
+        });
         menuButtons[3].addActionListener(e ->{});
         menuButtons[4].addActionListener(e ->{
             gameController.showKeyboardExplanation();

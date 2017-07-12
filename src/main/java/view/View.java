@@ -33,6 +33,8 @@ public interface View {
 
     void showPokedex(Trainer trainer, GameViewObserver gameController);
 
+    void showTeamPanel(Trainer trainer, GameViewObserver gameController);
+
     void showKeyboardPanel(GameViewObserver gameController);
 
     void showPause();

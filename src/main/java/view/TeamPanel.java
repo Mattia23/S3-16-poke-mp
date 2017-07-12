@@ -1,8 +1,8 @@
 package view;
 
 import controller.BattleController;
+import controller.GameViewObserver;
 import database.remote.DBConnect;
-import javafx.scene.control.RadioButton;
 import model.entities.Trainer;
 import scala.Tuple2;
 import utilities.Settings;
@@ -16,10 +16,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class PokemonChoicePanel extends BasePanel{
+public class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
     private List<Tuple2<JRadioButton,Integer>> buttonList = new ArrayList<>();
@@ -28,10 +29,8 @@ public class PokemonChoicePanel extends BasePanel{
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
 
-
-    public PokemonChoicePanel(BattleController controller, Trainer trainer) {
+    public TeamPanel(Trainer trainer, GameViewObserver gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
-        this.backButton.setVisible(false);
         this.infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
         this.infoText.setVisible(false);
         this.downPanel.add(this.infoText, BorderLayout.CENTER);
@@ -89,7 +88,6 @@ public class PokemonChoicePanel extends BasePanel{
                         if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                             for(Tuple2<JRadioButton,Integer> radioButton: buttonList){
                                 if(radioButton._1().isSelected()){
-                                    controller.pokemonToChangeIsSelected(radioButton._2());
                                 }
                             }
                         }
@@ -122,5 +120,10 @@ public class PokemonChoicePanel extends BasePanel{
                 k.gridy++;
             }
         }
+
+        this.backButton.addActionListener(e -> {
+            gameController.resumeGame();
+            gameController.gamePanel().setFocusable(true);
+        });
     }
 }
