@@ -24,16 +24,11 @@ public class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
     private List<Tuple2<JRadioButton,Integer>> buttonList = new ArrayList<>();
-    private JButton info;
-    private JLabel infoText;
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
 
     public TeamPanel(Trainer trainer, GameViewObserver gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
-        this.infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
-        this.infoText.setVisible(false);
-        this.downPanel.add(this.infoText, BorderLayout.CENTER);
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
@@ -42,19 +37,6 @@ public class TeamPanel extends BasePanel{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.info = new JButton(myImageIcon);
-        this.info.setBorderPainted(false);
-        this.info.setContentAreaFilled(false);
-        this.info.setOpaque(false);
-        this.info.addActionListener(e -> {
-            if(!this.infoText.isVisible()){
-                this.infoText.setVisible(true);
-            } else {
-                this.infoText.setVisible(false);
-            }
-        });
-        this.info.setToolTipText("Use arrow keys to select your Pokemon, then Enter to choose it.");
-        this.downPanel.add(this.info,BorderLayout.WEST);
         List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
         Boolean first = true;
         k.insets = new Insets(1,1,1,1);
@@ -80,17 +62,6 @@ public class TeamPanel extends BasePanel{
                     }
                     else if (e.getStateChange() == ItemEvent.DESELECTED) {
                         button.setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
-                    }
-                });
-                radioButton.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyTyped(KeyEvent e) {
-                        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                            for(Tuple2<JRadioButton,Integer> radioButton: buttonList){
-                                if(radioButton._1().isSelected()){
-                                }
-                            }
-                        }
                     }
                 });
                 if(Integer.parseInt(pokemonMap.get("lifePoints").toString()) == 0){
