@@ -25,7 +25,10 @@ class AudioImpl(song: String) extends  Audio{
 
   override def play(): Unit = clip.start()
 
-  override def stop(): Unit = clip.stop()
+  override def stop(): Unit = {
+    clip.stop()
+    clip.setMicrosecondPosition(0)
+  }
 
   override def loop(): Unit = clip.loop(Clip.LOOP_CONTINUOUSLY)
 }
