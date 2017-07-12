@@ -39,7 +39,7 @@ trait Trainer {
 
   def updateTrainer(points:Int): Unit
 
-  def changeFavouritePokemon(idNewPokemon: Int, idOldPokemon: Int): Unit
+  def setAllFavouritePokemon(list: java.util.List[Object]): Unit
 
   def addFavouritePokemon(idNewPokemon: Int): Unit
 
@@ -102,19 +102,8 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
     DBConnect.updateTrainer(this.id, this.experiencePoints, this.favouritePokemons)
   }
 
-  override def changeFavouritePokemon(idNewPokemon: Int, idOldPokemon: Int): Unit = {
-    var pos = 0
-    if(idNewPokemon==0 || this.capturedPokemons.toMap.get(idNewPokemon).isDefined){
-      for(pokemon <- this.favouritePokemons){
-        pos += 1
-        if(pokemon == idOldPokemon){
-          DBConnect.addFavouritePokemon(id,idNewPokemon,pos)
-        }
-      }
-      this.favouritePokemons_=(DBConnect.getFavouritePokemonList(id).get())
-    } else {
-      println("Error: you tried to add a pokemon you haven't captured in your favourite list!!!")
-    }
+  override def setAllFavouritePokemon(list: java.util.List[Object]): Unit = {
+    DBConnect.setAllFavouritePokemon(id, list)
   }
 
   override def addFavouritePokemon(idNewPokemon: Int): Unit = {

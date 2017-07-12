@@ -291,6 +291,18 @@ public final class DBConnect {
 		}
 	}
 
+	public static void setAllFavouritePokemon(int trainerId, java.util.List list){
+		initConnection();
+		String q = "update trainers set id_pokemon1='"+list.get(0)+"',id_pokemon2='"+list.get(1)+"'," +
+				"id_pokemon3='"+list.get(2)+"', id_pokemon4='"+list.get(3)+"',id_pokemon5='"+list.get(4)+"'," +
+				"id_pokemon6='"+list.get(5)+"' where id = '"+trainerId+"'";
+		try {
+			st.executeUpdate(q);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void addFavouritePokemon(int trainerId, int pokemonId, int pos){
 		initConnection();
 		String q = "update trainers set id_pokemon"+pos+" = '"+pokemonId+"' where id = '"+trainerId+"'";
