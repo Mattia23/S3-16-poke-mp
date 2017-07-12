@@ -321,6 +321,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        this.requestFocusInWindow();
         if(pokeballAnimation){
             g.drawImage(pokeballImage,pokeballX,pokeballY,this);
         }

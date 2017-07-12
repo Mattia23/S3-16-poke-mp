@@ -59,7 +59,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   }
 
   override def changePokemon(): Unit = {
-    view.showPokemonChoice(this)
+    view.showPokemonChoice(this, this.trainer)
   }
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {

@@ -11,7 +11,7 @@ import view._
 
 import scala.util.Random
 
-class MapController(private var view: View) extends GameController(view){
+class MapController(private var view: View) extends GameController(view) {
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
 

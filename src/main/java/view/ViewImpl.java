@@ -2,8 +2,10 @@ package view;
 import controller.BattleController;
 import controller.Controller;
 import controller.GameController;
+import controller.GameViewObserver;
 import database.remote.DBConnect;
 import model.entities.PokemonWithLife;
+import model.entities.Trainer;
 import utilities.Settings;
 
 import javax.swing.*;
@@ -87,7 +89,7 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokemonChoice(BattleController battleController) { this.setPanel(new PokemonChoicePanel(battleController, DBConnect.getTrainerFromDB("Ash").get())); }
+    public void showPokemonChoice(BattleController battleController, Trainer trainer) { this.setPanel(new PokemonChoicePanel(battleController, trainer)); }
 
     @Override
     public void showDialogue(JPanel dialoguePanel){
@@ -95,8 +97,13 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showGameMenuPanel(JPanel gameMenuPanel) {
-        this.setGameMenuPanel(gameMenuPanel);
+    public void showPokedex(Trainer trainer, GameViewObserver gameController) {
+        this.setPanel(new PokedexPanel(trainer, gameController));
+    }
+
+    @Override
+    public void showGameMenuPanel(GameViewObserver controller) {
+        this.setGameMenuPanel(new GameMenuPanel(controller));
     }
 
     @Override

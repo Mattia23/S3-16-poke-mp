@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameController;
+import controller.GameViewObserver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import java.awt.*;
 public class GameMenuPanel extends JPanel {
 
 
-    public GameMenuPanel(GameController gameController){
+    public GameMenuPanel(GameViewObserver gameController){
         gameController.gamePanel().setFocusable(false);
         setLayout(new GridLayout(0,1));
         final JButton[] menuButtons = new JButton[6];
@@ -18,7 +18,9 @@ public class GameMenuPanel extends JPanel {
         menuButtons[3] = new JButton("Allenatore");
         menuButtons[4] = new JButton("Tasti");
         menuButtons[5] = new JButton("Exit");
-        menuButtons[0].addActionListener(e ->{});
+        menuButtons[0].addActionListener(e ->{
+            gameController.showPokedex();
+        });
         menuButtons[1].addActionListener(e ->{});
         menuButtons[2].addActionListener(e ->{});
         menuButtons[3].addActionListener(e ->{});
