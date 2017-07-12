@@ -24,7 +24,7 @@ public class GameMenuPanel extends JPanel {
             gameController.showTeam();
         });
         menuButtons[2].addActionListener(e ->{
-
+            gameController.showTrainer();
         });
         menuButtons[3].addActionListener(e ->{
             gameController.showKeyboardExplanation();
