@@ -2,7 +2,10 @@ package view;
 
 import controller.SignInController;
 import model.entities.Trainer1;
+import model.entities.TrainerSprites$;
+import model.entities.Trainers;
 import utilities.Settings;
+import scala.Enumeration.Value;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,10 +26,9 @@ public class SignInPanel extends BasePanel {
         trainerImagePanel.add( label, BorderLayout.CENTER );
         trainerImagePanel.setOpaque(false);
 
-        JComboBox<Trainers> trainersBox = new JComboBox<>();
+        JComboBox<Value> trainersBox = new JComboBox<>();
         trainersBox.setMaximumRowCount(5);
-
-        for(Trainers trainer : Trainers.values()) {
+        for(Value trainer : Trainers.valueSetAsJavaList()) {
             trainersBox.addItem(trainer);
         }
         trainersBox.setSelectedIndex(0);
@@ -51,16 +53,16 @@ public class SignInPanel extends BasePanel {
         this.centralPanel.add(trainerImagePanel, k);
         k.gridy++;
         this.centralPanel.add(submit, k);
-/*
+
         trainersBox.addActionListener(e -> {
 
-           //Enumeration.Value trainer = (Enumeration.Value)((JComboBox)e.getSource()).getSelectedItem();
+            Value trainer = (Value)((JComboBox)e.getSource()).getSelectedItem();
 
-            this.trainerImage = new Trainer1().frontS().image();
+            this.trainerImage = TrainerSprites$.MODULE$.selectTrainerSprite(trainer.id()).frontS().image();
 
             label.setIcon(new ImageIcon(LoadImage.load(this.trainerImage)));
         });
-*/
+
         submit.addActionListener(e -> this.controller.signIn(accountData));
         this.backButton.addActionListener(e -> this.controller.back());
 

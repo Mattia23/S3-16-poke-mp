@@ -1,6 +1,7 @@
 package model.entities
 
 import utilities.Settings
+import scala.collection.JavaConverters._
 
 sealed trait TrainerSprites {
   def back1: Sprite
@@ -20,6 +21,10 @@ sealed trait TrainerSprites {
 object Trainers extends Enumeration {
   type Trainers = Value
   val Boy1, Boy2, Girl1, Girl2 = Value
+
+  def valueSetAsJavaList(): java.util.List[Trainers] = {
+    values.toList.asJava
+  }
 }
 
 object TrainerSprites {
