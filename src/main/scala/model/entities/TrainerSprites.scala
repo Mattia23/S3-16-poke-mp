@@ -17,6 +17,20 @@ sealed trait TrainerSprites {
   def rightS: Sprite
 }
 
+object Trainers extends Enumeration {
+  type Trainers = Value
+  val Boy1, Boy2, Girl1, Girl2 = Value
+}
+
+object TrainerSprites {
+  def selectTrainerSprite(idImage: Int): TrainerSprites = Trainers(idImage) match {
+    case Trainers.Boy1 => Trainer1()
+    case Trainers.Boy2 => Trainer2()
+    case Trainers.Girl1 => Trainer3()
+    case Trainers.Girl2 => Trainer4()
+  }
+}
+
 case class Trainer1() extends TrainerSprites {
   override val back1 = Back1(Settings.TRAINER_1_BACK_1_IMAGE_STRING)
 

@@ -3,8 +3,8 @@ package controller
 import javax.swing.SwingUtilities
 
 import model.entities._
-import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
+import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import utilities.Settings
 import view.{GamePanel, View}
 
@@ -34,7 +34,7 @@ trait GameController {
   def trainerInteract(direction: Direction.Direction): Unit
 }
 
-abstract class GameControllerImpl(private var view: View) extends GameController{
+abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
   private final val TRAINER_STEPS = 4
 
   private var agent: GameControllerAgent = _
@@ -44,8 +44,6 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   protected var inPause = false
   protected var audio: Audio = _
   protected var gamePanel: GamePanel = _
-
-  override val trainer: Trainer = new TrainerImpl("Ash", 1, 0)
 
   override var trainerIsMoving: Boolean = false
 
@@ -207,8 +205,6 @@ abstract class GameControllerImpl(private var view: View) extends GameController
   protected def setTrainerSpriteFront(): Unit = _trainerSprite = trainer.sprites.frontS
 
   protected def setTrainerSpriteBack(): Unit = _trainerSprite = trainer.sprites.backS
-
-
 
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false
