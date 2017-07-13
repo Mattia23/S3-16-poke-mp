@@ -40,7 +40,7 @@ public class BoxPanel extends JPanel {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         JLabel title = new JLabel("Pokémon Box");
-        title.setBackground(Color.WHITE);
+        title.setForeground(Color.WHITE);
         title.setHorizontalAlignment(JLabel.CENTER);
         add(title, BorderLayout.NORTH);
 
@@ -83,7 +83,7 @@ public class BoxPanel extends JPanel {
 
         add(pokemonPanel, BorderLayout.CENTER);
         pokemonPanel.setVisible(false);
-        final JButton close = new JButton("close");
+        final JButton close = new JButton("SAVE AND CLOSE");
         close.addActionListener(e -> {
             buildingController.trainer().setAllFavouritePokemon(this.favoritePokemon);
             buildingController.resumeGame();

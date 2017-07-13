@@ -54,7 +54,7 @@ public class PokemonPanel extends BasePanel {
         pokemonImage.setIcon(myImageIcon);
         pokemonName.setText(pokemon.get("name").toString().toUpperCase());
         pokemonLevel.setText(" Lv."+pokemon.get("level"));
-        pokemonLife.setText(pokemon.get("life")+"/"+pokemon.get("experiencePoints")+" PS");
+        pokemonLife.setText(pokemon.get("lifePoints")+"/"+pokemon.get("experiencePoints")+" PS");
         Tuple4 moves = (Tuple4) pokemon.get("attacks");
         pokemonAttacks[0].setText(moves._1().toString()+"");
         pokemonAttacks[1].setText(moves._2()+"");
