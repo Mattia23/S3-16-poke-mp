@@ -19,7 +19,12 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
 
   override protected def doStart(): Unit = {
     initView()
-    audio.loop()
+    if(trainer.capturedPokemons.isEmpty){
+      pause()
+      new LaboratoryController(this.view, this, trainer).start()
+    }else {
+      audio.loop()
+    }
   }
 
   override protected def doPause(): Unit = {

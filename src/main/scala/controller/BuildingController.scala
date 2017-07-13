@@ -29,8 +29,12 @@ abstract class BuildingController(private val view: View, private val mapControl
         case _: ArrayIndexOutOfBoundsException =>
           trainerIsMoving = false
           if (trainer.coordinate equals buildingMap.entryCoordinate) {
-            this.terminate()
-            mapController.resume()
+            if(buildingMap.isInstanceOf[LaboratoryMap] && trainer.capturedPokemons.isEmpty){
+              view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
+            }else {
+              this.terminate()
+              mapController.resume()
+            }
           }
         case _: NullPointerException => trainerIsMoving = false
       }

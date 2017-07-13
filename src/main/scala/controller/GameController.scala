@@ -54,35 +54,35 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override def trainerSprite: String = _trainerSprite.image
 
   override final def start(): Unit = {
-    doStart()
     inGame = true
     agent = new GameControllerAgent
     agent.start()
+    doStart()
   }
 
   protected def doStart(): Unit
 
   override final def terminate(): Unit = {
-    doTerminate()
     inGame = false
     agent.terminate()
+    doTerminate()
   }
 
   protected def doTerminate(): Unit
 
   override final def pause(): Unit = {
-    doPause()
     inPause = true
     agent.terminate()
+    doPause()
   }
 
   protected def doPause(): Unit
 
   override final def resume(): Unit = {
-    doResume()
     inPause = false
     agent = new GameControllerAgent
     agent.start()
+    doResume()
   }
 
   protected def doResume(): Unit
