@@ -27,11 +27,15 @@ trait Trainer {
 
   def favouritePokemons: List[Int]
 
-  def favouritePokemons_= (list: List[Int]) : Unit
+  def favouritePokemons_=(list: List[Int]) : Unit
 
   def capturedPokemons: List[Tuple2[Int,Int]]
 
-  def capturedPokemons_= (list: List[Tuple2[Int,Int]]) : Unit
+  def capturedPokemons_=(list: List[Tuple2[Int,Int]]) : Unit
+
+  def capturedPokemonId: List[Int]
+
+  def capturedPokemonId_=(list: List[Int]): Unit
 
   def updateTrainer(points:Int): Unit
 
@@ -51,6 +55,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
   private var _pokedex: Pokedex = new PokedexImpl(id)
   private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
   private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
+  override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
 
   override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
 
@@ -130,8 +135,6 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
     if(!this.pokedex.checkIfAlreadyMet(pokemon)){
       DBConnect.addMetPokemon(this.id,pokemon)
       this.pokedex.pokedex_=(DBConnect.getMetPokemonList(id).get())
-    } else {
-      println("You have already met this pokemon")
     }
   }
 

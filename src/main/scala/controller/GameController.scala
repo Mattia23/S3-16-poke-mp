@@ -2,11 +2,12 @@ package controller
 
 import javax.swing.SwingUtilities
 
+import database.remote.DBConnect
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import utilities.Settings
-import view.{GamePanel, View}
+import view.{GameMenuPanel, GamePanel, View}
 
 trait GameController {
   def trainer: Trainer
@@ -29,9 +30,15 @@ trait GameController {
 
   def resume(): Unit
 
+  def resumeGameAtPokemonCenter(): Unit
+
   def moveTrainer(direction: Direction.Direction): Unit
 
   def trainerInteract(direction: Direction.Direction): Unit
+
+  def showMenu(): Unit
+
+  def showPokedex(): Unit = {}
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
@@ -89,6 +96,11 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def doResume(): Unit
 
+  override def resumeGameAtPokemonCenter(): Unit = {
+    //SPOSTA L'ALLENATORE DAVANTI AL CENTRO POKEMON
+    resume()
+  }
+
   override final def moveTrainer(direction: Direction): Unit = doMove(direction)
 
   protected def doMove(direction: Direction): Unit
@@ -96,6 +108,10 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override final def trainerInteract(direction: Direction): Unit = doInteract(direction)
 
   protected def doInteract(direction: Direction) : Unit
+
+  override def showMenu(): Unit = view.showGameMenuPanel(this)
+
+  override def showPokedex(): Unit = view.showPokedex(trainer,this)
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

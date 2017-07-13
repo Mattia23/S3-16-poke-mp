@@ -1,7 +1,6 @@
 package controller
 
-import java.util.concurrent.{Executors, TimeUnit}
-
+import database.remote.DBConnect
 import model.entities.{Owner, Trainer}
 import model.game.{Battle, BattleImpl}
 import view.View
@@ -13,31 +12,40 @@ trait BattleController {
 
   def pokemonWildAttacks(): Unit
 
+  def getPokeballAvailableNumber: Int
+
   def trainerThrowPokeball(): Boolean
+
+  def changePokemon(): Unit
+
+  def pokemonToChangeIsSelected(id: Int): Unit
+
+  def trainerCanQuit(): Boolean
+
+  def resumeGameAtPokemonCenter(): Unit
 }
 
-class BattleControllerImpl(val trainer: Trainer, val view: View) extends BattleController {
-  val battle: Battle = new BattleImpl(trainer)
+class BattleControllerImpl(val controller: GameController, val trainer: Trainer, val view: View) extends BattleController {
+  val battle: Battle = new BattleImpl(trainer,this)
+  private var timer: Thread = _
+  private var battleFinished = false
   battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
-  view.showBattle(battle.myPokemon,battle.wildPokemon,this)
+  showNewView()
+
 
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
     view.getBattlePanel.setPokemonLifeProgressBar(battle.wildPokemon.pokemonLife,Owner.WILD.id)
-    if(!battle.battleFinished) {/*
-      val executorService = Executors.newSingleThreadScheduledExecutor
-      executorService.scheduleAtFixedRate(() => {
-        pokemonWildAttacks()
-      }, 3, 3, TimeUnit.SECONDS)*/
-      val t: Thread = new Thread() {
+    if(!battle.battleFinished) {
+      timer = new Thread() {
         override def run() {
           Thread.sleep(3000)
           pokemonWildAttacks()
         }
       }
-      t.start()
+      timer.start()
     } else {
-      //qualcosa
+      pokemonIsDead(0)
     }
   }
 
@@ -46,21 +54,88 @@ class BattleControllerImpl(val trainer: Trainer, val view: View) extends BattleC
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
     if(battle.battleFinished) {
-      //qualcosa
+      pokemonIsDead(1)
     }
+  }
+
+  override def changePokemon(): Unit = {
+    view.showPokemonChoice(this, this.trainer)
+  }
+
+  override def pokemonToChangeIsSelected(id: Int): Unit =  {
+    battle.updatePokemon()
+    battle.startBattleRound(id)
+    showNewView()
+    pokemonWildAttacksAfterTrainerChoice()
+  }
+
+  override def getPokeballAvailableNumber: Int = {
+    battle.pokeball
   }
 
   override def trainerThrowPokeball(): Boolean = {
+    battle.pokeball_=(battle.pokeball-1)
     if(!battle.pokeballLaunched()) {
-      val t: Thread = new Thread() {
+      pokemonWildAttacksAfterTrainerChoice()
+      false
+    } else {
+      timer = new Thread() {
         override def run() {
+          battle.updatePokemon()
           Thread.sleep(3000)
-          pokemonWildAttacks()
+          controller.resume()
         }
       }
-      t.start()
+      timer.start()
+      true
     }
-    battle.pokeballLaunched()
   }
 
+  override def trainerCanQuit(): Boolean = {
+    if (Random.nextDouble()<0.5) {
+      battle.updatePokemon()
+      controller.resume()
+      true
+    } else {
+      pokemonWildAttacksAfterTrainerChoice()
+      false
+    }
+  }
+
+  override def resumeGameAtPokemonCenter(): Unit = {
+    battleFinished = true
+    controller.resumeGameAtPokemonCenter()
+    DBConnect.rechangeAllTrainerPokemon(trainer.id)
+  }
+
+  private def showNewView(): Unit = {
+    view.showBattle(battle.myPokemon,battle.wildPokemon,this)
+  }
+
+  private def pokemonIsDead(index: Int): Unit = {
+    timer = new Thread() {
+      override def run() {
+        view.getBattlePanel.pokemonIsDead(index)
+        Thread.sleep(2000)
+        if(index==1 && !battleFinished) {
+          showNewView()
+        } else if (index==0) {
+          controller.resume()
+        }
+
+      }
+    }
+    timer.start()
+  }
+
+  private def pokemonWildAttacksAfterTrainerChoice(): Unit = {
+    timer = new Thread() {
+      override def run() {
+      view.getBattlePanel.pokemonWildAttacksAfterTrainerChoice()
+      Thread.sleep(2000)
+      pokemonWildAttacks()
+      }
+    }
+    timer.start()
+  }
 }

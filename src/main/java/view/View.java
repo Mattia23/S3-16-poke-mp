@@ -5,6 +5,7 @@ import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
 import model.environment.BuildingMap;
 import model.map.GameMap;
+import model.entities.Trainer;
 
 import javax.swing.*;
 
@@ -19,29 +20,33 @@ public interface View {
 
     void showMap(GameController mapController, GameMap gameMap);
 
-    GamePanel getMapPanel();
+    //GamePanel getMapPanel();
 
     void showPokemonCenter(GameController pokemonCenterController, BuildingMap buildingMap);
 
-    GamePanel getPokemonCenterPanel();
+    //GamePanel getPokemonCenterPanel();
 
     void showLaboratory(GameController laboratoryController, BuildingMap buildingMap, boolean emptyCaptures);
 
-    GamePanel getLaboratoryPanel();
+    //GamePanel getLaboratoryPanel();
+
+    GamePanel getGamePanel();
 
     void showBoxPanel(BuildingController buildingController);
 
     void showInitialPokemonPanel(BuildingController buildingController, Pokemon pokemon);
 
-   // void showPanel(JPanel panel);
-
     void showDialogue(JPanel dialoguePanel);
+
+    void showGameMenuPanel(GameController controller);
 
     void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController);
 
     BattleView getBattlePanel();
 
-    void showPokemonChoice();
+    void showPokemonChoice(BattleController battleController, Trainer trainer);
+
+    void showPokedex(Trainer trainer, GameController gameController);
 
     void showPause();
 

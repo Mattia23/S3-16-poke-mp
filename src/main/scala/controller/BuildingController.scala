@@ -73,7 +73,7 @@ class PokemonCenterController(private val view: View, private val mapController:
 
   private def initView(): Unit = {
     view.showPokemonCenter(this, buildingMap)
-    gamePanel = view.getPokemonCenterPanel
+    gamePanel = view.getGamePanel
   }
 
   override protected def doInteract(direction: Direction): Unit = {
@@ -112,8 +112,8 @@ class LaboratoryController(private val view: View, private val mapController: Ga
   }
 
   private def initView(): Unit = {
-    view.showLaboratory(this, buildingMap, true/*this.trainer.capturedPokemons.isEmpty*/)
-    gamePanel = view.getLaboratoryPanel
+    view.showLaboratory(this, buildingMap, this.trainer.capturedPokemons.isEmpty)
+    gamePanel = view.getGamePanel
   }
 
   override protected def doInteract(direction: Direction): Unit = {
@@ -124,7 +124,7 @@ class LaboratoryController(private val view: View, private val mapController: Ga
         if(nextPosition equals buildingMap.npc.coordinate){
           this.view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
-        if(true/*trainer.capturedPokemons.isEmpty*/) {
+        if(this.trainer.favouritePokemons.isEmpty) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
             this.pause()
             view.showInitialPokemonPanel(this, Pokemon(1,"ciao",(1,2,3,4),5,0,0,null)/*pokemon.pokemon*/)

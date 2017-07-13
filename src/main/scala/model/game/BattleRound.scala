@@ -1,7 +1,5 @@
 package model.game
 
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import model.entities.{PokemonBehaviour, PokemonBehaviourImpl, PokemonWithLife}
 
 import scala.util.Random
@@ -12,6 +10,8 @@ trait BattleRound {
   def myPokemonAttack(idAttack: Int): Unit
 
   def wildPokemonAttack(attack: Int): Unit
+
+  def updatePokemon(): Unit
 }
 
 class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemon: PokemonWithLife, battle: Battle) extends  BattleRound{
@@ -31,7 +31,7 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemo
     wildPokemonBehaviour.undergoAttack(damage)
     if(!wildPokemonBehaviour.isAlive){
       myPokemonBehaviour.growExperiencePoints(wildPokemonBehaviour.giveExperiencePoints)
-      myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
+      updatePokemon()
       battle.myPokemonKillsWildPokemon(true)
     }
   }
@@ -40,8 +40,12 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemo
     val damage: Int = wildPokemonBehaviour.launchAttack(attack)
     myPokemonBehaviour.undergoAttack(damage)
     if(!myPokemonBehaviour.isAlive){
-      myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
+      updatePokemon()
       battle.myPokemonKillsWildPokemon(false)
     }
+  }
+
+  override def updatePokemon(): Unit = {
+    myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
   }
 }

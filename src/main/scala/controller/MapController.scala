@@ -45,7 +45,7 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
   private def initView(): Unit = {
     setTrainerSpriteFront()
     view.showMap(this, gameMap)
-    gamePanel = view.getMapPanel
+    gamePanel = view.getGamePanel
   }
 
   override protected def doMove(direction: Direction): Unit = {
@@ -82,7 +82,8 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      new BattleControllerImpl(trainer,view)
+      pause()
+      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }
 
