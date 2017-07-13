@@ -24,7 +24,9 @@ public class SignInPanel extends BasePanel {
         this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "sign-in.png");
 
-        this.trainerImage = TrainerSprites$.MODULE$.selectTrainerSprite(BASIC_TRAINER_ID).frontS().image();//new Trainer1().frontS().image();
+        this.trainerImage = TrainerSprites$.MODULE$.selectTrainerSprite(BASIC_TRAINER_ID).frontS().image();
+        this.trainer = Trainers.Boy1();
+
         JLabel label = new JLabel("", new ImageIcon(LoadImage.load(this.trainerImage)), JLabel.CENTER);
         JPanel trainerImagePanel = new JPanel(new BorderLayout());
         trainerImagePanel.add( label, BorderLayout.CENTER );
