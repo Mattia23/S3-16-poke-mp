@@ -58,8 +58,7 @@ class TrainerTest extends FunSuite{
     f.pokemonBehaviour.insertPokemonIntoDB(f.trainer.id)
     f.trainer.capturedPokemons_=(DBConnect.getCapturedPokemonList(f.trainer.id).get())
     f.trainer.addFavouritePokemon(f.autoIncrementCaptured)
-    f.trainer.changeFavouritePokemon(f.autoIncrementCaptured+1,f.autoIncrementCaptured)
-    assert(f.trainer.favouritePokemons == List(f.autoIncrementCaptured+1,0,0,0,0,0))
+    assert(f.trainer.favouritePokemons == List(f.autoIncrementCaptured,0,0,0,0,0))
   }
 
   test("Update trainer") {
