@@ -31,7 +31,7 @@ public final class DBConnect {
 		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				con = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/pokemp_1", "pokemp", "viroliRules12CFU");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
 				st = con.createStatement();
 				MyEncryptor.init();
 			} catch (Exception ex) {
@@ -278,6 +278,40 @@ public final class DBConnect {
 		} catch(Exception ex) {
 			System.out.println(ex);
 		}
+	}
+
+	public static int getTrainerRank(int id){
+		try {
+			String query = "SELECT u.name ,u.id ,t.exp_points FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
+			rs = st.executeQuery(query);
+			int rank = 0;
+			while (rs.next()) {
+				rank++;
+				int userId = rs.getInt("id");
+				if(userId == id) {
+					return rank;
+				}
+			}
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+		return -1;
+	}
+
+	public static Optional<java.util.List<Tuple2<String, Integer>>> getRanking(){
+		try {
+			String query = "SELECT u.name ,u.id ,t.exp_points FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
+			rs = st.executeQuery(query);
+			java.util.List<Tuple2<String, Integer>> list = new ArrayList();
+			while (rs.next()) {
+				Tuple2<String,Integer> tuple = new Tuple2<>(rs.getString("username"), rs.getInt("exp_points"));
+				list.add(tuple);
+			}
+			return Optional.of(list);
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+		return Optional.empty();
 	}
 
 	public static void addMetPokemon(int trainerId, int pokemon){

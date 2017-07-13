@@ -23,7 +23,6 @@ import java.util.Map;
 public class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
-    private List<Tuple2<JRadioButton,Integer>> buttonList = new ArrayList<>();
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
 
@@ -64,10 +63,7 @@ public class TeamPanel extends BasePanel{
                         button.setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
                     }
                 });
-                if(Integer.parseInt(pokemonMap.get("lifePoints").toString()) == 0){
-                    radioButton.setEnabled(false);
-                }
-                if(first && Integer.parseInt(pokemonMap.get("lifePoints").toString()) != 0){
+                if(first){
                     radioButton.requestFocus();
                     radioButton.setSelected(true);
                     radioButton.setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
@@ -85,7 +81,6 @@ public class TeamPanel extends BasePanel{
                     });
                     first = false;
                 }
-                buttonList.add(new Tuple2<>(radioButton,Integer.parseInt(pokemon.toString())));
                 pokemonButtonGroup.add(radioButton);
                 this.centralPanel.add(radioButton, k);
                 k.gridy++;
