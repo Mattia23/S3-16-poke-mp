@@ -20,17 +20,15 @@ import java.util.List;
 public class BoxPanel extends JPanel {
     private final static int POKEMON_NAME = 0;
     private final static int POKEMON_LEVEL = 1;
-    private final static int MIN_POKEMON_IN_TEAM = 1;
-    private final static int MAX_POKEMON_IN_TEAM = 6;
-    private final GameController buildingController;
     private final JPanel teamPanel;
     private final JPanel boxPanel;
+    private final JLabel teamLabel = new JLabel();
+    private final JLabel boxLabel = new JLabel();
     private final PokemonPanel pokemonPanel;
     private List<Object> favoritePokemon;
     private List<Tuple2<Object, Object>> capturedPokemon;
 
     public BoxPanel(BuildingController buildingController){
-        this.buildingController = buildingController;
         this.favoritePokemon = new ArrayList<>();
         List<Object> favoritePokemon = scala.collection.JavaConverters.seqAsJavaList(buildingController.trainer().favouritePokemons());
         this.favoritePokemon = new ArrayList<>();
@@ -53,12 +51,12 @@ public class BoxPanel extends JPanel {
 
         final JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setSize(new Dimension(Settings.SCREEN_WIDTH()/6, 0));
-        leftPanel.add(new JLabel("TEAM "+ (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)) +"/"+MAX_POKEMON_IN_TEAM), BorderLayout.NORTH);
+        leftPanel.add(teamLabel, BorderLayout.NORTH);
         leftPanel.add(teamPanel, BorderLayout.CENTER);
         add(leftPanel, BorderLayout.WEST);
 
         final JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.add(new JLabel("BOX: "+(this.capturedPokemon.size() - (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)))+" Pokemon"), BorderLayout.NORTH);
+        rightPanel.add(boxLabel, BorderLayout.NORTH);
 
         /*final JPanel orderPanel = new JPanel();
         String[] orderStrings = {"Name", "Level"};
@@ -111,7 +109,7 @@ public class BoxPanel extends JPanel {
                 final JButton button = new JButton(">>");
                 teamPanel.add(button);
                 button.addActionListener(e -> {
-                    if (Collections.frequency(this.favoritePokemon, 0) < MAX_POKEMON_IN_TEAM - 1) {
+                    if (Collections.frequency(this.favoritePokemon, 0) < favoritePokemon.size() - 1) {
                         this.favoritePokemon.set(this.favoritePokemon.indexOf(pokemonId), 0);
                         paintBox();
                     }
@@ -143,10 +141,15 @@ public class BoxPanel extends JPanel {
                 });
             }
         }
-
+        refreshTeamAndBoxNumber();
         revalidate();
         repaint();
 
+    }
+
+    public void refreshTeamAndBoxNumber(){
+        teamLabel.setText("TEAM "+ (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)) +"/"+favoritePokemon.size());
+        boxLabel.setText("BOX: "+(this.capturedPokemon.size() - (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)))+" Pokemon");
     }
 
 }
