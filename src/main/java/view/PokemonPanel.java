@@ -1,73 +1,67 @@
 package view;
 
-import database.remote.DBConnect;
-import model.entities.Pokemon;
 import scala.Tuple4;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public class PokemonPanel extends JPanel {
-    //private JLabel pokemonLabel;
-    private final JLabel pokemonName;
-    private final JLabel pokemonLevel;
-    private final JLabel[] pokemonAttacks;
-    private final JLabel pokemonExperiencePoints;
-    private final JLabel pokemonLevelExperience;
+public class PokemonPanel extends BasePanel {
+    private final JLabel pokemonImage = new JLabel();
+    private final JLabel pokemonName = new JLabel();
+    private final JLabel pokemonLevel = new JLabel();
+    private final JLabel pokemonLife = new JLabel();
+    private final JLabel[] pokemonAttacks = new JLabel[4];
+    private final JLabel pokemonExperiencePoints = new JLabel();
+    private final JLabel pokemonLevelExperience = new JLabel();
+
+    private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.2);
 
     public PokemonPanel(){
-        setLayout(new GridLayout(0,2));
-        //pokemonLabel = new JLabel();
-        pokemonName = new JLabel();
-        pokemonLevel = new JLabel();
-        pokemonAttacks = new JLabel[4];
+        setBackground(Color.WHITE);
+        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
+        this.backButton.setVisible(false);
+        //this.backButton.setBorderPainted(false);
+        //this.backButton.setFocusPainted(false);
+        this.centralPanel.add(pokemonImage);
+        k.gridy++;
+        this.centralPanel.add(pokemonName,k);
+        this.centralPanel.add(pokemonLevel,k);
+        this.centralPanel.add(pokemonLife,k);
+        k.gridy++;
         for(int i = 0; i<pokemonAttacks.length; i++){
             pokemonAttacks[i] = new JLabel();
+            this.centralPanel.add(pokemonAttacks[i],k);
+            k.gridy++;
         }
-        pokemonExperiencePoints = new JLabel();
-        pokemonLevelExperience = new JLabel();
-        add(pokemonName);
-        add(pokemonLevel);
-        final JPanel attackPanel = new JPanel();
-        attackPanel.setLayout(new GridLayout(4,0));
-        for (final JLabel pokemonAttack : pokemonAttacks) {
-            attackPanel.add(pokemonAttack);
-        }
-        add(new JLabel("Attacks:"));
-        add(attackPanel);
+        k.gridy++;
+        this.centralPanel.add(pokemonExperiencePoints,k);
+        this.centralPanel.add(pokemonLevelExperience,k);
     }
 
     public void setPokemon(Map pokemon){
-        /*String s = pokemonMap.get("name").toString().toUpperCase() + "   Life: " + pokemonMap.get("lifePoints").toString() + "/" +
-                pokemonMap.get("experiencePoints").toString() + "   Lv:  " + pokemonMap.get("level").toString();
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonMap.get("id").toString() + ".png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + pokemon.get("id").toString() + ".png"));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*BufferedImage myPicture = null;
-        try {
-            myPicture = ImageIO.read(new File(pokemon.imageName()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        final JLabel pokemonLabel = new JLabel(new ImageIcon(myPicture));
-        add(pokemonLabel);*/
+        pokemonImage.setIcon(myImageIcon);
         pokemonName.setText(pokemon.get("name").toString().toUpperCase());
-        pokemonLevel.setText(" Lv."+pokemon.get("level").toString());
-        /*Tuple4 moves = pokemonMap.get("attacks");
-        for(int i = 0; i < 4; i++){
-            //qui c'è solo un numero e non l'attacco, si deve accedere al db
-            pokemonAttacks[i].setText(pokemon.attacks()+"");
-        }*/
+        pokemonLevel.setText(" Lv."+pokemon.get("level"));
+        pokemonLife.setText(pokemon.get("life")+"/"+pokemon.get("experiencePoints")+" PS");
+        Tuple4 moves = (Tuple4) pokemon.get("attacks");
+        pokemonAttacks[0].setText(moves._1().toString()+"");
+        pokemonAttacks[1].setText(moves._2()+"");
+        pokemonAttacks[2].setText(moves._3()+"");
+        pokemonAttacks[3].setText(moves._4()+"");
+        pokemonLevelExperience.setText("Level experience: "+pokemon.get("levelExperience"));
+        revalidate();
+        repaint();
     }
 }
