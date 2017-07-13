@@ -20,11 +20,24 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
   override protected def doStart(): Unit = {
     initView()
     if(trainer.capturedPokemons.isEmpty){
-      pause()
-      new LaboratoryController(this.view, this, trainer).start()
+      doFirstLogin()
     }else {
       audio.loop()
     }
+  }
+
+  private def doFirstLogin(): Unit = {
+    pause()
+    for( x <- 0 until gameMap.width){
+      for( y <- 0 until gameMap.height){
+        gameMap.map(x)(y) match {
+          case tile:Laboratory =>
+            lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+          case _ =>
+        }
+      }
+    }
+    new LaboratoryController(this.view, this, trainer).start()
   }
 
   override protected def doPause(): Unit = {
