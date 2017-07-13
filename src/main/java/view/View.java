@@ -35,6 +35,8 @@ public interface View {
 
     void showTeamPanel(Trainer trainer, GameViewObserver gameController);
 
+    void showTrainerPanel(Trainer trainer, GameViewObserver gameController);
+
     void showKeyboardPanel(GameViewObserver gameController);
 
     void showPause();

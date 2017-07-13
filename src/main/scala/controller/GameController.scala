@@ -47,6 +47,8 @@ trait GameViewObserver {
 
   def showTeam(): Unit
 
+  def showTrainer(): Unit
+
   def showKeyboardExplanation(): Unit
 }
 
@@ -117,6 +119,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override def showMenu(): Unit = view.showGameMenuPanel(this)
   override def showPokedex(): Unit = view.showPokedex(trainer,this)
   override def showTeam(): Unit = view.showTeamPanel(trainer, this)
+  override def showTrainer(): Unit = view.showTrainerPanel(trainer, this)
   override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this)
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
