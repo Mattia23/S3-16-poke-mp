@@ -99,6 +99,8 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
   override def updateTrainer(points: Int): Unit = {
     this.experiencePoints_=(this.experiencePoints + points)
     this.level_=(calculateLevel(this.experiencePoints))
+    capturedPokemons_=(DBConnect.getCapturedPokemonList(id).get())
+    capturedPokemonId_=(DBConnect.getCapturedPokemonIdList(id).get())
     DBConnect.updateTrainer(this.id, this.experiencePoints, this.favouritePokemons)
   }
 
