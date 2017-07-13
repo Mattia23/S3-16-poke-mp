@@ -1,8 +1,9 @@
 package model.characters
 
 import java.awt.Image
+import java.util.Optional
 
-import model.entities.Pokemon
+import model.entities.{Owner, Pokemon, PokemonFactory, PokemonWithLife}
 import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 import view.LoadImage
@@ -50,11 +51,11 @@ abstract class PokemonCharacter extends StaticCharacter{
 
   def image: Image
 
-  def pokemon: Pokemon
+  def pokemonWithLife: PokemonWithLife
 }
 
 class Bulbasaur extends PokemonCharacter{
-  override def pokemon: Pokemon = ???
+  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
 
   override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
 
@@ -64,7 +65,7 @@ class Bulbasaur extends PokemonCharacter{
 }
 
 class Charmander extends PokemonCharacter{
-  override def pokemon: Pokemon = ???
+  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(4), Optional.of(1)).get()
 
   override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "charmander.png")
 
@@ -74,7 +75,7 @@ class Charmander extends PokemonCharacter{
 }
 
 class Squirtle extends PokemonCharacter{
-  override def pokemon: Pokemon = ???
+  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
 
   override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "squirtle.png")
 

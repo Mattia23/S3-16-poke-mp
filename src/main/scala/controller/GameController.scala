@@ -73,9 +73,8 @@ abstract class GameController(private var view: View) extends GameViewObserver{
 
   override final def startGame(): Unit = {
     inGame = true
-    doStart()
     view.showPanel(gamePanel)
-    if(trainer.favouritePokemons.isEmpty) view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))
+    doStart()
   }
 
   protected def doStart(): Unit

@@ -44,6 +44,21 @@ object PokemonFactory {
                                 exp)
       Optional.of(pokemon)
     }
+    case Owner.INITIAL => {
+      val pokemonId: Int = databaseId.get()
+      val level: Int = 5
+      val exp: Int = generateExperiencePokemon(pokemonId, level)
+      val pokemon: PokemonWithLife =
+        new PokemonWithLifeImpl(Pokemon(id = pokemonId,
+          name = PokedexConnect.getPokemonName(pokemonId).get(),
+          attacks = (1,2,3,4),
+          level = level,
+          experiencePoints = exp,
+          levelExperience = Random.nextInt(exp),
+          imageName = pokemonId+".png"),
+          exp)
+      Optional.of(pokemon)
+    }
   }
 
   private def generateCasualPokemonId(trainerLevel: Int): Int = {
