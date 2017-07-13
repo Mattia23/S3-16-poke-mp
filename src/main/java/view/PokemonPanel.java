@@ -1,5 +1,8 @@
 package view;
 
+import database.local.PokedexConnect;
+import model.entities.PokemonWithLife;
+import scala.Tuple2;
 import scala.Tuple4;
 import utilities.Settings;
 
@@ -7,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Map;
 
 public class PokemonPanel extends BasePanel {
     private final JLabel pokemonImage = new JLabel();
@@ -15,7 +17,6 @@ public class PokemonPanel extends BasePanel {
     private final JLabel pokemonLevel = new JLabel();
     private final JLabel pokemonLife = new JLabel();
     private final JLabel[] pokemonAttacks = new JLabel[4];
-    private final JLabel pokemonExperiencePoints = new JLabel();
     private final JLabel pokemonLevelExperience = new JLabel();
 
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.2);
@@ -38,29 +39,32 @@ public class PokemonPanel extends BasePanel {
             k.gridy++;
         }
         k.gridy++;
-        this.centralPanel.add(pokemonExperiencePoints,k);
         this.centralPanel.add(pokemonLevelExperience,k);
     }
 
-    public void setPokemon(Map pokemon){
+    public void setPokemon(final PokemonWithLife pokemonWithLife){
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + pokemon.get("id").toString() + ".png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();
         }
         pokemonImage.setIcon(myImageIcon);
-        pokemonName.setText(pokemon.get("name").toString().toUpperCase());
-        pokemonLevel.setText(" Lv."+pokemon.get("level"));
-        pokemonLife.setText(pokemon.get("lifePoints")+"/"+pokemon.get("experiencePoints")+" PS");
-        Tuple4 moves = (Tuple4) pokemon.get("attacks");
-        pokemonAttacks[0].setText(moves._1().toString()+"");
-        pokemonAttacks[1].setText(moves._2()+"");
-        pokemonAttacks[2].setText(moves._3()+"");
-        pokemonAttacks[3].setText(moves._4()+"");
-        pokemonLevelExperience.setText("Level experience: "+pokemon.get("levelExperience"));
+        pokemonName.setText(pokemonWithLife.pokemon().name().toUpperCase());
+        pokemonLevel.setText(" Lv."+pokemonWithLife.pokemon().level());
+        pokemonLife.setText(pokemonWithLife.pokemonLife()+"/"+pokemonWithLife.pokemon().experiencePoints()+" PS");
+        Tuple4 moves = pokemonWithLife.pokemon().attacks();
+        Tuple2 attack1 = PokedexConnect.getPokemonAttack((int)moves._1()).get();
+        Tuple2 attack2 = PokedexConnect.getPokemonAttack((int)moves._2()).get();
+        Tuple2 attack3 = PokedexConnect.getPokemonAttack((int)moves._3()).get();
+        Tuple2 attack4 = PokedexConnect.getPokemonAttack((int)moves._4()).get();
+        pokemonAttacks[0].setText("Move 1: "+attack1._1()+" (Power:"+attack1._2()+")");
+        pokemonAttacks[1].setText("Move 2: "+attack2._1()+" (Power:"+attack2._2()+")");
+        pokemonAttacks[2].setText("Move 3: "+attack3._1()+" (Power:"+attack3._2()+")");
+        pokemonAttacks[3].setText("Move 4: "+attack4._1()+" (Power:"+attack4._2()+")");
+        pokemonLevelExperience.setText("Level experience: "+pokemonWithLife.pokemon().levelExperience());
         revalidate();
         repaint();
     }

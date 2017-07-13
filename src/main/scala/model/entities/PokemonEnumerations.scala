@@ -1,7 +1,7 @@
 package model.entities
 
 object Owner extends Enumeration {
-  val TRAINER, WILD = Value
+  val TRAINER, WILD, INITIAL = Value
 }
 
 object PokemonStatus extends Enumeration {

@@ -1,13 +1,10 @@
 package view;
 
 import controller.BuildingController;
-import controller.GameController;
-import database.remote.DBConnect;
-import model.entities.Pokemon;
+import model.entities.Owner;
+import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
-import scala.Int;
 import scala.Tuple2;
-import scala.collection.JavaConverters;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
@@ -98,16 +95,17 @@ public class BoxPanel extends JPanel {
         boxPanel.removeAll();
 
         for(Object pokemonObject: this.favoritePokemon){
-            Integer pokemonId = Integer.parseInt(pokemonObject.toString());
+            int pokemonId = Integer.parseInt(pokemonObject.toString());
             if(pokemonId != 0) {
-                Map pokemon = DBConnect.getPokemonFromDB(pokemonId).get();
-                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemon.get("id").toString() + ".png"));
-                final JLabel pokemonLabel = new JLabel(pokemon.get("name") + " Lv." + pokemon.get("level"));
+                final PokemonWithLife pokemonWithLife = PokemonFactory
+                        .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
+                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().id() + ".png"));
+                final JLabel pokemonLabel = new JLabel(pokemonWithLife.pokemon().name() + " Lv." + pokemonWithLife.pokemon().level());
                 pokemonLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonLabel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        pokemonPanel.setPokemon(pokemon);
+                        pokemonPanel.setPokemon(pokemonWithLife);
                         if (!pokemonPanel.isVisible()) pokemonPanel.setVisible(true);
                     }
 
@@ -126,17 +124,18 @@ public class BoxPanel extends JPanel {
         }
 
         for(Tuple2<Object, Object> pokemonObject: this.capturedPokemon){
-            Integer pokemonId = Integer.parseInt(pokemonObject._1().toString());
+            int pokemonId = Integer.parseInt(pokemonObject._1().toString());
+            final PokemonWithLife pokemonWithLife = PokemonFactory
+                    .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
             if(!this.favoritePokemon.contains(pokemonId)){
-                Map pokemon = DBConnect.getPokemonFromDB(pokemonId).get();
                 final JButton button = new JButton("<<");
-                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemon.get("id").toString() + ".png"));
-                final JLabel pokemonLabel = new JLabel(pokemon.get("name")+" Lv."+pokemon.get("level"));
+                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().id() + ".png"));
+                final JLabel pokemonLabel = new JLabel(pokemonWithLife.pokemon().name()+" Lv."+pokemonWithLife.pokemon().level());
                 pokemonLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonLabel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        pokemonPanel.setPokemon(pokemon);
+                        pokemonPanel.setPokemon(pokemonWithLife);
                         if(!pokemonPanel.isVisible()) pokemonPanel.setVisible(true);
                     }
                 });
@@ -145,7 +144,7 @@ public class BoxPanel extends JPanel {
                 boxPanel.add(pokemonLabel);
                 button.addActionListener(e ->{
                     if(this.favoritePokemon.contains(0)){
-                        this.favoritePokemon.set(this.favoritePokemon.indexOf(0),pokemonId);
+                        this.favoritePokemon.set(this.favoritePokemon.indexOf(0), pokemonId);
                         paintBox();
                     }
                 });

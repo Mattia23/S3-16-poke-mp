@@ -1,7 +1,7 @@
 package view;
 
 import controller.GameController;
-import model.entities.Pokemon;
+import model.entities.PokemonWithLife;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,19 +9,18 @@ import java.awt.*;
 
 public class InitialPokemonPanel extends JPanel {
 
-    public InitialPokemonPanel(final GameController buildingController, final Pokemon pokemon){
+    public InitialPokemonPanel(final GameController buildingController, final PokemonWithLife pokemonWithLife){
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10,100,10,100));
         final PokemonPanel pokemonPanel = new PokemonPanel();
-        pokemonPanel.setPokemon(null);
+        pokemonPanel.setPokemon(pokemonWithLife);
         add(pokemonPanel, BorderLayout.CENTER);
 
         final JPanel buttonPanel = new JPanel();
         final JButton yes = new JButton("yes");
         final JButton no = new JButton("no");
         yes.addActionListener(e ->{
-            //TODO correggere più avanti
-            buildingController.trainer().addFavouritePokemon(pokemon.id());
+            buildingController.trainer().addFavouritePokemon(pokemonWithLife.pokemon().id());
             buildingController.resumeGame();
         });
         no.addActionListener(e -> buildingController.resumeGame());

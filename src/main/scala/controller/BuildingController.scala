@@ -140,7 +140,7 @@ class LaboratoryController(private var view: View, private var mapController: Ga
         if(this.trainer.favouritePokemons.isEmpty) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
             this.pauseGame()
-            view.showPanel(new InitialPokemonPanel(this, Pokemon(1,"ciao",(1,2,3,4),5,0,0,null)/*pokemon.pokemon*/))
+            view.showPanel(new InitialPokemonPanel(this, pokemon.pokemonWithLife))
           }
         }
       }catch{
