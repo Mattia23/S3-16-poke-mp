@@ -1,5 +1,6 @@
 package controller
 
+import database.remote.DBConnect
 import model.entities.Trainer
 import model.environment.{Audio, Coordinate, CoordinateImpl}
 import model.environment.Direction.Direction
@@ -33,6 +34,18 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
   }
 
   override protected def doResume(): Unit = {
+    if(trainer.getFirstAvailableFavouritePokemon <= 0) {
+      DBConnect.rechangeAllTrainerPokemon(trainer.id)
+      for( x <- 0 until gameMap.width) {
+        for (y <- 0 until gameMap.height) {
+          gameMap.map(x)(y) match {
+            case tile: PokemonCenter =>
+              lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+            case _ =>
+          }
+        }
+      }
+    }
     trainer.coordinate = lastCoordinates
     initView()
     audio.loop()

@@ -104,8 +104,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
 
   override def resumeGameAtPokemonCenter(): Unit = {
     battleFinished = true
-    controller.resumeGameAtPokemonCenter()
-    DBConnect.rechangeAllTrainerPokemon(trainer.id)
+    controller.resume()
   }
 
   private def showNewView(): Unit = {
