@@ -125,7 +125,7 @@ class PokemonCenterController(private var view: View, private var mapController:
 class LaboratoryController(private var view: View, private var mapController: GameController) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
-  private val capturedPokemonEmpty: Boolean = this.trainer.capturedPokemons.isEmpty
+  private var capturedPokemonEmpty: Boolean = this.trainer.capturedPokemons.isEmpty
   override var gamePanel: GamePanel = new LaboratoryPanel(this, buildingMap, capturedPokemonEmpty)
 
   this.audio = Audio(Settings.LABORATORY_SONG)
@@ -148,6 +148,12 @@ class LaboratoryController(private var view: View, private var mapController: Ga
         case e: ArrayIndexOutOfBoundsException =>
       }
     }
+  }
+
+  override protected def doResume(): Unit = {
+    //TODO per adesso da sempre true perchè è da sistemare il codice in InitialPokemonPanel
+    capturedPokemonEmpty = this.trainer.capturedPokemons.isEmpty
+    super.doResume()
   }
 }
 
