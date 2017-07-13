@@ -20,6 +20,7 @@ public class InitialPokemonPanel extends JPanel {
         final JButton yes = new JButton("yes");
         final JButton no = new JButton("no");
         yes.addActionListener(e ->{
+            buildingController.trainer().addMetPokemon(pokemonWithLife.pokemon().id());
             buildingController.trainer().addFavouritePokemon(pokemonWithLife.pokemon().id());
             buildingController.resumeGame();
         });

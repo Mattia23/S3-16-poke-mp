@@ -99,7 +99,7 @@ public class BoxPanel extends JPanel {
             if(pokemonId != 0) {
                 final PokemonWithLife pokemonWithLife = PokemonFactory
                         .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
-                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().id() + ".png"));
+                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
                 final JLabel pokemonLabel = new JLabel(pokemonWithLife.pokemon().name() + " Lv." + pokemonWithLife.pokemon().level());
                 pokemonLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonLabel.addMouseListener(new MouseAdapter() {
@@ -129,7 +129,7 @@ public class BoxPanel extends JPanel {
                     .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
             if(!this.favoritePokemon.contains(pokemonId)){
                 final JButton button = new JButton("<<");
-                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().id() + ".png"));
+                final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
                 final JLabel pokemonLabel = new JLabel(pokemonWithLife.pokemon().name()+" Lv."+pokemonWithLife.pokemon().level());
                 pokemonLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonLabel.addMouseListener(new MouseAdapter() {

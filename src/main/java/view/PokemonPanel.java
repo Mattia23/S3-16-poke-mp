@@ -23,10 +23,8 @@ public class PokemonPanel extends BasePanel {
 
     public PokemonPanel(){
         setBackground(Color.WHITE);
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
+        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         this.backButton.setVisible(false);
-        //this.backButton.setBorderPainted(false);
-        //this.backButton.setFocusPainted(false);
         this.centralPanel.add(pokemonImage);
         k.gridy++;
         this.centralPanel.add(pokemonName,k);
@@ -46,7 +44,7 @@ public class PokemonPanel extends BasePanel {
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + pokemonWithLife.pokemon().imageName()));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();

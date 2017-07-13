@@ -125,7 +125,8 @@ class PokemonCenterController(private var view: View, private var mapController:
 class LaboratoryController(private var view: View, private var mapController: GameController) extends BuildingController(view, mapController){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   this.trainerPosition = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
-  override var gamePanel: GamePanel = new LaboratoryPanel(this, buildingMap, this.trainer.favouritePokemons.isEmpty)
+  private val capturedPokemonEmpty: Boolean = this.trainer.capturedPokemons.isEmpty
+  override var gamePanel: GamePanel = new LaboratoryPanel(this, buildingMap, capturedPokemonEmpty)
 
   this.audio = Audio(Settings.LABORATORY_SONG)
 
@@ -137,7 +138,7 @@ class LaboratoryController(private var view: View, private var mapController: Ga
         if(nextPosition equals buildingMap.npc.coordinate){
           this.view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
-        if(this.trainer.favouritePokemons.isEmpty) {
+        if(capturedPokemonEmpty) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
             this.pauseGame()
             view.showPanel(new InitialPokemonPanel(this, pokemon.pokemonWithLife))

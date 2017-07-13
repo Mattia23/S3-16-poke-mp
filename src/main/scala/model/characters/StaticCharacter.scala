@@ -55,7 +55,7 @@ abstract class PokemonCharacter extends StaticCharacter{
 }
 
 class Bulbasaur extends PokemonCharacter{
-  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
+  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
 
   override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
 
