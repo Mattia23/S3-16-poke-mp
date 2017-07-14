@@ -1,7 +1,7 @@
 package view;
 
 
-import controller.GameViewObserver;
+import controller.GameController;
 import utilities.Settings;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class KeyboardPanel extends BasePanel {
 
-    public KeyboardPanel (GameViewObserver gameController) {
+    public KeyboardPanel (GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "keyboard.png");
 
         JPanel northPanel = new JPanel(new BorderLayout());
@@ -34,8 +34,8 @@ public class KeyboardPanel extends BasePanel {
         k.gridy++;
 
         this.backButton.addActionListener(e -> {
-            gameController.resumeGame();
-            gameController.gamePanel().setFocusable(true);
+            gameController.resume();
+            //gameController.gamePanel().setFocusable(true);
         });
 
     }

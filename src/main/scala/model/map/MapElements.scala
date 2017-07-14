@@ -22,32 +22,32 @@ object MapElements {
 }
 
 class MapElementsImpl extends MapElements {
-  override var map = Map[(Int, Int), Tile]()
+  override var map: Map[(Int, Int), Tile] = Map[(Int, Int), Tile]()
 
-  override def addTile(tile: Tile, coordinate: Coordinate) = map = map + ((coordinate.x, coordinate.y) -> tile)
+  override def addTile(tile: Tile, coordinate: Coordinate): Unit = map = map + ((coordinate.x, coordinate.y) -> tile)
 
-  override def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]) = {
+  override def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]): Unit = {
     coordinates foreach(coordinate => addTile(tile, coordinate))
   }
 
-  override def addMultipleElements(tile: Tile, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate) = {
+  override def addMultipleElements(tile: Tile, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate): Unit = {
     for (x <- topLeftCoordinate.x to bottomRightCoordinate.x)
       for (y <- topLeftCoordinate.y to bottomRightCoordinate.y)
         addTile(tile, CoordinateImpl(x,y))
   }
 
-  override def addCompositeElement(compositeElement: CompositeElement, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate) = {
+  override def addCompositeElement(compositeElement: CompositeElement, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate): Unit = {
     for (x <- topLeftCoordinate.x to bottomRightCoordinate.x)
       for (y <- topLeftCoordinate.y to bottomRightCoordinate.y)
         (x,y) match{
-          case (x,y) if x == topLeftCoordinate.x && y == topLeftCoordinate.y => addTile(compositeElement.topLeftTile, CoordinateImpl(x,y))
-          case (x,y) if x == topLeftCoordinate.x && y == bottomRightCoordinate.y => addTile(compositeElement.bottomLeftTile, CoordinateImpl(x,y))
-          case (x,y) if x == bottomRightCoordinate.x && y == topLeftCoordinate.y => addTile(compositeElement.topRightTile, CoordinateImpl(x,y))
-          case (x,y) if x == bottomRightCoordinate.x && y == bottomRightCoordinate.y => addTile(compositeElement.bottomRightTile, CoordinateImpl(x,y))
-          case (x,_) if x == topLeftCoordinate.x => addTile(compositeElement.leftTile, CoordinateImpl(x,y))
-          case (x,_) if x == bottomRightCoordinate.x => addTile(compositeElement.rightTile, CoordinateImpl(x,y))
-          case (_,y) if y == topLeftCoordinate.y => addTile(compositeElement.topTile, CoordinateImpl(x,y))
-          case (_,y) if y == bottomRightCoordinate.y => addTile(compositeElement.bottomTile, CoordinateImpl(x,y))
+          case (_,_) if x == topLeftCoordinate.x && y == topLeftCoordinate.y => addTile(compositeElement.topLeftTile, CoordinateImpl(x,y))
+          case (_,_) if x == topLeftCoordinate.x && y == bottomRightCoordinate.y => addTile(compositeElement.bottomLeftTile, CoordinateImpl(x,y))
+          case (_,_) if x == bottomRightCoordinate.x && y == topLeftCoordinate.y => addTile(compositeElement.topRightTile, CoordinateImpl(x,y))
+          case (_,_) if x == bottomRightCoordinate.x && y == bottomRightCoordinate.y => addTile(compositeElement.bottomRightTile, CoordinateImpl(x,y))
+          case (_,_) if x == topLeftCoordinate.x => addTile(compositeElement.leftTile, CoordinateImpl(x,y))
+          case (_,_) if x == bottomRightCoordinate.x => addTile(compositeElement.rightTile, CoordinateImpl(x,y))
+          case (_,_) if y == topLeftCoordinate.y => addTile(compositeElement.topTile, CoordinateImpl(x,y))
+          case (_,_) if y == bottomRightCoordinate.y => addTile(compositeElement.bottomTile, CoordinateImpl(x,y))
           case _ => addTile(compositeElement.tile, CoordinateImpl(x,y))
         }
   }

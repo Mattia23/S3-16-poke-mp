@@ -1,8 +1,7 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 import model.environment.BuildingMap;
-import model.environment.LaboratoryMap;
 import utilities.Settings;
 
 import java.awt.*;
@@ -12,7 +11,7 @@ public class LaboratoryPanel extends BuildingPanel {
     private boolean emptyCaptures;
     private BuildingMap laboratoryMap;
 
-    public LaboratoryPanel(final GameViewObserver gameController, final BuildingMap laboratoryMap, final boolean emptyCaptures) {
+    public LaboratoryPanel(final GameController gameController, final BuildingMap laboratoryMap, final boolean emptyCaptures) {
         super(gameController, laboratoryMap);
         this.laboratoryMap = laboratoryMap;
         this.emptyCaptures = emptyCaptures;

@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
@@ -10,9 +10,9 @@ import java.awt.*;
 public class MapPanel extends GamePanel{
 
     private GameMap gameMap;
-    private GameViewObserver gameController;
+    private GameController gameController;
 
-    public MapPanel(final GameViewObserver gameController, final GameMap gameMap) {
+    public MapPanel(final GameController gameController, final GameMap gameMap) {
         super(gameController);
         this.gameMap = gameMap;
         this.gameController = gameController;
