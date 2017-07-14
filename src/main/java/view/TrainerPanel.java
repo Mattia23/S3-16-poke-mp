@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameViewObserver;
+import database.remote.DBConnect;
 import model.entities.Trainer;
 import utilities.Settings;
 
@@ -31,7 +32,7 @@ public class TrainerPanel extends BasePanel {
         this.centralPanel.add(new JLabel(""+trainer.experiencePoints()),k);
         k.gridy++;
         this.centralPanel.add(new JLabel("Posizione in classifica:"),k);
-        this.centralPanel.add(new JLabel(),k);
+        this.centralPanel.add(new JLabel(String.valueOf(DBConnect.getTrainerRank(trainer.id()))),k);
         k.gridy++;
         this.centralPanel.add(new JLabel("Battaglie vinte:"),k);
         this.centralPanel.add(new JLabel(),k);
