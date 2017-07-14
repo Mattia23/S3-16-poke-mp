@@ -1,25 +1,23 @@
 package view;
 import controller.GameKeyListener;
-import controller.GameViewObserver;
+import controller.GameController;
 import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.concurrent.Semaphore;
 
 public abstract class GamePanel extends JPanel{
 
     private int currentX;
     private int currentY;
 
-    protected GamePanel(final GameViewObserver gameController) {
+    protected GamePanel(final GameController gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
         GameKeyListener keyListener = new GameKeyListener(gameController);
         this.addKeyListener(keyListener);
-        this.currentX = gameController.trainerPosition().x() * Settings.TILE_PIXEL();
-        this.currentY = gameController.trainerPosition().y() * Settings.TILE_PIXEL();
+        this.currentX = gameController.trainer().coordinate().x() * Settings.TILE_PIXEL();
+        this.currentY = gameController.trainer().coordinate().y() * Settings.TILE_PIXEL();
     }
 
     @Override

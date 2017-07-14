@@ -59,12 +59,7 @@ class TrainerImpl(val name: String, private val idImage: Int, override var exper
   override var capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
   override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
 
-  override val sprites =  idImage match {
-    case 1 => Trainer1()
-    case 2 => Trainer2()
-    case 3 => Trainer3()
-    case _ => Trainer4()
-  }
+  override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
 
   private def calculateLevel(experiencePoints: Int): Int = {
     var level: Double = Settings.INITIAL_TRAINER_LEVEL

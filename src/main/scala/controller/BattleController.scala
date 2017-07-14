@@ -83,7 +83,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
         override def run() {
           battle.updatePokemon()
           Thread.sleep(3000)
-          controller.resumeGame()
+          controller.resume()
         }
       }
       timer.start()
@@ -94,7 +94,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   override def trainerCanQuit(): Boolean = {
     if (Random.nextDouble()<0.5) {
       battle.updatePokemon()
-      controller.resumeGame()
+      controller.resume()
       true
     } else {
       pokemonWildAttacksAfterTrainerChoice()
@@ -104,8 +104,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
 
   override def resumeGameAtPokemonCenter(): Unit = {
     battleFinished = true
-    controller.resumeGameAtPokemonCenter()
-    DBConnect.rechangeAllTrainerPokemon(trainer.id)
+    controller.resume()
   }
 
   private def showNewView(): Unit = {
@@ -120,7 +119,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
         if(index==1 && !battleFinished) {
           showNewView()
         } else if (index==0) {
-          controller.resumeGame()
+          controller.resume()
         }
 
       }

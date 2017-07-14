@@ -1,10 +1,10 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 import model.entities.PokemonWithLife;
 
 public class PokemonInTeamPanel extends PokemonPanel{
-    PokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameViewObserver controller){
+    PokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameController controller){
         setPokemon(pokemonWithLife);
         this.backButton.setVisible(true);
         this.backButton.addActionListener(e->{
