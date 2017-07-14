@@ -1,21 +1,16 @@
 package controller
 
-import database.remote.DBConnect
+import javax.swing.SwingUtilities
+
 import model.entities._
-import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.environment.Direction.Direction
+import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import utilities.Settings
+import view.{GamePanel, View}
 import view.{ClassicDialoguePanel, GameMenuPanel, GamePanel, View}
 
-trait GameViewObserver {
-
-  def gamePanel: GamePanel
-
-  def gamePanel_=(gamePanel: GamePanel): Unit
-
-  def trainerPosition: Coordinate
-
-  def trainerPosition_=(position: Coordinate): Unit
+trait GameController {
+  def trainer: Trainer
 
   def trainerIsMoving: Boolean
 
@@ -27,15 +22,13 @@ trait GameViewObserver {
 
   def trainerSprite: String
 
-  def startGame(): Unit
+  def start(): Unit
 
-  def terminateGame(): Unit
+  def terminate(): Unit
 
-  def pauseGame(): Unit
+  def pause(): Unit
 
-  def resumeGame(): Unit
-
-  def resumeGameAtPokemonCenter(): Unit
+  def resume(): Unit
 
   def moveTrainer(direction: Direction.Direction): Unit
 
@@ -54,16 +47,16 @@ trait GameViewObserver {
   def showKeyboardExplanation(): Unit
 }
 
-abstract class GameController(private var view: View) extends GameViewObserver{
+abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
   private final val TRAINER_STEPS = 4
 
-  protected var inGame = false
-  protected var inPause = false
-  protected val trainer: Trainer = DBConnect.getTrainerFromDB("Ash").get()
+  private var agent: GameControllerAgent = _
   private var _trainerSprite: Sprite = _
   private var fistStep: Boolean = true
-
-  override var trainerPosition: Coordinate = trainer.coordinate
+  protected var inGame = false
+  protected var inPause = false
+  protected var audio: Audio = _
+  protected var gamePanel: GamePanel = _
 
   override var trainerIsMoving: Boolean = false
 
@@ -73,38 +66,38 @@ abstract class GameController(private var view: View) extends GameViewObserver{
 
   override def trainerSprite: String = _trainerSprite.image
 
-  override final def startGame(): Unit = {
+  override final def start(): Unit = {
     inGame = true
-    view.showPanel(gamePanel)
     doStart()
+    agent = new GameControllerAgent
+    agent.start()
   }
 
   protected def doStart(): Unit
 
-  override final def terminateGame(): Unit = {
+  override final def terminate(): Unit = {
     inGame = false
     doTerminate()
+    if(agent != null)
+      agent.terminate()
   }
 
   protected def doTerminate(): Unit
 
-  override final def pauseGame(): Unit = {
+  override final def pause(): Unit = {
     inPause = true
     doPause()
-    view.showPause()
+    if(agent != null)
+      agent.terminate()
   }
 
   protected def doPause(): Unit
 
-  override final def resumeGame(): Unit = {
+  override final def resume(): Unit = {
     inPause = false
     doResume()
-    view.showPanel(gamePanel)
-  }
-
-  override def resumeGameAtPokemonCenter(): Unit = {
-    //SPOSTA L'ALLENATORE DAVANTI AL CENTRO POKEMON
-    resumeGame()
+    agent = new GameControllerAgent
+    agent.start()
   }
 
   protected def doResume(): Unit
@@ -118,31 +111,36 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   protected def doInteract(direction: Direction) : Unit
 
   override def showMenu(): Unit = view.showGameMenuPanel(this)
+
   override def showPokedex(): Unit = view.showPokedex(trainer,this)
+
   override def showTeam(): Unit = view.showTeamPanel(trainer, this)
+
   override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit = view.showPokemonInTeamPanel(pokemonWithLife,this)
+
   override def showTrainer(): Unit = view.showTrainerPanel(trainer, this)
+
   override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this)
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
       _trainerSprite = trainer.sprites.backS
-      CoordinateImpl(trainerPosition.x, trainerPosition.y - 1)
+      CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y - 1)
     case Direction.DOWN =>
       _trainerSprite = trainer.sprites.frontS
-      CoordinateImpl(trainerPosition.x, trainerPosition.y + 1)
+      CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y + 1)
     case Direction.RIGHT =>
       _trainerSprite = trainer.sprites.rightS
-      CoordinateImpl(trainerPosition.x + 1, trainerPosition.y)
+      CoordinateImpl(trainer.coordinate.x + 1, trainer.coordinate.y)
     case Direction.LEFT =>
       _trainerSprite = trainer.sprites.leftS
-      CoordinateImpl(trainerPosition.x - 1, trainerPosition.y)
+      CoordinateImpl(trainer.coordinate.x - 1, trainer.coordinate.y)
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
     new Thread(() => {
-      var actualX: Double = trainerPosition.x
-      var actualY: Double = trainerPosition.y
+      var actualX: Double = trainer.coordinate.x
+      var actualY: Double = trainer.coordinate.y
       for (_ <- 1 to TRAINER_STEPS) {
         direction match {
           case Direction.UP =>
@@ -229,10 +227,37 @@ abstract class GameController(private var view: View) extends GameViewObserver{
     }
   }
 
-  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainerPosition = CoordinateImpl(coordinate.x, coordinate.y)
+  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainer.coordinate = CoordinateImpl(coordinate.x, coordinate.y)
 
   protected def setTrainerSpriteFront(): Unit = _trainerSprite = trainer.sprites.frontS
 
   protected def setTrainerSpriteBack(): Unit = _trainerSprite = trainer.sprites.backS
+
+  private class GameControllerAgent extends Thread {
+    var stopped: Boolean = false
+
+    override def run(): Unit = {
+      while(isInGame && !stopped){
+        if(!isInPause){
+          try
+            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
+          catch {
+            case e: Exception => System.out.println(e)
+          }
+        }
+
+        try
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
+        catch {
+          case e: InterruptedException => System.out.println(e)
+        }
+      }
+    }
+
+    def terminate(): Unit = {
+      stopped = true
+    }
+
+  }
 
 }

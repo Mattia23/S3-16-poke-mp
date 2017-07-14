@@ -229,4 +229,20 @@ object Settings {
 
   val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
 
+  val LOGIN_BUTTON: String =  "Login"
+
+  val SIGN_IN_BUTTON: String =  "Sign in"
+
+  val QUIT_BUTTON: String =  "Quit"
+
+  val SUBMIT_BUTTON: String =  "Submit"
+
+  val USERNAME: String =  "Username"
+
+  val PASSWORD: String =  "Password"
+  val BATTLE_EVENT_CHANGE_POKEMON: Int = 1
+
+  val BATTLE_EVENT_CAPTURE_POKEMON: Int = 1
+
+  val BATTLE_EVENT_ESCAPE: Int = 2
 }

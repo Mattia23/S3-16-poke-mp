@@ -1,15 +1,13 @@
 package view;
 
-import controller.GameController;
-import utilities.Settings;
+import controller.GameControllerImpl;
 
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 public class ClassicDialoguePanel extends DialoguePanel {
-    private GameController gameController;
+    private GameControllerImpl gameController;
 
-    public ClassicDialoguePanel(final GameController gameController, final List<String> dialogues) {
+    public ClassicDialoguePanel(final GameControllerImpl gameController, final List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
         this.gameController.gamePanel().setFocusable(false);

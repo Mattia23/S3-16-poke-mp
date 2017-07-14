@@ -1,6 +1,7 @@
 package model.entities
 
 import utilities.Settings
+import scala.collection.JavaConverters._
 
 sealed trait TrainerSprites {
   def back1: Sprite
@@ -15,6 +16,24 @@ sealed trait TrainerSprites {
   def right1: Sprite
   def right2: Sprite
   def rightS: Sprite
+}
+
+object Trainers extends Enumeration {
+  type Trainers = Value
+  val Boy1, Boy2, Girl1, Girl2 = Value
+
+  def valueSetAsJavaList(): java.util.List[Trainers] = {
+    values.toList.asJava
+  }
+}
+
+object TrainerSprites {
+  def selectTrainerSprite(idImage: Int): TrainerSprites = Trainers(idImage) match {
+    case Trainers.Boy1 => Trainer1()
+    case Trainers.Boy2 => Trainer2()
+    case Trainers.Girl1 => Trainer3()
+    case Trainers.Girl2 => Trainer4()
+  }
 }
 
 case class Trainer1() extends TrainerSprites {

@@ -1,29 +1,38 @@
 package view;
 
-import controller.BattleController;
-import controller.Controller;
-import controller.GameController;
-import controller.GameViewObserver;
+import controller.*;
+import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
+import model.environment.BuildingMap;
+import model.map.GameMap;
 import model.entities.Trainer;
 
 import javax.swing.*;
 
 public interface View {
-
     void setController(Controller controller);
 
-    void showMenu();
+    void showInitialMenu(InitialMenuController initialMenuController);
 
-    void showLogin();
+    void showLogin(LoginController loginController);
 
-    void showSignIn();
+    void showSignIn(SignInController signInController);
 
-    void showPanel(JPanel gamePanel);
+    void showMap(GameController mapController, GameMap gameMap);
+
+    void showPokemonCenter(GameController pokemonCenterController, BuildingMap buildingMap);
+
+    void showLaboratory(GameController laboratoryController, BuildingMap buildingMap, boolean emptyCaptures);
+
+    GamePanel getGamePanel();
+
+    void showBoxPanel(BuildingController buildingController);
+
+    void showInitialPokemonPanel(BuildingController buildingController, PokemonWithLife pokemon);
 
     void showDialogue(JPanel dialoguePanel);
 
-    void showGameMenuPanel(GameViewObserver controller);
+    void showGameMenuPanel(GameController controller);
 
     void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController);
 
@@ -31,18 +40,18 @@ public interface View {
 
     void showPokemonChoice(BattleController battleController, Trainer trainer);
 
-    void showPokedex(Trainer trainer, GameViewObserver gameController);
+    void showPokedex(Trainer trainer, GameController gameController);
 
-    void showTeamPanel(Trainer trainer, GameViewObserver gameController);
+    void showTeamPanel(Trainer trainer, GameController gameController);
 
-    void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameViewObserver gameController);
+    void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameController gameController);
 
-    void showTrainerPanel(Trainer trainer, GameViewObserver gameController);
+    void showTrainerPanel(Trainer trainer, GameController gameController);
 
-    void showKeyboardPanel(GameViewObserver gameController);
+    void showKeyboardPanel(GameController gameController);
 
     void showPause();
 
-    void showError(final String error, final String title);
+    void showMessage(final String error, final String title, final int messageType);
 
 }

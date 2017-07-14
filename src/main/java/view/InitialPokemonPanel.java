@@ -10,6 +10,8 @@ import scala.Tuple2;
 import scala.collection.JavaConverters;
 import scala.collection.immutable.*;
 import scala.collection.immutable.List;
+import controller.GameControllerImpl;
+import model.entities.Pokemon;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,9 +37,9 @@ public class InitialPokemonPanel extends JPanel {
             pokemonBehaviour.insertPokemonIntoDB(buildingController.trainer().id());
             buildingController.trainer().updateTrainer(0);
             buildingController.trainer().addFavouritePokemon(autoIncrementCaptured);
-            buildingController.resumeGame();
+            buildingController.resume();
         });
-        no.addActionListener(e -> buildingController.resumeGame());
+        no.addActionListener(e -> buildingController.resume());
         buttonPanel.add(new JLabel("Do you choose this Pokémon?"), buttonPanel);
         buttonPanel.add(yes, buttonPanel);
         buttonPanel.add(no, buttonPanel);

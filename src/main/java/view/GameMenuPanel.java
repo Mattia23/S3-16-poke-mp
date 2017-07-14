@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,8 +8,8 @@ import java.awt.*;
 public class GameMenuPanel extends JPanel {
 
 
-    public GameMenuPanel(GameViewObserver gameController){
-        gameController.gamePanel().setFocusable(false);
+    public GameMenuPanel(GameController gameController){
+        //gameController.gamePanel().setFocusable(false);
         setLayout(new GridLayout(0,1));
         final JButton[] menuButtons = new JButton[5];
         menuButtons[0] = new JButton("Pokédex");
@@ -30,8 +30,9 @@ public class GameMenuPanel extends JPanel {
             gameController.showKeyboardExplanation();
         });
         menuButtons[4].addActionListener(e ->{
+            gameController.resume();
             this.setVisible(false);
-            gameController.gamePanel().setFocusable(true);
+            //gameController.gamePanel().setFocusable(true);
         });
         for (JButton menuButton : menuButtons) {
             menuButton.setBackground(Color.WHITE);

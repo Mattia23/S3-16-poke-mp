@@ -11,7 +11,7 @@ trait Controller{
 
   def view: View
 
-  def getGameController: Optional[GameViewObserver]
+  def getGameController: Optional[GameController]
 
   def quit(): Unit
 
@@ -33,7 +33,7 @@ object ControllerImpl {
 class ControllerImpl extends Controller {
   override var view: View = _
 
-  private var gameController: GameViewObserver = _
+  private var gameController: GameController = _
 
   private def checkInitializzation(): Unit = {
     if (this.view == null) {
@@ -45,13 +45,13 @@ class ControllerImpl extends Controller {
     this.checkInitializzation()
 
     if (this.gameController == null) {
-      this.gameController = new MapController(this.view)
+      //this.gameController = new MapController(this.view)
     }
 
-    this.gameController.startGame()
+    this.gameController.start()
   }
 
-  override def getGameController: Optional[GameViewObserver] = Optional.ofNullable(this.gameController)
+  override def getGameController: Optional[GameController] = Optional.ofNullable(this.gameController)
   override def quit(): Unit = System.exit(0)
 
 }

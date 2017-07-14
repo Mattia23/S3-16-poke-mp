@@ -1,9 +1,8 @@
 package controller
 
-import javax.swing.SwingUtilities
-
-import model.entities.{Owner, PokemonFactory, Trainer}
-import model.environment.{Audio, CoordinateImpl}
+import database.remote.DBConnect
+import model.entities.Trainer
+import model.environment.{Audio, Coordinate, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map._
 import utilities.Settings
@@ -11,48 +10,73 @@ import view._
 
 import scala.util.Random
 
-class MapController(private var view: View) extends GameController(view) {
+class MapController(private val view: View, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer){
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
+  private final val POKEMON_CENTER_BUILDING = "Pokemon center"
+  private final val LABORATORY_BUILDING = "Laboratory"
 
-  private var agent: GameControllerAgent = _
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
-  //private val audio = Audio(Settings.MAP_SONG)
+  private var lastCoordinates: Coordinate = _
+  audio = Audio(Settings.MAP_SONG)
 
-  this.setTrainerSpriteFront()
+  override protected def doStart(): Unit = {
+    initView()
+    if(trainer.capturedPokemons.isEmpty){
+      doFirstLogin()
+    }else {
+      audio.loop()
+    }
+  }
 
-  override var gamePanel: GamePanel = new MapPanel(this, gameMap)
+  private def doFirstLogin(): Unit = {
+    pause()
+    updateLastCoordinateToBuilding(LABORATORY_BUILDING)
+    new LaboratoryController(this.view, this, trainer).start()
+  }
 
-  override def doStart(): Unit = {
-    agent = new GameControllerAgent
-    //audio.loop()
-    try {
-      agent.start()
-    } catch {
-      case e: IllegalStateException => view.showError(e.toString, "Not initialized")
+  private def updateLastCoordinateToBuilding(building: String): Unit = {
+    for( x <- 0 until gameMap.width){
+      for( y <- 0 until gameMap.height){
+        (building, gameMap.map(x)(y)) match {
+          case (LABORATORY_BUILDING, tile:Laboratory) =>
+            lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+          case (POKEMON_CENTER_BUILDING, tile: PokemonCenter) =>
+            lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+          case _ =>
+        }
+      }
     }
     if(this.trainer.capturedPokemons.isEmpty)
       this.view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))
   }
 
-  override def doPause(): Unit = {
+  override protected def doPause(): Unit = {
+    lastCoordinates = trainer.coordinate
+    audio.stop()
+  }
+
+  override protected def doResume(): Unit = {
+    if(trainer.getFirstAvailableFavouritePokemon <= 0) {
+      DBConnect.rechangeAllTrainerPokemon(trainer.id)
+      updateLastCoordinateToBuilding(POKEMON_CENTER_BUILDING)
+    }
+    trainer.coordinate = lastCoordinates
+    initView()
+    audio.loop()
+  }
+
+  override protected def doTerminate(): Unit = {
+    audio.stop()
+  }
+
+  private def initView(): Unit = {
     setTrainerSpriteFront()
-    //audio.stop()
-    agent.terminate()
+    view.showMap(this, gameMap)
+    gamePanel = view.getGamePanel
   }
 
-  override def doResume(): Unit = {
-    agent = new GameControllerAgent
-    agent.start()
-    //audio.loop()
-  }
-
-  override def doTerminate(): Unit = {
-    //audio.stop()
-    agent.terminate()
-  }
-
-  override def doMove(direction: Direction): Unit = {
+  override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
       val nextPosition = nextTrainerPosition(direction)
       val tile = gameMap.map(nextPosition.x)(nextPosition.y)
@@ -68,53 +92,27 @@ class MapController(private var view: View) extends GameController(view) {
     }
   }
 
+  override protected def doInteract(direction: Direction): Unit = ???
+
   private def enterInBuilding(building: Building): Unit = {
-    this.pauseGame()
+    pause()
     var buildingController: BuildingController = null
     building match{
       case _: PokemonCenter =>
-        buildingController = new PokemonCenterController(this.view, this)
+        buildingController = new PokemonCenterController(this.view, this, trainer)
       case _: Laboratory =>
-        buildingController = new LaboratoryController(this.view, this)
+        buildingController = new LaboratoryController(this.view, this, trainer)
     }
-    buildingController.startGame()
+    buildingController.start()
     trainerIsMoving = false
   }
 
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      this.pauseGame()
+      pause()
       new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }
 
-  private class GameControllerAgent extends Thread {
-    var stopped: Boolean = false
-
-    override def run(): Unit = {
-      while(isInGame && !stopped){
-        if(!isInPause){
-          try
-            SwingUtilities.invokeAndWait(() => gamePanel.repaint())
-          catch {
-            case e: Exception => System.out.println(e)
-          }
-        }
-
-        try
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
-        catch {
-          case e: InterruptedException => System.out.println(e)
-        }
-      }
-    }
-
-    def terminate(): Unit = {
-      stopped = true
-    }
-
-  }
-
-  override protected def doInteract(direction: Direction): Unit = ???
 }

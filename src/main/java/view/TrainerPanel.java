@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 import database.remote.DBConnect;
 import model.entities.Trainer;
 import utilities.Settings;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class TrainerPanel extends BasePanel {
 
-    public TrainerPanel(Trainer trainer, GameViewObserver gameController) {
+    public TrainerPanel(Trainer trainer, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -37,8 +37,8 @@ public class TrainerPanel extends BasePanel {
         this.centralPanel.add(new JLabel("Battaglie vinte:"),k);
         this.centralPanel.add(new JLabel(),k);
         this.backButton.addActionListener(e -> {
-            gameController.resumeGame();
-            gameController.gamePanel().setFocusable(true);
+            gameController.resume();
+            //gameController.gamePanel().setFocusable(true);
         });
     }
 }
