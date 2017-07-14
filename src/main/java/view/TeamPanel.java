@@ -3,6 +3,9 @@ package view;
 import controller.BattleController;
 import controller.GameViewObserver;
 import database.remote.DBConnect;
+import model.entities.Owner;
+import model.entities.PokemonFactory;
+import model.entities.PokemonWithLife;
 import model.entities.Trainer;
 import scala.Tuple2;
 import utilities.Settings;
@@ -19,12 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
-    private ButtonGroup pokemonButtonGroup = new ButtonGroup();
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
+    ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
     public TeamPanel(Trainer trainer, GameViewObserver gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
@@ -41,11 +45,13 @@ public class TeamPanel extends BasePanel{
         k.insets = new Insets(1,1,1,1);
         for(Object pokemon: pokemonList){
             if(Integer.parseInt(pokemon.toString()) != 0){
-                Map pokemonMap = DBConnect.getPokemonFromDB(Integer.parseInt(pokemon.toString())).get();
-                String s = pokemonMap.get("name").toString().toUpperCase() + "   Life: " + pokemonMap.get("lifePoints").toString() + "/" +
-                        pokemonMap.get("experiencePoints").toString() + "   Lv:  " + pokemonMap.get("level").toString();
+                final int pokemonId = Integer.parseInt(pokemon.toString());
+                final PokemonWithLife pokemonWithLife = PokemonFactory
+                        .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
+                String s = pokemonWithLife.pokemon().name().toUpperCase() + "   Life: " + pokemonWithLife.pokemonLife() + "/" +
+                        pokemonWithLife.pokemon().experiencePoints() + "   Lv:  " + pokemonWithLife.pokemon().level();
                 try {
-                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonMap.get("id").toString() + ".png"));
+                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
                     myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -61,6 +67,14 @@ public class TeamPanel extends BasePanel{
                     }
                     else if (e.getStateChange() == ItemEvent.DESELECTED) {
                         button.setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
+                    }
+                });
+                radioButton.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyTyped(KeyEvent e) {
+                        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                            gameController.showPokemonInTeamPanel(pokemonWithLife);
+                        }
                     }
                 });
                 if(first){

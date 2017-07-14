@@ -47,6 +47,8 @@ trait GameViewObserver {
 
   def showTeam(): Unit
 
+  def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit
+
   def showTrainer(): Unit
 
   def showKeyboardExplanation(): Unit
@@ -57,7 +59,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
 
   protected var inGame = false
   protected var inPause = false
-  protected val trainer: Trainer = DBConnect.getTrainerFromDB("Ash").get()
+  protected val trainer: Trainer = DBConnect.getTrainerFromDB("marco2").get()
   private var _trainerSprite: Sprite = _
   private var fistStep: Boolean = true
 
@@ -118,6 +120,7 @@ abstract class GameController(private var view: View) extends GameViewObserver{
   override def showMenu(): Unit = view.showGameMenuPanel(this)
   override def showPokedex(): Unit = view.showPokedex(trainer,this)
   override def showTeam(): Unit = view.showTeamPanel(trainer, this)
+  override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit = view.showPokemonInTeamPanel(pokemonWithLife,this)
   override def showTrainer(): Unit = view.showTrainerPanel(trainer, this)
   override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this)
 

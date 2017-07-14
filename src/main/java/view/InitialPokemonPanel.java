@@ -21,7 +21,6 @@ public class InitialPokemonPanel extends JPanel {
 
     public InitialPokemonPanel(final GameController buildingController, final PokemonWithLife pokemonWithLife){
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(10,100,10,100));
         final PokemonPanel pokemonPanel = new PokemonPanel();
         pokemonPanel.setPokemon(pokemonWithLife);
         add(pokemonPanel, BorderLayout.CENTER);
@@ -34,14 +33,7 @@ public class InitialPokemonPanel extends JPanel {
             final PokemonBehaviour pokemonBehaviour = new PokemonBehaviourImpl(pokemonWithLife);
             buildingController.trainer().addMetPokemon(pokemonWithLife.pokemon().id());
             pokemonBehaviour.insertPokemonIntoDB(buildingController.trainer().id());
-            //TODO sistemare qua il codice
-            /*List<Tuple2<Int,Int>> capturedPokemonList = DBConnect.getCapturedPokemonList(buildingController.trainer().id()).get();
-            java.util.List<Tuple2<Object,Object>> capturedPokemonObject = new ArrayList<>();
-            for(int i = 0; i<capturedPokemonList.length(); i++){
-                Tuple2<Object, Object> objectTuple = new Tuple2(capturedPokemonList.apply(i)._1(), capturedPokemonList.apply(i)._2());
-                capturedPokemonObject.add(objectTuple);
-            }
-            buildingController.trainer().capturedPokemons_$eq(scala.collection.JavaConverters.seqAsJavaList(capturedPokemonObject));*/
+            buildingController.trainer().updateTrainer(0);
             buildingController.trainer().addFavouritePokemon(autoIncrementCaptured);
             buildingController.resumeGame();
         });

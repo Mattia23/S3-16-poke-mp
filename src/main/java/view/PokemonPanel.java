@@ -21,7 +21,7 @@ public class PokemonPanel extends BasePanel {
 
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.2);
 
-    public PokemonPanel(){
+    PokemonPanel(){
         setBackground(Color.WHITE);
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         this.backButton.setVisible(false);

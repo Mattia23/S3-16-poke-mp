@@ -25,6 +25,8 @@ trait Trainer {
 
   def pokedex: Pokedex
 
+  def pokedex_=(pokedex: Pokedex)
+
   def favouritePokemons: List[Int]
 
   def favouritePokemons_=(list: List[Int]) : Unit
@@ -48,13 +50,13 @@ trait Trainer {
   def getFirstAvailableFavouritePokemon: Int
 }
 
-class TrainerImpl(val name: String, private val idImage: Int, private var _experiencePoints: Int) extends Trainer{
+class TrainerImpl(val name: String, private val idImage: Int, override var experiencePoints: Int) extends Trainer{
   val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
-  private var _level: Int = calculateLevel(experiencePoints)
+  override var level: Int = calculateLevel(experiencePoints)
   private var _coordinate: Coordinate = CoordinateImpl(25,25)
-  private var _pokedex: Pokedex = new PokedexImpl(id)
-  private var _favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
-  private var _capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
+  override var pokedex: Pokedex = new PokedexImpl(id)
+  override var favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
+  override var capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
   override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
 
   override val sprites =  idImage match {
@@ -63,24 +65,6 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
     case 3 => Trainer3()
     case _ => Trainer4()
   }
-
-  override def experiencePoints: Int = this._experiencePoints
-
-  override def experiencePoints_=(points: Int): Unit = this._experiencePoints = points
-
-  override def level: Int = this._level
-
-  override def level_=(level: Int): Unit = this._level = level
-
-  override def pokedex: Pokedex = this._pokedex
-
-  override def favouritePokemons: List[Int] = this._favouritePokemons
-
-  override def favouritePokemons_=(list: List[Int]): Unit = this._favouritePokemons = list
-
-  override def capturedPokemons: List[Tuple2[Int,Int]] = this._capturedPokemons
-
-  override def capturedPokemons_=(list: List[Tuple2[Int,Int]]): Unit = this._capturedPokemons = list
 
   private def calculateLevel(experiencePoints: Int): Int = {
     var level: Double = Settings.INITIAL_TRAINER_LEVEL
@@ -106,7 +90,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
 
   override def setAllFavouritePokemon(list: java.util.List[Object]): Unit = {
     DBConnect.setAllFavouritePokemon(id, list)
-    _favouritePokemons = DBConnect.getFavouritePokemonList(id).get()
+    this.favouritePokemons = DBConnect.getFavouritePokemonList(id).get()
   }
 
   override def addFavouritePokemon(idNewPokemon: Int): Unit = {
@@ -120,7 +104,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
           found = 1
         }
       }
-      this.favouritePokemons_=(DBConnect.getFavouritePokemonList(id).get())
+      this.favouritePokemons=DBConnect.getFavouritePokemonList(id).get()
     } else if(this.favouritePokemons.contains(idNewPokemon)){
       println("you already have this pokemon in your list")
     } else if(this.capturedPokemons.toMap.get(idNewPokemon).isEmpty){
@@ -136,7 +120,7 @@ class TrainerImpl(val name: String, private val idImage: Int, private var _exper
   }
 
   override def getFirstAvailableFavouritePokemon: Int = {
-    for(pokemon <- this._favouritePokemons){
+    for(pokemon <- this.favouritePokemons){
       if(DBConnect.pokemonHasLife(pokemon)){
         return pokemon
       }
