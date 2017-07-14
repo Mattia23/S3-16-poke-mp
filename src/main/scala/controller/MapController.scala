@@ -31,6 +31,8 @@ class MapController(private var view: View) extends GameController(view) {
     } catch {
       case e: IllegalStateException => view.showError(e.toString, "Not initialized")
     }
+    if(this.trainer.capturedPokemons.isEmpty)
+      this.view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))
   }
 
   override def doPause(): Unit = {
