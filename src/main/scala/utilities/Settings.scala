@@ -229,4 +229,9 @@ object Settings {
 
   val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
 
+  val BATTLE_EVENT_CHANGE_POKEMON: Int = 1
+
+  val BATTLE_EVENT_CAPTURE_POKEMON: Int = 1
+
+  val BATTLE_EVENT_ESCAPE: Int = 2
 }

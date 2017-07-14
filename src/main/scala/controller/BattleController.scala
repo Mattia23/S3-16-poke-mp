@@ -3,6 +3,7 @@ package controller
 import database.remote.DBConnect
 import model.entities.{Owner, Trainer}
 import model.game.{Battle, BattleImpl}
+import utilities.Settings
 import view.View
 
 import scala.util.Random
@@ -63,7 +64,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   }
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
-    battle.updatePokemon()
+    battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CHANGE_POKEMON)
     battle.startBattleRound(id)
     showNewView()
     pokemonWildAttacksAfterTrainerChoice()
@@ -81,7 +82,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
     } else {
       timer = new Thread() {
         override def run() {
-          battle.updatePokemon()
+          battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CAPTURE_POKEMON)
           Thread.sleep(3000)
           controller.resumeGame()
         }
@@ -93,7 +94,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
 
   override def trainerCanQuit(): Boolean = {
     if (Random.nextDouble()<0.5) {
-      battle.updatePokemon()
+      battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_ESCAPE)
       controller.resumeGame()
       true
     } else {
