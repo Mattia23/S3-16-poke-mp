@@ -12,12 +12,13 @@ import scala.collection.JavaConverters._
 abstract class BuildingController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
 
   protected var buildingMap: BuildingMap
+  protected var nextPosition: Coordinate = _
 
   this.setTrainerSpriteBack()
 
   override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
-      val nextPosition = nextTrainerPosition(direction)
+      nextPosition = nextTrainerPosition(direction)
       try {
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         tile match {
@@ -78,7 +79,7 @@ class PokemonCenterController(private val view: View, private val mapController:
 
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause) {
-      val nextPosition = nextTrainerPosition(direction)
+      if(direction != null) nextPosition = nextTrainerPosition(direction)
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
