@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameController;
+import controller.GameControllerImpl;
 import database.remote.DBConnect;
 import utilities.Settings;
 
@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.util.List;
 
 public class DoctorDialoguePanel extends DialoguePanel {
-    private GameController gameController;
+    private GameControllerImpl gameController;
 
-    public DoctorDialoguePanel(GameController gameController, List<String> dialogues) {
+    public DoctorDialoguePanel(GameControllerImpl gameController, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
         this.gameController.gamePanel().setFocusable(false);

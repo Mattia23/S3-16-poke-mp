@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 import database.local.PokedexConnect;
 import model.entities.Trainer;
 import utilities.Settings;
@@ -16,7 +16,8 @@ public class PokedexPanel extends  BasePanel{
     private static final int FONT_SIZE = Settings.FRAME_SIDE()/25;
     private static final int POKEMON_SIDE = (int) (Settings.FRAME_SIDE()/5.8);
     private static final int POKEBALL_SIDE = Settings.FRAME_SIDE()/22;
-    PokedexPanel(Trainer trainer, GameViewObserver gameController){
+
+    public PokedexPanel(Trainer trainer, GameController gameController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
         northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
@@ -74,8 +75,8 @@ public class PokedexPanel extends  BasePanel{
         }
 
         this.backButton.addActionListener(e -> {
-            gameController.resumeGame();
-            gameController.gamePanel().setFocusable(true);
+            gameController.resume();
+           // gameController.gamePanel().setFocusable(true);
         });
         JScrollPane scroll = new JScrollPane(centralPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setOpaque(false);

@@ -2,9 +2,12 @@ package view;
 import controller.BattleController;
 import controller.Controller;
 import controller.GameController;
-import controller.GameViewObserver;
+import controller.*;
 import database.remote.DBConnect;
+import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
+import model.environment.BuildingMap;
+import model.map.GameMap;
 import model.entities.Trainer;
 import utilities.Settings;
 
@@ -15,21 +18,19 @@ public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
     private Controller controller;
-    private BuildingPanel buildingPanel;
-    private Dimension frameDim;
+    private Dimension frameDiminsion;
     private BattleView battlePanel;
+    private GamePanel gamePanel;
 
-    public ViewImpl(Controller controller) {
-        this.controller = controller;
+    public ViewImpl() {
         this.setTitle(WINDOW_TITLE);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frameDim = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
-        this.setSize(frameDim);
-        this.setMinimumSize(frameDim);
+        this.frameDiminsion = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
+        this.setSize(frameDiminsion);
+        this.setMinimumSize(frameDiminsion);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);
-        this.getContentPane().add(new MenuPanel(this, this.controller));
         this.validate();
         this.setVisible(true);
     }
@@ -58,22 +59,51 @@ public class ViewImpl extends JFrame implements View {
 
     @Override
     public void setController(Controller controller) { this.controller = controller; }
-    
 
     @Override
-    public void showMenu() {
-        this.setPanel(new MenuPanel(this, this.controller));
+    public void showInitialMenu(InitialMenuController initialMenuController) {
+        this.setPanel(new InitialMenuPanel(initialMenuController));
     }
 
     @Override
-    public void showLogin() { this.setPanel(new LoginPanel(this, this.controller)); }
+    public void showLogin(LoginController loginController) {
+        this.setPanel(new LoginPanel(loginController));
+    }
 
     @Override
-    public void showSignIn() { this.setPanel(new SignInPanel(this, this.controller)); }
+    public void showSignIn(SignInController signInController) {
+        this.setPanel(new SignInPanel(signInController));
+    }
 
     @Override
-    public void showPanel(JPanel gamePanel) {
-        this.setPanel(gamePanel);
+    public void showMap(GameController mapController, GameMap gameMap) {
+        this.gamePanel = new MapPanel(mapController, gameMap);
+        this.setPanel(this.gamePanel);
+    }
+
+    @Override
+    public void showPokemonCenter(GameController pokemonCenterController, BuildingMap buildingMap) {
+        this.gamePanel = new PokemonCenterPanel(pokemonCenterController, buildingMap);
+        this.setPanel(this.gamePanel);
+    }
+
+    @Override
+    public void showLaboratory(GameController laboratoryController, BuildingMap buildingMap, boolean emptyCaptures) {
+        this.gamePanel = new LaboratoryPanel(laboratoryController, buildingMap, emptyCaptures);
+        this.setPanel(this.gamePanel);
+    }
+
+    @Override
+    public GamePanel getGamePanel() { return this.gamePanel; }
+
+    @Override
+    public void showBoxPanel(BuildingController buildingController) {
+        this.setPanel(new BoxPanel(buildingController));
+    }
+
+    @Override
+    public void showInitialPokemonPanel(BuildingController buildingController, PokemonWithLife pokemon) {
+        this.setPanel(new InitialPokemonPanel(buildingController, pokemon));
     }
 
     @Override
@@ -97,32 +127,32 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokedex(Trainer trainer, GameViewObserver gameController) {
+    public void showPokedex(Trainer trainer, GameController gameController) {
         this.setPanel(new PokedexPanel(trainer, gameController));
     }
 
     @Override
-    public void showTeamPanel(Trainer trainer, GameViewObserver gameController) {
+    public void showTeamPanel(Trainer trainer, GameController gameController) {
         this.setPanel(new TeamPanel(trainer, gameController));
     }
 
     @Override
-    public void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameViewObserver gameController) {
+    public void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameController gameController) {
         this.setPanel(new PokemonInTeamPanel(pokemonWithLife, gameController));
     }
 
     @Override
-    public void showTrainerPanel(Trainer trainer, GameViewObserver gameController) {
+    public void showTrainerPanel(Trainer trainer, GameController gameController) {
         this.setPanel(new TrainerPanel(trainer, gameController));
     }
 
     @Override
-    public void showKeyboardPanel(GameViewObserver gameController) {
+    public void showKeyboardPanel(GameController gameController) {
         this.setPanel(new KeyboardPanel(gameController));
     }
 
     @Override
-    public void showGameMenuPanel(GameViewObserver controller) {
+    public void showGameMenuPanel(GameController controller) {
         this.setGameMenuPanel(new GameMenuPanel(controller));
     }
 
@@ -132,8 +162,8 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showError(final String error, final String title) {
-        JOptionPane.showMessageDialog(this, error, title, JOptionPane.ERROR_MESSAGE);
+    public void showMessage(final String message, final String title, final int messageType) {
+        JOptionPane.showMessageDialog(this, message, title, messageType);
     }
 
 }
