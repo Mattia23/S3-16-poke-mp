@@ -19,9 +19,12 @@ object PlayerConnectionServerManager {
                                 body: Array[Byte]): Unit = {
       val gson = new Gson()
       val message = gson.fromJson(new String(body, "UTF-8"), classOf[User])
-      ConnectedUsers.put(message.userId, message)
 
-      
+      val response = gson.toJson(ConnectedUsers.map).toString
+      channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, response.getBytes("UTF-8"))
+
+      ConnectedUsers.map.put(message.userId, message)
+
     }
   }
 
