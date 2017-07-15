@@ -240,9 +240,14 @@ object Settings {
   val USERNAME: String =  "Username"
 
   val PASSWORD: String =  "Password"
+
   val BATTLE_EVENT_CHANGE_POKEMON: Int = 1
 
   val BATTLE_EVENT_CAPTURE_POKEMON: Int = 1
 
   val BATTLE_EVENT_ESCAPE: Int = 2
+
+  val CLIENT_HOST: String = "localhost"
+
+  val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
 }
