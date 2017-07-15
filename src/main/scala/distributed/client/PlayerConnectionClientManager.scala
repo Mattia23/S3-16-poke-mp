@@ -20,10 +20,11 @@ object PlayerConnectionClientManager {
                                 envelope: Envelope,
                                 properties: AMQP.BasicProperties,
                                 body: Array[Byte]) {
+      println(" [x] Received message")
       val message = new String(body, "UTF-8")
       val serverUsers: ConnectedUsers = gson.fromJson(message, classOf[ConnectedUsers])
       ConnectedUsersImpl.map.putAll(serverUsers.map)
-      println(" [x] Received message")
+
     }
   }
   channel.basicConsume(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, true, consumer)

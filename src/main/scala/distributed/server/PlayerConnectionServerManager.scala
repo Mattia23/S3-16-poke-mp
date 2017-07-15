@@ -17,10 +17,14 @@ object PlayerConnectionServerManager {
                                 envelope: Envelope,
                                 properties: AMQP.BasicProperties,
                                 body: Array[Byte]): Unit = {
+      println("server: received")
       val gson = new Gson()
       val message = gson.fromJson(new String(body, "UTF-8"), classOf[User])
+       val response = gson.toJson(ConnectedUsersImpl.map)
+      channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, response.getBytes("UTF-8"))
+
       ConnectedUsersImpl.map.put(message.userId, message)
-      
+
     }
   }
 
