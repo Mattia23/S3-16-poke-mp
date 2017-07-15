@@ -3,6 +3,8 @@ package utilities
 import java.awt.{Dimension, Toolkit}
 import java.util
 
+import model.environment.{Coordinate, CoordinateImpl}
+
 object Settings {
   val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
 
@@ -252,4 +254,6 @@ object Settings {
   val CLIENT_HOST: String = "localhost"
 
   val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
+
+  val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 }

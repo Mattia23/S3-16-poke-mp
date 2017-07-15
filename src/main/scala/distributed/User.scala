@@ -1,5 +1,6 @@
 package distributed
 
+import model.entities.TrainerSprites
 import model.environment.Coordinate
 
 trait User {
@@ -7,15 +8,15 @@ trait User {
 
   def username: String
 
-  def idImage: Int
+  def sprites: TrainerSprites
 
   def position: Coordinate
 }
 
 object User {
-  def apply(userId: Int, username: String, idImage: Int, position: Coordinate): User =
-    new UserImpl(userId, username, idImage, position)
+  def apply(userId: Int, username: String, sprites: TrainerSprites, position: Coordinate): User =
+    new UserImpl(userId, username, sprites, position)
 }
 
 class UserImpl(override val userId: Int, override val username: String,
-               override val idImage: Int, override val position: Coordinate) extends User
+               override val sprites: TrainerSprites, override val position: Coordinate) extends User

@@ -2,7 +2,7 @@ package distributed.server
 
 import com.google.gson.Gson
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.{ConnectedUsers, User}
+import distributed.{ConnectedUsersImpl, User}
 import utilities.Settings
 
 object PlayerConnectionServerManager {
@@ -19,8 +19,7 @@ object PlayerConnectionServerManager {
                                 body: Array[Byte]): Unit = {
       val gson = new Gson()
       val message = gson.fromJson(new String(body, "UTF-8"), classOf[User])
-      ConnectedUsers.put(message.userId, message)
-
+      ConnectedUsersImpl.map.put(message.userId, message)
       
     }
   }
