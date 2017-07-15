@@ -247,7 +247,9 @@ object Settings {
 
   val BATTLE_EVENT_ESCAPE: Int = 2
 
-  val SERVER_HOST = "localhost"
+  val SERVER_HOST: String = "localhost"
 
-  val PLAYER_CONNECTION_CHANNEL_QUEUE = "player_connection"
+  val CLIENT_HOST: String = "localhost"
+
+  val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
 }
