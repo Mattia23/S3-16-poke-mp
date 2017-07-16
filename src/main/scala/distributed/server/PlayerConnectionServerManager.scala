@@ -26,7 +26,7 @@ object PlayerConnectionServerManager {
 
       val response = gson.toJson(ConnectedUsersImpl.map)
       channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + message.userId, null, response.getBytes("UTF-8"))
-
+      println("server: send")
       ConnectedUsersImpl.map.put(message.userId, message)
 
     }
