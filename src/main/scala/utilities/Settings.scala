@@ -249,11 +249,11 @@ object Settings {
 
   val BATTLE_EVENT_ESCAPE: Int = 2
 
-  val SERVER_HOST: String = "localhost"
-
-  val CLIENT_HOST: String = "localhost"
+  val HOST_ADDRESS: String = "localhost"
 
   val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
+
+  val PLAYERS_CONNECTED_CHANNEL_QUEUE: String = "players_connected"
 
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 }

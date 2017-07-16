@@ -8,7 +8,7 @@ trait ConnectedUsers {
 
 object ConnectedUsersImpl extends ConnectedUsers{
 
-  private var _map = new ConcurrentHashMap[Int, User]()
+  private val _map = new ConcurrentHashMap[Int, User]()
 
   override val map: ConcurrentHashMap[Int, User] = _map
 }
