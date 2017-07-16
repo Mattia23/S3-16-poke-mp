@@ -2,7 +2,7 @@ package distributed.client
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.{ConnectedUsers, ConnectedUsersImpl, User}
+import distributed.{ConnectedUsers, ConnectedUsersDeserializer, ConnectedUsersImpl, User}
 import model.environment.Coordinate
 import utilities.Settings
 
@@ -37,10 +37,11 @@ object PlayerConnectionClientManager {
         val serverUsers = gson.fromJson(message, ConnectedUsersImpl.getClass).asInstanceOf[ConnectedUsers]
         ConnectedUsersImpl.map.putAll(serverUsers.map)
         ConnectedUsersImpl.map.values() forEach (user => println(""+user.userId+ ""+user.username))
+
+        channel.close()
       }
     }
     channel.basicConsume(userQueue, true, consumer)
-    channel.close()
   }
 
 }

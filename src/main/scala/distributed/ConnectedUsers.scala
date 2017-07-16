@@ -19,12 +19,11 @@ object ConnectedUsersImpl extends ConnectedUsers{
 class ConnectedUsersDeserializer extends JsonDeserializer[ConnectedUsers] {
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ConnectedUsers = {
     val jsonConnectedUser = json.getAsJsonObject
-    val jsonUsersMap = jsonConnectedUser.getAsJsonObject("map")
     val jsonKeys = jsonConnectedUser.keySet()
     val gson = new GsonBuilder().registerTypeAdapter(classOf[UserImpl], new UserDeserializer).create()
 
     jsonKeys forEach(key => {
-      ConnectedUsersImpl.map.put(key.toInt, gson.fromJson(jsonUsersMap.get(key), classOf[UserImpl]))
+      ConnectedUsersImpl.map.put(key.toInt, gson.fromJson(jsonConnectedUser.get(key), classOf[UserImpl]))
     })
 
     ConnectedUsersImpl

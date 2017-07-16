@@ -40,9 +40,9 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
-      val connectedUsers: Future[Unit] = Future { PlayerConnectionClientManager.sendUserInformation(trainer.id, username,
+      /*val connectedUsers: Future[Unit] = Future {*/ PlayerConnectionClientManager.sendUserInformation(trainer.id, username,
         TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
-      }
+      //}
       //TODO Usare DistributedMapController a cui passare la future (e con un executor far disegnare gli omini)
       new MapController(view, trainer).start()
     } else {
