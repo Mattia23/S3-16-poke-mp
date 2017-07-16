@@ -14,7 +14,7 @@ object PlayerConnectionClientManager {
   private val channel: Channel = ClientConnection.connection.createChannel()
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
-  def sendUserInformation(userId: Int, username: String, sprites: TrainerSprites, position: Coordinate): Unit = {
+  def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
     val user = User(userId, username, sprites, position)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(user).getBytes("UTF-8"))
     println(" [x] Sent message")
