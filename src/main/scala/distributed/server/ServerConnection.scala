@@ -12,7 +12,7 @@ object ServerConnection extends DistributedConnection{
 
   private def create() = {
     val factory = new ConnectionFactory
-    factory.setHost(Settings.CLIENT_HOST)
+    factory.setHost(Settings.HOST_ADDRESS)
     _connection = factory.newConnection
   }
 

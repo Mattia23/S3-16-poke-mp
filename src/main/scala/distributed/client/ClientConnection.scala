@@ -11,7 +11,7 @@ object ClientConnection extends DistributedConnection{
 
   private def create() = {
     val factory = new ConnectionFactory()
-    factory.setHost(Settings.SERVER_HOST)
+    factory.setHost(Settings.HOST_ADDRESS)
     _connection = factory.newConnection()
   }
 
