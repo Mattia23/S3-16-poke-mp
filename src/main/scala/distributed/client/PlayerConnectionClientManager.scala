@@ -1,15 +1,14 @@
 package distributed.client
 
-import com.google.gson.Gson
+import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.{ConnectedUsers, ConnectedUsersImpl, User}
-import model.entities.TrainerSprites
+import distributed.{ConnectedUsers, ConnectedUsersDeserializer, ConnectedUsersImpl, User}
 import model.environment.Coordinate
 import utilities.Settings
 
 object PlayerConnectionClientManager {
 
-  private val gson: Gson = new Gson()
+  private var gson: Gson = new Gson()
 
   private val channel: Channel = ClientConnection.connection.createChannel()
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
@@ -34,7 +33,8 @@ object PlayerConnectionClientManager {
                                   body: Array[Byte]) {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
-        val serverUsers: ConnectedUsers = gson.fromJson(message, classOf[ConnectedUsers])
+        gson = new GsonBuilder().registerTypeAdapter(ConnectedUsersImpl.getClass, new ConnectedUsersDeserializer()).create()
+        val serverUsers = gson.fromJson(message, ConnectedUsersImpl.getClass).asInstanceOf[ConnectedUsers]
         ConnectedUsersImpl.map.putAll(serverUsers.map)
         ConnectedUsersImpl.map.values() forEach (user => println(""+user.userId+ ""+user.username))
       }
