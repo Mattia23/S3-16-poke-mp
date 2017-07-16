@@ -1,6 +1,6 @@
 package distributed.server
 
-import com.google.gson.{Gson, GsonBuilder}
+import com.google.gson.GsonBuilder
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
 import distributed.{ConnectedUsersImpl, User, UserDeserializer, UserImpl}
 import model.environment.CoordinateImpl
@@ -27,7 +27,6 @@ object PlayerConnectionServerManager {
       channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + message.userId, null, response.getBytes("UTF-8"))
       println("server: send")
       ConnectedUsersImpl.map.put(message.userId, message)
-
     }
   }
 

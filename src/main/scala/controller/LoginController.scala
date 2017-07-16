@@ -4,10 +4,13 @@ import java.util.Optional
 import javax.swing.JOptionPane
 
 import database.remote.DBConnect
+import distributed.ConnectedUsers
 import distributed.client.PlayerConnectionClientManager
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
+
+import scala.concurrent.Future
 
 trait LoginController{
   def login(username: String, password: String): Unit
@@ -37,7 +40,10 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
-      PlayerConnectionClientManager.sendUserInformation(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
+      val connectedUsers: Future[Unit] = Future { PlayerConnectionClientManager.sendUserInformation(trainer.id, username,
+        TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
+      }
+      //TODO Usare DistributedMapController a cui passare la future (e con un executor far disegnare gli omini)
       new MapController(view, trainer).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)

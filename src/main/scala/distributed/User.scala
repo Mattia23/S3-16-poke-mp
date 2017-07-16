@@ -2,7 +2,7 @@ package distributed
 
 import java.lang.reflect.Type
 
-import com.google.gson.{Gson, JsonDeserializationContext, JsonDeserializer, JsonElement}
+import com.google.gson.{JsonDeserializationContext, JsonDeserializer, JsonElement}
 import model.environment.{Coordinate, CoordinateImpl}
 
 trait User {
