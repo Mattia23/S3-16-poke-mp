@@ -5,7 +5,7 @@ import javax.swing.JOptionPane
 
 import database.remote.DBConnect
 import distributed.client.PlayerConnectionClientManager
-import model.entities.Trainer
+import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
 
@@ -37,7 +37,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
-      PlayerConnectionClientManager.sendUserInformation(trainer.id, username, trainer.sprites, Settings.INITIAL_PLAYER_POSITION)
+      PlayerConnectionClientManager.sendUserInformation(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
       new MapController(view, trainer).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
