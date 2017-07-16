@@ -3,8 +3,6 @@ package distributed.server
 import com.google.gson.Gson
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
 import distributed.{ConnectedUsersImpl, User}
-import model.entities.TrainerSprites
-import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 
 object PlayerConnectionServerManager {
@@ -12,7 +10,7 @@ object PlayerConnectionServerManager {
   val channel: Channel = ServerConnection.connection.createChannel
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
-  ConnectedUsersImpl.map.put(162646, User(162646, "GiuliaGrossa", TrainerSprites.selectTrainerSprite(3), CoordinateImpl(0,0)))
+  ConnectedUsersImpl.map.put(162646, User(162646, "GG", 3, 0, 0))
 
   val consumer = new DefaultConsumer(channel) {
 
