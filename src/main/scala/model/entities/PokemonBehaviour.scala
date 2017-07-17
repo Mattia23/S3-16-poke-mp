@@ -52,9 +52,7 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
     if(this.pokemonExperienceGrown > 0) {
       var newExpPoints = this.pokemonWithLife.pokemon.levelExperience + this.pokemonExperienceGrown
       val levelExp = this.pokemonWithLife.pokemon.experiencePoints + 4
-      println(newExpPoints+ " "+levelExp)
       if (newExpPoints >= levelExp) {
-        println("SONO NELLA PARTE GIUSTA "+newExpPoints+ " "+levelExp)
         (checkEvolution(this.pokemonWithLife.pokemon.level+1),
           this.pokemonWithLife.pokemon.level+1,
           this.pokemonWithLife.pokemon.experiencePoints+4,

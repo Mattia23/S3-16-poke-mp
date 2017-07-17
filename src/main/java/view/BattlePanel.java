@@ -227,6 +227,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
                         super.run();
                         try {
                             attacksAreVisible = false;
+                            changeButtons();
                             displayPanel.setVisible(true);
                             attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" UTILIZZA " + att +"!");
                             Thread.sleep(3000);
@@ -234,7 +235,6 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             PokedexConnect.getPokemonAttack((int)pokemonEntities[0].pokemon().attacks()._3()).get()._1().toUpperCase()+"!");
                             Thread.sleep(3000);
                             displayPanel.setVisible(false);
-                            changeButtons();
                             index = 0;
                             Object[] names = trainerChoices.keySet().toArray();
                             frame.getRootPane().setDefaultButton(trainerChoices.get(names[index].toString()));
