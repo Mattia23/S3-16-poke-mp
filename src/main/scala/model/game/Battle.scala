@@ -85,7 +85,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
     case 1 => {
-      val pointsEarned: Int = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.3,_trainer.level)).toInt
+      val pointsEarned: Int = (wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
       _round.updatePokemon()
     }
