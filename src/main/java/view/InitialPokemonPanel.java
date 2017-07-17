@@ -5,19 +5,9 @@ import database.remote.DBConnect;
 import model.entities.PokemonBehaviour;
 import model.entities.PokemonBehaviourImpl;
 import model.entities.PokemonWithLife;
-import scala.Int;
-import scala.Tuple2;
-import scala.collection.JavaConverters;
-import scala.collection.immutable.*;
-import scala.collection.immutable.List;
-import controller.GameControllerImpl;
-import model.entities.Pokemon;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class InitialPokemonPanel extends JPanel {
 

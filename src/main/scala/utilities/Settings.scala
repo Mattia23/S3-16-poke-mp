@@ -210,14 +210,14 @@ object Settings {
 
   val CHARACTER_IMAGES_FOLDER = "/images/characters/"
 
-  val INITIAL_DIALOGUE: util.List[String] = util.Arrays.asList("Heyy ragazzo!","E' pericoloso gironzolare senza Pokémon!",
-    "Vieni a sceglierne uno!", "(questa voce sembra provenire dal laboratorio laggiù a destra)")
+  val INITIAL_DIALOGUE: util.List[String] = util.Arrays.asList("Hey!","It is dangerous to walk on the grass without Pokémon!",
+    "Come here to pick one!", "(this voice seems to come from the lab right there)")
 
-  val CLASSIC_DIALOGUE: util.List[String] = util.Arrays.asList("next")
+  val CLASSIC_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("next")
 
-  val DOCTOR_DIALOGUE: util.List[String] = util.Arrays.asList("yes", "no")
+  val DOCTOR_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
 
-  val TRAINER_DIALOGUE: util.List[String] = util.Arrays.asList("fight", "change", "bye")
+  val TRAINER_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("fight", "bye")
 
   val AUDIO_FOLDER: String = "/audio/"
 

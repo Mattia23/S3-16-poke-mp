@@ -21,7 +21,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
     protected void setFinalButtons() {
         buttonPanel.removeAll();
         buttons.clear();
-        for(String text: Settings.DOCTOR_DIALOGUE()){
+        for(String text: Settings.DOCTOR_DIALOGUE_BUTTON()){
             final JButton button = new JButton(text);
             button.addKeyListener(this);
             button.addActionListener(e ->{

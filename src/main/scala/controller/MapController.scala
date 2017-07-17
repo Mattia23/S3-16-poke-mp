@@ -47,8 +47,8 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
         }
       }
     }
-    if(this.trainer.capturedPokemons.isEmpty)
-      this.view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))
+    /*if(this.trainer.capturedPokemons.isEmpty)
+      this.view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))*/
   }
 
   override protected def doPause(): Unit = {
