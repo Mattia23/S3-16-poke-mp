@@ -24,8 +24,8 @@ class UserImpl(override val userId: Int, override val username: String,
                override val idImage: Int, override val position: Coordinate) extends User
 
 
-class UserDeserializer extends JsonDeserializer[UserImpl] {
-  override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): UserImpl = {
+object UserDeserializer extends JsonDeserializer[User] {
+  override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): User = {
     val jsonUser = json.getAsJsonObject
     val jsonPosition = jsonUser.getAsJsonObject("position")
     val position = CoordinateImpl(jsonPosition.get("x").getAsInt, jsonPosition.get("y").getAsInt)

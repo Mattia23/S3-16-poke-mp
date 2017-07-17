@@ -16,16 +16,14 @@ object ConnectedUsersImpl extends ConnectedUsers{
   override val map: ConcurrentHashMap[Int, User] = _map
 }
 
-class ConnectedUsersDeserializer extends JsonDeserializer[ConnectedUsers] {
+object ConnectedUsersDeserializer extends JsonDeserializer[ConnectedUsers] {
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ConnectedUsers = {
     val jsonConnectedUser = json.getAsJsonObject
     val jsonUsersMap = jsonConnectedUser.getAsJsonObject("map")
     val jsonKeys = jsonUsersMap.keySet()
-    val gson = new GsonBuilder().registerTypeAdapter(classOf[UserImpl], new UserDeserializer).create()
+    val gson = new GsonBuilder().registerTypeAdapter(classOf[UserImpl], UserDeserializer).create()
 
-    jsonKeys forEach(key => {
-      ConnectedUsersImpl.map.put(key.toInt, gson.fromJson(jsonUsersMap.get(key), classOf[UserImpl]))
-    })
+    jsonKeys forEach(key => ConnectedUsersImpl.map.put(key.toInt, gson.fromJson(jsonUsersMap.get(key), classOf[UserImpl])))
 
     ConnectedUsersImpl
   }

@@ -6,6 +6,7 @@ import java.util
 import model.environment.{Coordinate, CoordinateImpl}
 
 object Settings {
+
   val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
 
   val GAME_REFRESH_TIME: Int = 100
@@ -254,6 +255,8 @@ object Settings {
   val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
 
   val PLAYERS_CONNECTED_CHANNEL_QUEUE: String = "players_connected"
+
+  val PLAYER_POSITION_CHANNEL_QUEUE: String = "player_position"
 
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 }

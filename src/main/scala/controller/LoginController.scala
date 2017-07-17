@@ -4,13 +4,10 @@ import java.util.Optional
 import javax.swing.JOptionPane
 
 import database.remote.DBConnect
-import distributed.ConnectedUsers
 import distributed.client.PlayerConnectionClientManager
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
-
-import scala.concurrent.Future
 
 trait LoginController{
   def login(username: String, password: String): Unit

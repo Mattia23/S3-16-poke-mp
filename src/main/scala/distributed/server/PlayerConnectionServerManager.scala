@@ -20,7 +20,7 @@ object PlayerConnectionServerManager {
                                 properties: AMQP.BasicProperties,
                                 body: Array[Byte]): Unit = {
       println("server: received")
-      val gson = new GsonBuilder().registerTypeAdapter(classOf[UserImpl], new UserDeserializer).create()
+      val gson = new GsonBuilder().registerTypeAdapter(classOf[UserImpl], UserDeserializer).create()
       val message = gson.fromJson(new String(body, "UTF-8"), classOf[UserImpl])
 
       val response = gson.toJson(ConnectedUsersImpl)
