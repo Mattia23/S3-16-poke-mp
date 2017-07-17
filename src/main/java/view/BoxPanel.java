@@ -40,9 +40,14 @@ public class BoxPanel extends JPanel {
         title.setForeground(Color.WHITE);
         title.setHorizontalAlignment(JLabel.CENTER);
         add(title, BorderLayout.NORTH);
-
-        teamPanel = new JPanel(new GridLayout(0,3));
-        boxPanel = new JPanel(new GridLayout(0,3));
+        GridLayout gridLayout;
+        if(Settings.FRAME_SIDE() > 530){
+            gridLayout = new GridLayout(0,3);
+        } else {
+            gridLayout = new GridLayout(0,2);
+        }
+        teamPanel = new JPanel(gridLayout);
+        boxPanel = new JPanel(gridLayout);
 
         pokemonPanel = new PokemonPanel();
 
@@ -53,8 +58,9 @@ public class BoxPanel extends JPanel {
         final JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(teamLabel, BorderLayout.NORTH);
         leftPanel.add(teamPanel, BorderLayout.CENTER);
+        leftPanel.setPreferredSize(new Dimension(Settings.FRAME_SIDE()/4, 0));
         add(leftPanel, BorderLayout.WEST);
-        //leftPanel.setPreferredSize(new Dimension(Settings.SCREEN_WIDTH()/10, 0));
+
 
         final JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(boxLabel, BorderLayout.NORTH);
@@ -75,8 +81,8 @@ public class BoxPanel extends JPanel {
         rightPanel.add(orderPanel, BorderLayout.SOUTH);*/
 
         rightPanel.add(scrollFrame, BorderLayout.CENTER);
+        rightPanel.setPreferredSize(new Dimension((int)(Settings.FRAME_SIDE()/3.5), 0));
         add(rightPanel, BorderLayout.EAST);
-        //rightPanel.setPreferredSize(new Dimension(Settings.SCREEN_WIDTH()/10, 0));
 
         add(pokemonPanel, BorderLayout.CENTER);
         pokemonPanel.setVisible(false);
@@ -100,9 +106,10 @@ public class BoxPanel extends JPanel {
                 final PokemonWithLife pokemonWithLife = PokemonFactory
                         .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
                 final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
-                final JLabel pokemonLabel = new JLabel(pokemonWithLife.pokemon().name() + " Lv." + pokemonWithLife.pokemon().level());
-                pokemonLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                pokemonLabel.addMouseListener(new MouseAdapter() {
+                final JLabel pokemonLabel = new JLabel("Lv." + pokemonWithLife.pokemon().level());
+                pokemonLabel.setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
+                pokemonImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                pokemonImage.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         pokemonPanel.setPokemon(pokemonWithLife);
@@ -111,7 +118,7 @@ public class BoxPanel extends JPanel {
 
                 });
                 teamPanel.add(pokemonImage);
-                teamPanel.add(pokemonLabel);
+                if(Settings.FRAME_SIDE() > 530) teamPanel.add(pokemonLabel);
                 final JButton button = new JButton(">>");
                 teamPanel.add(button);
                 button.addActionListener(e -> {
@@ -130,9 +137,10 @@ public class BoxPanel extends JPanel {
             if(!this.favoritePokemon.contains(pokemonId)){
                 final JButton button = new JButton("<<");
                 final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
-                final JLabel pokemonLabel = new JLabel(pokemonWithLife.pokemon().name()+" Lv."+pokemonWithLife.pokemon().level());
-                pokemonLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                pokemonLabel.addMouseListener(new MouseAdapter() {
+                final JLabel pokemonLabel = new JLabel("Lv."+pokemonWithLife.pokemon().level());
+                pokemonLabel.setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
+                pokemonImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                pokemonImage.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         pokemonPanel.setPokemon(pokemonWithLife);
@@ -141,7 +149,7 @@ public class BoxPanel extends JPanel {
                 });
                 boxPanel.add(button);
                 boxPanel.add(pokemonImage);
-                boxPanel.add(pokemonLabel);
+                if(Settings.FRAME_SIDE() > 530) boxPanel.add(pokemonLabel);
                 button.addActionListener(e ->{
                     if(this.favoritePokemon.contains(0)){
                         this.favoritePokemon.set(this.favoritePokemon.indexOf(0), pokemonId);
@@ -156,12 +164,12 @@ public class BoxPanel extends JPanel {
 
     }
 
-    public void refreshTeamAndBoxNumber(){
+    private void refreshTeamAndBoxNumber(){
         teamLabel.setText("TEAM "+ (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)) +"/"+favoritePokemon.size());
         boxLabel.setText("BOX: "+(this.capturedPokemon.size() - (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)))+" Pokemon");
     }
 
-    public ImageIcon getPokemonIcon(String pokemonImageString){
+    private ImageIcon getPokemonIcon(String pokemonImageString){
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
