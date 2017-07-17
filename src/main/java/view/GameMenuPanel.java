@@ -8,7 +8,6 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class GameMenuPanel extends JPanel{
     private static final String JOPTIONPANE_TITLE = "Logout";
@@ -41,10 +40,7 @@ public class GameMenuPanel extends JPanel{
                 gameController.resume();
             }
         });
-        menuButtons[6].addActionListener(e ->{
-            gameController.resume();
-            this.setVisible(false);
-        });
+        menuButtons[6].addActionListener(e -> gameController.resume());
         for (JRadioButton menuButton : menuButtons) {
             menuButton.setBackground(Color.WHITE);
             menuButton.addKeyListener(new KeyAdapter() {
@@ -58,7 +54,7 @@ public class GameMenuPanel extends JPanel{
             buttonGroup.add(menuButton);
             add(menuButton);
         }
-        menuButtons[0].requestFocus();
+        menuButtons[0].setSelected(true);
         menuButtons[0].addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent ae) {

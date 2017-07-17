@@ -5,6 +5,8 @@ import database.remote.DBConnect;
 import utilities.Settings;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.util.List;
 
 public class DoctorDialoguePanel extends DialoguePanel {

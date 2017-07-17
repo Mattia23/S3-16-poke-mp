@@ -63,6 +63,7 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
     trainer.coordinate = lastCoordinates
     initView()
     audio.loop()
+    this.gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {

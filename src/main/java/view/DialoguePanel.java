@@ -23,11 +23,12 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
     public DialoguePanel(final List<String> dialogues){
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(new EmptyBorder(10, 10, 10, 10));
-        dialogueLabel = new JLabel();
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+        dialogueLabel = new JLabel("", SwingConstants.CENTER);
         if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(0));
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-        add(dialogueLabel, BorderLayout.WEST);
+        add(dialogueLabel, BorderLayout.CENTER);
 
         buttonPanel.setBackground(Color.WHITE);
         final JButton buttonNext = new JButton("next");
