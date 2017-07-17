@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -44,6 +46,18 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         buttonPanel.add(buttonNext);
         add(buttonPanel, BorderLayout.EAST);
         buttonNext.requestFocus();
+        buttonNext.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent ae) {
+                buttonNext.requestFocus();
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) { }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) { }
+        });
     }
 
     protected abstract void setFinalButtons();
@@ -70,7 +84,7 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
                     buttons.get(--currentButton).requestFocus();
                 }
                 break;
-            case KeyEvent.VK_Z:
+            case KeyEvent.VK_SPACE:
                 buttons.get(currentButton).doClick();
             default:
                 break;

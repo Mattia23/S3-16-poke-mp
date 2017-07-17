@@ -83,11 +83,3 @@ public class RankingPanel extends BasePanel {
         return (int) level;
     }
 }
-
-class MyViewPort extends JViewport {
-
-    public MyViewPort() {
-        setOpaque(false);
-    }
-
-}

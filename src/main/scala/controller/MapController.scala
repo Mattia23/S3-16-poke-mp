@@ -53,7 +53,7 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
 
   override protected def doPause(): Unit = {
     lastCoordinates = trainer.coordinate
-    //audio.stop()
+    audio.stop()
   }
 
   override protected def doResume(): Unit = {
