@@ -6,7 +6,11 @@ import distributed.{ConnectedUsers, ConnectedUsersDeserializer, ConnectedUsersIm
 import model.environment.Coordinate
 import utilities.Settings
 
-object PlayerConnectionClientManager {
+trait PlayerConnectionClientManager{
+  def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
+}
+
+object PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager{
 
   private var gson: Gson = new Gson()
 
@@ -36,7 +40,7 @@ object PlayerConnectionClientManager {
         gson = new GsonBuilder().registerTypeAdapter(ConnectedUsersImpl.getClass, new ConnectedUsersDeserializer()).create()
         val serverUsers = gson.fromJson(message, ConnectedUsersImpl.getClass).asInstanceOf[ConnectedUsers]
         ConnectedUsersImpl.map.putAll(serverUsers.map)
-        ConnectedUsersImpl.map.values() forEach (user => println(""+user.userId+ ""+user.username))
+        //ConnectedUsersImpl.map.values() forEach (user => println(""+user.userId+ ""+user.username))
 
         channel.close()
       }

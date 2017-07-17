@@ -18,8 +18,6 @@ public class MapPanel extends GamePanel{
         this.gameController = gameController;
     }
 
-
-
     @Override
     protected void doPaint(final Graphics g) {
         for (int x = 0; x < Settings.MAP_WIDTH(); x++) {

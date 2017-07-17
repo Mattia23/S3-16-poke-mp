@@ -11,7 +11,7 @@ object PlayerConnectionServerManager {
   val channel: Channel = ServerConnection.connection.createChannel
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
-  ConnectedUsersImpl.map.put(162646, User(162646, "GG", 3, CoordinateImpl(0,0)))
+  //ConnectedUsersImpl.map.put(162646, User(162646, "GG", 3, CoordinateImpl(0,0)))
 
   val consumer = new DefaultConsumer(channel) {
 
