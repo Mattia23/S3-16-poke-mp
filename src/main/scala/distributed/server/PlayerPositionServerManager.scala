@@ -29,5 +29,5 @@ class PlayerPositionServerManager extends CommunicationManager {
 }
 
 object PlayerPositionServerManager {
-  def apply: PlayerPositionServerManager = new PlayerPositionServerManager()
+  def apply(): PlayerPositionServerManager = new PlayerPositionServerManager()
 }
