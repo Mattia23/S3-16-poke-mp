@@ -147,6 +147,11 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
+    public void showRankingPanel(Trainer trainer, GameController gameController) {
+        this.setPanel(new RankingPanel(trainer, gameController));
+    }
+
+    @Override
     public void showKeyboardPanel(GameController gameController) {
         this.setPanel(new KeyboardPanel(gameController));
     }

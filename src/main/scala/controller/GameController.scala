@@ -43,6 +43,8 @@ trait GameController {
 
   def showTrainer(): Unit
 
+  def showRanking(): Unit
+
   def showKeyboardExplanation(): Unit
 
   def doLogout(): Unit
@@ -120,6 +122,8 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit = view.showPokemonInTeamPanel(pokemonWithLife,this)
 
   override def showTrainer(): Unit = view.showTrainerPanel(trainer, this)
+
+  override def showRanking(): Unit = view.showRankingPanel(trainer, this)
 
   override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this)
 
