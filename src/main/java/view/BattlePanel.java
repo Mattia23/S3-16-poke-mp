@@ -15,6 +15,7 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class BattlePanel extends ImagePanel implements BattleView {
     private final static int IMAGE_POKEMON_SIZE = Settings.FRAME_SIDE() / 4;
@@ -38,6 +39,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
     private JProgressBar pokemonLevExpBar = new JProgressBar(0, 100);
     private Map<String,JButton> trainerChoices = new LinkedHashMap<>();
     private String[] myPokemonAttacks = new String[4];
+    private String[] wildPokemonAttacks;
     private Map<String,JButton> attacks = new LinkedHashMap<>();
     private int index = 0;
     private boolean attacksAreVisible = false;
@@ -96,6 +98,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
         pokemonLevExpBar.setValue(pokemonEntities[1].pokemon().levelExperience());
         pokemonLevExpBar.setBounds(POKEMON_LEV_EXP_POSE.width,POKEMON_LEV_EXP_POSE.height,170,8);
         this.add(pokemonLevExpBar);
+        getWildPokemonAttack();
     }
 
     private void createTrainerChoicesGraphic() {
@@ -232,7 +235,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" UTILIZZA " + att +"!");
                             Thread.sleep(3000);
                             attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" UTILIZZA " +
-                            PokedexConnect.getPokemonAttack((int)pokemonEntities[0].pokemon().attacks()._3()).get()._1().toUpperCase()+"!");
+                            wildPokemonAttacks[new Random().nextInt(wildPokemonAttacks.length)].toUpperCase()+"!");
                             Thread.sleep(3000);
                             displayPanel.setVisible(false);
                             index = 0;
@@ -300,6 +303,14 @@ public class BattlePanel extends ImagePanel implements BattleView {
             attacks.get(att).setVisible(attacksAreVisible);
         }
     }
+
+    private void getWildPokemonAttack() {
+        wildPokemonAttacks = new String[]{PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._1()).get()._1(),
+                PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._2()).get()._1(),
+                PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._3()).get()._1(),
+                PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._4()).get()._1()};
+    }
+
     @Override
     public void setPokemonLife() {
         myPokemonLife.setText(pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
@@ -315,7 +326,22 @@ public class BattlePanel extends ImagePanel implements BattleView {
     }
     @Override
     public void pokemonWildAttacksAfterTrainerChoice() {
-        System.out.println("Pokemon wild use ATTACCO");
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    displayPanel.setVisible(true);
+                    int i = new Random().nextInt(wildPokemonAttacks.length);
+                    attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase() + " UTILIZZA " +
+                        wildPokemonAttacks[i].toUpperCase() + "!");
+                    Thread.sleep(3000);
+                    displayPanel.setVisible(false);
+                } catch (Exception e) {
+                }
+            }
+        };
+        t.start();
     }
 
     @Override
