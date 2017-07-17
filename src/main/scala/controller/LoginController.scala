@@ -4,13 +4,12 @@ import java.util.Optional
 import javax.swing.JOptionPane
 
 import database.remote.DBConnect
+import distributed.client.PlayerConnectionClientManager
 import distributed.client.PlayerConnectionClientManagerImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
-
 import scala.concurrent.Future
-
 
 trait LoginController{
   def login(username: String, password: String): Unit
@@ -41,13 +40,12 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
 
-      import scala.concurrent.ExecutionContext.Implicits.global
+      //import scala.concurrent.ExecutionContext.Implicits.global
       //val connectedUsers = Future {
         PlayerConnectionClientManagerImpl.sendUserInformation(trainer.id, username,
           TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
      // }
       //}
-      //TODO Usare DistributedMapController a cui passare la future (e con un executor far disegnare gli omini)
       new DistributedMapController(view, trainer/*, connectedUsers*/).start()
      // new MapController(view, trainer).start()
     } else {

@@ -7,7 +7,6 @@ import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import utilities.Settings
 import view.{GamePanel, View}
-import view.{ClassicDialoguePanel, GameMenuPanel, GamePanel, View}
 
 trait GameController {
   def trainer: Trainer

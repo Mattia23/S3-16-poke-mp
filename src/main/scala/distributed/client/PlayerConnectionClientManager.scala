@@ -37,7 +37,7 @@ object PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager{
                                   body: Array[Byte]) {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
-        gson = new GsonBuilder().registerTypeAdapter(ConnectedUsersImpl.getClass, new ConnectedUsersDeserializer()).create()
+        gson = new GsonBuilder().registerTypeAdapter(ConnectedUsersImpl.getClass, ConnectedUsersDeserializer).create()
         val serverUsers = gson.fromJson(message, ConnectedUsersImpl.getClass).asInstanceOf[ConnectedUsers]
         ConnectedUsersImpl.map.putAll(serverUsers.map)
         //ConnectedUsersImpl.map.values() forEach (user => println(""+user.userId+ ""+user.username))
