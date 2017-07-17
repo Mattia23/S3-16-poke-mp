@@ -83,7 +83,7 @@ public class BoxPanel extends JPanel {
         final JButton close = new JButton("SAVE AND CLOSE");
         close.addActionListener(e -> {
             buildingController.trainer().setAllFavouritePokemon(this.favoritePokemon);
-            buildingController.resumeGame();
+            buildingController.resume();
         });
         add(close, BorderLayout.SOUTH);
 

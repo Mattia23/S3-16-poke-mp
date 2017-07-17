@@ -30,7 +30,7 @@ trait Battle {
 
   def battleFinished_=(battleFinished: Boolean): Unit
 
-  def updatePokemon(): Unit
+  def updatePokemonAndTrainer(event: Int): Unit
 }
 
 class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle {
@@ -52,7 +52,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
     battleFinished = true
     var pointsEarned: Int = 0
     if(won){
-      pointsEarned = (wildPokemon.pokemon.experiencePoints / wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
+      pointsEarned = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.2,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
     } else {
       var newPokemonId = _trainer.getFirstAvailableFavouritePokemon
@@ -70,8 +70,14 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
     _round.pokeballLaunched()
   }
 
-  override def updatePokemon(): Unit = {
+  override def updatePokemonAndTrainer(event: Int): Unit = event match {
+    case 1 => {
+      val pointsEarned: Int = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.3,_trainer.level)).toInt
+      _trainer.updateTrainer(pointsEarned)
+    }
+    case 2 => {
+      _trainer.updateTrainer(0)
+    }
     _round.updatePokemon()
-    _trainer.updateTrainer(0)
   }
 }

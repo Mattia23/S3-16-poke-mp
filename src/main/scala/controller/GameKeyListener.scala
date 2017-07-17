@@ -4,7 +4,7 @@ import java.awt.event.{KeyEvent, KeyListener}
 
 import model.environment.Direction
 
-class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
+class GameKeyListener(val gameController: GameController) extends KeyListener{
   private var direction: Direction.Direction = _
   private var lastPressed: Int = _
 
@@ -23,7 +23,9 @@ class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
           catchButton(e.getKeyCode)
           this.gameController.moveTrainer(this.direction)
         case KeyEvent.VK_Z => this.gameController.trainerInteract(this.direction)
-        case KeyEvent.VK_ESCAPE => this.gameController.showMenu()
+        case KeyEvent.VK_ESCAPE =>
+          this.gameController.pause()
+          this.gameController.showMenu()
         case _ =>
       }
     }
@@ -37,7 +39,7 @@ class GameKeyListener(val gameController: GameViewObserver) extends KeyListener{
       case MOVE_RIGHT => direction = Direction.RIGHT
       case MOVE_UP => direction = Direction.UP
       case MOVE_DOWN => direction = Direction.DOWN
-      case PAUSE_BUTTON => gameController.pauseGame
+      case PAUSE_BUTTON => gameController.pause
     }
   }
 

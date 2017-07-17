@@ -1,13 +1,10 @@
 package view;
 
-import controller.BattleController;
-import controller.GameViewObserver;
-import database.remote.DBConnect;
+import controller.GameController;
 import model.entities.Owner;
 import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
 import model.entities.Trainer;
-import scala.Tuple2;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
@@ -19,9 +16,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class TeamPanel extends BasePanel{
@@ -30,7 +25,7 @@ public class TeamPanel extends BasePanel{
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
     ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
-    public TeamPanel(Trainer trainer, GameViewObserver gameController) {
+    public TeamPanel(Trainer trainer, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -102,8 +97,8 @@ public class TeamPanel extends BasePanel{
         }
 
         this.backButton.addActionListener(e -> {
-            gameController.resumeGame();
-            gameController.gamePanel().setFocusable(true);
+            gameController.resume();
+            //gameController.gamePanel().setFocusable(true);
         });
     }
 }

@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameViewObserver;
+import controller.GameController;
 import model.environment.BuildingMap;
 import utilities.Settings;
 
@@ -10,9 +10,9 @@ public class BuildingPanel extends GamePanel {
     protected int centerX;
     protected int centerY;
     private BuildingMap buildingMap;
-    private GameViewObserver gameController;
+    private GameController gameController;
 
-    public BuildingPanel(final GameViewObserver gameController, final BuildingMap buildingMap) {
+    public BuildingPanel(final GameController gameController, final BuildingMap buildingMap) {
         super(gameController);
 
         this.buildingMap = buildingMap;
@@ -24,7 +24,7 @@ public class BuildingPanel extends GamePanel {
     }
 
     @Override
-    protected synchronized void doPaint(final Graphics g) {
+    protected void doPaint(final Graphics g) {
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
         g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
