@@ -30,7 +30,7 @@ public class ViewImpl extends JFrame implements View {
         this.setMinimumSize(frameDiminsion);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setAlwaysOnTop(true);
+        //this.setAlwaysOnTop(true);
         this.validate();
         this.setVisible(true);
     }
