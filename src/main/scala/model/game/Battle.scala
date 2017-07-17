@@ -52,7 +52,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
     battleFinished = true
     var pointsEarned: Int = 0
     if(won){
-      pointsEarned = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.2,_trainer.level)).toInt
+      pointsEarned = (wildPokemon.pokemon.level * math.pow(1.2,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
     } else {
       var newPokemonId = _trainer.getFirstAvailableFavouritePokemon
@@ -72,7 +72,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
     case 1 => {
-      val pointsEarned: Int = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.3,_trainer.level)).toInt
+      val pointsEarned: Int = (wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
     }
     case 2 => {

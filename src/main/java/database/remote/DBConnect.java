@@ -31,6 +31,7 @@ public final class DBConnect {
 		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				//con = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/pokemp_1", "pokemp", "viroliRules12CFU");
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
 				st = con.createStatement();
 				MyEncryptor.init();
