@@ -87,10 +87,11 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
     case 1 => {
       val pointsEarned: Int = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.3,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
+      _round.updatePokemon()
     }
     case 2 => {
       _trainer.updateTrainer(0)
+      _round.updatePokemon()
     }
-    _round.updatePokemon()
   }
 }
