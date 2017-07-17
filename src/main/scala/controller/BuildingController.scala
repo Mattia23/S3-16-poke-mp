@@ -1,6 +1,7 @@
 package controller
 
-import model.entities.{Pokemon, Trainer}
+import model.characters.{OakAfterChoise}
+import model.entities.{Trainer}
 import model.environment.Direction.Direction
 import model.environment._
 import model.map.Box
@@ -99,6 +100,7 @@ class PokemonCenterController(private val view: View, private val mapController:
 class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   private var capturedPokemonEmpty: Boolean = this.trainer.capturedPokemons.isEmpty
+  if(!capturedPokemonEmpty) buildingMap.npc = new OakAfterChoise
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
   audio = Audio(Settings.LABORATORY_SONG)
@@ -110,7 +112,6 @@ class LaboratoryController(private val view: View, private val mapController: Ga
 
   override protected def doResume(): Unit = {
     super.doResume()
-    //TODO per adesso da sempre true perchè è da sistemare il codice in InitialPokemonPanel
     capturedPokemonEmpty = this.trainer.capturedPokemons.isEmpty
     initView()
   }
