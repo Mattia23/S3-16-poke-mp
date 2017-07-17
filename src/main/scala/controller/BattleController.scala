@@ -27,9 +27,10 @@ trait BattleController {
 }
 
 class BattleControllerImpl(val controller: GameController, val trainer: Trainer, val view: View) extends BattleController {
+  private val WILD_POKEMON: Int = 0
+  private val MY_POKEMON: Int = 1
   val battle: Battle = new BattleImpl(trainer,this)
   private var timer: Thread = _
-  private var battleFinished = false
   battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
   showNewView()
 
@@ -46,7 +47,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
       }
       timer.start()
     } else {
-      pokemonIsDead(0)
+      pokemonIsDead(WILD_POKEMON)
     }
   }
 
@@ -54,8 +55,8 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
     battle.round.wildPokemonAttack(Random.nextInt(3)+1)
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
-    if(battle.battleFinished) {
-      pokemonIsDead(1)
+    if(battle.roundFinished) {
+      pokemonIsDead(MY_POKEMON)
     }
   }
 
@@ -104,7 +105,6 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   }
 
   override def resumeGameAtPokemonCenter(): Unit = {
-    battleFinished = true
     controller.resume()
   }
 
@@ -112,14 +112,14 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
     view.showBattle(battle.myPokemon,battle.wildPokemon,this)
   }
 
-  private def pokemonIsDead(index: Int): Unit = {
+  private def pokemonIsDead(pokemonDeadId: Int): Unit = {
     timer = new Thread() {
       override def run() {
-        view.getBattlePanel.pokemonIsDead(index)
+        view.getBattlePanel.pokemonIsDead(pokemonDeadId)
         Thread.sleep(2000)
-        if(index==1 && !battleFinished) {
+        if(pokemonDeadId==MY_POKEMON && !battle.battleFinished) {
           showNewView()
-        } else if (index==0) {
+        } else if (pokemonDeadId==WILD_POKEMON) {
           controller.resume()
         }
 

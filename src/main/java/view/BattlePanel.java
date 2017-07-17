@@ -202,7 +202,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
             });
             t.start();
         });
-        trainerChoices.get("Escape").addActionListener(e -> {if (!controller.trainerCanQuit()) System.out.println("non posso uscire");});
+        trainerChoices.get("Escape").addActionListener(e -> controller.trainerCanQuit());
         for(String att : attacks.keySet()) {
             attacks.get(att).addActionListener(e -> {
                 Object[] atts = attacks.keySet().toArray();
@@ -285,7 +285,6 @@ public class BattlePanel extends ImagePanel implements BattleView {
     private static Dimension newDimension(Double d1, Double d2) {
         return new Dimension((int)(Settings.FRAME_SIDE()*d1),(int)(Settings.FRAME_SIDE()*d2));
     }
-
     private void createJTextField(JTextField jTextField,String text) {
         jTextField.setText(text);
         jTextField.setOpaque(false);
@@ -294,7 +293,6 @@ public class BattlePanel extends ImagePanel implements BattleView {
         jTextField.setDisabledTextColor(Color.black);
         this.add(jTextField);
     }
-
     private void changeButtons() {
         for(String c : trainerChoices.keySet()) {
             trainerChoices.get(c).setVisible(!attacksAreVisible);
@@ -303,7 +301,6 @@ public class BattlePanel extends ImagePanel implements BattleView {
             attacks.get(att).setVisible(attacksAreVisible);
         }
     }
-
     private void getWildPokemonAttack() {
         wildPokemonAttacks = new String[]{PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._1()).get()._1(),
                 PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._2()).get()._1(),

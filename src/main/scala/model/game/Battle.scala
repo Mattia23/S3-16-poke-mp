@@ -30,12 +30,17 @@ trait Battle {
 
   def battleFinished_=(battleFinished: Boolean): Unit
 
+  def roundFinished: Boolean
+
+  def roundFinished_=(battleFinished: Boolean): Unit
+
   def updatePokemonAndTrainer(event: Int): Unit
 }
 
 class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle {
   var _round: BattleRound = _
   override var battleFinished: Boolean = false
+  override var roundFinished: Boolean = false
   override def trainer: Trainer = _trainer
   override def round: BattleRound = _round
   override var pokeball: Int = 3
@@ -49,15 +54,23 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
   }
 
   override def myPokemonKillsWildPokemon(won: Boolean): Unit = {
-    battleFinished = true
     var pointsEarned: Int = 0
     if(won){
+      battleFinished = true
       pointsEarned = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.2,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
     } else {
+      roundFinished = true
       var newPokemonId = _trainer.getFirstAvailableFavouritePokemon
       if(newPokemonId > 0){
         startBattleRound(newPokemonId)
+        val t: Thread = new Thread {
+          override def run {
+            Thread.sleep(1000)
+            roundFinished = false
+          }
+        }
+        t.start()
       } else {
         pointsEarned = 30
         _trainer.updateTrainer(pointsEarned)

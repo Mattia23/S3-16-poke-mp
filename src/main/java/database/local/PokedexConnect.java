@@ -144,7 +144,8 @@ public final class PokedexConnect {
         init();
         List<Integer> attacksList = new ArrayList<>();
         String sql = "SELECT id FROM moves "+
-                "WHERE power >= "+ min +
+                "WHERE generation_id = 1"+
+                " AND power >= "+ min +
                 " AND power <= "+ max;
         try (PreparedStatement pstmt  = con.prepareStatement(sql)){
             ResultSet rs  = pstmt.executeQuery();
