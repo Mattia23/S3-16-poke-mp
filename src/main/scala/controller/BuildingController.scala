@@ -32,6 +32,7 @@ abstract class BuildingController(private val view: View, private val mapControl
           trainerIsMoving = false
           if (trainer.coordinate equals buildingMap.entryCoordinate) {
             if(buildingMap.isInstanceOf[LaboratoryMap] && trainer.capturedPokemons.isEmpty){
+              this.pause()
               view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
             }else {
               this.terminate()
@@ -51,9 +52,13 @@ abstract class BuildingController(private val view: View, private val mapControl
     audio.stop()
   }
 
-  override protected def doPause(): Unit = {}
+  override protected def doPause(): Unit = {
+    this.gamePanel.setFocusable(false)
+  }
 
-  override protected def doResume(): Unit = {}
+  override protected def doResume(): Unit = {
+    this.gamePanel.setFocusable(true)
+  }
 
 }
 
@@ -84,6 +89,7 @@ class PokemonCenterController(private val view: View, private val mapController:
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
+          this.pause()
           this.view.showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(tile.isInstanceOf[Box]){
@@ -127,6 +133,7 @@ class LaboratoryController(private val view: View, private val mapController: Ga
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
+          this.pause()
           this.view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(capturedPokemonEmpty) {

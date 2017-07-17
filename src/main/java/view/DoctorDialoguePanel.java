@@ -1,6 +1,6 @@
 package view;
 
-import controller.GameControllerImpl;
+import controller.GameController;
 import database.remote.DBConnect;
 import utilities.Settings;
 
@@ -8,12 +8,11 @@ import javax.swing.*;
 import java.util.List;
 
 public class DoctorDialoguePanel extends DialoguePanel {
-    private GameControllerImpl gameController;
+    private GameController gameController;
 
-    public DoctorDialoguePanel(GameControllerImpl gameController, List<String> dialogues) {
+    public DoctorDialoguePanel(GameController gameController, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
-        this.gameController.gamePanel().setFocusable(false);
         if(dialogues.size() == 1) setFinalButtons();
     }
 
@@ -25,7 +24,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
             final JButton button = new JButton(text);
             button.addKeyListener(this);
             button.addActionListener(e ->{
-                gameController.gamePanel().setFocusable(true);
+                gameController.resume();
                 this.setVisible(false);
             });
             buttonPanel.add(button);

@@ -68,11 +68,6 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
 
     @Override
     public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_RIGHT:
                 if (currentButton < buttons.size()-1) {
@@ -89,6 +84,11 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
             default:
                 break;
         }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
     }
 
     @Override

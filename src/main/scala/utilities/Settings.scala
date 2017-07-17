@@ -210,9 +210,6 @@ object Settings {
 
   val CHARACTER_IMAGES_FOLDER = "/images/characters/"
 
-  val INITIAL_DIALOGUE: util.List[String] = util.Arrays.asList("Hey!","It is dangerous to walk on the grass without Pokémon!",
-    "Come here to pick one!", "(this voice seems to come from the lab right there)")
-
   val CLASSIC_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("next")
 
   val DOCTOR_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
