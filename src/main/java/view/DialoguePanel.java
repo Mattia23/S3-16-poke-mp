@@ -1,16 +1,13 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 public abstract class DialoguePanel extends JPanel implements KeyListener{
     private final JLabel dialogueLabel;
@@ -69,6 +66,11 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
 
     @Override
     public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_RIGHT:
                 if (currentButton < buttons.size()-1) {
@@ -80,16 +82,9 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
                     buttons.get(--currentButton).requestFocus();
                 }
                 break;
-            case KeyEvent.VK_SPACE:
-                buttons.get(currentButton).doClick();
             default:
                 break;
         }
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
     }
 
     @Override

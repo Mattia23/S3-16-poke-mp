@@ -1,7 +1,6 @@
 package view;
 
 import controller.GameController;
-import controller.GameControllerImpl;
 
 import java.util.List;
 

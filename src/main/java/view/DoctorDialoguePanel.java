@@ -5,8 +5,6 @@ import database.remote.DBConnect;
 import utilities.Settings;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.util.List;
 
 public class DoctorDialoguePanel extends DialoguePanel {
@@ -25,10 +23,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
         for(String text: Settings.DOCTOR_DIALOGUE_BUTTON()){
             final JButton button = new JButton(text);
             button.addKeyListener(this);
-            button.addActionListener(e ->{
-                gameController.resume();
-                this.setVisible(false);
-            });
+            button.addActionListener(e -> gameController.resume());
             buttonPanel.add(button);
             buttons.add(button);
         }
