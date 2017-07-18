@@ -1,10 +1,11 @@
 package app
 
-import distributed.server.{PlayerConnectionServerManager, ServerConnection}
+import distributed.DistributedConnectionImpl
+import distributed.server.PlayerConnectionServerManager
 
 object ServerMain extends App{
 
-  ServerConnection.connection
+  DistributedConnectionImpl().connection
   PlayerConnectionServerManager().start()
 
   //ServerConnection.close()

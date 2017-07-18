@@ -5,9 +5,9 @@ import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
 import distributed._
 import utilities.Settings
 
-private class PlayerConnectionServerManager extends CommunicationManager {
+class PlayerConnectionServerManager extends CommunicationManager {
   override def start(): Unit = {
-    val channel: Channel = ServerConnection.connection.createChannel
+    val channel: Channel = DistributedConnectionImpl().connection.createChannel
     channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {

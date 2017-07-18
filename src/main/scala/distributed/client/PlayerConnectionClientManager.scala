@@ -2,22 +2,29 @@ package distributed.client
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.{ConnectedUsers, ConnectedUsersDeserializer, ConnectedUsersImpl, User}
+import distributed._
 import model.environment.Coordinate
 import utilities.Settings
 
-trait PlayerConnectionClientManager{
+trait PlayerConnectionClientManager extends CommunicationManager{
   def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
 }
 
-object PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager{
+object PlayerConnectionClientManagerImpl {
+  def apply(): PlayerConnectionClientManager = new PlayerConnectionClientManagerImpl()
+}
+
+class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
 
   private var gson: Gson = new Gson()
+  private var channel: Channel = _
 
-  private val channel: Channel = ClientConnection.connection.createChannel()
-  channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
+  override def start(): Unit = {
+    channel = DistributedConnectionImpl().connection.createChannel()
+    channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
+  }
 
-  def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
+  override def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
     val user = User(userId, username, sprites, position)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(user).getBytes("UTF-8"))
     println(" [x] Sent message")

@@ -2,13 +2,13 @@ package distributed.server
 
 import com.google.gson.GsonBuilder
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.CommunicationManager
+import distributed.{CommunicationManager, DistributedConnectionImpl}
 import distributed.messages.{PlayerPositionMessageDeserializer, PlayerPositionMessageImpl}
 import utilities.Settings
 
 class PlayerPositionServerManager extends CommunicationManager {
   override def start(): Unit = {
-    val channel: Channel = ServerConnection.connection.createChannel
+    val channel: Channel = DistributedConnectionImpl().connection.createChannel
     channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
@@ -29,5 +29,5 @@ class PlayerPositionServerManager extends CommunicationManager {
 }
 
 object PlayerPositionServerManager {
-  def apply(): PlayerPositionServerManager = new PlayerPositionServerManager()
+  def apply(): CommunicationManager = new PlayerPositionServerManager()
 }

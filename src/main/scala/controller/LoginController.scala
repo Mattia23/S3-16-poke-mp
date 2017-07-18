@@ -42,7 +42,9 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
 
       //import scala.concurrent.ExecutionContext.Implicits.global
       //val connectedUsers = Future {
-        PlayerConnectionClientManagerImpl.sendUserInformation(trainer.id, username,
+      val playerConnectionClientManager = PlayerConnectionClientManagerImpl()
+      playerConnectionClientManager.start()
+      playerConnectionClientManager.sendUserInformation(trainer.id, username,
           TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
      // }
       //}
