@@ -6,8 +6,7 @@ import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import utilities.Settings
-import view.{GamePanel, View}
-import view.{ClassicDialoguePanel, GameMenuPanel, GamePanel, View}
+import view._
 
 trait GameController {
   def trainer: Trainer
@@ -44,7 +43,11 @@ trait GameController {
 
   def showTrainer(): Unit
 
+  def showRanking(): Unit
+
   def showKeyboardExplanation(): Unit
+
+  def doLogout(): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
@@ -120,7 +123,11 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   override def showTrainer(): Unit = view.showTrainerPanel(trainer, this)
 
+  override def showRanking(): Unit = view.showRankingPanel(trainer, this)
+
   override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this)
+
+  override def doLogout(): Unit = view.showInitialMenu(new InitialMenuControllerImpl(view))
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
