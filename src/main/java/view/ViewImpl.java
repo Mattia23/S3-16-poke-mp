@@ -1,10 +1,7 @@
 package view;
 import controller.BattleController;
-import controller.Controller;
 import controller.GameController;
 import controller.*;
-import database.remote.DBConnect;
-import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
 import model.environment.BuildingMap;
 import model.map.GameMap;
@@ -17,7 +14,6 @@ import java.awt.*;
 public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
-    private Controller controller;
     private Dimension frameDiminsion;
     private BattleView battlePanel;
     private GamePanel gamePanel;
@@ -56,9 +52,6 @@ public class ViewImpl extends JFrame implements View {
         this.revalidate();
         this.repaint();
     }
-
-    @Override
-    public void setController(Controller controller) { this.controller = controller; }
 
     @Override
     public void showInitialMenu(InitialMenuController initialMenuController) {

@@ -1,5 +1,9 @@
 package distributed.client
 
+import java.util
+import java.util.concurrent.ConcurrentHashMap
+
+import com.google.gson.reflect.TypeToken
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
@@ -9,7 +13,7 @@ import utilities.Settings
 trait PlayerConnectionClientManager extends CommunicationManager{
   def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
 
-  def receivePlayersConnected(userId: Int): Unit
+  def receivePlayersConnected(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit
 }
 
 object PlayerConnectionClientManagerImpl {
@@ -30,11 +34,9 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
     val user = User(userId, username, sprites, position)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(user).getBytes("UTF-8"))
     println(" [x] Sent message")
-
-    //receivePlayersConnected(userId)
   }
 
-  override def receivePlayersConnected(userId: Int): Unit = {
+  override def receivePlayersConnected(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit = {
     val userQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
     channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
     channel.queueDeclare(userQueue, false, false, false, null)
@@ -47,10 +49,10 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
                                   body: Array[Byte]) {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
-        gson = new GsonBuilder().registerTypeAdapter(ConnectedUsersImpl.getClass, ConnectedUsersDeserializer).create()
-        val serverUsers = gson.fromJson(message, ConnectedUsersImpl.getClass).asInstanceOf[ConnectedUsers]
-        ConnectedUsersImpl.map.putAll(serverUsers.map)
-        //ConnectedUsersImpl.map.values() forEach (user => println(""+user.userId+ ""+user.username))
+        val collectionType = new TypeToken[Map[Int, User]](){}.getType
+        val serverUsers = gson.fromJson(message, collectionType)
+        connectedUsers.putAll(serverUsers)
+        connectedUsers.values() forEach (user => println(""+user.userId+ ""+user.username))
 
         channel.close()
       }

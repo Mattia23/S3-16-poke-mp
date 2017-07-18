@@ -1,9 +1,11 @@
 package controller
 
 import java.util.Optional
+import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JOptionPane
 
 import database.remote.DBConnect
+import distributed.{ConnectedUsers, User}
 import distributed.client.PlayerConnectionClientManagerImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
@@ -37,20 +39,21 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
-      serverInteraction(username, trainer)
+      val connectedUsers = new ConcurrentHashMap[Int, User]()
+      serverInteraction(username, trainer, connectedUsers)
 
-      new DistributedMapController(view, trainer/*, connectedUsers*/).start()
+      new DistributedMapController(view, trainer, connectedUsers).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
     }
   }
 
-  private def serverInteraction(username: String, trainer: Trainer) = {
+  private def serverInteraction(username: String, trainer: Trainer, connectedUsers: ConcurrentHashMap[Int, User]) = {
     val playerConnectionClientManager = PlayerConnectionClientManagerImpl()
     playerConnectionClientManager.start()
     playerConnectionClientManager.sendUserInformation(trainer.id, username,
       TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
-    playerConnectionClientManager.receivePlayersConnected(trainer.id)
+    playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedUsers)
   }
 
   override def back(): Unit = initialMenuController.show()

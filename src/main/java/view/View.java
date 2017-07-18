@@ -10,8 +10,6 @@ import model.entities.Trainer;
 import javax.swing.*;
 
 public interface View {
-    void setController(Controller controller);
-
     void showInitialMenu(InitialMenuController initialMenuController);
 
     void showLogin(LoginController loginController);
