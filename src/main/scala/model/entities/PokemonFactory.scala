@@ -36,7 +36,7 @@ object PokemonFactory {
       val pokemon: PokemonWithLife =
         new PokemonWithLifeImpl(Pokemon(id = pokemonId,
                                         name = PokedexConnect.getPokemonName(pokemonId).get(),
-                                        attacks = (1,2,3,4),
+                                        attacks = generateAttacksPokemon(pokemonId),
                                         level = level,
                                         experiencePoints = exp,
                                         levelExperience = Random.nextInt(exp),
@@ -51,7 +51,7 @@ object PokemonFactory {
       val pokemon: PokemonWithLife =
         new PokemonWithLifeImpl(Pokemon(id = pokemonId,
           name = PokedexConnect.getPokemonName(pokemonId).get(),
-          attacks = (1,2,3,4),
+          attacks = generateAttacksPokemon(pokemonId),
           level = level,
           experiencePoints = exp,
           levelExperience = Random.nextInt(exp),
@@ -64,8 +64,7 @@ object PokemonFactory {
   private def generateCasualPokemonId(trainerLevel: Int): Int = {
     var indexRandomList: mutable.Map[Range,Int] = mutable.HashMap()
     if(trainerLevel < LEVEL_STEP_ONE) {
-      indexRandomList = indexRandomList += ((0 until 40) -> 1) += ((40 until 70) -> 5) += ((70 until 90) -> 10) +=
-        ((90 until 100) -> 20)
+      indexRandomList = indexRandomList += ((0 until 50) -> 1) += ((50 until 80) -> 5) += ((80 until 100) -> 10)
     } else if (trainerLevel < LEVEL_STEP_TWO) {
       indexRandomList = indexRandomList += ((0 until 35) -> 1) += ((35 until 60) -> 5) += ((60 until 80) -> 10) +=
         ((80 until 90) -> 20) += ((90 until 96) -> 30) += ((96 until 100) -> 50)
@@ -100,6 +99,12 @@ object PokemonFactory {
   private def generateExperiencePokemon(id: Int, level: Int): Int = {
     val baseExp: Int = PokedexConnect.getBaseExperiencePokemon(id).get()
     baseExp + level*4 - 4
+  }
+
+  private def generateAttacksPokemon(id: Int): (Int,Int,Int,Int) = {
+    val attacksList: java.util.List[Integer] = PokedexConnect.getAttacksList(id)
+    (attacksList.get(Random.nextInt(attacksList.size())),attacksList.get(Random.nextInt(attacksList.size())),
+      attacksList.get(Random.nextInt(attacksList.size())),attacksList.get(Random.nextInt(attacksList.size())))
   }
 
 }

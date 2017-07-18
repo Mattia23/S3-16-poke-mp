@@ -1,6 +1,10 @@
 package database.local;
 
+import scala.Int;
 import scala.Tuple2;
+import scala.collection.IndexedSeq;
+import scala.collection.mutable.Seq;
+
 import java.sql.*;
 import java.util.*;
 
@@ -116,6 +120,42 @@ public final class PokedexConnect {
         String sql = "SELECT base_experience FROM pokemon WHERE id = "+ getFirstStagePokemon(id);
         Optional<?> result = executeTheQuery(sql,Type.Integer, Collections.singletonList("base_experience"));
         return result.isPresent() ? ((Optional<Integer>)result) : Optional.empty();
+    }
+
+    public static int getRarity(int id) {
+        String sql = "SELECT pokemon_rarity FROM pokemon WHERE id = "+ id;
+        Optional<?> result = executeTheQuery(sql,Type.Integer, Collections.singletonList("pokemon_rarity"));
+        return ((Optional<Integer>)result).get();
+    }
+
+    public static List<Integer> getAttacksList(int id) {
+        int rarity = getRarity(id);
+        int min = 0, max = 250;
+        if( rarity == 1 || rarity == 5 || rarity == 10) {
+            min = 1;
+            max = 49;
+        } else if ( rarity == 0 || rarity == 20 || rarity == 30) {
+            min = 50;
+            max = 119;
+        } else if ( rarity == 50 || rarity == 100) {
+            min = 20;
+            max = 250;
+        }
+        init();
+        List<Integer> attacksList = new ArrayList<>();
+        String sql = "SELECT id FROM moves "+
+                "WHERE generation_id = 1"+
+                " AND power >= "+ min +
+                " AND power <= "+ max;
+        try (PreparedStatement pstmt  = con.prepareStatement(sql)){
+            ResultSet rs  = pstmt.executeQuery();
+            while (rs.next()) {
+                attacksList.add(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return attacksList;
     }
 
 

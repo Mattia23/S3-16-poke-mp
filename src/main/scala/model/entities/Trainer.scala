@@ -52,7 +52,7 @@ trait Trainer {
 
 class TrainerImpl(override val name: String, private val idImage: Int, override var experiencePoints: Int) extends Trainer{
   override val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
-  override var level: Int = calculateLevel(experiencePoints)
+  override var level: Int = calculateLevel()
   private var _coordinate: Coordinate = Settings.INITIAL_PLAYER_POSITION
   override var pokedex: Pokedex = new PokedexImpl(id)
   override var favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
@@ -61,10 +61,10 @@ class TrainerImpl(override val name: String, private val idImage: Int, override 
 
   override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
 
-  private def calculateLevel(experiencePoints: Int): Int = {
+  private def calculateLevel(): Int = {
     var level: Double = Settings.INITIAL_TRAINER_LEVEL
     var step: Double = Settings.LEVEL_STEP
-    while(experiencePoints > step ){
+    while(this.experiencePoints > step ){
       step = step + Settings.LEVEL_STEP*math.pow(2,level)
       level += 1
     }
@@ -77,7 +77,7 @@ class TrainerImpl(override val name: String, private val idImage: Int, override 
 
   override def updateTrainer(points: Int): Unit = {
     this.experiencePoints_=(this.experiencePoints + points)
-    this.level_=(calculateLevel(this.experiencePoints))
+    this.level_=(calculateLevel())
     capturedPokemons_=(DBConnect.getCapturedPokemonList(id).get())
     capturedPokemonId_=(DBConnect.getCapturedPokemonIdList(id).get())
     DBConnect.updateTrainer(this.id, this.experiencePoints, this.favouritePokemons)
