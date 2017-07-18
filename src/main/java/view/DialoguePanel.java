@@ -1,14 +1,13 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 public abstract class DialoguePanel extends JPanel implements KeyListener{
     private final JLabel dialogueLabel;
@@ -21,11 +20,12 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
     public DialoguePanel(final List<String> dialogues){
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(new EmptyBorder(10, 10, 10, 10));
-        dialogueLabel = new JLabel();
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+        dialogueLabel = new JLabel("", SwingConstants.CENTER);
         if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(0));
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
-        add(dialogueLabel, BorderLayout.WEST);
+        add(dialogueLabel, BorderLayout.CENTER);
 
         buttonPanel.setBackground(Color.WHITE);
         final JButton buttonNext = new JButton("next");
@@ -44,6 +44,18 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         buttonPanel.add(buttonNext);
         add(buttonPanel, BorderLayout.EAST);
         buttonNext.requestFocus();
+        buttonNext.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent ae) {
+                buttonNext.requestFocus();
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) { }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) { }
+        });
     }
 
     protected abstract void setFinalButtons();
@@ -70,8 +82,6 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
                     buttons.get(--currentButton).requestFocus();
                 }
                 break;
-            case KeyEvent.VK_Z:
-                buttons.get(currentButton).doClick();
             default:
                 break;
         }
