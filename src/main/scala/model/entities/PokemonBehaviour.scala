@@ -23,8 +23,8 @@ trait PokemonBehaviour {
 }
 
 class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends PokemonBehaviour {
-  private val ATTACK_PERCENTAGE: Double = 0.1
-  private val EXPERIENCE_PERCENTAGE: Double = 0.75
+  private val ATTACK_PERCENTAGE: Double = 0.2
+  private val GIVE_EXPERIENCE_PERCENTAGE: Double = 0.40
   private var _isAlive: Boolean = true
   private var pokemonExperienceGrown = 0
 
@@ -41,19 +41,18 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
   override def isAlive = this._isAlive
 
   override def giveExperiencePoints: Int = {
-    (pokemonWithLife.pokemon.experiencePoints * EXPERIENCE_PERCENTAGE).toInt
+    (pokemonWithLife.pokemon.experiencePoints * GIVE_EXPERIENCE_PERCENTAGE).toInt
   }
 
   override def growExperiencePoints(points: Int): Unit = {
-    this.pokemonExperienceGrown = points //DA MODIFICARE (TENERE CONTO DEL LIVELLO)
+    this.pokemonExperienceGrown = points
   }
 
   private def checkIfLevelGrows: (Int,Int,Int,Int) = {
     if(this.pokemonExperienceGrown > 0) {
-      val expPoints = this.pokemonWithLife.pokemon.experiencePoints
-      var newExpPoints = expPoints + this.pokemonExperienceGrown
-      val levelExp = this.pokemonWithLife.pokemon.levelExperience + expPoints
-      if (newExpPoints >= levelExp+4) {
+      var newExpPoints = this.pokemonWithLife.pokemon.levelExperience + this.pokemonExperienceGrown
+      val levelExp = this.pokemonWithLife.pokemon.experiencePoints + 4
+      if (newExpPoints >= levelExp) {
         (checkEvolution(this.pokemonWithLife.pokemon.level+1),
           this.pokemonWithLife.pokemon.level+1,
           this.pokemonWithLife.pokemon.experiencePoints+4,
