@@ -72,6 +72,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
         }
         t.start()
       } else {
+        battleFinished = true
         pointsEarned = 30
         _trainer.updateTrainer(pointsEarned)
         controller.resumeGameAtPokemonCenter
