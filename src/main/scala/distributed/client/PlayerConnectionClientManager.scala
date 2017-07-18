@@ -1,7 +1,7 @@
 package distributed.client
 
 import java.util
-import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.google.gson.reflect.TypeToken
 import com.google.gson.{Gson, GsonBuilder}
@@ -49,10 +49,11 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
                                   body: Array[Byte]) {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
-        val collectionType = new TypeToken[Map[Int, User]](){}.getType
+        gson = new GsonBuilder().registerTypeAdapter(classOf[ConcurrentHashMap[Int, User]], ConnectedUsersDeserializer).create()
+        val collectionType = new TypeToken[ConcurrentMap[Int, User]](){}.getType
         val serverUsers = gson.fromJson(message, collectionType)
         connectedUsers.putAll(serverUsers)
-        connectedUsers.values() forEach (user => println(""+user.userId+ ""+user.username))
+        connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()
       }
