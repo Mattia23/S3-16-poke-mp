@@ -1,12 +1,12 @@
 package distributed.client
 
-import java.util
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.google.gson.reflect.TypeToken
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
+import distributed.deserializers.ConnectedUsersDeserializer
 import model.environment.Coordinate
 import utilities.Settings
 
@@ -50,8 +50,7 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConcurrentHashMap[Int, User]], ConnectedUsersDeserializer).create()
-        val collectionType = new TypeToken[ConcurrentMap[Int, User]](){}.getType
-        val serverUsers = gson.fromJson(message, collectionType)
+        val serverUsers = gson.fromJson(message, classOf[ConcurrentHashMap[Int, User]])
         connectedUsers.putAll(serverUsers)
         connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 

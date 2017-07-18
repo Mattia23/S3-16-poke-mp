@@ -2,7 +2,6 @@ package view;
 
 import controller.GameController;
 import controller.UsersTrainerSpritesMapImpl;
-import distributed.ConnectedUsersImpl;
 import distributed.User;
 import model.map.GameMap;
 import utilities.Settings;
@@ -18,7 +17,7 @@ public class DistributedMapPanel extends MapPanel{
     @Override
     protected void doPaint(final Graphics g) {
         super.doPaint(g);
-        if(!UsersTrainerSpritesMapImpl.map().isEmpty()){
+    /*    if(!UsersTrainerSpritesMapImpl.map().isEmpty()){
             for(User user: ConnectedUsersImpl.map().values()){
                 g.drawImage(LoadImage.load((UsersTrainerSpritesMapImpl.map().get(user.userId()))),
                         (( user.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
@@ -26,6 +25,7 @@ public class DistributedMapPanel extends MapPanel{
                         null);
             }
         }
+        */
     }
 
 }
