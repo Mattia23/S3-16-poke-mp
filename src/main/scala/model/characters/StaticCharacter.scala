@@ -29,8 +29,15 @@ class Oak extends StaticCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(6, 4)
 
-  override val dialogue: List[String] = List("Ciao bell!", "Benvenuto nel mondo dei Pokémon.",
-    "Se non lo hai già fatto,", "puoi scegliere uno dei 3 Pokémon sulla mia scrivania.", "Buon avventura!")
+  override val dialogue: List[String] = List("Hi!", "Welcome to Pokémon World.",
+    "You can choose one of 3 Pokémon on my desk.", "Good adventure!")
+
+}
+
+class OakAfterChoise extends Oak{
+
+  override val dialogue: List[String] = List("Hey, how are you doing?", "I see the pokemon you chose is happy!",
+    "Keep it up and...", "Gotta Catch 'Em All!")
 
 }
 
@@ -42,7 +49,7 @@ class Doctor extends StaticCharacter{
 
   override def coordinate: Coordinate = CoordinateImpl(7, 3)
 
-  override val dialogue: List[String] = List("Ciao ragazzo.", "Vuoi che curi i tuoi Pokemon?")
+  override val dialogue: List[String] = List("Hi trainer!", "Do you want to cure your Pokemon?")
 }
 
 abstract class PokemonCharacter extends StaticCharacter{

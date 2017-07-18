@@ -11,6 +11,7 @@ trait BuildingMap extends BasicMap{
   def image: Image
   def matriciesNotWalkable: List[MatrixCoordinate]
   def npc: StaticCharacter
+  def npc_=(staticCharacter: StaticCharacter): Unit = npc = staticCharacter
   def entryCoordinate: Coordinate
 
   def pokemonNpc: List[PokemonCharacter]
@@ -68,7 +69,7 @@ class LaboratoryMap extends BuildingMap{
   override val width: Int = 13
   override val map: Array[Array[Tile]]= Array.ofDim[Tile](width, height)
 
-  override val npc: StaticCharacter = new Oak
+  override var npc: StaticCharacter = new Oak
 
   override val image: Image = LoadImage.load(Settings.MAP_IMAGES_FOLDER + "laboratory.png")
 

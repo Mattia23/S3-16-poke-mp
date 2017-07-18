@@ -47,13 +47,12 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
         }
       }
     }
-    if(this.trainer.capturedPokemons.isEmpty)
-      this.view.showDialogue(new ClassicDialoguePanel(this, Settings.INITIAL_DIALOGUE))
   }
 
   override protected def doPause(): Unit = {
     lastCoordinates = trainer.coordinate
     audio.stop()
+    this.gamePanel.setFocusable(false)
   }
 
   override protected def doResume(): Unit = {
@@ -64,6 +63,7 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
     trainer.coordinate = lastCoordinates
     initView()
     audio.loop()
+    this.gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {

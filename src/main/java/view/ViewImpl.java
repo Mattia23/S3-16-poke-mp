@@ -30,7 +30,7 @@ public class ViewImpl extends JFrame implements View {
         this.setMinimumSize(frameDiminsion);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setAlwaysOnTop(true);
+        //this.setAlwaysOnTop(true);
         this.validate();
         this.setVisible(true);
     }
@@ -144,6 +144,11 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showTrainerPanel(Trainer trainer, GameController gameController) {
         this.setPanel(new TrainerPanel(trainer, gameController));
+    }
+
+    @Override
+    public void showRankingPanel(Trainer trainer, GameController gameController) {
+        this.setPanel(new RankingPanel(trainer, gameController));
     }
 
     @Override

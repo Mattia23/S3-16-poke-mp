@@ -48,6 +48,8 @@ public interface View {
 
     void showTrainerPanel(Trainer trainer, GameController gameController);
 
+    void showRankingPanel(Trainer trainer, GameController gameController);
+
     void showKeyboardPanel(GameController gameController);
 
     void showPause();
