@@ -21,13 +21,13 @@ public class GameMenuPanel extends JPanel{
     public GameMenuPanel(GameController gameController){
         setLayout(new GridLayout(0,1));
         menuButtons = new JRadioButton[7];
-        menuButtons[0] = new JRadioButton("Pokédex",getImageIconByName("pokedex.png"));
-        menuButtons[1] = new JRadioButton("Team",getImageIconByName("team.png"));
-        menuButtons[2] = new JRadioButton("Trainer",getImageIconByName("trainer.png"));
-        menuButtons[3] = new JRadioButton("Ranking",getImageIconByName("ranking.png"));
-        menuButtons[4] = new JRadioButton("Keyboard",getImageIconByName("keyboard.png"));
-        menuButtons[5] = new JRadioButton("Logout",getImageIconByName("logout.png"));
-        menuButtons[6] = new JRadioButton("Exit",getImageIconByName("exit.png"));
+        menuButtons[0] = new JRadioButton("POKEDEX",getImageIconByName("pokedex.png"));
+        menuButtons[1] = new JRadioButton("TEAM",getImageIconByName("team.png"));
+        menuButtons[2] = new JRadioButton("TRAINER",getImageIconByName("trainer.png"));
+        menuButtons[3] = new JRadioButton("RANKING",getImageIconByName("ranking.png"));
+        menuButtons[4] = new JRadioButton("KEYBOARD",getImageIconByName("keyboard.png"));
+        menuButtons[5] = new JRadioButton("LOGOUT",getImageIconByName("logout.png"));
+        menuButtons[6] = new JRadioButton("EXIT",getImageIconByName("exit.png"));
         menuButtons[0].addActionListener(e -> gameController.showPokedex());
         menuButtons[1].addActionListener(e -> gameController.showTeam());
         menuButtons[2].addActionListener(e -> gameController.showTrainer());
