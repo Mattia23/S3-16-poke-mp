@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class BoxPanel extends JPanel {
+public class BoxPanel extends ImagePanel {
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1);
     private final static int POKEMON_NAME = 0;
     private final static int POKEMON_LEVEL = 1;
@@ -29,6 +29,7 @@ public class BoxPanel extends JPanel {
     private List<Tuple2<Object, Object>> capturedPokemon;
 
     public BoxPanel(BuildingController buildingController){
+        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "box-pokemon.png");
         this.favoritePokemon = new ArrayList<>();
         List<Object> favoritePokemon = scala.collection.JavaConverters.seqAsJavaList(buildingController.trainer().favouritePokemons());
         this.favoritePokemon = new ArrayList<>();
