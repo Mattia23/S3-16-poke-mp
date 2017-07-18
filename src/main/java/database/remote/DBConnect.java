@@ -11,6 +11,7 @@ import model.entities.Trainer;
 import model.entities.TrainerImpl;
 import scala.Int;
 import scala.Tuple2;
+import scala.Tuple3;
 import scala.Tuple4;
 import scala.collection.Iterator;
 import scala.collection.JavaConverters;
@@ -31,6 +32,7 @@ public final class DBConnect {
 		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				//con = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/pokemp_1", "pokemp", "viroliRules12CFU");
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
 				st = con.createStatement();
 				MyEncryptor.init();
@@ -298,13 +300,13 @@ public final class DBConnect {
 		return -1;
 	}
 
-	public static Optional<java.util.List<Tuple2<String, Integer>>> getRanking(){
+	public static Optional<java.util.List<Tuple3<String, Integer, String>>> getRanking(){
 		try {
-			String query = "SELECT u.name ,u.id ,t.exp_points FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
+			String query = "SELECT u.name ,u.id ,t.exp_points, u.id_image FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
 			rs = st.executeQuery(query);
-			java.util.List<Tuple2<String, Integer>> list = new ArrayList();
+			java.util.List<Tuple3<String, Integer, String>> list = new ArrayList();
 			while (rs.next()) {
-				Tuple2<String,Integer> tuple = new Tuple2<>(rs.getString("username"), rs.getInt("exp_points"));
+				Tuple3<String,Integer, String> tuple = new Tuple3<>(rs.getString("username"), rs.getInt("exp_points"), rs.getString("id_image"));
 				list.add(tuple);
 			}
 			return Optional.of(list);
