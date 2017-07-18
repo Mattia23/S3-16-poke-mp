@@ -1,13 +1,16 @@
 package view;
 
 import controller.GameController;
+import utilities.Settings;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class GameMenuPanel extends JPanel{
     private static final String JOPTIONPANE_TITLE = "Logout";
@@ -18,13 +21,13 @@ public class GameMenuPanel extends JPanel{
     public GameMenuPanel(GameController gameController){
         setLayout(new GridLayout(0,1));
         menuButtons = new JRadioButton[7];
-        menuButtons[0] = new JRadioButton("Pokédex");
-        menuButtons[1] = new JRadioButton("Team");
-        menuButtons[2] = new JRadioButton("Trainer");
-        menuButtons[3] = new JRadioButton("Ranking");
-        menuButtons[4] = new JRadioButton("Keyboard");
-        menuButtons[5] = new JRadioButton("Logout");
-        menuButtons[6] = new JRadioButton("Exit");
+        menuButtons[0] = new JRadioButton("Pokédex",getImageIconByName("pokedex.png"));
+        menuButtons[1] = new JRadioButton("Team",getImageIconByName("team.png"));
+        menuButtons[2] = new JRadioButton("Trainer",getImageIconByName("trainer.png"));
+        menuButtons[3] = new JRadioButton("Ranking",getImageIconByName("ranking.png"));
+        menuButtons[4] = new JRadioButton("Keyboard",getImageIconByName("keyboard.png"));
+        menuButtons[5] = new JRadioButton("Logout",getImageIconByName("logout.png"));
+        menuButtons[6] = new JRadioButton("Exit",getImageIconByName("exit.png"));
         menuButtons[0].addActionListener(e -> gameController.showPokedex());
         menuButtons[1].addActionListener(e -> gameController.showTeam());
         menuButtons[2].addActionListener(e -> gameController.showTrainer());
@@ -69,5 +72,17 @@ public class GameMenuPanel extends JPanel{
             public void ancestorMoved(AncestorEvent event) {
             }
         });
+    }
+
+    private ImageIcon getImageIconByName(String imageName){
+        final Image myImage;
+        ImageIcon myImageIcon = null;
+        try {
+            myImage = ImageIO.read(getClass().getResource(Settings.GAME_MENU_IMAGES() + imageName));
+            myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  myImageIcon;
     }
 }
