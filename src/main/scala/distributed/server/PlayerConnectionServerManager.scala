@@ -1,6 +1,10 @@
 package distributed.server
 
-import com.google.gson.GsonBuilder
+import java.util
+import java.util.concurrent.ConcurrentHashMap
+
+import com.google.gson.reflect.TypeToken
+import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
 import utilities.Settings
@@ -14,6 +18,8 @@ class PlayerConnectionServerManager extends CommunicationManager {
     val channel: Channel = DistributedConnectionImpl().connection.createChannel
     channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
+    val connectedUsers = new ConcurrentHashMap[Int, User]()
+
     val consumer = new DefaultConsumer(channel) {
 
       override def handleDelivery(consumerTag: String,
@@ -24,10 +30,10 @@ class PlayerConnectionServerManager extends CommunicationManager {
         val gson = new GsonBuilder().registerTypeAdapter(classOf[UserImpl], UserDeserializer).create()
         val message = gson.fromJson(new String(body, "UTF-8"), classOf[UserImpl])
 
-        val response = gson.toJson(ConnectedUsersImpl)
+        val response = gson.toJson(connectedUsers)
         channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + message.userId, null, response.getBytes("UTF-8"))
         println("server: send")
-        ConnectedUsersImpl.map.put(message.userId, message)
+        connectedUsers.put(message.userId, message)
       }
     }
 
