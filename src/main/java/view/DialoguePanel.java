@@ -42,7 +42,7 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         buttons.add(buttonNext);
         buttonNext.addKeyListener(this);
         buttonPanel.add(buttonNext);
-        add(buttonPanel, BorderLayout.EAST);
+        add(buttonPanel, BorderLayout.SOUTH);
         buttonNext.requestFocus();
         buttonNext.addAncestorListener(new AncestorListener() {
             @Override
