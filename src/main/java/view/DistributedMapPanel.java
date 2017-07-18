@@ -20,7 +20,6 @@ public class DistributedMapPanel extends MapPanel{
         super.doPaint(g);
         if(!UsersTrainerSpritesMapImpl.map().isEmpty()){
             for(User user: ConnectedUsersImpl.map().values()){
-                System.out.println("x: "+ user.position().x() + " y: "+user.position().y());
                 g.drawImage(LoadImage.load((UsersTrainerSpritesMapImpl.map().get(user.userId()))),
                         (( user.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
                         (( user.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2 ,

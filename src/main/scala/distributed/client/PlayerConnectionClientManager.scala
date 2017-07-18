@@ -1,13 +1,15 @@
 package distributed.client
 
 import com.google.gson.{Gson, GsonBuilder}
-import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
+import com.rabbitmq.client._
 import distributed._
 import model.environment.Coordinate
 import utilities.Settings
 
 trait PlayerConnectionClientManager extends CommunicationManager{
   def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
+
+  def receivePlayersConnected(userId: Int): Unit
 }
 
 object PlayerConnectionClientManagerImpl {
@@ -29,11 +31,12 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(user).getBytes("UTF-8"))
     println(" [x] Sent message")
 
-    receivePlayersConnected(userId)
+    //receivePlayersConnected(userId)
   }
 
-  private def receivePlayersConnected(userId: Int) = {
+  override def receivePlayersConnected(userId: Int): Unit = {
     val userQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
+    channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
     channel.queueDeclare(userQueue, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {

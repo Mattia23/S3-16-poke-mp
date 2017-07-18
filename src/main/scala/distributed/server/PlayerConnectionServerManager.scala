@@ -1,9 +1,13 @@
 package distributed.server
 
 import com.google.gson.GsonBuilder
-import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
+import com.rabbitmq.client._
 import distributed._
 import utilities.Settings
+
+object PlayerConnectionServerManager {
+  def apply(): CommunicationManager = new PlayerConnectionServerManager()
+}
 
 class PlayerConnectionServerManager extends CommunicationManager {
   override def start(): Unit = {
@@ -29,8 +33,4 @@ class PlayerConnectionServerManager extends CommunicationManager {
 
     channel.basicConsume(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, true, consumer)
   }
-}
-
-object PlayerConnectionServerManager {
-  def apply(): CommunicationManager = new PlayerConnectionServerManager()
 }

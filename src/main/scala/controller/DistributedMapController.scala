@@ -1,19 +1,15 @@
 package controller
 
 import java.util.concurrent.ConcurrentHashMap
-import javax.swing.SwingUtilities
-
 import distributed.ConnectedUsersImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
 
-import scala.concurrent.Future
-import scala.util.{Failure, Success}
-
 class DistributedMapController(private val view: View, private val _trainer: Trainer/*, private val connectedUsers: Future[Unit]*/) extends MapController(view, _trainer){
 
-  private var distributedAgent: DistributedMapContollerAgent = _
+  private var distributedAgent: DistributedMapControllerAgent = _
+
   /*
   import scala.concurrent.ExecutionContext.Implicits.global
   connectedUsers.onComplete {
@@ -25,7 +21,7 @@ class DistributedMapController(private val view: View, private val _trainer: Tra
 */
   override protected def doStart(): Unit = {
     super.doStart()
-    distributedAgent = new DistributedMapContollerAgent(this)
+    distributedAgent = new DistributedMapControllerAgent(this)
     distributedAgent.start
   }
 
@@ -43,7 +39,7 @@ object UsersTrainerSpritesMapImpl extends UsersTrainerSprites{
   override val map: ConcurrentHashMap[Int, String] = _map
 }
 
-private class DistributedMapContollerAgent(private val gameController: GameController) extends Thread {
+private class DistributedMapControllerAgent(private val gameController: GameController) extends Thread {
   var stopped: Boolean = false
 
   override def run(): Unit = {

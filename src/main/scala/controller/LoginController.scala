@@ -4,12 +4,10 @@ import java.util.Optional
 import javax.swing.JOptionPane
 
 import database.remote.DBConnect
-import distributed.client.PlayerConnectionClientManager
 import distributed.client.PlayerConnectionClientManagerImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
-import scala.concurrent.Future
 
 trait LoginController{
   def login(username: String, password: String): Unit
@@ -39,20 +37,20 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
+      serverInteraction(username, trainer)
 
-      //import scala.concurrent.ExecutionContext.Implicits.global
-      //val connectedUsers = Future {
-      val playerConnectionClientManager = PlayerConnectionClientManagerImpl()
-      playerConnectionClientManager.start()
-      playerConnectionClientManager.sendUserInformation(trainer.id, username,
-          TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
-     // }
-      //}
       new DistributedMapController(view, trainer/*, connectedUsers*/).start()
-     // new MapController(view, trainer).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
     }
+  }
+
+  private def serverInteraction(username: String, trainer: Trainer) = {
+    val playerConnectionClientManager = PlayerConnectionClientManagerImpl()
+    playerConnectionClientManager.start()
+    playerConnectionClientManager.sendUserInformation(trainer.id, username,
+      TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
+    playerConnectionClientManager.receivePlayersConnected(trainer.id)
   }
 
   override def back(): Unit = initialMenuController.show()
