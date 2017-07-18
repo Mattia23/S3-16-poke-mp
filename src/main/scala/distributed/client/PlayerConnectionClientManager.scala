@@ -1,8 +1,6 @@
 package distributed.client
 
-import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
-
-import com.google.gson.reflect.TypeToken
+import java.util.concurrent.ConcurrentHashMap
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._

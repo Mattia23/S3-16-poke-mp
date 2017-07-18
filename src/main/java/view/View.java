@@ -1,7 +1,6 @@
 package view;
 
 import controller.*;
-import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
 import model.environment.BuildingMap;
 import model.map.GameMap;
@@ -16,7 +15,7 @@ public interface View {
 
     void showSignIn(SignInController signInController);
 
-    void showMap(GameController mapController, GameMap gameMap);
+    void showMap(DistributedMapController mapController, GameMap gameMap);
 
     void showPokemonCenter(GameController pokemonCenterController, BuildingMap buildingMap);
 

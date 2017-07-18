@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JOptionPane
 
 import database.remote.DBConnect
-import distributed.{ConnectedUsers, User}
+import distributed.User
 import distributed.client.PlayerConnectionClientManagerImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
@@ -42,7 +42,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       val connectedUsers = new ConcurrentHashMap[Int, User]()
       serverInteraction(username, trainer, connectedUsers)
 
-      new DistributedMapController(view, trainer, connectedUsers).start()
+      MapController(view, trainer, connectedUsers).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
     }

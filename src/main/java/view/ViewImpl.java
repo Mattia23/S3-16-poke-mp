@@ -69,8 +69,8 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showMap(GameController mapController, GameMap gameMap) {
-        this.gamePanel = new DistributedMapPanel(mapController, gameMap);
+    public void showMap(DistributedMapController mapController, GameMap gameMap) {
+        this.gamePanel = new MapPanel(mapController, gameMap);
         this.setPanel(this.gamePanel);
     }
 

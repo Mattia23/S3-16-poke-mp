@@ -1,6 +1,7 @@
 package view;
 
-import controller.GameController;
+import controller.DistributedMapController;
+import distributed.User;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
@@ -10,9 +11,9 @@ import java.awt.*;
 public class MapPanel extends GamePanel{
 
     private GameMap gameMap;
-    private GameController gameController;
+    private DistributedMapController gameController;
 
-    public MapPanel(final GameController gameController, final GameMap gameMap) {
+    public MapPanel(final DistributedMapController gameController, final GameMap gameMap) {
         super(gameController);
         this.gameMap = gameMap;
         this.gameController = gameController;
@@ -37,5 +38,14 @@ public class MapPanel extends GamePanel{
                 Settings.FRAME_SIDE() / 2,
                 Settings.FRAME_SIDE() / 2,
                 null);
+
+        if(!this.gameController.usersTrainerSprites().isEmpty()){
+            for(User user: this.gameController.connectedUsers().values()){
+                g.drawImage(LoadImage.load((this.gameController.usersTrainerSprites().get(user.userId()))),
+                        (( user.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
+                        (( user.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2 ,
+                        null);
+            }
+        }
     }
 }

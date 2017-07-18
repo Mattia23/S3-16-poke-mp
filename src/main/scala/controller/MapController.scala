@@ -1,7 +1,10 @@
 package controller
 
+import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
+
 import database.remote.DBConnect
-import model.entities.Trainer
+import distributed.User
+import model.entities.{Trainer, TrainerSprites}
 import model.environment.{Audio, Coordinate, CoordinateImpl}
 import model.environment.Direction.Direction
 import model.map._
@@ -10,18 +13,29 @@ import view._
 
 import scala.util.Random
 
-class MapController(private val view: View, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer){
+object MapController {
+  def apply(view: View, _trainer: Trainer, connectedUsers: ConcurrentMap[Int, User]): GameController = new MapController(view, _trainer, connectedUsers)
+
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
   private final val POKEMON_CENTER_BUILDING = "Pokemon center"
   private final val LABORATORY_BUILDING = "Laboratory"
+}
+
+class MapController(private val view: View, private val _trainer: Trainer, override val connectedUsers: ConcurrentMap[Int, User]) extends GameControllerImpl(view, _trainer) with DistributedMapController{
+  import MapController._
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
+  private var distributedAgent: DistributedMapControllerAgent = _
   audio = Audio(Settings.MAP_SONG)
+
+  override val usersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
   override protected def doStart(): Unit = {
     initView()
+    distributedAgent = new DistributedMapControllerAgent()
+    distributedAgent.start
     if(trainer.capturedPokemons.isEmpty){
       doFirstLogin()
     }else {
@@ -50,6 +64,7 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
   }
 
   override protected def doPause(): Unit = {
+    if(distributedAgent != null) distributedAgent.terminate
     lastCoordinates = trainer.coordinate
     audio.stop()
     this.gamePanel.setFocusable(false)
@@ -62,11 +77,14 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
     }
     trainer.coordinate = lastCoordinates
     initView()
+    distributedAgent = new DistributedMapControllerAgent()
+    distributedAgent.start
     audio.loop()
     this.gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {
+    if(distributedAgent != null) distributedAgent.terminate
     audio.stop()
   }
 
@@ -113,6 +131,31 @@ class MapController(private val view: View, private val _trainer: Trainer) exten
       pause()
       new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
+  }
+
+
+  private class DistributedMapControllerAgent() extends Thread {
+    var stopped: Boolean = false
+
+    override def run(): Unit = {
+      while(isInGame && !stopped){
+        if(!isInPause){
+          connectedUsers.values() forEach (user =>
+            usersTrainerSprites.put(user.userId, TrainerSprites.selectTrainerSprite(user.idImage).frontS.image))
+        }
+
+        try
+          Thread.sleep(Settings.GAME_REFRESH_TIME)
+        catch {
+          case e: InterruptedException => System.out.println(e)
+        }
+      }
+    }
+
+    def terminate(): Unit = {
+      stopped = true
+    }
+
   }
 
 }
