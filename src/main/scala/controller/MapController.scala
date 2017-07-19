@@ -1,13 +1,12 @@
 package controller
 
-import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
+import java.util.concurrent.ConcurrentMap
 
 import database.remote.DBConnect
 import distributed.User
-import distributed.client.{PlayerPositionClientManager, PlayerPositionClientManagerImpl}
-import model.entities.{Trainer, TrainerSprites}
-import model.environment.{Audio, Coordinate, CoordinateImpl}
+import model.entities.Trainer
 import model.environment.Direction.Direction
+import model.environment.{Audio, Coordinate, CoordinateImpl}
 import model.map._
 import utilities.Settings
 import view._
@@ -30,7 +29,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapControllerImpl(connectedUsers)
   private var distributedAgent: DistributedMapControllerAgent = _
-  private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl()
   audio = Audio(Settings.MAP_SONG)
 
 
@@ -106,7 +104,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
           enterInBuilding(tile)
         case _ if tile.walkable =>
           walk(direction, nextPosition)
-          playerPositionManager.sendPlayerPosition(trainer.id, nextPosition)
+          distributedMapController.sendTrainerPosition(trainer.id, nextPosition)
           if(tile.isInstanceOf[TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }

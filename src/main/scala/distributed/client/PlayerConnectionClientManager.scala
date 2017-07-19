@@ -38,7 +38,6 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
 
   override def receivePlayersConnected(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit = {
     val userQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
-    channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
     channel.queueDeclare(userQueue, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {

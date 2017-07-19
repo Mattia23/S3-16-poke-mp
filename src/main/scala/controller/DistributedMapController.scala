@@ -3,13 +3,17 @@ package controller
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import distributed.User
+import distributed.client.{PlayerPositionClientManager, PlayerPositionClientManagerImpl}
 import model.entities.TrainerSprites
+import model.environment.Coordinate
 import utilities.Settings
 
 trait DistributedMapController{
   def connectedUsers: ConcurrentMap[Int, User]
 
   def usersTrainerSprites: ConcurrentMap[Int, String]
+
+  def sendTrainerPosition(trainerId: Int, position: Coordinate): Unit
 }
 
 object DistributedMapControllerImpl{
@@ -18,7 +22,11 @@ object DistributedMapControllerImpl{
 
 class DistributedMapControllerImpl(override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
 
+  private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl()
+
   override val usersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
+
+  override def sendTrainerPosition(trainerId: Int, position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 }
 
 

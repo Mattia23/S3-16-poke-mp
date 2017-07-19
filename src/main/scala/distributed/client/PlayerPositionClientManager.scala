@@ -36,8 +36,9 @@ class PlayerPositionClientManagerImpl extends PlayerPositionClientManager{
 
   override def receiveOtherPlayerPosition(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit = {
     val userQueue = Settings.OTHER_PLAYER_POSITION_CHANNEL_QUEUE + userId
-    channel.queueDeclare(Settings.OTHER_PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
-    channel.queueDeclare(userQueue, false, false, false, null)
+
+    channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
+    channel.queueBind(userQueue, Settings.PLAYER_POSITION_EXCHANGE, "")
 
     val consumer = new DefaultConsumer(channel) {
 
