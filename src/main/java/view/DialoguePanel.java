@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DialoguePanel extends JPanel implements KeyListener{
-    private final JLabel dialogueLabel;
+    protected final JLabel dialogueLabel;
     protected String response;
     protected int currentButton = 0;
     private int currentDialogue = 0;

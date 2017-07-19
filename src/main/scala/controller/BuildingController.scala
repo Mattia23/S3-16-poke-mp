@@ -1,10 +1,9 @@
 package controller
 
-import model.characters.{OakAfterChoise}
-import model.entities.{Trainer}
+import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
-import model.map.Box
+import model.map.{Box, BuildingMap, LaboratoryMap, PokemonCenterMap}
 import utilities.Settings
 import view._
 

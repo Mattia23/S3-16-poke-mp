@@ -1,6 +1,5 @@
 package view;
 
-import controller.GameController;
 import controller.GameMenuController;
 import model.entities.PokemonWithLife;
 

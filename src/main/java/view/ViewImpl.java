@@ -5,7 +5,7 @@ import controller.Controller;
 import controller.GameController;
 import controller.*;
 import model.entities.PokemonWithLife;
-import model.environment.BuildingMap;
+import model.map.BuildingMap;
 import model.map.GameMap;
 import model.entities.Trainer;
 import utilities.Settings;

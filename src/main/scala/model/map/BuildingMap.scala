@@ -1,9 +1,9 @@
-package model.environment
+package model.map
 
 import java.awt.Image
 
-import model.characters._
-import model.map._
+import model.entities._
+import model.environment.{Coordinate, CoordinateImpl, MatrixCoordinate}
 import utilities.Settings
 import view.LoadImage
 

@@ -23,11 +23,24 @@ public class DoctorDialoguePanel extends DialoguePanel {
         for(String text: Settings.DOCTOR_DIALOGUE_BUTTON()){
             final JButton button = new JButton(text);
             button.addKeyListener(this);
-            button.addActionListener(e -> gameController.resume());
             buttonPanel.add(button);
             buttons.add(button);
         }
         buttons.get(currentButton).requestFocus();
-        buttons.get(0).addActionListener(e -> DBConnect.rechangeAllTrainerPokemon(gameController.trainer().id()));
+        buttons.get(0).addActionListener(e -> {
+            //DBConnect.rechangeAllTrainerPokemon(gameController.trainer().id());
+            dialogueLabel.setText("Your Pokémon has been healed!");
+            buttonPanel.removeAll();
+            buttons.clear();
+            final JButton button = new JButton("bye");
+            button.addActionListener(e2 -> gameController.resume());
+            button.addKeyListener(this);
+            buttonPanel.add(button);
+            buttons.add(button);
+            button.requestFocus();
+            repaint();
+        });
+        buttons.get(1).addActionListener(e -> gameController.resume());
+        repaint();
     }
 }

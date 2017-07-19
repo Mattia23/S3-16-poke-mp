@@ -2,7 +2,6 @@ package view;
 
 import controller.GameController;
 import database.remote.DBConnect;
-import model.entities.Trainer;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;

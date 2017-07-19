@@ -1,7 +1,6 @@
 package view;
 
 import controller.GameController;
-import model.entities.Trainer;
 import scala.Tuple3;
 import utilities.Settings;
 

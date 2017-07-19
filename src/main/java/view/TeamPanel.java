@@ -4,7 +4,6 @@ import controller.GameController;
 import model.entities.Owner;
 import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
-import model.entities.Trainer;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
