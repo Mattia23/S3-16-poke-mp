@@ -23,20 +23,20 @@ object MapController {
   private final val LABORATORY_BUILDING = "Laboratory"
 }
 
-class MapController(private val view: View, private val _trainer: Trainer, override val connectedUsers: ConcurrentMap[Int, User]) extends GameControllerImpl(view, _trainer) with DistributedMapController{
+class MapController(private val view: View, private val _trainer: Trainer, private val connectedUsers: ConcurrentMap[Int, User]) extends GameControllerImpl(view, _trainer){
   import MapController._
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
+  private val distributedMapController: DistributedMapController = DistributedMapControllerImpl(connectedUsers)
   private var distributedAgent: DistributedMapControllerAgent = _
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl()
   audio = Audio(Settings.MAP_SONG)
 
-  override val usersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
   override protected def doStart(): Unit = {
     initView()
-    distributedAgent = new DistributedMapControllerAgent()
+    distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start
     if(trainer.capturedPokemons.isEmpty){
       doFirstLogin()
@@ -79,7 +79,7 @@ class MapController(private val view: View, private val _trainer: Trainer, overr
     }
     trainer.coordinate = lastCoordinates
     initView()
-    distributedAgent = new DistributedMapControllerAgent()
+    distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start
     audio.loop()
     this.gamePanel.setFocusable(true)
@@ -92,7 +92,7 @@ class MapController(private val view: View, private val _trainer: Trainer, overr
 
   private def initView(): Unit = {
     setTrainerSpriteFront()
-    view.showMap(this, gameMap)
+    view.showMap(this, distributedMapController, gameMap)
     gamePanel = view.getGamePanel
   }
 
@@ -134,31 +134,6 @@ class MapController(private val view: View, private val _trainer: Trainer, overr
       pause()
       new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
-  }
-
-
-  private class DistributedMapControllerAgent() extends Thread {
-    var stopped: Boolean = false
-
-    override def run(): Unit = {
-      while(isInGame && !stopped){
-        if(!isInPause){
-          connectedUsers.values() forEach (user =>
-            usersTrainerSprites.put(user.userId, TrainerSprites.selectTrainerSprite(user.idImage).frontS.image))
-        }
-
-        try
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
-        catch {
-          case e: InterruptedException => System.out.println(e)
-        }
-      }
-    }
-
-    def terminate(): Unit = {
-      stopped = true
-    }
-
   }
 
 }

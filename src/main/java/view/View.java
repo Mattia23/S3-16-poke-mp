@@ -15,7 +15,7 @@ public interface View {
 
     void showSignIn(SignInController signInController);
 
-    void showMap(DistributedMapController mapController, GameMap gameMap);
+    void showMap(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap);
 
     void showPokemonCenter(GameController pokemonCenterController, BuildingMap buildingMap);
 
@@ -48,8 +48,6 @@ public interface View {
     void showRankingPanel(Trainer trainer, GameController gameController);
 
     void showKeyboardPanel(GameController gameController);
-
-    void showPause();
 
     void showMessage(final String error, final String title, final int messageType);
 

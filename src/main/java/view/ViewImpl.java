@@ -69,8 +69,8 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showMap(DistributedMapController mapController, GameMap gameMap) {
-        this.gamePanel = new MapPanel(mapController, gameMap);
+    public void showMap(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
+        this.gamePanel = new MapPanel(mapController, distributedMapController, gameMap);
         this.setPanel(this.gamePanel);
     }
 
@@ -152,11 +152,6 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showGameMenuPanel(GameController controller) {
         this.setGameMenuPanel(new GameMenuPanel(controller));
-    }
-
-    @Override
-    public void showPause() {
-
     }
 
     @Override

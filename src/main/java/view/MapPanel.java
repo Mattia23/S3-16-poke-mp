@@ -1,6 +1,7 @@
 package view;
 
 import controller.DistributedMapController;
+import controller.GameController;
 import distributed.User;
 import model.map.Building;
 import model.map.GameMap;
@@ -11,12 +12,14 @@ import java.awt.*;
 public class MapPanel extends GamePanel{
 
     private GameMap gameMap;
-    private DistributedMapController gameController;
+    private GameController mapController;
+    private DistributedMapController distributedMapController;
 
-    public MapPanel(DistributedMapController gameController, GameMap gameMap) {
-        super(gameController);
+    public MapPanel(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
+        super(mapController);
         this.gameMap = gameMap;
-        this.gameController = gameController;
+        this.mapController = mapController;
+        this.distributedMapController = distributedMapController;
     }
 
     @Override
@@ -43,16 +46,16 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawTrainer(Graphics g){
-        g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
+        g.drawImage(LoadImage.load(mapController.trainerSprite()),
                 Settings.FRAME_SIDE() / 2,
                 Settings.FRAME_SIDE() / 2,
                 null);
     }
 
     private void drawOtherTrainers(Graphics g){
-        if(!this.gameController.usersTrainerSprites().isEmpty()){
-            for(User user: this.gameController.connectedUsers().values()){
-                g.drawImage(LoadImage.load((this.gameController.usersTrainerSprites().get(user.userId()))),
+        if(!this.distributedMapController.usersTrainerSprites().isEmpty()){
+            for(User user: this.distributedMapController.connectedUsers().values()){
+                g.drawImage(LoadImage.load((this.distributedMapController.usersTrainerSprites().get(user.userId()))),
                         (( user.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
                         (( user.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2 ,
                         null);
