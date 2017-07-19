@@ -8,7 +8,7 @@ import distributed.deserializers.ConnectedUsersDeserializer
 import model.environment.Coordinate
 import utilities.Settings
 
-trait PlayerConnectionClientManager extends CommunicationManager{
+trait PlayerConnectionClientManager{
   def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
 
   def receivePlayersConnected(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit
@@ -23,10 +23,9 @@ class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
   private var gson: Gson = new Gson()
   private var channel: Channel = _
 
-  override def start(): Unit = {
-    channel = DistributedConnectionImpl().connection.createChannel()
-    channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
-  }
+  channel = DistributedConnectionImpl().connection.createChannel()
+  channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
+
 
   override def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
     val user = User(userId, username, sprites, position)

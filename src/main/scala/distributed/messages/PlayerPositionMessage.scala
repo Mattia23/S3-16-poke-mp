@@ -11,6 +11,10 @@ trait PlayerPositionMessage {
   def position: Coordinate
 }
 
+object PlayerPositionMessageImpl {
+  def apply(userId: Int, position: Coordinate): PlayerPositionMessage = new PlayerPositionMessageImpl(userId, position)
+}
+
 class PlayerPositionMessageImpl(override val userId: Int, override val position: Coordinate) extends PlayerPositionMessage
 
 object PlayerPositionMessageDeserializer extends JsonDeserializer[PlayerPositionMessage] {

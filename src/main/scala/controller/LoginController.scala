@@ -41,7 +41,6 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       val trainer = optionalTrainer.get()
       val connectedUsers = new ConcurrentHashMap[Int, User]()
       serverInteraction(username, trainer, connectedUsers)
-
       MapController(view, trainer, connectedUsers).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
@@ -50,7 +49,6 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
 
   private def serverInteraction(username: String, trainer: Trainer, connectedUsers: ConcurrentHashMap[Int, User]) = {
     val playerConnectionClientManager = PlayerConnectionClientManagerImpl()
-    playerConnectionClientManager.start()
     playerConnectionClientManager.sendUserInformation(trainer.id, username,
       TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
     playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedUsers)

@@ -20,7 +20,7 @@ class PlayerPositionServerManager extends CommunicationManager {
         println("server: received")
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val message = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerPositionMessageImpl])
-        /* TODO: salvare il messaggio e rispondere */
+        /* TODO: salvare il messaggio e inviare la posizione a tutti (diverso modo di gestire le code product/subscribe) */
       }
     }
 

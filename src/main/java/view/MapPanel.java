@@ -13,14 +13,20 @@ public class MapPanel extends GamePanel{
     private GameMap gameMap;
     private DistributedMapController gameController;
 
-    public MapPanel(final DistributedMapController gameController, final GameMap gameMap) {
+    public MapPanel(DistributedMapController gameController, GameMap gameMap) {
         super(gameController);
         this.gameMap = gameMap;
         this.gameController = gameController;
     }
 
     @Override
-    protected void doPaint(final Graphics g) {
+    protected void doPaint(Graphics g) {
+        drawMapElements(g);
+        drawTrainer(g);
+        drawOtherTrainers(g);
+    }
+
+    private void drawMapElements(Graphics g){
         for (int x = 0; x < Settings.MAP_WIDTH(); x++) {
             for (int y = 0; y < Settings.MAP_HEIGHT(); y++) {
                 if (!(this.gameMap.map()[x][y] instanceof Building) ||
@@ -34,11 +40,16 @@ public class MapPanel extends GamePanel{
                 }
             }
         }
+    }
+
+    private void drawTrainer(Graphics g){
         g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
                 Settings.FRAME_SIDE() / 2,
                 Settings.FRAME_SIDE() / 2,
                 null);
+    }
 
+    private void drawOtherTrainers(Graphics g){
         if(!this.gameController.usersTrainerSprites().isEmpty()){
             for(User user: this.gameController.connectedUsers().values()){
                 g.drawImage(LoadImage.load((this.gameController.usersTrainerSprites().get(user.userId()))),
