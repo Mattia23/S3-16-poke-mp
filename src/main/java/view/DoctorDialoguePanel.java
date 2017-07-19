@@ -2,6 +2,8 @@ package view;
 
 import controller.GameController;
 import database.remote.DBConnect;
+import model.entities.Doctor$;
+import model.environment.AudioImpl;
 import utilities.Settings;
 
 import javax.swing.*;
@@ -28,8 +30,9 @@ public class DoctorDialoguePanel extends DialoguePanel {
         }
         buttons.get(currentButton).requestFocus();
         buttons.get(0).addActionListener(e -> {
-            //DBConnect.rechangeAllTrainerPokemon(gameController.trainer().id());
-            dialogueLabel.setText("Your Pokémon has been healed!");
+            new AudioImpl(Settings.HEALING_SOUND()).play();
+            DBConnect.rechangeAllTrainerPokemon(gameController.trainer().id());
+            dialogueLabel.setText(Doctor$.MODULE$.DIALOGUE_AFTER_HEAL());
             buttonPanel.removeAll();
             buttons.clear();
             final JButton button = new JButton("bye");
