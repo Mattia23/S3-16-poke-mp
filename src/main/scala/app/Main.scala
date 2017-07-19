@@ -1,6 +1,6 @@
 package app
 
-import controller.{Controller, ControllerImpl, InitialMenuController, InitialMenuControllerImpl}
+import controller.{InitialMenuController, InitialMenuControllerImpl}
 import view.{View, ViewImpl}
 
 object Main extends App {
