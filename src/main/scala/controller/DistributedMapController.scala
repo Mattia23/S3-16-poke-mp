@@ -23,6 +23,7 @@ object DistributedMapControllerImpl{
 class DistributedMapControllerImpl(override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
 
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl()
+  playerPositionManager.receiveOtherPlayerPosition(connectedUsers)
 
   override val usersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
@@ -30,7 +31,7 @@ class DistributedMapControllerImpl(override val connectedUsers: ConcurrentMap[In
 }
 
 
-class DistributedMapControllerAgent(mapController: GameController, distributedMapController: DistributedMapController) extends Thread {
+class DistributedMapControllerAgent(private val mapController: GameController, private val distributedMapController: DistributedMapController) extends Thread {
   var stopped: Boolean = false
 
   override def run(): Unit = {

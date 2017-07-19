@@ -1,19 +1,19 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.deserializers.{ConnectedUsersDeserializer, PlayerPositionMessageDeserializer}
+import distributed.deserializers.PlayerPositionMessageDeserializer
+import distributed.messages.PlayerPositionMessageImpl
 import distributed.{DistributedConnectionImpl, User}
-import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageImpl}
 import model.environment.Coordinate
 import utilities.Settings
 
 trait PlayerPositionClientManager{
   def sendPlayerPosition(userId: Int, position: Coordinate): Unit
 
-  def receiveOtherPlayerPosition(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit
+  def receiveOtherPlayerPosition(connectedUsers: ConcurrentMap[Int, User]): Unit
 }
 
 object PlayerPositionClientManagerImpl {
@@ -34,10 +34,10 @@ class PlayerPositionClientManagerImpl extends PlayerPositionClientManager{
     println(" [x] Sent message")
   }
 
-  override def receiveOtherPlayerPosition(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit = {
-    val userQueue = Settings.OTHER_PLAYER_POSITION_CHANNEL_QUEUE + userId
+  override def receiveOtherPlayerPosition(connectedUsers: ConcurrentMap[Int, User]): Unit = {
 
     channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
+    val userQueue = channel.queueDeclare.getQueue
     channel.queueBind(userQueue, Settings.PLAYER_POSITION_EXCHANGE, "")
 
     val consumer = new DefaultConsumer(channel) {

@@ -33,6 +33,11 @@ class PlayerPositionServerManager(private val connectedUsers: ConcurrentMap[Int,
         connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.position.x+" "+user.position.y))
 
         /* TODO: inviare la posizione a tutti (diverso modo di gestire le code product/subscribe) */
+        channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
+
+        val response = gson.toJson(positionMessage)
+        channel.basicPublish(Settings.PLAYER_POSITION_EXCHANGE, "", null, response.getBytes("UTF-8"))
+        println("server: send")
       }
     }
 

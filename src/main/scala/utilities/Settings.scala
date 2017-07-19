@@ -257,8 +257,6 @@ object Settings {
 
   val PLAYER_POSITION_CHANNEL_QUEUE: String = "player_position"
 
-  val OTHER_PLAYER_POSITION_CHANNEL_QUEUE: String = "other_player_position"
-
   val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
 
   val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
