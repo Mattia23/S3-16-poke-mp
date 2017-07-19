@@ -2,8 +2,9 @@ package distributed.server
 
 import com.google.gson.GsonBuilder
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
+import distributed.deserializers.PlayerPositionMessageDeserializer
 import distributed.{CommunicationManager, DistributedConnectionImpl}
-import distributed.messages.{PlayerPositionMessageDeserializer, PlayerPositionMessageImpl}
+import distributed.messages.PlayerPositionMessageImpl
 import utilities.Settings
 
 class PlayerPositionServerManager extends CommunicationManager {

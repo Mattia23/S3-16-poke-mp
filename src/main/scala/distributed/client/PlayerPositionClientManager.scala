@@ -4,9 +4,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.deserializers.ConnectedUsersDeserializer
+import distributed.deserializers.{ConnectedUsersDeserializer, PlayerPositionMessageDeserializer}
 import distributed.{DistributedConnectionImpl, User}
-import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageDeserializer, PlayerPositionMessageImpl}
+import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageImpl}
 import model.environment.Coordinate
 import utilities.Settings
 

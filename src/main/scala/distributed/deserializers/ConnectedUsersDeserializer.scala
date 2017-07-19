@@ -4,7 +4,7 @@ import java.lang.reflect.Type
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.google.gson.{GsonBuilder, JsonDeserializationContext, JsonDeserializer, JsonElement}
-import distributed.{User, UserDeserializer, UserImpl}
+import distributed.{User, UserImpl}
 
 object ConnectedUsersDeserializer extends JsonDeserializer[ConcurrentMap[Int, User]] {
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ConcurrentMap[Int, User] = {

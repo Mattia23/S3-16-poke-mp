@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
+import distributed.deserializers.UserDeserializer
 import utilities.Settings
 
 object PlayerConnectionServerManager {
