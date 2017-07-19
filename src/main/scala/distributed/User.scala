@@ -1,9 +1,6 @@
 package distributed
 
-import java.lang.reflect.Type
-
-import com.google.gson.{JsonDeserializationContext, JsonDeserializer, JsonElement}
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.Coordinate
 
 trait User {
   def userId: Int
@@ -13,6 +10,8 @@ trait User {
   def idImage: Int
 
   def position: Coordinate
+
+  def position_=(coordinate: Coordinate): Unit
 }
 
 object User {
@@ -21,6 +20,6 @@ object User {
 }
 
 class UserImpl(override val userId: Int, override val username: String,
-               override val idImage: Int, override val position: Coordinate) extends User
+               override val idImage: Int, override var position: Coordinate) extends User
 
 

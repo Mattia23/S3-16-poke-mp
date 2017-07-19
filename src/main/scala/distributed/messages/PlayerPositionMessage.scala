@@ -1,9 +1,6 @@
 package distributed.messages
 
-import java.lang.reflect.Type
-
-import com.google.gson.{JsonDeserializationContext, JsonDeserializer, JsonElement}
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.Coordinate
 
 trait PlayerPositionMessage {
   def userId: Int

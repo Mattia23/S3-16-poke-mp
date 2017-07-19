@@ -11,7 +11,7 @@ object PlayerPositionMessageDeserializer extends JsonDeserializer[PlayerPosition
     val jsonUser = json.getAsJsonObject
     val jsonPosition = jsonUser.getAsJsonObject("position")
     val position = CoordinateImpl(jsonPosition.get("x").getAsInt, jsonPosition.get("y").getAsInt)
-    val playerPositionMessage = new PlayerPositionMessageImpl(jsonUser.get("userId").getAsInt, position/*, Direction.UP*/)
+    val playerPositionMessage = new PlayerPositionMessageImpl(jsonUser.get("userId").getAsInt, position)
     playerPositionMessage
   }
 }
