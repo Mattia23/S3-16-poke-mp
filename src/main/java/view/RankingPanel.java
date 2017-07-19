@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RankingPanel extends BasePanel {
 
-    public RankingPanel(Trainer trainer, GameController gameController) {
+    public RankingPanel(GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         final JScrollPane scrollFrame = new JScrollPane(mainPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -50,7 +50,7 @@ public class RankingPanel extends BasePanel {
             trainerPanel.add(level);
             trainerPanel.add(exp);
             setFontBold(rank);
-            if(object._1().toString().equals(trainer.name())){
+            if(object._1().toString().equals(gameController.trainer().name())){
                 setFontBold(name);
                 setFontBold(level);
                 setFontBold(exp);

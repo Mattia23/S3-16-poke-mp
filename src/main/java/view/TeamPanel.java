@@ -25,7 +25,7 @@ public class TeamPanel extends BasePanel{
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
     ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
-    public TeamPanel(Trainer trainer, GameController gameController) {
+    public TeamPanel(GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -35,7 +35,7 @@ public class TeamPanel extends BasePanel{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
+        List pokemonList = scala.collection.JavaConverters.seqAsJavaList(gameController.trainer().favouritePokemons());
         Boolean first = true;
         k.insets = new Insets(1,1,1,1);
         for(Object pokemon: pokemonList){

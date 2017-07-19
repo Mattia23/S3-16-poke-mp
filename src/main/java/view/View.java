@@ -40,15 +40,15 @@ public interface View {
 
     void showPokemonChoice(BattleController battleController, Trainer trainer);
 
-    void showPokedex(Trainer trainer, GameController gameController);
+    void showPokedex(GameController gameController);
 
-    void showTeamPanel(Trainer trainer, GameController gameController);
+    void showTeamPanel(GameController gameController);
 
-    void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameController gameController);
+    void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameMenuController gameMenuController);
 
-    void showTrainerPanel(Trainer trainer, GameController gameController);
+    void showTrainerPanel(GameController gameController);
 
-    void showRankingPanel(Trainer trainer, GameController gameController);
+    void showRankingPanel(GameController gameController);
 
     void showKeyboardPanel(GameController gameController);
 

@@ -1,10 +1,9 @@
 package view;
+
 import controller.BattleController;
 import controller.Controller;
 import controller.GameController;
 import controller.*;
-import database.remote.DBConnect;
-import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
 import model.environment.BuildingMap;
 import model.map.GameMap;
@@ -24,7 +23,7 @@ public class ViewImpl extends JFrame implements View {
 
     public ViewImpl() {
         this.setTitle(WINDOW_TITLE);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.frameDiminsion = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
         this.setSize(frameDiminsion);
         this.setMinimumSize(frameDiminsion);
@@ -127,28 +126,23 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokedex(Trainer trainer, GameController gameController) {
-        this.setPanel(new PokedexPanel(trainer, gameController));
+    public void showPokedex(GameController gameController) {
+        this.setPanel(new PokedexPanel(gameController));
     }
 
     @Override
-    public void showTeamPanel(Trainer trainer, GameController gameController) {
-        this.setPanel(new TeamPanel(trainer, gameController));
+    public void showTeamPanel(GameController gameController) {
+        this.setPanel(new TeamPanel(gameController));
     }
 
     @Override
-    public void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameController gameController) {
-        this.setPanel(new PokemonInTeamPanel(pokemonWithLife, gameController));
+    public void showTrainerPanel(GameController gameController) {
+        this.setPanel(new TrainerPanel(gameController));
     }
 
     @Override
-    public void showTrainerPanel(Trainer trainer, GameController gameController) {
-        this.setPanel(new TrainerPanel(trainer, gameController));
-    }
-
-    @Override
-    public void showRankingPanel(Trainer trainer, GameController gameController) {
-        this.setPanel(new RankingPanel(trainer, gameController));
+    public void showRankingPanel(GameController gameController) {
+        this.setPanel(new RankingPanel(gameController));
     }
 
     @Override
@@ -158,7 +152,12 @@ public class ViewImpl extends JFrame implements View {
 
     @Override
     public void showGameMenuPanel(GameController controller) {
-        this.setGameMenuPanel(new GameMenuPanel(controller));
+        this.setGameMenuPanel(new GameMenuPanel(new GameMenuControllerImpl(this, controller)));
+    }
+
+    @Override
+    public void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameMenuController gameMenuController) {
+        this.setPanel(new PokemonInTeamPanel(pokemonWithLife, gameMenuController));
     }
 
     @Override
