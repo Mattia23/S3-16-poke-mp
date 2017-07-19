@@ -26,9 +26,9 @@ class PlayerPositionClientManagerImpl extends PlayerPositionClientManager{
   private var channel: Channel = _
 
   channel = DistributedConnectionImpl().connection.createChannel()
-  channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
 
   override def sendPlayerPosition(userId: Int, position: Coordinate): Unit = {
+    channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
     val playerPositionMessage = PlayerPositionMessageImpl(userId, position)
     channel.basicPublish("", Settings.PLAYER_POSITION_CHANNEL_QUEUE, null, gson.toJson(playerPositionMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
@@ -50,11 +50,11 @@ class PlayerPositionClientManagerImpl extends PlayerPositionClientManager{
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val otherPlayerPosition = gson.fromJson(message, classOf[PlayerPositionMessageImpl])
-        /* TODO Aggiornare posizione del player in ConnectedUser e lo sprite in usersTrainerSprite in base alla direzione,
+
+        connectedUsers.get(otherPlayerPosition.userId).position = otherPlayerPosition.position
+        /* TODO Aggiornare lo sprite in usersTrainerSprite in base alla direzione,
         * fare il movimento sulla mappa, fare la receive in DistributedAgent, executor?
         */
-
-        channel.close()
       }
     }
     channel.basicConsume(userQueue, true, consumer)
