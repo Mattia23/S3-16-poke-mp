@@ -75,18 +75,7 @@ public class TeamPanel extends BasePanel{
                     radioButton.requestFocus();
                     radioButton.setSelected(true);
                     radioButton.setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
-                    radioButton.addAncestorListener(new AncestorListener() {
-                        @Override
-                        public void ancestorAdded(AncestorEvent ae) {
-                            radioButton.requestFocus();
-                        }
-
-                        @Override
-                        public void ancestorRemoved(AncestorEvent event) { }
-
-                        @Override
-                        public void ancestorMoved(AncestorEvent event) { }
-                    });
+                    JUtil.setFocus(radioButton);
                     first = false;
                 }
                 pokemonButtonGroup.add(radioButton);

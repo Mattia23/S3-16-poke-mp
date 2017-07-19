@@ -5,8 +5,6 @@ import utilities.Settings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -57,20 +55,7 @@ public class GameMenuPanel extends JPanel{
             add(menuButton);
         }
         menuButtons[0].setSelected(true);
-        menuButtons[0].addAncestorListener(new AncestorListener() {
-            @Override
-            public void ancestorAdded(AncestorEvent ae) {
-                menuButtons[0].requestFocus();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-            }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) {
-            }
-        });
+        JUtil.setFocus(menuButtons[0]);
     }
 
     private ImageIcon getImageIconByName(String imageName){
