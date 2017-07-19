@@ -259,5 +259,7 @@ object Settings {
 
   val OTHER_PLAYER_POSITION_CHANNEL_QUEUE: String = "other_player_position"
 
+  val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
+
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 }
