@@ -4,13 +4,13 @@ import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
-import distributed.deserializers.{PlayerPositionMessageDeserializer, UserMessageDeserializer}
-import distributed.messages.{PlayerPositionMessageImpl, UserMessageImpl}
+import distributed.deserializers.UserMessageDeserializer
+import distributed.messages.UserMessageImpl
 import distributed.{CommunicationManager, DistributedConnectionImpl, User}
 import utilities.Settings
 
 object NewPlayerInGameClientManager {
-  def apply(userId: Int, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new NewPlayerInGameClientManager(userId, connectedUsers)
+  def apply(connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new NewPlayerInGameClientManager(connectedUsers)
 }
 
 class NewPlayerInGameClientManager(private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager{
