@@ -4,9 +4,9 @@ import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
+import distributed.Player
 import distributed.deserializers.PlayerPositionMessageDeserializer
 import distributed.messages.PlayerPositionMessageImpl
-import distributed.{DistributedConnectionImpl, Player}
 import model.environment.Coordinate
 import utilities.Settings
 
@@ -16,14 +16,14 @@ trait PlayerPositionClientManager{
   def receiveOtherPlayerPosition(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
 }
 
-object PlayerPositionClientManagerImpl {
+object PlayerPositionClientManager {
   def apply(connection: Connection): PlayerPositionClientManager = new PlayerPositionClientManagerImpl(connection)
 }
 
 class PlayerPositionClientManagerImpl(private val connection: Connection) extends PlayerPositionClientManager{
 
   private var gson: Gson = new Gson()
-  private var channel: Channel = connection.createChannel()
+  private val channel: Channel = connection.createChannel()
 
   channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
 

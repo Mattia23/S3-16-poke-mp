@@ -14,14 +14,14 @@ trait PlayerLogoutClientManager {
   def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConcurrentHashMap[Int, Player]): Unit
 }
 
-object PlayerLogoutClientManagerImpl {
+object PlayerLogoutClientManager {
   def apply(connection: Connection): PlayerLogoutClientManager = new PlayerLogoutClientManagerImpl(connection)
 }
 
 class PlayerLogoutClientManagerImpl(private val connection: Connection) extends PlayerLogoutClientManager {
 
-  private var gson: Gson = new Gson()
-  private var channel: Channel = connection.createChannel()
+  private val gson: Gson = new Gson()
+  private val channel: Channel = connection.createChannel()
   private val playerQueue = channel.queueDeclare.getQueue
 
   channel.queueDeclare(Settings.PLAYER_LOGOUT_CHANNEL_QUEUE, false, false, false, null)

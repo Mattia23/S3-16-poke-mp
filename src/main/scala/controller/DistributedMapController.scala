@@ -24,8 +24,8 @@ object DistributedMapControllerImpl{
 
 class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConcurrentMap[Int, Player]) extends DistributedMapController{
 
-  private val newPlayerInGame: NewPlayerInGameClientManager = NewPlayerInGameClientManagerImpl(connection)
-  private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl(connection)
+  private val newPlayerInGame: NewPlayerInGameClientManager = NewPlayerInGameClientManager(connection)
+  private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManager(connection)
 
   newPlayerInGame.receiveNewPlayerInGame(mapController.trainer.id, connectedPlayers)
   playerPositionManager.receiveOtherPlayerPosition(mapController.trainer.id, connectedPlayers)

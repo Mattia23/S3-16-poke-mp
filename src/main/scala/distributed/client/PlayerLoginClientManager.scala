@@ -16,14 +16,14 @@ trait PlayerLoginClientManager{
   def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentHashMap[Int, Player]): Unit
 }
 
-object PlayerLoginClientManagerImpl {
+object PlayerLoginClientManager {
   def apply(connection: Connection): PlayerLoginClientManager = new PlayerLoginClientManagerImpl(connection)
 }
 
 class PlayerLoginClientManagerImpl(private val connection: Connection) extends PlayerLoginClientManager {
 
   private var gson: Gson = new Gson()
-  private var channel: Channel = connection.createChannel()
+  private val channel: Channel = connection.createChannel()
 
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 

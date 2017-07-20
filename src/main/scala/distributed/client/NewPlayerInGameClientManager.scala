@@ -13,14 +13,14 @@ trait NewPlayerInGameClientManager{
   def receiveNewPlayerInGame(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
 }
 
-object NewPlayerInGameClientManagerImpl {
+object NewPlayerInGameClientManager {
   def apply(connection: Connection): NewPlayerInGameClientManager =
     new NewPlayerInGameClientManagerImpl(connection)
 }
 
 class NewPlayerInGameClientManagerImpl(private val connection: Connection) extends NewPlayerInGameClientManager{
 
-  private var channel: Channel = connection.createChannel()
+  private val channel: Channel = connection.createChannel()
   private val playerQueue = channel.queueDeclare.getQueue
 
   channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
