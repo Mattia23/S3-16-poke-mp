@@ -35,12 +35,18 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doStart(): Unit = {
     initView()
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-    distributedAgent.start
+    distributedAgent.start()
     if(trainer.capturedPokemons.isEmpty){
       doFirstLogin()
     }else {
       audio.loop()
     }
+  }
+
+  private def initView(): Unit = {
+    setTrainerSpriteFront()
+    view.showMap(this, distributedMapController, gameMap)
+    gamePanel = view.getGamePanel
   }
 
   private def doFirstLogin(): Unit = {
@@ -64,7 +70,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override protected def doPause(): Unit = {
-    if(distributedAgent != null) distributedAgent.terminate
+    if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
     this.gamePanel.setFocusable(false)
@@ -78,20 +84,14 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     trainer.coordinate = lastCoordinates
     initView()
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-    distributedAgent.start
+    distributedAgent.start()
     audio.loop()
     this.gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {
-    if(distributedAgent != null) distributedAgent.terminate
+    if(distributedAgent != null) distributedAgent.terminate()
     audio.stop()
-  }
-
-  private def initView(): Unit = {
-    setTrainerSpriteFront()
-    view.showMap(this, distributedMapController, gameMap)
-    gamePanel = view.getGamePanel
   }
 
   override protected def doMove(direction: Direction): Unit = {

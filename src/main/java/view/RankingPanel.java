@@ -39,7 +39,7 @@ public class RankingPanel extends BasePanel {
             Image myImage;
             ImageIcon myImageIcon = null;
             try {
-                myImage = ImageIO.read(getClass().getResource(gameController.trainerSprite()));
+                myImage = ImageIO.read(getClass().getResource(gameController.trainer().sprites().frontS().image()));
                 myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
             } catch (IOException e) {
                 e.printStackTrace();
