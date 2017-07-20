@@ -8,9 +8,9 @@ import distributed.server.{PlayerConnectionServerManager, PlayerPositionServerMa
 object ServerMain extends App{
 
   val connectedUsers = new ConcurrentHashMap[Int, User]()
-  DistributedConnectionImpl().connection
-  PlayerConnectionServerManager(connectedUsers).start()
-  PlayerPositionServerManager(connectedUsers).start()
+  val connection = DistributedConnectionImpl().connection
+  PlayerConnectionServerManager(connection, connectedUsers).start()
+  PlayerPositionServerManager(connection, connectedUsers).start()
 
   //ServerConnection.close()
 

@@ -265,9 +265,13 @@ object Settings {
 
   val PLAYER_POSITION_CHANNEL_QUEUE: String = "player_position"
 
+  val PLAYER_LOGOUT_CHANNEL_QUEUE: String = "player_logout"
+
   val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
 
   val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
+
+  val PLAYER_LOGOUT_EXCHANGE: String = "player_logout_exchange"
 
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 

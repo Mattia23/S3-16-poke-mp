@@ -12,12 +12,12 @@ import distributed.messages.{ConnectedUsersMessage, UserMessage, UserMessageImpl
 import utilities.Settings
 
 object PlayerConnectionServerManager {
-  def apply(connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerConnectionServerManager(connectedUsers)
+  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerConnectionServerManager(connection, connectedUsers)
 }
 
-class PlayerConnectionServerManager(private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
+class PlayerConnectionServerManager(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
   override def start(): Unit = {
-    val channel: Channel = DistributedConnectionImpl().connection.createChannel
+    val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
