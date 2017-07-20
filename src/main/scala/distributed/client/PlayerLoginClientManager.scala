@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentHashMap
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
-import distributed.deserializers.ConnectedUsersMessageDeserializer
-import distributed.messages.{ConnectedUsersMessageImpl, UserMessage}
+import distributed.deserializers.ConnectedPlayersMessageDeserializer
+import distributed.messages.{ConnectedPlayersMessageImpl, PlayerMessage}
 import model.environment.Coordinate
 import utilities.Settings
 
@@ -29,7 +29,7 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
 
   override def sendPlayerInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
     val user = Player(userId, username, sprites, position)
-    val userMessage = UserMessage(user)
+    val userMessage = PlayerMessage(user)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(userMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
   }
@@ -46,9 +46,9 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
                                   body: Array[Byte]) {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
-        gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedUsersMessageImpl], ConnectedUsersMessageDeserializer).create()
-        val serverUsersMessage = gson.fromJson(message, classOf[ConnectedUsersMessageImpl])
-        connectedPlayers.putAll(serverUsersMessage.connectedUsers)
+        gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
+        val serverUsersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
+        connectedPlayers.putAll(serverUsersMessage.connectedPlayers)
         //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()

@@ -6,13 +6,13 @@ import com.google.gson.{JsonDeserializationContext, JsonDeserializer, JsonElemen
 import distributed.{Player, PlayerImpl}
 import model.environment.CoordinateImpl
 
-object UserDeserializer extends JsonDeserializer[Player] {
+object PlayerDeserializer extends JsonDeserializer[Player] {
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Player = {
-    val jsonUser = json.getAsJsonObject
-    val jsonPosition = jsonUser.getAsJsonObject("position")
+    val jsonPlayer = json.getAsJsonObject
+    val jsonPosition = jsonPlayer.getAsJsonObject("position")
     val position = CoordinateImpl(jsonPosition.get("x").getAsInt, jsonPosition.get("y").getAsInt)
-    //val user = new UserImpl(jsonUser.get("userId").getAsInt, jsonUser.get("username").getAsString, jsonUser.get("idImage").getAsInt, position)
+    //val user = new UserImpl(jsonPlayer.get("userId").getAsInt, jsonPlayer.get("username").getAsString, jsonPlayer.get("idImage").getAsInt, position)
     //user
-    Player(jsonUser.get("userId").getAsInt, jsonUser.get("username").getAsString, jsonUser.get("idImage").getAsInt, position)
+    Player(jsonPlayer.get("userId").getAsInt, jsonPlayer.get("username").getAsString, jsonPlayer.get("idImage").getAsInt, position)
   }
 }

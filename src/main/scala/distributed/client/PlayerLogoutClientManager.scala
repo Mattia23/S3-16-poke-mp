@@ -2,12 +2,10 @@ package distributed.client
 
 import java.util.concurrent.ConcurrentHashMap
 
-import com.google.gson.{Gson, GsonBuilder}
+import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.Player
-import distributed.deserializers.UserMessageDeserializer
-import distributed.messages.{UserLogoutMessageImpl, UserMessageImpl}
-import model.environment.Coordinate
+import distributed.messages.{PlayerLogoutMessage, PlayerLogoutMessageImpl}
 import utilities.Settings
 
 trait PlayerLogoutClientManager {
@@ -46,7 +44,7 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
                                   body: Array[Byte]) {
         println(" [x] Received other player logout")
         val message = new String(body, "UTF-8")
-        val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[UserLogoutMessageImpl])
+        val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerLogoutMessageImpl])
 
         if (logoutMessage.userId != userId) connectedPlayers.remove(logoutMessage.userId)
 
