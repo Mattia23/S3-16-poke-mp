@@ -249,7 +249,15 @@ object Settings {
 
   val BATTLE_EVENT_ESCAPE: Int = 2
 
-  val HOST_ADDRESS: String = "localhost"
+  val LOCAL_HOST_ADDRESS: String = "localhost"
+
+  val REMOTE_HOST_ADDRESS: String = "ec2-13-58-204-113.us-east-2.compute.amazonaws.com"
+
+  val REMOTE_HOST_PORT: Int = 5672
+
+  val REMOTE_HOST_USERNAME: String = "guest"
+
+  val REMOTE_HOST_PASSWORD: String = "guest"
 
   val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
 
