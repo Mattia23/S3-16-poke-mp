@@ -4,8 +4,8 @@ import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
-import distributed.deserializers.UserMessageDeserializer
-import distributed.messages.UserMessageImpl
+import distributed.deserializers.PlayerMessageDeserializer
+import distributed.messages.PlayerMessageImpl
 import distributed.{CommunicationService, DistributedConnection, DistributedConnectionImpl, User}
 import utilities.Settings
 
@@ -34,10 +34,10 @@ class NewPlayerInGameClientManager(private val connection: Connection, private v
                                   body: Array[Byte]) {
         println(" [x] Received other player in game")
         val message = new String(body, "UTF-8")
-        gson = new GsonBuilder().registerTypeAdapter(classOf[UserMessageImpl], UserMessageDeserializer).create()
-        val otherPlayer = gson.fromJson(message, classOf[UserMessageImpl])
+        gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerMessageImpl], PlayerMessageDeserializer).create()
+        val otherPlayer = gson.fromJson(message, classOf[PlayerMessageImpl])
 
-        if (otherPlayer.user.userId != userId) connectedUsers.put(otherPlayer.user.userId, otherPlayer.user)
+        if (otherPlayer.player.userId != userId) connectedUsers.put(otherPlayer.player.userId, otherPlayer.player)
 
       }
     }

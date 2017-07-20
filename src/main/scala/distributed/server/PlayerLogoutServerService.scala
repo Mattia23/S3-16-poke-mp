@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentMap
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed.deserializers.PlayerPositionMessageDeserializer
-import distributed.messages.{PlayerPositionMessageImpl, UserLogoutMessageImpl}
+import distributed.messages.{PlayerPositionMessageImpl, PlayerLogoutMessageImpl}
 import distributed.{CommunicationService, User}
 import utilities.Settings
 
@@ -26,7 +26,7 @@ class PlayerLogoutServerService(private val connection: Connection, private val 
                                   body: Array[Byte]): Unit = {
         println("server: received player logout")
         val gson = new Gson()
-        val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[UserLogoutMessageImpl])
+        val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerLogoutMessageImpl])
 
         connectedUsers.remove(logoutMessage.userId)
         //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.position.x+" "+user.position.y))

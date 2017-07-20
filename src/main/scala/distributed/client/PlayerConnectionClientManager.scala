@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentHashMap
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
-import distributed.deserializers.{ConnectedUsersDeserializer, ConnectedUsersMessageDeserializer}
-import distributed.messages.{ConnectedUsersMessage, ConnectedUsersMessageImpl, UserMessage}
+import distributed.deserializers.{ConnectedPlayersDeserializer, ConnectedPlayersMessageDeserializer}
+import distributed.messages.{ConnectedPlayersMessage, ConnectedPlayersMessageImpl, PlayerMessage}
 import model.environment.Coordinate
 import utilities.Settings
 
@@ -31,7 +31,7 @@ class PlayerConnectionClientManagerImpl(private val connection: Connection) exte
 
   override def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
     val user = User(userId, username, sprites, position)
-    val userMessage = UserMessage(user)
+    val userMessage = PlayerMessage(user)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(userMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
   }
@@ -49,9 +49,9 @@ class PlayerConnectionClientManagerImpl(private val connection: Connection) exte
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
         println(message)
-        gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedUsersMessageImpl], ConnectedUsersMessageDeserializer).create()
-        val serverUsersMessage = gson.fromJson(message, classOf[ConnectedUsersMessageImpl])
-        connectedUsers.putAll(serverUsersMessage.connectedUsers)
+        gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
+        val serverUsersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
+        connectedUsers.putAll(serverUsersMessage.connectedPlayers)
         connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()
