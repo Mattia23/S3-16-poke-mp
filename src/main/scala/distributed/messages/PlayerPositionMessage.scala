@@ -8,7 +8,7 @@ trait PlayerPositionMessage {
   def position: Coordinate
 }
 
-object PlayerPositionMessageImpl {
+object PlayerPositionMessage {
   def apply(userId: Int, position: Coordinate): PlayerPositionMessage = new PlayerPositionMessageImpl(userId, position)
 }
 

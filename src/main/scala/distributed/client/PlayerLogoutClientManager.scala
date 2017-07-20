@@ -20,8 +20,8 @@ object PlayerLogoutClientManagerImpl {
 
 class PlayerLogoutClientManagerImpl(private val connection: Connection) extends PlayerLogoutClientManager {
 
-  private var gson: Gson = new Gson()
-  private var channel: Channel = connection.createChannel()
+  private val gson: Gson = new Gson()
+  private val channel: Channel = connection.createChannel()
   private val playerQueue = channel.queueDeclare.getQueue
 
   channel.queueDeclare(Settings.PLAYER_LOGOUT_CHANNEL_QUEUE, false, false, false, null)
@@ -43,7 +43,6 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
         println(" [x] Received other player logout")
-        val message = new String(body, "UTF-8")
         val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerLogoutMessageImpl])
 
         if (logoutMessage.userId != userId) connectedPlayers.remove(logoutMessage.userId)
