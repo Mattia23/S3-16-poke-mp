@@ -57,7 +57,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
     var pointsEarned: Int = 0
     if(won){
       battleFinished = true
-      pointsEarned = (wildPokemon.pokemon.experiencePoints * wildPokemon.pokemon.level / math.pow(1.2,_trainer.level)).toInt
+      pointsEarned = (wildPokemon.pokemon.level * math.pow(1.2,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
     } else {
       roundFinished = true

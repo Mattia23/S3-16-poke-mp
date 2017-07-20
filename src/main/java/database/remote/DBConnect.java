@@ -32,8 +32,8 @@ public final class DBConnect {
 		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				//con = DriverManager.getConnection("jdbc:mysql://johnny.heliohost.org:3306/pokemp_1", "pokemp", "viroliRules12CFU");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
+				con = DriverManager.getConnection("jdbc:mysql://lhcp1100.webapps.net:3306/eh2df0us_pokemon_mp", "eh2df0us", "{r87_16fzl:$");
+				//con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
 				st = con.createStatement();
 				MyEncryptor.init();
 			} catch (Exception ex) {
@@ -122,7 +122,7 @@ public final class DBConnect {
 		try {
 			String query = "SELECT `AUTO_INCREMENT`\n" +
 					"FROM  INFORMATION_SCHEMA.TABLES\n" +
-					"WHERE TABLE_SCHEMA = 'pokemon_mp'\n" +
+					"WHERE TABLE_SCHEMA = 'eh2df0us_pokemon_mp'\n" +
 					"AND   TABLE_NAME   = '"+tableName+"';";
 			rs = st.executeQuery(query);
 			if(rs.next()){
