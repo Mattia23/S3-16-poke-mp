@@ -2,8 +2,8 @@ package controller
 
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
-import distributed.User
-import distributed.client.{PlayerPositionClientManager, PlayerPositionClientManagerImpl}
+import distributed.{CommunicationManager, User}
+import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
 import utilities.Settings
@@ -17,13 +17,16 @@ trait DistributedMapController{
 }
 
 object DistributedMapControllerImpl{
-  def apply(connectedUsers: ConcurrentMap[Int, User]): DistributedMapController = new DistributedMapControllerImpl(connectedUsers)
+  def apply(mapController: GameController, connectedUsers: ConcurrentMap[Int, User]): DistributedMapController = new DistributedMapControllerImpl(mapController, connectedUsers)
 }
 
-class DistributedMapControllerImpl(override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
+class DistributedMapControllerImpl(private val mapController: GameController, override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
 
+  private val newPlayerInGame: CommunicationManager = NewPlayerInGameClientManager(mapController.trainer.id, connectedUsers)
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl()
-  playerPositionManager.receiveOtherPlayerPosition(connectedUsers)
+
+  newPlayerInGame.start()
+  playerPositionManager.receiveOtherPlayerPosition(mapController.trainer.id, connectedUsers)
 
   override val usersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 

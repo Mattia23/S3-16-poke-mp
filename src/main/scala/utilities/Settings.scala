@@ -267,5 +267,7 @@ object Settings {
 
   val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
 
+  val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
+
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 }
