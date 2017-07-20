@@ -4,7 +4,8 @@ import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
 import distributed.{CommunicationService, Player}
-import distributed.client.{NewPlayerInGameClientManager, NewPlayerInGameClientManagerImpl, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
+import distributed.client._
+import distributed.messages.PlayerLogoutMessage
 import model.entities.TrainerSprites
 import model.environment.Coordinate
 import utilities.Settings
@@ -14,27 +15,36 @@ trait DistributedMapController{
 
   def playersTrainerSprites: ConcurrentMap[Int, String]
 
-  def sendTrainerPosition(trainerId: Int, position: Coordinate): Unit
+  def sendTrainerPosition(position: Coordinate): Unit
+
+  def playerLogout(): Unit
 }
 
-object DistributedMapControllerImpl{
+object DistributedMapController{
   def apply(mapController: GameController, connection: Connection, connectedPlayers: ConcurrentMap[Int, Player]): DistributedMapController =
     new DistributedMapControllerImpl(mapController, connection, connectedPlayers)
 }
 
 class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConcurrentMap[Int, Player]) extends DistributedMapController{
 
-  private val newPlayerInGame: NewPlayerInGameClientManager = NewPlayerInGameClientManager(connection)
+  private val trainerId: Int = mapController.trainer.id
+  private val newPlayerInGameManager: NewPlayerInGameClientManager = NewPlayerInGameClientManager(connection)
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManager(connection)
+  private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
 
-  newPlayerInGame.receiveNewPlayerInGame(mapController.trainer.id, connectedPlayers)
-  playerPositionManager.receiveOtherPlayerPosition(mapController.trainer.id, connectedPlayers)
+  newPlayerInGameManager.receiveNewPlayerInGame(trainerId, connectedPlayers)
+  playerPositionManager.receiveOtherPlayerPosition(trainerId, connectedPlayers)
+  playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
 
   override val playersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
-  override def sendTrainerPosition(trainerId: Int, position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
-}
+  override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
+  override def playerLogout(): Unit = {
+    playerLogoutManager.sendPlayerLogout(trainerId)
+    connection.close()
+  }
+}
 
 class DistributedMapControllerAgent(private val mapController: GameController, private val distributedMapController: DistributedMapController) extends Thread {
   var stopped: Boolean = false

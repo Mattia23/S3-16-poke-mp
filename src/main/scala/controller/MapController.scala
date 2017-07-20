@@ -28,7 +28,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
-  private val distributedMapController: DistributedMapController = DistributedMapControllerImpl(this, connection, connectedUsers)
+  private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedUsers)
   private var distributedAgent: DistributedMapControllerAgent = _
   audio = Audio(Settings.MAP_SONG)
 
@@ -105,7 +105,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
           enterInBuilding(tile)
         case _ if tile.walkable =>
           walk(direction, nextPosition)
-          distributedMapController.sendTrainerPosition(trainer.id, nextPosition)
+          distributedMapController.sendTrainerPosition(nextPosition)
           if(tile.isInstanceOf[TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }
