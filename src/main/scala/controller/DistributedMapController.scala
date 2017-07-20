@@ -3,7 +3,7 @@ package controller
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
-import distributed.{CommunicationManager, User}
+import distributed.{CommunicationService, User}
 import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
@@ -24,7 +24,7 @@ object DistributedMapControllerImpl{
 
 class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
 
-  private val newPlayerInGame: CommunicationManager = NewPlayerInGameClientManager(connection, mapController.trainer.id, connectedUsers)
+  private val newPlayerInGame: CommunicationService = NewPlayerInGameClientManager(connection, mapController.trainer.id, connectedUsers)
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl(connection)
 
   newPlayerInGame.start()

@@ -11,11 +11,11 @@ import distributed.deserializers.UserMessageDeserializer
 import distributed.messages.{ConnectedUsersMessage, UserMessage, UserMessageImpl}
 import utilities.Settings
 
-object PlayerConnectionServerManager {
-  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerConnectionServerManager(connection, connectedUsers)
+object PlayerLoginServerService {
+  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationService = new PlayerLoginServerService(connection, connectedUsers)
 }
 
-class PlayerConnectionServerManager(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
+class PlayerLoginServerService(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationService {
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)

@@ -6,15 +6,15 @@ import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed.deserializers.UserMessageDeserializer
 import distributed.messages.UserMessageImpl
-import distributed.{CommunicationManager, DistributedConnection, DistributedConnectionImpl, User}
+import distributed.{CommunicationService, DistributedConnection, DistributedConnectionImpl, User}
 import utilities.Settings
 
 object NewPlayerInGameClientManager {
-  def apply(connection: Connection, userId: Int, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager =
+  def apply(connection: Connection, userId: Int, connectedUsers: ConcurrentMap[Int, User]): CommunicationService =
     new NewPlayerInGameClientManager(connection, userId, connectedUsers)
 }
 
-class NewPlayerInGameClientManager(private val connection: Connection, private val userId: Int, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager{
+class NewPlayerInGameClientManager(private val connection: Connection, private val userId: Int, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationService{
 
   private var gson: Gson = _
   private var channel: Channel = _

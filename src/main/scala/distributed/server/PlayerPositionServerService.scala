@@ -5,15 +5,15 @@ import java.util.concurrent.ConcurrentMap
 import com.google.gson.GsonBuilder
 import com.rabbitmq.client._
 import distributed.deserializers.PlayerPositionMessageDeserializer
-import distributed.{CommunicationManager, User}
+import distributed.{CommunicationService, User}
 import distributed.messages.PlayerPositionMessageImpl
 import utilities.Settings
 
-object PlayerPositionServerManager {
-  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerPositionServerManager(connection, connectedUsers)
+object PlayerPositionServerService {
+  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationService = new PlayerPositionServerService(connection, connectedUsers)
 }
 
-class PlayerPositionServerManager(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
+class PlayerPositionServerService(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationService {
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)

@@ -6,14 +6,14 @@ import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed.deserializers.PlayerPositionMessageDeserializer
 import distributed.messages.{PlayerPositionMessageImpl, UserLogoutMessageImpl}
-import distributed.{CommunicationManager, User}
+import distributed.{CommunicationService, User}
 import utilities.Settings
 
-object PlayerLogoutServerManager {
-  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerLogoutServerManager(connection, connectedUsers)
+object PlayerLogoutServerService {
+  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationService = new PlayerLogoutServerService(connection, connectedUsers)
 }
 
-class PlayerLogoutServerManager(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager{
+class PlayerLogoutServerService(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_LOGOUT_CHANNEL_QUEUE, false, false, false, null)
