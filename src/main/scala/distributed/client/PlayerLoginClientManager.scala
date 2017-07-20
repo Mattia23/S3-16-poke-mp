@@ -48,11 +48,10 @@ class PlayerConnectionClientManagerImpl(private val connection: Connection) exte
                                   body: Array[Byte]) {
         println(" [x] Received message")
         val message = new String(body, "UTF-8")
-        println(message)
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedUsersMessageImpl], ConnectedUsersMessageDeserializer).create()
         val serverUsersMessage = gson.fromJson(message, classOf[ConnectedUsersMessageImpl])
         connectedUsers.putAll(serverUsersMessage.connectedUsers)
-        connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
+        //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()
       }

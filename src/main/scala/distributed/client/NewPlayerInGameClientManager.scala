@@ -9,22 +9,24 @@ import distributed.messages.UserMessageImpl
 import distributed.{CommunicationManager, DistributedConnection, DistributedConnectionImpl, User}
 import utilities.Settings
 
-object NewPlayerInGameClientManager {
-  def apply(connection: Connection, userId: Int, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager =
-    new NewPlayerInGameClientManager(connection, userId, connectedUsers)
+trait NewPlayerInGameClientManager{
+  def receiveNewPlayerInGame(userId: Int, connectedUsers: ConcurrentMap[Int, User]): Unit
 }
 
-class NewPlayerInGameClientManager(private val connection: Connection, private val userId: Int, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager{
+object NewPlayerInGameClientManagerImpl {
+  def apply(connection: Connection): NewPlayerInGameClientManager =
+    new NewPlayerInGameClientManagerImpl(connection)
+}
 
-  private var gson: Gson = _
-  private var channel: Channel = _
+class NewPlayerInGameClientManagerImpl(private val connection: Connection) extends NewPlayerInGameClientManager{
 
-  override def start(): Unit = {
-    channel = connection.createChannel()
-    val userQueue = channel.queueDeclare.getQueue
+  private var channel: Channel = connection.createChannel()
+  private val userQueue = channel.queueDeclare.getQueue
 
-    channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
-    channel.queueBind(userQueue, Settings.NEW_PLAYER_EXCHANGE, "")
+  channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
+  channel.queueBind(userQueue, Settings.NEW_PLAYER_EXCHANGE, "")
+
+  override def receiveNewPlayerInGame(userId: Int, connectedUsers: ConcurrentMap[Int, User]): Unit = {
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -34,12 +36,12 @@ class NewPlayerInGameClientManager(private val connection: Connection, private v
                                   body: Array[Byte]) {
         println(" [x] Received other player in game")
         val message = new String(body, "UTF-8")
-        gson = new GsonBuilder().registerTypeAdapter(classOf[UserMessageImpl], UserMessageDeserializer).create()
+        val gson = new GsonBuilder().registerTypeAdapter(classOf[UserMessageImpl], UserMessageDeserializer).create()
         val otherPlayer = gson.fromJson(message, classOf[UserMessageImpl])
 
         if (otherPlayer.user.userId != userId) connectedUsers.put(otherPlayer.user.userId, otherPlayer.user)
-
       }
+
     }
 
     channel.basicConsume(userQueue, true, consumer)
