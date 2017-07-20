@@ -11,7 +11,8 @@ object UserDeserializer extends JsonDeserializer[User] {
     val jsonUser = json.getAsJsonObject
     val jsonPosition = jsonUser.getAsJsonObject("position")
     val position = CoordinateImpl(jsonPosition.get("x").getAsInt, jsonPosition.get("y").getAsInt)
-    val user = new UserImpl(jsonUser.get("userId").getAsInt, jsonUser.get("username").getAsString, jsonUser.get("idImage").getAsInt, position)
-    user
+    //val user = new UserImpl(jsonUser.get("userId").getAsInt, jsonUser.get("username").getAsString, jsonUser.get("idImage").getAsInt, position)
+    //user
+    User(jsonUser.get("userId").getAsInt, jsonUser.get("username").getAsString, jsonUser.get("idImage").getAsInt, position)
   }
 }

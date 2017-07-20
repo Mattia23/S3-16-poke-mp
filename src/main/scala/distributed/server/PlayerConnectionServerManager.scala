@@ -8,7 +8,7 @@ import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
 import distributed.deserializers.UserMessageDeserializer
-import distributed.messages.{UserMessage, UserMessageImpl}
+import distributed.messages.{ConnectedUsersMessage, UserMessage, UserMessageImpl}
 import utilities.Settings
 
 object PlayerConnectionServerManager {
@@ -32,7 +32,7 @@ class PlayerConnectionServerManager(private val connectedUsers: ConcurrentMap[In
         val userMessage = gson.fromJson(new String(body, "UTF-8"), classOf[UserMessageImpl])
         val user = userMessage.user
 
-        val response = gson.toJson(connectedUsers)
+        val response = gson.toJson(ConnectedUsersMessage(connectedUsers))
         channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + user.userId, null, response.getBytes("UTF-8"))
         println("server: send connected user")
         connectedUsers.put(user.userId, user)
