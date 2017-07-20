@@ -3,19 +3,19 @@ package distributed.server
 import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.GsonBuilder
-import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
+import com.rabbitmq.client._
 import distributed.deserializers.PlayerPositionMessageDeserializer
-import distributed.{CommunicationManager, DistributedConnectionImpl, User}
+import distributed.{CommunicationManager, User}
 import distributed.messages.PlayerPositionMessageImpl
 import utilities.Settings
 
 object PlayerPositionServerManager {
-  def apply(connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerPositionServerManager(connectedUsers)
+  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerPositionServerManager(connection, connectedUsers)
 }
 
-class PlayerPositionServerManager(private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
+class PlayerPositionServerManager(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
   override def start(): Unit = {
-    val channel: Channel = DistributedConnectionImpl().connection.createChannel
+    val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
