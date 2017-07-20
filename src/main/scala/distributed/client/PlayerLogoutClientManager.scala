@@ -43,7 +43,6 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
         println(" [x] Received other player logout")
-        val message = new String(body, "UTF-8")
         val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerLogoutMessageImpl])
 
         if (logoutMessage.userId != userId) connectedPlayers.remove(logoutMessage.userId)

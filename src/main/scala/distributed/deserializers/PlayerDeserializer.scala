@@ -11,8 +11,6 @@ object PlayerDeserializer extends JsonDeserializer[Player] {
     val jsonPlayer = json.getAsJsonObject
     val jsonPosition = jsonPlayer.getAsJsonObject("position")
     val position = CoordinateImpl(jsonPosition.get("x").getAsInt, jsonPosition.get("y").getAsInt)
-    //val user = new UserImpl(jsonPlayer.get("userId").getAsInt, jsonPlayer.get("username").getAsString, jsonPlayer.get("idImage").getAsInt, position)
-    //user
     Player(jsonPlayer.get("userId").getAsInt, jsonPlayer.get("username").getAsString, jsonPlayer.get("idImage").getAsInt, position)
   }
 }

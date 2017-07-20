@@ -7,6 +7,7 @@ import com.rabbitmq.client._
 import distributed.Player
 import distributed.deserializers.PlayerPositionMessageDeserializer
 import distributed.messages.PlayerPositionMessageImpl
+import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageImpl}
 import model.environment.Coordinate
 import utilities.Settings
 
@@ -28,7 +29,7 @@ class PlayerPositionClientManagerImpl(private val connection: Connection) extend
   channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
 
   override def sendPlayerPosition(userId: Int, position: Coordinate): Unit = {
-    val playerPositionMessage = PlayerPositionMessageImpl(userId, position)
+    val playerPositionMessage = PlayerPositionMessage(userId, position)
     channel.basicPublish("", Settings.PLAYER_POSITION_CHANNEL_QUEUE, null, gson.toJson(playerPositionMessage).getBytes("UTF-8"))
     println(" [x] Sent position")
   }

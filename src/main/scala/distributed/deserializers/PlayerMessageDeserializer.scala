@@ -10,6 +10,6 @@ object PlayerMessageDeserializer extends JsonDeserializer[PlayerMessage]{
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): PlayerMessage = {
     val jsonPlayerMessage = json.getAsJsonObject
     val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerImpl], PlayerDeserializer).create()
-    PlayerMessage(gson.fromJson(jsonPlayerMessage.getAsJsonObject("user"), classOf[PlayerImpl]))
+    PlayerMessage(gson.fromJson(jsonPlayerMessage.getAsJsonObject("player"), classOf[PlayerImpl]))
   }
 }
