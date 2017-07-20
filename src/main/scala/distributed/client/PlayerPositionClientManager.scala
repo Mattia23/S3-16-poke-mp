@@ -13,7 +13,7 @@ import utilities.Settings
 trait PlayerPositionClientManager{
   def sendPlayerPosition(userId: Int, position: Coordinate): Unit
 
-  def receiveOtherPlayerPosition(connectedUsers: ConcurrentMap[Int, User]): Unit
+  def receiveOtherPlayerPosition(userId: Int, connectedUsers: ConcurrentMap[Int, User]): Unit
 }
 
 object PlayerPositionClientManagerImpl {
@@ -26,15 +26,15 @@ class PlayerPositionClientManagerImpl extends PlayerPositionClientManager{
   private var channel: Channel = _
 
   channel = DistributedConnectionImpl().connection.createChannel()
+  channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
 
   override def sendPlayerPosition(userId: Int, position: Coordinate): Unit = {
-    channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
     val playerPositionMessage = PlayerPositionMessageImpl(userId, position)
     channel.basicPublish("", Settings.PLAYER_POSITION_CHANNEL_QUEUE, null, gson.toJson(playerPositionMessage).getBytes("UTF-8"))
-    println(" [x] Sent message")
+    println(" [x] Sent position")
   }
 
-  override def receiveOtherPlayerPosition(connectedUsers: ConcurrentMap[Int, User]): Unit = {
+  override def receiveOtherPlayerPosition(userId: Int, connectedUsers: ConcurrentMap[Int, User]): Unit = {
 
     channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
     val userQueue = channel.queueDeclare.getQueue
@@ -46,17 +46,19 @@ class PlayerPositionClientManagerImpl extends PlayerPositionClientManager{
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received message")
+        println(" [x] Received other player position")
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val otherPlayerPosition = gson.fromJson(message, classOf[PlayerPositionMessageImpl])
 
-        connectedUsers.get(otherPlayerPosition.userId).position = otherPlayerPosition.position
+        if (otherPlayerPosition.userId != userId) connectedUsers.get(otherPlayerPosition.userId).position = otherPlayerPosition.position
+
         /* TODO Aggiornare lo sprite in usersTrainerSprite in base alla direzione,
         * fare il movimento sulla mappa, fare la receive in DistributedAgent, executor?
         */
       }
     }
+
     channel.basicConsume(userQueue, true, consumer)
   }
 }

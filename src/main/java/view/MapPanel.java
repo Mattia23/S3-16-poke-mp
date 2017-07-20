@@ -25,8 +25,8 @@ public class MapPanel extends GamePanel{
     @Override
     protected void doPaint(Graphics g) {
         drawMapElements(g);
-        drawTrainer(g);
         drawOtherTrainers(g);
+        drawTrainer(g);
     }
 
     private void drawMapElements(Graphics g){
@@ -45,13 +45,6 @@ public class MapPanel extends GamePanel{
         }
     }
 
-    private void drawTrainer(Graphics g){
-        g.drawImage(LoadImage.load(mapController.trainerSprite()),
-                Settings.FRAME_SIDE() / 2,
-                Settings.FRAME_SIDE() / 2,
-                null);
-    }
-
     private void drawOtherTrainers(Graphics g){
         if(!this.distributedMapController.usersTrainerSprites().isEmpty()){
             for(User user: this.distributedMapController.connectedUsers().values()){
@@ -62,4 +55,12 @@ public class MapPanel extends GamePanel{
             }
         }
     }
+
+    private void drawTrainer(Graphics g){
+        g.drawImage(LoadImage.load(mapController.trainerSprite()),
+                Settings.FRAME_SIDE() / 2,
+                Settings.FRAME_SIDE() / 2,
+                null);
+    }
+
 }

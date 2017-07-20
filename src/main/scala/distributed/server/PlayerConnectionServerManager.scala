@@ -26,18 +26,25 @@ class PlayerConnectionServerManager(private val connectedUsers: ConcurrentMap[In
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]): Unit = {
-        println("server: received")
+        println("server: received new user")
         println(new String(body, "UTF-8"))
         val gson = new GsonBuilder().registerTypeAdapter(classOf[UserMessageImpl], UserMessageDeserializer).create()
-        val user = gson.fromJson(new String(body, "UTF-8"), classOf[UserMessageImpl]).user
+        val userMessage = gson.fromJson(new String(body, "UTF-8"), classOf[UserMessageImpl])
+        val user = userMessage.user
 
         val response = gson.toJson(connectedUsers)
         channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + user.userId, null, response.getBytes("UTF-8"))
-        println("server: send")
+        println("server: send connected user")
         connectedUsers.put(user.userId, user)
+
+        channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
+        val newPlayerResponse = gson.toJson(userMessage)
+        channel.basicPublish(Settings.NEW_PLAYER_EXCHANGE, "", null, newPlayerResponse.getBytes("UTF-8"))
+        println("server: send new user")
       }
     }
 
     channel.basicConsume(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, true, consumer)
   }
+
 }

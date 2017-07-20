@@ -24,20 +24,17 @@ class PlayerPositionServerManager(private val connectedUsers: ConcurrentMap[Int,
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]): Unit = {
-        println("server: received")
+        println("server: received player position")
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val positionMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerPositionMessageImpl])
 
         connectedUsers.get(positionMessage.userId).position = positionMessage.position
+        //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.position.x+" "+user.position.y))
 
-        connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.position.x+" "+user.position.y))
-
-        /* TODO: inviare la posizione a tutti (diverso modo di gestire le code product/subscribe) */
         channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
-
         val response = gson.toJson(positionMessage)
         channel.basicPublish(Settings.PLAYER_POSITION_EXCHANGE, "", null, response.getBytes("UTF-8"))
-        println("server: send")
+        println("server: send player position")
       }
     }
 
