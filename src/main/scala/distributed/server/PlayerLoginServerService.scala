@@ -11,11 +11,11 @@ import distributed.deserializers.UserMessageDeserializer
 import distributed.messages.{ConnectedUsersMessage, UserMessage, UserMessageImpl}
 import utilities.Settings
 
-object PlayerConnectionServerManager {
-  def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new PlayerConnectionServerManager(connection, connectedUsers)
+object PlayerLoginServerService {
+  def apply(connection: Connection, connectedPlayers: ConcurrentMap[Int, Player]): CommunicationService = new PlayerLoginServerService(connection, connectedPlayers)
 }
 
-class PlayerConnectionServerManager(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager {
+class PlayerLoginServerService(private val connection: Connection, private val connectedPlayers: ConcurrentMap[Int, Player]) extends CommunicationService {
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
@@ -32,10 +32,10 @@ class PlayerConnectionServerManager(private val connection: Connection, private 
         val userMessage = gson.fromJson(new String(body, "UTF-8"), classOf[UserMessageImpl])
         val user = userMessage.user
 
-        val response = gson.toJson(ConnectedUsersMessage(connectedUsers))
+        val response = gson.toJson(ConnectedUsersMessage(connectedPlayers))
         channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + user.userId, null, response.getBytes("UTF-8"))
         println("server: send connected user")
-        connectedUsers.put(user.userId, user)
+        connectedPlayers.put(user.userId, user)
 
         channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
         val newPlayerResponse = gson.toJson(userMessage)

@@ -2,7 +2,7 @@ package view;
 
 import controller.DistributedMapController;
 import controller.GameController;
-import distributed.User;
+import distributed.Player;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
@@ -46,11 +46,11 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawOtherTrainers(Graphics g){
-        if(!this.distributedMapController.usersTrainerSprites().isEmpty()){
-            for(User user: this.distributedMapController.connectedUsers().values()){
-                g.drawImage(LoadImage.load((this.distributedMapController.usersTrainerSprites().get(user.userId()))),
-                        (( user.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
-                        (( user.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2 ,
+        if(!this.distributedMapController.playersTrainerSprites().isEmpty()){
+            for(Player player : this.distributedMapController.connectedPlayers().values()){
+                g.drawImage(LoadImage.load((this.distributedMapController.playersTrainerSprites().get(player.userId()))),
+                        (( player.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
+                        (( player.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2 ,
                         null);
             }
         }

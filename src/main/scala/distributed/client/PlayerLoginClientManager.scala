@@ -5,40 +5,38 @@ import java.util.concurrent.ConcurrentHashMap
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
-import distributed.deserializers.{ConnectedUsersDeserializer, ConnectedUsersMessageDeserializer}
-import distributed.messages.{ConnectedUsersMessage, ConnectedUsersMessageImpl, UserMessage}
+import distributed.deserializers.ConnectedUsersMessageDeserializer
+import distributed.messages.{ConnectedUsersMessageImpl, UserMessage}
 import model.environment.Coordinate
 import utilities.Settings
 
-trait PlayerConnectionClientManager{
-  def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
+trait PlayerLoginClientManager{
+  def sendPlayerInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
 
-  def receivePlayersConnected(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit
+  def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentHashMap[Int, Player]): Unit
 }
 
-object PlayerConnectionClientManagerImpl {
-  def apply(connection: Connection): PlayerConnectionClientManager = new PlayerConnectionClientManagerImpl(connection)
+object PlayerLoginClientManagerImpl {
+  def apply(connection: Connection): PlayerLoginClientManager = new PlayerLoginClientManagerImpl(connection)
 }
 
-class PlayerConnectionClientManagerImpl(private val connection: Connection) extends PlayerConnectionClientManager {
+class PlayerLoginClientManagerImpl(private val connection: Connection) extends PlayerLoginClientManager {
 
   private var gson: Gson = new Gson()
-  private var channel: Channel = _
+  private var channel: Channel = connection.createChannel()
 
-  channel = connection.createChannel()
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
-
-  override def sendUserInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
-    val user = User(userId, username, sprites, position)
+  override def sendPlayerInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
+    val user = Player(userId, username, sprites, position)
     val userMessage = UserMessage(user)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(userMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
   }
 
-  override def receivePlayersConnected(userId: Int, connectedUsers: ConcurrentHashMap[Int, User]): Unit = {
-    val userQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
-    channel.queueDeclare(userQueue, false, false, false, null)
+  override def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentHashMap[Int, Player]): Unit = {
+    val playerQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
+    channel.queueDeclare(playerQueue, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -50,13 +48,13 @@ class PlayerConnectionClientManagerImpl(private val connection: Connection) exte
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedUsersMessageImpl], ConnectedUsersMessageDeserializer).create()
         val serverUsersMessage = gson.fromJson(message, classOf[ConnectedUsersMessageImpl])
-        connectedUsers.putAll(serverUsersMessage.connectedUsers)
+        connectedPlayers.putAll(serverUsersMessage.connectedUsers)
         //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()
       }
     }
-    channel.basicConsume(userQueue, true, consumer)
+    channel.basicConsume(playerQueue, true, consumer)
   }
 
 }

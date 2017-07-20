@@ -1,5 +1,5 @@
 package distributed
 
-trait CommunicationManager {
+trait CommunicationService {
   def start()
 }

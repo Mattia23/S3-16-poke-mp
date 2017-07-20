@@ -3,34 +3,34 @@ package controller
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
-import distributed.{CommunicationManager, User}
-import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
+import distributed.{CommunicationService, Player}
+import distributed.client.{NewPlayerInGameClientManager, NewPlayerInGameClientManagerImpl, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
 import utilities.Settings
 
 trait DistributedMapController{
-  def connectedUsers: ConcurrentMap[Int, User]
+  def connectedPlayers: ConcurrentMap[Int, Player]
 
-  def usersTrainerSprites: ConcurrentMap[Int, String]
+  def playersTrainerSprites: ConcurrentMap[Int, String]
 
   def sendTrainerPosition(trainerId: Int, position: Coordinate): Unit
 }
 
 object DistributedMapControllerImpl{
-  def apply(mapController: GameController, connection: Connection, connectedUsers: ConcurrentMap[Int, User]): DistributedMapController =
-    new DistributedMapControllerImpl(mapController, connection, connectedUsers)
+  def apply(mapController: GameController, connection: Connection, connectedPlayers: ConcurrentMap[Int, Player]): DistributedMapController =
+    new DistributedMapControllerImpl(mapController, connection, connectedPlayers)
 }
 
-class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
+class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConcurrentMap[Int, Player]) extends DistributedMapController{
 
-  private val newPlayerInGame: CommunicationManager = NewPlayerInGameClientManager(connection, mapController.trainer.id, connectedUsers)
+  private val newPlayerInGame: NewPlayerInGameClientManager = NewPlayerInGameClientManagerImpl(connection)
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl(connection)
 
-  newPlayerInGame.start()
-  playerPositionManager.receiveOtherPlayerPosition(mapController.trainer.id, connectedUsers)
+  newPlayerInGame.receiveNewPlayerInGame(mapController.trainer.id, connectedPlayers)
+  playerPositionManager.receiveOtherPlayerPosition(mapController.trainer.id, connectedPlayers)
 
-  override val usersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
+  override val playersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
   override def sendTrainerPosition(trainerId: Int, position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 }
@@ -42,8 +42,8 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
   override def run(): Unit = {
     while(mapController.isInGame && !stopped){
       if(!mapController.isInPause){
-        distributedMapController.connectedUsers.values() forEach (user =>
-          distributedMapController.usersTrainerSprites.put(user.userId, TrainerSprites.selectTrainerSprite(user.idImage).frontS.image))
+        distributedMapController.connectedPlayers.values() forEach (player =>
+          distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
       }
 
       try

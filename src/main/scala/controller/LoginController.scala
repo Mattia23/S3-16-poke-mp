@@ -6,8 +6,8 @@ import javax.swing.JOptionPane
 
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
-import distributed.{DistributedConnectionImpl, User}
-import distributed.client.PlayerConnectionClientManagerImpl
+import distributed.{DistributedConnectionImpl, Player}
+import distributed.client.PlayerLoginClientManagerImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
@@ -46,7 +46,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
       val connection = DistributedConnectionImpl().connection
-      val connectedUsers = new ConcurrentHashMap[Int, User]()
+      val connectedUsers = new ConcurrentHashMap[Int, Player]()
 
       serverInteraction(connection, username, trainer, connectedUsers)
       MapController(view, trainer, connection, connectedUsers).start()
@@ -55,10 +55,10 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     }
   }
 
-  private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedUsers: ConcurrentHashMap[Int, User]) = {
-    val playerConnectionClientManager = PlayerConnectionClientManagerImpl(connection)
+  private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedUsers: ConcurrentHashMap[Int, Player]) = {
+    val playerConnectionClientManager = PlayerLoginClientManagerImpl(connection)
 
-    playerConnectionClientManager.sendUserInformation(trainer.id, username,
+    playerConnectionClientManager.sendPlayerInformation(trainer.id, username,
       TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
     playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedUsers)
   }

@@ -1,13 +1,13 @@
 package distributed.messages
 
-import distributed.User
+import distributed.Player
 
 trait UserMessage {
-  def user: User
+  def user: Player
 }
 
 object UserMessage {
-  def apply(user: User): UserMessage = new UserMessageImpl(user)
+  def apply(user: Player): UserMessage = new UserMessageImpl(user)
 }
 
-class UserMessageImpl(override val user: User) extends UserMessage
+class UserMessageImpl(override val user: Player) extends UserMessage
