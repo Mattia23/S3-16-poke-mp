@@ -18,17 +18,22 @@ trait LoginController{
   def back(): Unit
 }
 
+object LoginControllerImpl{
+  private final val LOGIN_FAILED: String = "LOGIN FAILED"
+}
+
 class LoginControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends LoginController{
 
+  import LoginControllerImpl._
   view showLogin this
 
   override def login(username: String, password: String): Unit = {
     new Thread(() => {
       if(username == "" || password == "") {
-        view.showMessage("Username and/or password must not be empty", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
+        view.showMessage(Settings.LOGIN_ERROR_USERNAME_PASSWORD_EMPTY, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
       }else{
         if (!DBConnect.checkCredentials(username, password)) {
-           view.showMessage("Wrong username or password", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
+           view.showMessage(Settings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
         } else {
           newGame(username)
         }
@@ -46,7 +51,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       serverInteraction(connection, username, trainer, connectedUsers)
       MapController(view, trainer, connection, connectedUsers).start()
     } else {
-      view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
+      view.showMessage(Settings.LOGIN_ERROR_NO_TRAINER, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
     }
   }
 

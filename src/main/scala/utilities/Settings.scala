@@ -270,4 +270,24 @@ object Settings {
   val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
 
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
+
+  val LOGIN_ERROR_USERNAME_PASSWORD_EMPTY: String = "Username and/or password must not be empty"
+
+  val LOGIN_ERROR_WRONG_USERNAME_PASSWORD: String = "Wrong username or password"
+
+  val LOGIN_ERROR_NO_TRAINER: String = "There is no trainer for this user"
+
+  val SIGN_IN_NAME_ERROR: String = "Name must be at least 3 characters"
+
+  val SIGN_IN_SURNAME_ERROR: String = "Surname must be at least 3 characters"
+
+  val SIGN_IN_EMAIL_ERROR: String = "Wrong e-mail"
+
+  val SIGN_IN_USERNAME_ERROR: String = "Username must be at least 4 characters"
+
+  val SIGN_IN_PASSWORD_ERROR: String = "Password must be at least 7 characters"
+
+  val CORRECT_SIGN_IN: String = "Successful sign-in"
+
+  val SIGN_IN_FAILED: String = "Username not available"
 }
