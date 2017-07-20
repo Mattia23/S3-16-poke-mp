@@ -1,5 +1,7 @@
 package controller
 
+import model.environment.{Audio, AudioImpl}
+import utilities.Settings
 import view.View
 
 trait GameMenuController{
@@ -35,5 +37,7 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
     view.showInitialMenu(new InitialMenuControllerImpl(view))
   }
 
-  override def doExit(): Unit = gameController.resume()
+  override def doExit(): Unit = {
+    gameController.resume()
+  }
 }

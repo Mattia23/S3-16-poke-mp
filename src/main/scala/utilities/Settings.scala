@@ -228,6 +228,8 @@ object Settings {
 
   val HEALING_SOUND: String = AUDIO_FOLDER + "healing.wav"
 
+  val MENU_SONG: String = AUDIO_FOLDER + "menu.wav"
+
   val LOGIN_BUTTON: String =  "Login"
 
   val SIGN_IN_BUTTON: String =  "Sign in"

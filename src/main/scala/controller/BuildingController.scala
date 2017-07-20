@@ -53,10 +53,12 @@ abstract class BuildingController(private val view: View, private val mapControl
 
   override protected def doPause(): Unit = {
     this.gamePanel.setFocusable(false)
+    this.audio.stop()
   }
 
   override protected def doResume(): Unit = {
     this.gamePanel.setFocusable(true)
+    this.audio.loop()
   }
 
 }

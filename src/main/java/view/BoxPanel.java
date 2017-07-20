@@ -4,6 +4,8 @@ import controller.BuildingController;
 import model.entities.Owner;
 import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
+import model.environment.Audio;
+import model.environment.AudioImpl;
 import scala.Tuple2;
 import utilities.Settings;
 
@@ -27,9 +29,12 @@ public class BoxPanel extends ImagePanel {
     private final PokemonPanel pokemonPanel;
     private List<Object> favoritePokemon;
     private List<Tuple2<Object, Object>> capturedPokemon;
+    private Audio audio;
 
     public BoxPanel(BuildingController buildingController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "box-pokemon.png");
+        audio = new AudioImpl(Settings.MENU_SONG());
+        audio.play();
         this.favoritePokemon = new ArrayList<>();
         List<Object> favoritePokemon = scala.collection.JavaConverters.seqAsJavaList(buildingController.trainer().favouritePokemons());
         this.favoritePokemon = new ArrayList<>();
@@ -90,6 +95,7 @@ public class BoxPanel extends ImagePanel {
         final JButton close = new JButton("SAVE AND CLOSE");
         close.addActionListener(e -> {
             buildingController.trainer().setAllFavouritePokemon(this.favoritePokemon);
+            audio.stop();
             buildingController.resume();
         });
         add(close, BorderLayout.SOUTH);

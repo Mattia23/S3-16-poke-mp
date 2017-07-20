@@ -86,7 +86,6 @@ public class TeamPanel extends BasePanel{
 
         this.backButton.addActionListener(e -> {
             gameController.resume();
-            //gameController.gamePanel().setFocusable(true);
         });
     }
 }
