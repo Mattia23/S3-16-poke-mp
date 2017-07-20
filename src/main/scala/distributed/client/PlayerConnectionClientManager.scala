@@ -17,15 +17,15 @@ trait PlayerConnectionClientManager{
 }
 
 object PlayerConnectionClientManagerImpl {
-  def apply(): PlayerConnectionClientManager = new PlayerConnectionClientManagerImpl()
+  def apply(connection: Connection): PlayerConnectionClientManager = new PlayerConnectionClientManagerImpl(connection)
 }
 
-class PlayerConnectionClientManagerImpl extends PlayerConnectionClientManager {
+class PlayerConnectionClientManagerImpl(private val connection: Connection) extends PlayerConnectionClientManager {
 
   private var gson: Gson = new Gson()
   private var channel: Channel = _
 
-  channel = DistributedConnectionImpl().connection.createChannel()
+  channel = connection.createChannel()
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
 

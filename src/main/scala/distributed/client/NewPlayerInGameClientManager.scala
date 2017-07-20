@@ -3,23 +3,24 @@ package distributed.client
 import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.{Gson, GsonBuilder}
-import com.rabbitmq.client.{AMQP, Channel, DefaultConsumer, Envelope}
+import com.rabbitmq.client._
 import distributed.deserializers.UserMessageDeserializer
 import distributed.messages.UserMessageImpl
-import distributed.{CommunicationManager, DistributedConnectionImpl, User}
+import distributed.{CommunicationManager, DistributedConnection, DistributedConnectionImpl, User}
 import utilities.Settings
 
 object NewPlayerInGameClientManager {
-  def apply(userId: Int, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager = new NewPlayerInGameClientManager(userId, connectedUsers)
+  def apply(connection: Connection, userId: Int, connectedUsers: ConcurrentMap[Int, User]): CommunicationManager =
+    new NewPlayerInGameClientManager(connection, userId, connectedUsers)
 }
 
-class NewPlayerInGameClientManager(private val userId: Int, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager{
+class NewPlayerInGameClientManager(private val connection: Connection, private val userId: Int, private val connectedUsers: ConcurrentMap[Int, User]) extends CommunicationManager{
 
   private var gson: Gson = _
   private var channel: Channel = _
 
   override def start(): Unit = {
-    channel = DistributedConnectionImpl().connection.createChannel()
+    channel = connection.createChannel()
     val userQueue = channel.queueDeclare.getQueue
 
     channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")

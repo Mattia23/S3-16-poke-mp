@@ -4,8 +4,9 @@ import java.util.Optional
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JOptionPane
 
+import com.rabbitmq.client.Connection
 import database.remote.DBConnect
-import distributed.User
+import distributed.{DistributedConnectionImpl, User}
 import distributed.client.PlayerConnectionClientManagerImpl
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
@@ -39,16 +40,19 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
+      val connection = DistributedConnectionImpl().connection
       val connectedUsers = new ConcurrentHashMap[Int, User]()
-      serverInteraction(username, trainer, connectedUsers)
-      MapController(view, trainer, connectedUsers).start()
+
+      serverInteraction(connection, username, trainer, connectedUsers)
+      MapController(view, trainer, connection, connectedUsers).start()
     } else {
       view.showMessage("There is no trainer for this user", "LOGIN FAILED", JOptionPane.ERROR_MESSAGE)
     }
   }
 
-  private def serverInteraction(username: String, trainer: Trainer, connectedUsers: ConcurrentHashMap[Int, User]) = {
-    val playerConnectionClientManager = PlayerConnectionClientManagerImpl()
+  private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedUsers: ConcurrentHashMap[Int, User]) = {
+    val playerConnectionClientManager = PlayerConnectionClientManagerImpl(connection)
+
     playerConnectionClientManager.sendUserInformation(trainer.id, username,
       TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION)
     playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedUsers)

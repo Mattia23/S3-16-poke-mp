@@ -2,6 +2,7 @@ package controller
 
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
+import com.rabbitmq.client.Connection
 import distributed.{CommunicationManager, User}
 import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
 import model.entities.TrainerSprites
@@ -17,13 +18,14 @@ trait DistributedMapController{
 }
 
 object DistributedMapControllerImpl{
-  def apply(mapController: GameController, connectedUsers: ConcurrentMap[Int, User]): DistributedMapController = new DistributedMapControllerImpl(mapController, connectedUsers)
+  def apply(mapController: GameController, connection: Connection, connectedUsers: ConcurrentMap[Int, User]): DistributedMapController =
+    new DistributedMapControllerImpl(mapController, connection, connectedUsers)
 }
 
-class DistributedMapControllerImpl(private val mapController: GameController, override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
+class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedUsers: ConcurrentMap[Int, User]) extends DistributedMapController{
 
-  private val newPlayerInGame: CommunicationManager = NewPlayerInGameClientManager(mapController.trainer.id, connectedUsers)
-  private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl()
+  private val newPlayerInGame: CommunicationManager = NewPlayerInGameClientManager(connection, mapController.trainer.id, connectedUsers)
+  private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManagerImpl(connection)
 
   newPlayerInGame.start()
   playerPositionManager.receiveOtherPlayerPosition(mapController.trainer.id, connectedUsers)

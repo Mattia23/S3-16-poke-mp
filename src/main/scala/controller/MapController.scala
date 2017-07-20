@@ -2,6 +2,7 @@ package controller
 
 import java.util.concurrent.ConcurrentMap
 
+import com.rabbitmq.client.Connection
 import database.remote.DBConnect
 import distributed.User
 import model.entities.Trainer
@@ -14,7 +15,7 @@ import view._
 import scala.util.Random
 
 object MapController {
-  def apply(view: View, _trainer: Trainer, connectedUsers: ConcurrentMap[Int, User]): GameController = new MapController(view, _trainer, connectedUsers)
+  def apply(view: View, _trainer: Trainer, connection: Connection, connectedUsers: ConcurrentMap[Int, User]): GameController = new MapController(view, _trainer, connection, connectedUsers)
 
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
@@ -22,12 +23,12 @@ object MapController {
   private final val LABORATORY_BUILDING = "Laboratory"
 }
 
-class MapController(private val view: View, private val _trainer: Trainer, private val connectedUsers: ConcurrentMap[Int, User]) extends GameControllerImpl(view, _trainer){
+class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, User]) extends GameControllerImpl(view, _trainer){
   import MapController._
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
-  private val distributedMapController: DistributedMapController = DistributedMapControllerImpl(this, connectedUsers)
+  private val distributedMapController: DistributedMapController = DistributedMapControllerImpl(this, connection, connectedUsers)
   private var distributedAgent: DistributedMapControllerAgent = _
   audio = Audio(Settings.MAP_SONG)
 
@@ -35,12 +36,18 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doStart(): Unit = {
     initView()
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-    distributedAgent.start
+    distributedAgent.start()
     if(trainer.capturedPokemons.isEmpty){
       doFirstLogin()
     }else {
       audio.loop()
     }
+  }
+
+  private def initView(): Unit = {
+    setTrainerSpriteFront()
+    view.showMap(this, distributedMapController, gameMap)
+    gamePanel = view.getGamePanel
   }
 
   private def doFirstLogin(): Unit = {
@@ -64,7 +71,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override protected def doPause(): Unit = {
-    if(distributedAgent != null) distributedAgent.terminate
+    if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
     this.gamePanel.setFocusable(false)
@@ -78,20 +85,14 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     trainer.coordinate = lastCoordinates
     initView()
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-    distributedAgent.start
+    distributedAgent.start()
     audio.loop()
     this.gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {
-    if(distributedAgent != null) distributedAgent.terminate
+    if(distributedAgent != null) distributedAgent.terminate()
     audio.stop()
-  }
-
-  private def initView(): Unit = {
-    setTrainerSpriteFront()
-    view.showMap(this, distributedMapController, gameMap)
-    gamePanel = view.getGamePanel
   }
 
   override protected def doMove(direction: Direction): Unit = {
