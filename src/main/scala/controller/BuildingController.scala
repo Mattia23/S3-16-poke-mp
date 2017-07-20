@@ -63,6 +63,7 @@ abstract class BuildingController(private val view: View, private val mapControl
 
 }
 
+
 class PokemonCenterController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
