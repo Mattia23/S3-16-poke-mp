@@ -33,21 +33,9 @@ trait GameController {
 
   def trainerInteract(direction: Direction.Direction): Unit
 
-  def showMenu(): Unit
-
-  def showPokedex(): Unit
-
-  def showTeam(): Unit
+  def showGameMenu(): Unit
 
   def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit
-
-  def showTrainer(): Unit
-
-  def showRanking(): Unit
-
-  def showKeyboardExplanation(): Unit
-
-  def doLogout(): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
@@ -113,21 +101,13 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def doInteract(direction: Direction) : Unit
 
-  override def showMenu(): Unit = view.showGameMenuPanel(this)
+  override def showGameMenu(): Unit = {
+    this.setTrainerSpriteFront()
+    view.showGameMenuPanel(this)
+  }
 
-  override def showPokedex(): Unit = view.showPokedex(trainer,this)
-
-  override def showTeam(): Unit = view.showTeamPanel(trainer, this)
-
-  override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit = view.showPokemonInTeamPanel(pokemonWithLife,this)
-
-  override def showTrainer(): Unit = view.showTrainerPanel(trainer, this)
-
-  override def showRanking(): Unit = view.showRankingPanel(trainer, this)
-
-  override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this)
-
-  override def doLogout(): Unit = view.showInitialMenu(new InitialMenuControllerImpl(view))
+  override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit =
+    view.showPokemonInTeamPanel(pokemonWithLife, new GameMenuControllerImpl(view, this))
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

@@ -4,7 +4,6 @@ import controller.GameController;
 import model.entities.Owner;
 import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
-import model.entities.Trainer;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
@@ -25,7 +24,7 @@ public class TeamPanel extends BasePanel{
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
     ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
-    public TeamPanel(Trainer trainer, GameController gameController) {
+    public TeamPanel(GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -35,7 +34,7 @@ public class TeamPanel extends BasePanel{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
+        List pokemonList = scala.collection.JavaConverters.seqAsJavaList(gameController.trainer().favouritePokemons());
         Boolean first = true;
         k.insets = new Insets(1,1,1,1);
         for(Object pokemon: pokemonList){
@@ -76,18 +75,7 @@ public class TeamPanel extends BasePanel{
                     radioButton.requestFocus();
                     radioButton.setSelected(true);
                     radioButton.setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
-                    radioButton.addAncestorListener(new AncestorListener() {
-                        @Override
-                        public void ancestorAdded(AncestorEvent ae) {
-                            radioButton.requestFocus();
-                        }
-
-                        @Override
-                        public void ancestorRemoved(AncestorEvent event) { }
-
-                        @Override
-                        public void ancestorMoved(AncestorEvent event) { }
-                    });
+                    JUtil.setFocus(radioButton);
                     first = false;
                 }
                 pokemonButtonGroup.add(radioButton);
@@ -98,7 +86,6 @@ public class TeamPanel extends BasePanel{
 
         this.backButton.addActionListener(e -> {
             gameController.resume();
-            //gameController.gamePanel().setFocusable(true);
         });
     }
 }

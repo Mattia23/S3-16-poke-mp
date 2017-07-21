@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DialoguePanel extends JPanel implements KeyListener{
-    private final JLabel dialogueLabel;
+    protected final JLabel dialogueLabel;
     protected String response;
     protected int currentButton = 0;
     private int currentDialogue = 0;
@@ -44,18 +44,7 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         buttonPanel.add(buttonNext);
         add(buttonPanel, BorderLayout.SOUTH);
         buttonNext.requestFocus();
-        buttonNext.addAncestorListener(new AncestorListener() {
-            @Override
-            public void ancestorAdded(AncestorEvent ae) {
-                buttonNext.requestFocus();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) { }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) { }
-        });
+        JUtil.setFocus(buttonNext);
     }
 
     protected abstract void setFinalButtons();

@@ -4,6 +4,8 @@ import controller.InitialMenuController;
 import utilities.Settings;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +47,19 @@ public class InitialMenuPanel extends BasePanel implements ActionListener {
         this.downPanel.add(this.quit, k);
         this.downPanel.setOpaque(false);
         this.add(downPanel, BorderLayout.SOUTH);
+        this.login.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent ae) {
+                login.requestFocus();
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) { }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) { }
+        });
+        repaint();
     }
 
     public void actionPerformed(ActionEvent ev) {
