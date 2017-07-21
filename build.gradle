@@ -5,6 +5,9 @@ apply plugin: 'scala'
 
 sourceCompatibility = 1.8
 
+sourceSets.main.scala.srcDir "src/main/java"
+sourceSets.main.java.srcDirs = []
+
 repositories {
     mavenCentral()
 }
@@ -12,4 +15,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'org.scala-lang:scala-library:2.12.2'
+    compile 'mysql:mysql-connector-java:5.1.42'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.18.0'
+    compile 'org.scalatest:scalatest_2.12:3.0.3'
 }
