@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameController;
+import controller.GameMenuController;
 import database.remote.DBConnect;
 import utilities.Settings;
 
@@ -11,12 +12,12 @@ import java.io.IOException;
 
 public class TrainerPanel extends BasePanel {
 
-    public TrainerPanel(GameController gameController) {
+    public TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(gameController.trainerSprite()));
+            myImage = ImageIO.read(getClass().getResource(gameController.trainer().sprites().frontS().image()));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +38,8 @@ public class TrainerPanel extends BasePanel {
         this.centralPanel.add(new JLabel(),k);
         this.backButton.addActionListener(e -> {
             gameController.resume();
-            //gameController.gamePanel().setFocusable(true);
+            gameController.pause();
+            gameMenuController.showGameMenu();
         });
     }
 }

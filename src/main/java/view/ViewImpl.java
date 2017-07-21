@@ -1,7 +1,6 @@
 package view;
 
 import controller.BattleController;
-import controller.Controller;
 import controller.GameController;
 import controller.*;
 import model.entities.PokemonWithLife;
@@ -16,7 +15,6 @@ import java.awt.*;
 public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
-    private Controller controller;
     private Dimension frameDiminsion;
     private BattleView battlePanel;
     private GamePanel gamePanel;
@@ -50,14 +48,11 @@ public class ViewImpl extends JFrame implements View {
         this.repaint();
     }
 
-    private void setGameMenuPanel(JPanel gameMenuPanel) {
-        this.getContentPane().add(gameMenuPanel, BorderLayout.EAST);
+    private void setGameMenuPanel(GameMenuController gameMenuController) {
+        this.getContentPane().add(new GameMenuPanel(gameMenuController), BorderLayout.EAST);
         this.revalidate();
         this.repaint();
     }
-
-    @Override
-    public void setController(Controller controller) { this.controller = controller; }
 
     @Override
     public void showInitialMenu(InitialMenuController initialMenuController) {
@@ -75,8 +70,8 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showMap(GameController mapController, GameMap gameMap) {
-        this.gamePanel = new MapPanel(mapController, gameMap);
+    public void showMap(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
+        this.gamePanel = new MapPanel(mapController, distributedMapController, gameMap);
         this.setPanel(this.gamePanel);
     }
 
@@ -126,43 +121,38 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokedex(GameController gameController) {
-        this.setPanel(new PokedexPanel(gameController));
+    public void showPokedex(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new PokedexPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showTeamPanel(GameController gameController) {
-        this.setPanel(new TeamPanel(gameController));
+    public void showTeamPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new TeamPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showTrainerPanel(GameController gameController) {
-        this.setPanel(new TrainerPanel(gameController));
+    public void showTrainerPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new TrainerPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showRankingPanel(GameController gameController) {
-        this.setPanel(new RankingPanel(gameController));
+    public void showRankingPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new RankingPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showKeyboardPanel(GameController gameController) {
-        this.setPanel(new KeyboardPanel(gameController));
+    public void showKeyboardPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new KeyboardPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showGameMenuPanel(GameController controller) {
-        this.setGameMenuPanel(new GameMenuPanel(new GameMenuControllerImpl(this, controller)));
+    public void showGameMenuPanel(GameMenuController gameMenuController) {
+        this.setGameMenuPanel(gameMenuController);
     }
 
     @Override
     public void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameMenuController gameMenuController) {
         this.setPanel(new PokemonInTeamPanel(pokemonWithLife, gameMenuController));
-    }
-
-    @Override
-    public void showPause() {
-
     }
 
     @Override

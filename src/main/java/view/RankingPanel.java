@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameController;
+import controller.GameMenuController;
 import scala.Tuple3;
 import utilities.Settings;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class RankingPanel extends BasePanel {
 
-    public RankingPanel(GameController gameController) {
+    public RankingPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         final JScrollPane scrollFrame = new JScrollPane(mainPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -38,7 +39,7 @@ public class RankingPanel extends BasePanel {
             Image myImage;
             ImageIcon myImageIcon = null;
             try {
-                myImage = ImageIO.read(getClass().getResource(gameController.trainerSprite()));
+                myImage = ImageIO.read(getClass().getResource(gameController.trainer().sprites().frontS().image()));
                 myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -60,7 +61,12 @@ public class RankingPanel extends BasePanel {
             }
             mainPanel.add(trainerPanel);
         }
-        this.backButton.addActionListener(e -> gameController.resume());
+
+        this.backButton.addActionListener(e -> {
+            gameController.resume();
+            gameController.pause();
+            gameMenuController.showGameMenu();
+        });
 
     }
 
