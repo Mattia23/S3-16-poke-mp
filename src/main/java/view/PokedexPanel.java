@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameController;
+import controller.GameMenuController;
 import database.local.PokedexConnect;
 import utilities.Settings;
 
@@ -16,7 +17,7 @@ public class PokedexPanel extends  BasePanel{
     private static final int POKEMON_SIDE = (int) (Settings.FRAME_SIDE()/5.8);
     private static final int POKEBALL_SIDE = Settings.FRAME_SIDE()/22;
 
-    public PokedexPanel(GameController gameController){
+    public PokedexPanel(GameMenuController gameMenuController, GameController gameController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
         northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
@@ -75,7 +76,8 @@ public class PokedexPanel extends  BasePanel{
 
         this.backButton.addActionListener(e -> {
             gameController.resume();
-           // gameController.gamePanel().setFocusable(true);
+            gameController.pause();
+            gameMenuController.showGameMenu();
         });
         JScrollPane scroll = new JScrollPane(centralPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setOpaque(false);

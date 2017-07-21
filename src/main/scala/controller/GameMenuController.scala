@@ -1,5 +1,6 @@
 package controller
 
+import model.entities.PokemonWithLife
 import model.environment.{Audio, AudioImpl}
 import utilities.Settings
 import view.View
@@ -18,19 +19,27 @@ trait GameMenuController{
   def doLogout(): Unit
 
   def doExit(): Unit
+
+  def showGameMenu(): Unit
+
+  def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit
 }
 
 class GameMenuControllerImpl(private var view: View, private val gameController: GameController) extends GameMenuController{
 
-  override def showPokedex(): Unit = view.showPokedex(gameController)
+  private val audio: Audio = new AudioImpl(Settings.MENU_SONG)
+  audio.loop()
+  showGameMenu()
 
-  override def showTeam(): Unit = view.showTeamPanel(gameController)
+  override def showPokedex(): Unit = view.showPokedex(this, gameController)
 
-  override def showTrainer(): Unit = view.showTrainerPanel(gameController)
+  override def showTeam(): Unit = view.showTeamPanel(this, gameController)
 
-  override def showRanking(): Unit = view.showRankingPanel(gameController)
+  override def showTrainer(): Unit = view.showTrainerPanel(this, gameController)
 
-  override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(gameController)
+  override def showRanking(): Unit = view.showRankingPanel(this, gameController)
+
+  override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this, gameController)
 
   override def doLogout(): Unit = {
     gameController.terminate()
@@ -38,6 +47,14 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
   }
 
   override def doExit(): Unit = {
+    audio.stop()
     gameController.resume()
   }
+
+  override def showGameMenu(): Unit = {
+    view.showGameMenuPanel(this)
+  }
+
+  override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit =
+    view.showPokemonInTeamPanel(pokemonWithLife, this)
 }
