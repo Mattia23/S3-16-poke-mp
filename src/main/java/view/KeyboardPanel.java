@@ -2,6 +2,7 @@ package view;
 
 
 import controller.GameController;
+import controller.GameMenuController;
 import utilities.Settings;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import java.awt.*;
 
 public class KeyboardPanel extends BasePanel {
 
-    public KeyboardPanel (GameController gameController) {
+    public KeyboardPanel (GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "keyboard.png");
 
         JPanel northPanel = new JPanel(new BorderLayout());
@@ -35,7 +36,8 @@ public class KeyboardPanel extends BasePanel {
 
         this.backButton.addActionListener(e -> {
             gameController.resume();
-            //gameController.gamePanel().setFocusable(true);
+            gameController.pause();
+            gameMenuController.showGameMenu();
         });
 
     }
