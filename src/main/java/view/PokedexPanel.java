@@ -2,7 +2,6 @@ package view;
 
 import controller.GameController;
 import database.local.PokedexConnect;
-import model.entities.Trainer;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
@@ -17,7 +16,7 @@ public class PokedexPanel extends  BasePanel{
     private static final int POKEMON_SIDE = (int) (Settings.FRAME_SIDE()/5.8);
     private static final int POKEBALL_SIDE = Settings.FRAME_SIDE()/22;
 
-    public PokedexPanel(Trainer trainer, GameController gameController){
+    public PokedexPanel(GameController gameController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
         northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
@@ -25,7 +24,7 @@ public class PokedexPanel extends  BasePanel{
         this.add(northPanel, BorderLayout.NORTH);
         k.insets = new Insets(0,0,0,10);
         JLabel id, name, icon, captured, infoNumber;
-        infoNumber = new JLabel("      INFO:           CAUGHT: " + trainer.capturedPokemonId().length() + "   SEEN: " + trainer.pokedex().pokedex().length());
+        infoNumber = new JLabel("      INFO:           CAUGHT: " + gameController.trainer().capturedPokemonId().length() + "   SEEN: " + gameController.trainer().pokedex().pokedex().length());
         infoNumber.setFont(new Font("Verdana", Font.PLAIN, INFO_FONT_SIZE));
         infoNumber.setHorizontalAlignment(JLabel.CENTER);
         infoNumber.setForeground(Color.WHITE);
@@ -34,7 +33,7 @@ public class PokedexPanel extends  BasePanel{
         ImageIcon myImageIcon = null;
         for(int i = 1; i < 152; i++) {
             id = new JLabel(i + ")");
-            if(trainer.pokedex().pokedex().contains(i)){
+            if(gameController.trainer().pokedex().pokedex().contains(i)){
                 name = new JLabel(PokedexConnect.getPokemonName(i).get().toUpperCase());
                 try {
                     myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + i + ".png"));
@@ -43,7 +42,7 @@ public class PokedexPanel extends  BasePanel{
                     e.printStackTrace();
                 }
                 icon = new JLabel(myImageIcon);
-                if(trainer.capturedPokemonId().contains(i)){
+                if(gameController.trainer().capturedPokemonId().contains(i)){
                     try {
                         myImage = ImageIO.read(getClass().getResource(Settings.POKEBALL_IMAGES() + "pokeballIcon.png"));
                         myImageIcon = new ImageIcon(myImage.getScaledInstance(POKEBALL_SIDE,POKEBALL_SIDE,java.awt.Image.SCALE_SMOOTH));

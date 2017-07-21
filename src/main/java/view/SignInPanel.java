@@ -1,7 +1,6 @@
 package view;
 
 import controller.SignInController;
-import model.entities.Trainer1;
 import model.entities.TrainerSprites$;
 import model.entities.Trainers;
 import utilities.Settings;
@@ -71,6 +70,6 @@ public class SignInPanel extends BasePanel {
 
         submit.addActionListener(e -> this.controller.signIn(accountData, this.trainer.id()));
         this.backButton.addActionListener(e -> this.controller.back());
-
+        JUtil.setFocus(accountData.get(AccountData.Name.toString()));
     }
 }

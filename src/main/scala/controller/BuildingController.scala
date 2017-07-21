@@ -1,16 +1,15 @@
 package controller
 
-import model.characters.{OakAfterChoise}
-import model.entities.{Trainer}
+import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
-import model.map.Box
+import model.map.{Box, BuildingMap, LaboratoryMap, PokemonCenterMap}
 import utilities.Settings
 import view._
 
 import scala.collection.JavaConverters._
 
-abstract class BuildingController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
+abstract class BuildingController(private val view: View, private val mapController: GameController, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
 
   protected var buildingMap: BuildingMap
   protected var nextPosition: Coordinate = _
@@ -54,13 +53,16 @@ abstract class BuildingController(private val view: View, private val mapControl
 
   override protected def doPause(): Unit = {
     this.gamePanel.setFocusable(false)
+    this.audio.stop()
   }
 
   override protected def doResume(): Unit = {
     this.gamePanel.setFocusable(true)
+    this.audio.loop()
   }
 
 }
+
 
 class PokemonCenterController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap

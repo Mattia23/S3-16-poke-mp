@@ -25,7 +25,7 @@ class GameKeyListener(val gameController: GameController) extends KeyListener{
         case KeyEvent.VK_SPACE => this.gameController.trainerInteract(this.direction)
         case KeyEvent.VK_ESCAPE =>
           this.gameController.pause()
-          this.gameController.showMenu()
+          this.gameController.showGameMenu()
         case _ =>
       }
     }

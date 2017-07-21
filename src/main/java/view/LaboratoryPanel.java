@@ -1,7 +1,7 @@
 package view;
 
 import controller.GameController;
-import model.environment.BuildingMap;
+import model.map.BuildingMap;
 import utilities.Settings;
 
 import java.awt.*;

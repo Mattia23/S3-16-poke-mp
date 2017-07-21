@@ -1,9 +1,8 @@
 package view;
 
 import controller.*;
-import model.entities.Pokemon;
 import model.entities.PokemonWithLife;
-import model.environment.BuildingMap;
+import model.map.BuildingMap;
 import model.map.GameMap;
 import model.entities.Trainer;
 
@@ -40,15 +39,15 @@ public interface View {
 
     void showPokemonChoice(BattleController battleController, Trainer trainer);
 
-    void showPokedex(Trainer trainer, GameController gameController);
+    void showPokedex(GameController gameController);
 
-    void showTeamPanel(Trainer trainer, GameController gameController);
+    void showTeamPanel(GameController gameController);
 
-    void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameController gameController);
+    void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameMenuController gameMenuController);
 
-    void showTrainerPanel(Trainer trainer, GameController gameController);
+    void showTrainerPanel(GameController gameController);
 
-    void showRankingPanel(Trainer trainer, GameController gameController);
+    void showRankingPanel(GameController gameController);
 
     void showKeyboardPanel(GameController gameController);
 
