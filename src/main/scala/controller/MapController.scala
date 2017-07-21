@@ -77,6 +77,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override protected def doResume(): Unit = {
+    distributedMapController.sendTrainerInBuilding(true)
     if(trainer.getFirstAvailableFavouritePokemon <= 0) {
       DBConnect.rechangeAllTrainerPokemon(trainer.id)
       setTrainerSpriteFront()
@@ -115,6 +116,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doInteract(direction: Direction): Unit = ???
 
   private def enterInBuilding(building: Building): Unit = {
+    distributedMapController.sendTrainerInBuilding(false)
     pause()
     var buildingController: BuildingController = null
     building match{

@@ -1,19 +1,18 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
 import distributed.deserializers.ConnectedPlayersMessageDeserializer
 import distributed.messages.{ConnectedPlayersMessageImpl, PlayerMessage}
-import model.environment.Coordinate
 import utilities.Settings
 
 trait PlayerLoginClientManager{
-  def sendPlayerInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit
+  def sendPlayer(player: Player): Unit
 
-  def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentHashMap[Int, Player]): Unit
+  def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
 }
 
 object PlayerLoginClientManager {
@@ -27,14 +26,13 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
 
   channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
 
-  override def sendPlayerInformation(userId: Int, username: String, sprites: Int, position: Coordinate): Unit = {
-    val player = Player(userId, username, sprites, position)
+  override def sendPlayer(player: Player): Unit = {
     val playerMessage = PlayerMessage(player)
     channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
   }
 
-  override def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentHashMap[Int, Player]): Unit = {
+  override def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
     val playerQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
     channel.queueDeclare(playerQueue, false, false, false, null)
 
