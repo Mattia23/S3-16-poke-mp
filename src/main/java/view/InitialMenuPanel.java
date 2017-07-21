@@ -47,18 +47,10 @@ public class InitialMenuPanel extends BasePanel implements ActionListener {
         this.downPanel.add(this.quit, k);
         this.downPanel.setOpaque(false);
         this.add(downPanel, BorderLayout.SOUTH);
-        this.login.addAncestorListener(new AncestorListener() {
-            @Override
-            public void ancestorAdded(AncestorEvent ae) {
-                login.requestFocus();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) { }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) { }
-        });
+        JUtil.setFocus(this.login);
+        JUtil.setEnterClick(this.login);
+        JUtil.setEnterClick(this.signIn);
+        JUtil.setEnterClick(this.quit);
         repaint();
     }
 
