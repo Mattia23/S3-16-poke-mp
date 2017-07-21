@@ -45,7 +45,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   private def initView(): Unit = {
-    setTrainerSpriteFront()
     view.showMap(this, distributedMapController, gameMap)
     gamePanel = view.getGamePanel
   }
@@ -80,6 +79,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doResume(): Unit = {
     if(trainer.getFirstAvailableFavouritePokemon <= 0) {
       DBConnect.rechangeAllTrainerPokemon(trainer.id)
+      setTrainerSpriteFront()
       updateLastCoordinateToBuilding(POKEMON_CENTER_BUILDING)
     }
     trainer.coordinate = lastCoordinates

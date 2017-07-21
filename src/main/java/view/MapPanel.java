@@ -57,7 +57,7 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawTrainer(Graphics g){
-        g.drawImage(LoadImage.load(mapController.trainerSprite()),
+        g.drawImage(LoadImage.load(mapController.trainer().currentSprite().image()),
                 Settings.FRAME_SIDE() / 2,
                 Settings.FRAME_SIDE() / 2,
                 null);

@@ -27,7 +27,7 @@ public class BuildingPanel extends GamePanel {
     protected void doPaint(final Graphics g) {
         g.drawImage(this.buildingMap.image(), centerX, centerY, this);
 
-        g.drawImage(LoadImage.load(this.gameController.trainerSprite()),
+        g.drawImage(LoadImage.load(this.gameController.trainer().currentSprite().image()),
                 centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
 
         g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.TILE_PIXEL(),
