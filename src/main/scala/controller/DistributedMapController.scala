@@ -3,8 +3,8 @@ package controller
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
-import distributed.{CommunicationService, Player}
-import distributed.client.{NewPlayerInGameClientManager, NewPlayerInGameClientManagerImpl, PlayerPositionClientManager, PlayerPositionClientManagerImpl}
+import distributed.Player
+import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
 import utilities.Settings
