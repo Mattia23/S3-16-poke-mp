@@ -9,15 +9,13 @@ import model.entities.Trainer;
 import javax.swing.*;
 
 public interface View {
-    void setController(Controller controller);
-
     void showInitialMenu(InitialMenuController initialMenuController);
 
     void showLogin(LoginController loginController);
 
     void showSignIn(SignInController signInController);
 
-    void showMap(GameController mapController, GameMap gameMap);
+    void showMap(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap);
 
     void showPokemonCenter(GameController pokemonCenterController, BuildingMap buildingMap);
 
@@ -50,8 +48,6 @@ public interface View {
     void showRankingPanel(GameMenuController gameMenuController, GameController gameController);
 
     void showKeyboardPanel(GameMenuController gameMenuController, GameController gameController);
-
-    void showPause();
 
     void showMessage(final String error, final String title, final int messageType);
 
