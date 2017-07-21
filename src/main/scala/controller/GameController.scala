@@ -19,8 +19,6 @@ trait GameController {
 
   def isInPause: Boolean
 
-  //def trainerSprite: String
-
   def start(): Unit
 
   def terminate(): Unit
@@ -40,7 +38,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   private final val TRAINER_STEPS = 4
 
   private var agent: GameControllerAgent = _
-  //private var _trainerSprite: Sprite = _
   private var fistStep: Boolean = true
   protected var inGame = false
   protected var inPause = false
@@ -52,8 +49,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override def isInGame: Boolean = this.inGame
 
   override def isInPause: Boolean = this.inPause
-
-  //override def trainerSprite: String = _trainerSprite.image
 
   override final def start(): Unit = {
     inGame = true
@@ -105,7 +100,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
-     // _trainerSprite = trainer.sprites.backS
       trainer.currentSprite = trainer.sprites.backS
       CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y - 1)
     case Direction.DOWN =>
