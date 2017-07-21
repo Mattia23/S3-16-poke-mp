@@ -19,8 +19,6 @@ trait GameController {
 
   def isInPause: Boolean
 
-  def trainerSprite: String
-
   def start(): Unit
 
   def terminate(): Unit
@@ -40,7 +38,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   private final val TRAINER_STEPS = 4
 
   private var agent: GameControllerAgent = _
-  private var _trainerSprite: Sprite = _
   private var fistStep: Boolean = true
   protected var inGame = false
   protected var inPause = false
@@ -52,8 +49,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override def isInGame: Boolean = this.inGame
 
   override def isInPause: Boolean = this.inPause
-
-  override def trainerSprite: String = _trainerSprite.image
 
   override final def start(): Unit = {
     inGame = true
@@ -105,16 +100,16 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
-      _trainerSprite = trainer.sprites.backS
+      trainer.currentSprite = trainer.sprites.backS
       CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y - 1)
     case Direction.DOWN =>
-      _trainerSprite = trainer.sprites.frontS
+      trainer.currentSprite = trainer.sprites.frontS
       CoordinateImpl(trainer.coordinate.x, trainer.coordinate.y + 1)
     case Direction.RIGHT =>
-      _trainerSprite = trainer.sprites.rightS
+      trainer.currentSprite = trainer.sprites.rightS
       CoordinateImpl(trainer.coordinate.x + 1, trainer.coordinate.y)
     case Direction.LEFT =>
-      _trainerSprite = trainer.sprites.leftS
+      trainer.currentSprite = trainer.sprites.leftS
       CoordinateImpl(trainer.coordinate.x - 1, trainer.coordinate.y)
   }
 
@@ -149,70 +144,70 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   private def updateTrainerSprite(direction: Direction): Unit = {
     if (trainerIsMoving) {
       direction match {
-        case Direction.UP => _trainerSprite match {
+        case Direction.UP => trainer.currentSprite match {
           case BackS(_) =>
             if (fistStep) {
-              _trainerSprite = trainer.sprites.back1
+              trainer.currentSprite = trainer.sprites.back1
               fistStep = false
             } else {
-              _trainerSprite = trainer.sprites.back2
+              trainer.currentSprite = trainer.sprites.back2
               fistStep = true
             }
-          case Back1(_) | Back2(_) => _trainerSprite = trainer.sprites.backS
-          case _ => _trainerSprite = trainer.sprites.back1
+          case Back1(_) | Back2(_) => trainer.currentSprite = trainer.sprites.backS
+          case _ => trainer.currentSprite = trainer.sprites.back1
         }
-        case Direction.DOWN => _trainerSprite match {
+        case Direction.DOWN => trainer.currentSprite match {
           case FrontS(_) =>
             if (fistStep) {
-              _trainerSprite = trainer.sprites.front1
+              trainer.currentSprite = trainer.sprites.front1
               fistStep = false
             } else {
-              _trainerSprite = trainer.sprites.front2
+              trainer.currentSprite = trainer.sprites.front2
               fistStep = true
             }
-          case Front1(_) | Front2(_) => _trainerSprite = trainer.sprites.frontS
-          case _ => _trainerSprite = trainer.sprites.front1
+          case Front1(_) | Front2(_) => trainer.currentSprite = trainer.sprites.frontS
+          case _ => trainer.currentSprite = trainer.sprites.front1
         }
-        case Direction.LEFT => _trainerSprite match {
+        case Direction.LEFT => trainer.currentSprite match {
           case LeftS(_) =>
             if (fistStep) {
-              _trainerSprite = trainer.sprites.left1
+              trainer.currentSprite = trainer.sprites.left1
               fistStep = false
             } else {
-              _trainerSprite = trainer.sprites.left2
+              trainer.currentSprite = trainer.sprites.left2
               fistStep = true
             }
-          case Left1(_) | Left2(_) => _trainerSprite = trainer.sprites.leftS
-          case _ => _trainerSprite = trainer.sprites.left1
+          case Left1(_) | Left2(_) => trainer.currentSprite = trainer.sprites.leftS
+          case _ => trainer.currentSprite = trainer.sprites.left1
         }
-        case Direction.RIGHT => _trainerSprite match {
+        case Direction.RIGHT => trainer.currentSprite match {
           case RightS(_) =>
             if (fistStep) {
-              _trainerSprite = trainer.sprites.right1
+              trainer.currentSprite = trainer.sprites.right1
               fistStep = false
             } else {
-              _trainerSprite = trainer.sprites.right2
+              trainer.currentSprite = trainer.sprites.right2
               fistStep = true
             }
-          case Right1(_) | Right2(_) => _trainerSprite = trainer.sprites.rightS
-          case _ => _trainerSprite = trainer.sprites.right1
+          case Right1(_) | Right2(_) => trainer.currentSprite = trainer.sprites.rightS
+          case _ => trainer.currentSprite = trainer.sprites.right1
         }
       }
     } else {
       direction match {
-        case Direction.UP => _trainerSprite = trainer.sprites.backS
-        case Direction.DOWN => _trainerSprite = trainer.sprites.frontS
-        case Direction.LEFT => _trainerSprite = trainer.sprites.leftS
-        case Direction.RIGHT => _trainerSprite = trainer.sprites.rightS
+        case Direction.UP => trainer.currentSprite = trainer.sprites.backS
+        case Direction.DOWN => trainer.currentSprite = trainer.sprites.frontS
+        case Direction.LEFT => trainer.currentSprite = trainer.sprites.leftS
+        case Direction.RIGHT => trainer.currentSprite = trainer.sprites.rightS
       }
     }
   }
 
   private def updateTrainerPosition(coordinate: Coordinate): Unit = trainer.coordinate = CoordinateImpl(coordinate.x, coordinate.y)
 
-  protected def setTrainerSpriteFront(): Unit = _trainerSprite = trainer.sprites.frontS
+  protected def setTrainerSpriteFront(): Unit = trainer.currentSprite = trainer.sprites.frontS
 
-  protected def setTrainerSpriteBack(): Unit = _trainerSprite = trainer.sprites.backS
+  protected def setTrainerSpriteBack(): Unit = trainer.currentSprite = trainer.sprites.backS
 
   private class GameControllerAgent extends Thread {
     var stopped: Boolean = false

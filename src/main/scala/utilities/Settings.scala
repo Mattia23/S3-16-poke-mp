@@ -3,7 +3,10 @@ package utilities
 import java.awt.{Dimension, Toolkit}
 import java.util
 
+import model.environment.{Coordinate, CoordinateImpl}
+
 object Settings {
+
   val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
 
   val GAME_REFRESH_TIME: Int = 100
@@ -241,9 +244,60 @@ object Settings {
   val USERNAME: String =  "Username"
 
   val PASSWORD: String =  "Password"
+
   val BATTLE_EVENT_CHANGE_POKEMON: Int = 1
 
   val BATTLE_EVENT_CAPTURE_POKEMON: Int = 1
 
   val BATTLE_EVENT_ESCAPE: Int = 2
+
+  val LOCAL_HOST_ADDRESS: String = "localhost"
+
+  val REMOTE_HOST_ADDRESS: String = "ec2-13-58-204-113.us-east-2.compute.amazonaws.com"
+
+  val REMOTE_HOST_PORT: Int = 5672
+
+  val REMOTE_HOST_USERNAME: String = "guest"
+
+  val REMOTE_HOST_PASSWORD: String = "guest"
+
+  val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
+
+  val PLAYERS_CONNECTED_CHANNEL_QUEUE: String = "players_connected"
+
+  val PLAYER_POSITION_CHANNEL_QUEUE: String = "player_position"
+
+  val PLAYER_LOGOUT_CHANNEL_QUEUE: String = "player_logout"
+
+  val PLAYER_IN_BUILDING_CHANNEL_QUEUE: String = "player_in_building"
+
+  val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
+
+  val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
+
+  val PLAYER_LOGOUT_EXCHANGE: String = "player_logout_exchange"
+
+  val PLAYER_IN_BUILDING_EXCHANGE: String = "player_in_building_exchange"
+
+  val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
+
+  val LOGIN_ERROR_USERNAME_PASSWORD_EMPTY: String = "Username and/or password must not be empty"
+
+  val LOGIN_ERROR_WRONG_USERNAME_PASSWORD: String = "Wrong username or password"
+
+  val LOGIN_ERROR_NO_TRAINER: String = "There is no trainer for this user"
+
+  val SIGN_IN_NAME_ERROR: String = "Name must be at least 3 characters"
+
+  val SIGN_IN_SURNAME_ERROR: String = "Surname must be at least 3 characters"
+
+  val SIGN_IN_EMAIL_ERROR: String = "Wrong e-mail"
+
+  val SIGN_IN_USERNAME_ERROR: String = "Username must be at least 4 characters"
+
+  val SIGN_IN_PASSWORD_ERROR: String = "Password must be at least 7 characters"
+
+  val CORRECT_SIGN_IN: String = "Successful sign-in"
+
+  val SIGN_IN_FAILED: String = "Username not available"
 }

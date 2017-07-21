@@ -1,7 +1,6 @@
 package view;
 
 import controller.BattleController;
-import controller.Controller;
 import controller.GameController;
 import controller.*;
 import model.entities.PokemonWithLife;
@@ -16,7 +15,6 @@ import java.awt.*;
 public class ViewImpl extends JFrame implements View {
 
     private static final String WINDOW_TITLE = "Pokemon MP";
-    private Controller controller;
     private Dimension frameDiminsion;
     private BattleView battlePanel;
     private GamePanel gamePanel;
@@ -57,9 +55,6 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void setController(Controller controller) { this.controller = controller; }
-
-    @Override
     public void showInitialMenu(InitialMenuController initialMenuController) {
         this.setPanel(new InitialMenuPanel(initialMenuController));
     }
@@ -75,8 +70,8 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showMap(GameController mapController, GameMap gameMap) {
-        this.gamePanel = new MapPanel(mapController, gameMap);
+    public void showMap(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
+        this.gamePanel = new MapPanel(mapController, distributedMapController, gameMap);
         this.setPanel(this.gamePanel);
     }
 
@@ -158,11 +153,6 @@ public class ViewImpl extends JFrame implements View {
     @Override
     public void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameMenuController gameMenuController) {
         this.setPanel(new PokemonInTeamPanel(pokemonWithLife, gameMenuController));
-    }
-
-    @Override
-    public void showPause() {
-
     }
 
     @Override

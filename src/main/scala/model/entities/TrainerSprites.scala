@@ -1,6 +1,7 @@
 package model.entities
 
 import utilities.Settings
+
 import scala.collection.JavaConverters._
 
 sealed trait TrainerSprites {
@@ -33,6 +34,13 @@ object TrainerSprites {
     case Trainers.Boy2 => Trainer2()
     case Trainers.Girl1 => Trainer3()
     case Trainers.Girl2 => Trainer4()
+  }
+
+  def getIdImageFromTrainerSprite(trainerSprites: TrainerSprites): Int = trainerSprites match {
+    case Trainer1() => Trainers.Boy1.id
+    case Trainer2() => Trainers.Boy2.id
+    case Trainer3() => Trainers.Girl1.id
+    case Trainer4() => Trainers.Girl2.id
   }
 }
 

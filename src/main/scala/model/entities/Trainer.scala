@@ -19,6 +19,10 @@ trait Trainer {
 
   def sprites: TrainerSprites
 
+  def currentSprite: Sprite
+
+  def currentSprite_=(sprite: Sprite): Unit
+
   def coordinate: Coordinate
 
   def coordinate_=(coordinate: Coordinate): Unit
@@ -50,16 +54,18 @@ trait Trainer {
   def getFirstAvailableFavouritePokemon: Int
 }
 
-class TrainerImpl(val name: String, private val idImage: Int, override var experiencePoints: Int) extends Trainer{
-  val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
+class TrainerImpl(override val name: String, private val idImage: Int, override var experiencePoints: Int) extends Trainer{
+
+  private var _coordinate: Coordinate = Settings.INITIAL_PLAYER_POSITION
+
+  override val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
   override var level: Int = calculateLevel()
-  private var _coordinate: Coordinate = CoordinateImpl(25,25)
+  override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
+  override var currentSprite: Sprite = sprites.frontS
   override var pokedex: Pokedex = new PokedexImpl(id)
   override var favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
   override var capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
   override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
-
-  override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
 
   private def calculateLevel(): Int = {
     var level: Double = Settings.INITIAL_TRAINER_LEVEL
