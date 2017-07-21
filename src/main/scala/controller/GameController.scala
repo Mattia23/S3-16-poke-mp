@@ -34,8 +34,6 @@ trait GameController {
   def trainerInteract(direction: Direction.Direction): Unit
 
   def showGameMenu(): Unit
-
-  def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
@@ -102,12 +100,8 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def doInteract(direction: Direction) : Unit
 
   override def showGameMenu(): Unit = {
-    this.setTrainerSpriteFront()
-    view.showGameMenuPanel(this)
+    new GameMenuControllerImpl(view, this)
   }
-
-  override def showPokemonInTeamPanel(pokemonWithLife: PokemonWithLife): Unit =
-    view.showPokemonInTeamPanel(pokemonWithLife, new GameMenuControllerImpl(view, this))
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

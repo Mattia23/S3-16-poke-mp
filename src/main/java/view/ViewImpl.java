@@ -50,8 +50,8 @@ public class ViewImpl extends JFrame implements View {
         this.repaint();
     }
 
-    private void setGameMenuPanel(JPanel gameMenuPanel) {
-        this.getContentPane().add(gameMenuPanel, BorderLayout.EAST);
+    private void setGameMenuPanel(GameMenuController gameMenuController) {
+        this.getContentPane().add(new GameMenuPanel(gameMenuController), BorderLayout.EAST);
         this.revalidate();
         this.repaint();
     }
@@ -126,33 +126,33 @@ public class ViewImpl extends JFrame implements View {
     }
 
     @Override
-    public void showPokedex(GameController gameController) {
-        this.setPanel(new PokedexPanel(gameController));
+    public void showPokedex(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new PokedexPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showTeamPanel(GameController gameController) {
-        this.setPanel(new TeamPanel(gameController));
+    public void showTeamPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new TeamPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showTrainerPanel(GameController gameController) {
-        this.setPanel(new TrainerPanel(gameController));
+    public void showTrainerPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new TrainerPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showRankingPanel(GameController gameController) {
-        this.setPanel(new RankingPanel(gameController));
+    public void showRankingPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new RankingPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showKeyboardPanel(GameController gameController) {
-        this.setPanel(new KeyboardPanel(gameController));
+    public void showKeyboardPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.setPanel(new KeyboardPanel(gameMenuController, gameController));
     }
 
     @Override
-    public void showGameMenuPanel(GameController controller) {
-        this.setGameMenuPanel(new GameMenuPanel(new GameMenuControllerImpl(this, controller)));
+    public void showGameMenuPanel(GameMenuController gameMenuController) {
+        this.setGameMenuPanel(gameMenuController);
     }
 
     @Override

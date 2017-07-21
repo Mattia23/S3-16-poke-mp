@@ -31,7 +31,7 @@ public interface View {
 
     void showDialogue(JPanel dialoguePanel);
 
-    void showGameMenuPanel(GameController controller);
+    void showGameMenuPanel(GameMenuController gameMenuController);
 
     void showBattle(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, BattleController battleController);
 
@@ -39,17 +39,17 @@ public interface View {
 
     void showPokemonChoice(BattleController battleController, Trainer trainer);
 
-    void showPokedex(GameController gameController);
+    void showPokedex(GameMenuController gameMenuController, GameController gameController);
 
-    void showTeamPanel(GameController gameController);
+    void showTeamPanel(GameMenuController gameMenuController, GameController gameController);
 
     void showPokemonInTeamPanel(PokemonWithLife pokemonWithLife, GameMenuController gameMenuController);
 
-    void showTrainerPanel(GameController gameController);
+    void showTrainerPanel(GameMenuController gameMenuController, GameController gameController);
 
-    void showRankingPanel(GameController gameController);
+    void showRankingPanel(GameMenuController gameMenuController, GameController gameController);
 
-    void showKeyboardPanel(GameController gameController);
+    void showKeyboardPanel(GameMenuController gameMenuController, GameController gameController);
 
     void showPause();
 

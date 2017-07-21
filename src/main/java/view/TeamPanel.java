@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameController;
+import controller.GameMenuController;
 import model.entities.Owner;
 import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
@@ -24,7 +25,7 @@ public class TeamPanel extends BasePanel{
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
     ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
-    public TeamPanel(GameController gameController) {
+    public TeamPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -67,7 +68,7 @@ public class TeamPanel extends BasePanel{
                     @Override
                     public void keyTyped(KeyEvent e) {
                         if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                            gameController.showPokemonInTeamPanel(pokemonWithLife);
+                            gameMenuController.showPokemonInTeamPanel(pokemonWithLife);
                         }
                     }
                 });
@@ -86,6 +87,8 @@ public class TeamPanel extends BasePanel{
 
         this.backButton.addActionListener(e -> {
             gameController.resume();
+            gameController.pause();
+            gameMenuController.showGameMenu();
         });
     }
 }
