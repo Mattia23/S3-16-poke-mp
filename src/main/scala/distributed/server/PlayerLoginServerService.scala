@@ -1,14 +1,12 @@
 package distributed.server
 
-import java.util
-import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
+import java.util.concurrent.ConcurrentMap
 
-import com.google.gson.reflect.TypeToken
-import com.google.gson.{Gson, GsonBuilder}
+import com.google.gson.GsonBuilder
 import com.rabbitmq.client._
 import distributed._
 import distributed.deserializers.PlayerMessageDeserializer
-import distributed.messages.{ConnectedPlayersMessage, PlayerMessage, PlayerMessageImpl}
+import distributed.messages.{ConnectedPlayersMessage, PlayerMessageImpl}
 import utilities.Settings
 
 object PlayerLoginServerService {

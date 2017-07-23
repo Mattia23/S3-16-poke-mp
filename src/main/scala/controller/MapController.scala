@@ -73,7 +73,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
-    this.gamePanel.setFocusable(false)
+    gamePanel.setFocusable(false)
   }
 
   override protected def doResume(): Unit = {
@@ -88,7 +88,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start()
     audio.loop()
-    this.gamePanel.setFocusable(true)
+    gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {
