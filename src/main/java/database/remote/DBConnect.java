@@ -29,17 +29,29 @@ public final class DBConnect {
 	private DBConnect() {}
 
 	private static void initConnection() {
-		if(con == null) {
-			try {
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				//con = DriverManager.getConnection("jdbc:mysql://lhcp1100.webapps.net:3306/eh2df0us_pokemon_mp", "eh2df0us", "{r87_16fzl:$");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
-				st = con.createStatement();
-				MyEncryptor.init();
-			} catch (Exception ex) {
-				System.out.println("Error: " + ex);
+		try {
+			if(con == null || con.isClosed()) {
+                try {
+                    Class.forName("com.mysql.jdbc.Driver").newInstance();
+                    con = DriverManager.getConnection("jdbc:mysql://lhcp1100.webapps.net:3306/eh2df0us_pokemon_mp", "eh2df0us", "{r87_16fzl:$");
+                    //con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
+                    st = con.createStatement();
+                    MyEncryptor.init();
+                } catch (Exception ex) {
+                    System.out.println("Error: " + ex);
 
-			}
+                }
+            }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void closeConnection(){
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

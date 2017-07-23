@@ -1,7 +1,9 @@
 package controller
 
+import java.util.concurrent.Semaphore
 import javax.swing.SwingUtilities
 
+import database.remote.DBConnect
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
@@ -32,6 +34,8 @@ trait GameController {
   def trainerInteract(direction: Direction.Direction): Unit
 
   def showGameMenu(): Unit
+
+  def logout(): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
@@ -43,6 +47,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected var inPause = false
   protected var audio: Audio = _
   protected var gamePanel: GamePanel = _
+  protected val semaphore: Semaphore = new Semaphore(1)
 
   override var trainerIsMoving: Boolean = false
 
@@ -98,6 +103,13 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
     new GameMenuControllerImpl(view, this)
   }
 
+  override def logout(): Unit = {
+    DBConnect.closeConnection()
+    doLogout()
+  }
+
+  protected def doLogout(): Unit
+
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
       trainer.currentSprite = trainer.sprites.backS
@@ -115,6 +127,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
     new Thread(() => {
+      semaphore.acquire()
       var actualX: Double = trainer.coordinate.x
       var actualY: Double = trainer.coordinate.y
       for (_ <- 1 to TRAINER_STEPS) {
@@ -138,6 +151,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
       updateTrainerPosition(nextPosition)
       trainerIsMoving = false
       updateTrainerSprite(direction)
+      semaphore.release()
     }).start()
   }
 

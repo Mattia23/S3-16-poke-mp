@@ -63,6 +63,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
           case (POKEMON_CENTER_BUILDING, tile: PokemonCenter) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+            distributedMapController.sendTrainerPosition(lastCoordinates)
           case _ =>
         }
       }
@@ -113,8 +114,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
   }
 
-  override protected def doInteract(direction: Direction): Unit = ???
-
   private def enterInBuilding(building: Building): Unit = {
     distributedMapController.sendTrainerInBuilding(false)
     pause()
@@ -132,9 +131,17 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
+      semaphore.acquire()
       pause()
       new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
+      semaphore.release()
     }
   }
 
+  override protected def doInteract(direction: Direction): Unit = ???
+
+  override protected def doLogout(): Unit = {
+    distributedMapController.playerLogout()
+    terminate()
+  }
 }

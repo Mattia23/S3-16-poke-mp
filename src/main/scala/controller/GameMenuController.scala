@@ -42,7 +42,7 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
   override def showKeyboardExplanation(): Unit = view.showKeyboardPanel(this, gameController)
 
   override def doLogout(): Unit = {
-    gameController.terminate()
+    gameController.logout()
     view.showInitialMenu(new InitialMenuControllerImpl(view))
   }
 

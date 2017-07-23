@@ -261,7 +261,7 @@ object Settings {
 
   val REMOTE_HOST_PASSWORD: String = "guest"
 
-  val PLAYER_CONNECTION_CHANNEL_QUEUE: String = "player_connection"
+  val PLAYER_LOGIN_CHANNEL_QUEUE: String = "player_connection"
 
   val PLAYERS_CONNECTED_CHANNEL_QUEUE: String = "players_connected"
 
@@ -285,7 +285,7 @@ object Settings {
 
   val LOGIN_ERROR_WRONG_USERNAME_PASSWORD: String = "Wrong username or password"
 
-  val LOGIN_ERROR_NO_TRAINER: String = "There is no trainer for this user"
+  val LOGIN_NO_TRAINER_ERROR: String = "There is no trainer for this user"
 
   val SIGN_IN_NAME_ERROR: String = "Name must be at least 3 characters"
 
