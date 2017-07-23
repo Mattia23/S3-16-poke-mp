@@ -113,8 +113,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
   }
 
-  override protected def doInteract(direction: Direction): Unit = ???
-
   private def enterInBuilding(building: Building): Unit = {
     distributedMapController.sendTrainerInBuilding(false)
     pause()
@@ -137,4 +135,10 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
   }
 
+  override protected def doInteract(direction: Direction): Unit = ???
+
+  override protected def doLogout(): Unit = {
+    distributedMapController.playerLogout()
+    terminate()
+  }
 }

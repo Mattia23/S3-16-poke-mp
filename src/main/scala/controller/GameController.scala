@@ -2,6 +2,7 @@ package controller
 
 import javax.swing.SwingUtilities
 
+import database.remote.DBConnect
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
@@ -32,6 +33,8 @@ trait GameController {
   def trainerInteract(direction: Direction.Direction): Unit
 
   def showGameMenu(): Unit
+
+  def logout(): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
@@ -97,6 +100,13 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override def showGameMenu(): Unit = {
     new GameMenuControllerImpl(view, this)
   }
+
+  override def logout(): Unit = {
+    DBConnect.closeConnection()
+    doLogout()
+  }
+
+  protected def doLogout(): Unit
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>

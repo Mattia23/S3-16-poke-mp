@@ -51,7 +51,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       serverInteraction(connection, username, trainer, connectedPlayers)
       MapController(view, trainer, connection, connectedPlayers).start()
     } else {
-      view.showMessage(Settings.LOGIN_ERROR_NO_TRAINER, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+      view.showMessage(Settings.LOGIN_NO_TRAINER_ERROR, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
     }
   }
 
