@@ -133,7 +133,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       pause()
-      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
+      new BattleControllerImpl(this: GameController, view: View)
     }
   }
 

@@ -340,6 +340,10 @@ public class BattlePanel extends ImagePanel implements BattleView {
         };
         t.start();
     }
+    @Override
+    public int[] getOtherPokemonAttacks() { return new int[]{(Integer)pokemonEntities[0].pokemon().attacks()._1(),
+            (Integer)pokemonEntities[0].pokemon().attacks()._2(), (Integer)pokemonEntities[0].pokemon().attacks()._3(),
+            (Integer)pokemonEntities[0].pokemon().attacks()._4()}; }
 
     @Override
     public void paintComponent(Graphics g) {
