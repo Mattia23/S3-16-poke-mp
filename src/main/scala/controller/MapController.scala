@@ -61,8 +61,11 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
         (building, gameMap.map(x)(y)) match {
           case (LABORATORY_BUILDING, tile:Laboratory) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+            return
           case (POKEMON_CENTER_BUILDING, tile: PokemonCenter) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+            distributedMapController.sendTrainerPosition(lastCoordinates)
+            return
           case _ =>
         }
       }
@@ -73,7 +76,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
-    this.gamePanel.setFocusable(false)
+    gamePanel.setFocusable(false)
   }
 
   override protected def doResume(): Unit = {
@@ -88,7 +91,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start()
     audio.loop()
-    this.gamePanel.setFocusable(true)
+    gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {
@@ -113,8 +116,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
   }
 
-  override protected def doInteract(direction: Direction): Unit = ???
-
   private def enterInBuilding(building: Building): Unit = {
     distributedMapController.sendTrainerInBuilding(false)
     pause()
@@ -132,9 +133,17 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
+      semaphore.acquire()
       pause()
+      semaphore.release()
       new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }
 
+  override protected def doInteract(direction: Direction): Unit = ???
+
+  override protected def doLogout(): Unit = {
+    distributedMapController.playerLogout()
+    terminate()
+  }
 }
