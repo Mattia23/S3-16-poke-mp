@@ -61,6 +61,11 @@ abstract class BuildingController(private val view: View, private val mapControl
     this.audio.loop()
   }
 
+  override protected def doLogout(): Unit = {
+    terminate()
+    mapController.terminate()
+  }
+
 }
 
 
@@ -103,6 +108,7 @@ class PokemonCenterController(private val view: View, private val mapController:
       }
     }
   }
+
 }
 
 class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
@@ -148,5 +154,6 @@ class LaboratoryController(private val view: View, private val mapController: Ga
       }
     }
   }
+
 }
 

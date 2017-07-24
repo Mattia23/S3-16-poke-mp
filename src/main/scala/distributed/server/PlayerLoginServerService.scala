@@ -1,14 +1,12 @@
 package distributed.server
 
-import java.util
-import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
+import java.util.concurrent.ConcurrentMap
 
-import com.google.gson.reflect.TypeToken
-import com.google.gson.{Gson, GsonBuilder}
+import com.google.gson.GsonBuilder
 import com.rabbitmq.client._
 import distributed._
 import distributed.deserializers.PlayerMessageDeserializer
-import distributed.messages.{ConnectedPlayersMessage, PlayerMessage, PlayerMessageImpl}
+import distributed.messages.{ConnectedPlayersMessage, PlayerMessageImpl}
 import utilities.Settings
 
 object PlayerLoginServerService {
@@ -18,7 +16,7 @@ object PlayerLoginServerService {
 class PlayerLoginServerService(private val connection: Connection, private val connectedPlayers: ConcurrentMap[Int, Player]) extends CommunicationService {
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
-    channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
+    channel.queueDeclare(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -33,7 +31,9 @@ class PlayerLoginServerService(private val connection: Connection, private val c
         val player = playerMessage.player
 
         val response = gson.toJson(ConnectedPlayersMessage(connectedPlayers))
-        channel.basicPublish("", Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + player.userId, null, response.getBytes("UTF-8"))
+        val respondeQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + player.userId
+        channel.queueDeclare(respondeQueue, false, false, false, null)
+        channel.basicPublish("", respondeQueue, null, response.getBytes("UTF-8"))
         println("server: send connected player")
         connectedPlayers.put(player.userId, player)
 
@@ -44,7 +44,7 @@ class PlayerLoginServerService(private val connection: Connection, private val c
       }
     }
 
-    channel.basicConsume(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, true, consumer)
+    channel.basicConsume(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, true, consumer)
   }
 
 }

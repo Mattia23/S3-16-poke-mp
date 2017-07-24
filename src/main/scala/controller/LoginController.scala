@@ -48,11 +48,12 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       val connection = DistributedConnectionImpl().connection
       val connectedPlayers = new ConcurrentHashMap[Int, Player]()
 
+      MapController(view, trainer, connection, connectedPlayers).start()
       serverInteraction(connection, username, trainer, connectedPlayers)
       initialMenuController.stopMainMusic()
-      MapController(view, trainer, connection, connectedPlayers).start()
+
     } else {
-      view.showMessage(Settings.LOGIN_ERROR_NO_TRAINER, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+      view.showMessage(Settings.LOGIN_NO_TRAINER_ERROR, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
     }
   }
 
