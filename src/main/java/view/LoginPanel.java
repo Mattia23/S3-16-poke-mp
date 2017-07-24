@@ -33,15 +33,16 @@ public class LoginPanel extends BasePanel {
         k.gridy++;
         this.centralPanel.add(submit,k);
         submit.addActionListener(e -> this.controller.login(usernameField.getText(), passwordField.getText()));
+
         JUtil.setFocus(usernameField);
-        passwordField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    submit.doClick();
-                }
-            }
-        });
+        JUtil.setSubmitEnterClick(usernameField, submit);
+        JUtil.setSubmitEnterClick(passwordField, submit);
+        JUtil.setEnterClick(submit);
+        JUtil.setEscClick(usernameField, this.backButton);
+        JUtil.setEscClick(passwordField, this.backButton);
+        JUtil.setEscClick(submit, this.backButton);
+        JUtil.setEscClick(this.backButton, this.backButton);
+        JUtil.setEnterClick(this.backButton);
     }
 
 }

@@ -223,6 +223,8 @@ object Settings {
 
   val AUDIO_FOLDER: String = "/audio/"
 
+  val MAIN_SONG: String = AUDIO_FOLDER + "opening-theme.wav"
+
   val MAP_SONG: String = AUDIO_FOLDER + "base-music.wav"
 
   val POKEMONCENTER_SONG: String = AUDIO_FOLDER + "pokemoncenter.wav"
@@ -232,6 +234,12 @@ object Settings {
   val HEALING_SOUND: String = AUDIO_FOLDER + "healing.wav"
 
   val MENU_SONG: String = AUDIO_FOLDER + "menu.wav"
+
+  val POKEMON_WILD_SONG: String = AUDIO_FOLDER + "pokemon-wild.wav"
+
+  val CAPTURE_SONG: String = AUDIO_FOLDER + "pokemon-capture.wav"
+
+  val CAPTURE_FAILED_SONG: String = AUDIO_FOLDER + "pokemon-capture-failed.wav"
 
   val LOGIN_BUTTON: String =  "Login"
 
