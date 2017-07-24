@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.messages.{PlayerInBuildingMessageImpl, PlayerLogoutMessageImpl}
+import distributed.messages.PlayerInBuildingMessageImpl
 import distributed.{CommunicationService, Player}
 import utilities.Settings
 
@@ -28,7 +28,6 @@ class PlayerInBuildingServerService (private val connection: Connection, private
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
         connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
-        //connectedPlayers.values() forEach (user => println(""+user.userId+ " "+user.position.x+" "+user.position.y))
 
         channel.exchangeDeclare(Settings.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
         val response = gson.toJson(playerInBuildingMessage)

@@ -47,7 +47,6 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
         val serverPlayersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
         connectedPlayers.putAll(serverPlayersMessage.connectedPlayers)
-        //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()
       }
