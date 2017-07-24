@@ -19,6 +19,8 @@ trait DistributedMapController{
 
   def sendTrainerInBuilding(isInBuilding: Boolean): Unit
 
+  def trainerChallengerId: Int = 0
+
   def playerLogout(): Unit
 }
 
@@ -34,6 +36,8 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManager(connection)
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
+  private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, trainerId)
+  override var trainerChallengerId: Int = 0
 
   newPlayerInGameManager.receiveNewPlayerInGame(trainerId, connectedPlayers)
   playerPositionManager.receiveOtherPlayerPosition(trainerId, connectedPlayers)
@@ -60,6 +64,10 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
       if(!mapController.isInPause){
         distributedMapController.connectedPlayers.values() forEach (player =>
           distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
+        if(distributedMapController.trainerChallengerId != 0){
+          //dialogo tra mapController.trainer.id; distributedMapController.trainerChallengerId
+          //distributedMapController.trainerChallengerId = 0
+        }
       }
 
       try
