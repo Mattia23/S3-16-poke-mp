@@ -1,0 +1,52 @@
+package distributed.client
+
+import com.google.gson.Gson
+import com.rabbitmq.client._
+import controller.BattleController
+import distributed.messages.{BattleMessage, BattleMessageImpl}
+
+trait BattleClientManager {
+  def sendBattleMessage(trainerId: Int, pokemonId: Int, attackId: Int): Unit
+
+  def receiveBattleMessage(): Unit
+}
+
+object BattleClientManager {
+  def apply(connection: Connection, myPlayerId: Int, otherPlayerId: Int, controller: BattleController): BattleClientManager =
+    new BattleClientManagerImpl(connection, myPlayerId, otherPlayerId, controller)
+}
+
+class BattleClientManagerImpl(private val connection: Connection,
+                              private val myPlayerId: Int,
+                              private val otherPlayerId: Int,
+                              private val controller: BattleController) extends BattleClientManager {
+
+  private var gson: Gson = new Gson()
+  private val channel: Channel = connection.createChannel()
+  private val myChannelName: String = "battle" + myPlayerId
+  private val otherChannelName: String = "battle" + otherPlayerId
+
+  channel.queueDeclare(myChannelName, false, false, false, null)
+
+  override def sendBattleMessage(trainerId: Int, pokemonId: Int, attackId: Int): Unit = {
+    val battleMessage = BattleMessage(trainerId,pokemonId,attackId)
+    channel.basicPublish("", myChannelName, null, gson.toJson(battleMessage).getBytes("UTF-8"))
+    println(" [x] Sent battle info")
+  }
+
+  override def receiveBattleMessage(): Unit = {
+    val consumer = new DefaultConsumer(channel) {
+
+      override def handleDelivery(consumerTag: String,
+                                  envelope: Envelope,
+                                  properties: AMQP.BasicProperties,
+                                  body: Array[Byte]) {
+        println(" [x] Received other player in building")
+        val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
+        controller.otherPokemonAttacks(battleMessage.attackId)
+      }
+
+    }
+    channel.basicConsume(otherChannelName,true,consumer)
+  }
+}

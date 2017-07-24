@@ -46,7 +46,7 @@ public class RankingPanel extends BasePanel {
             trainerPanel.add(level);
             trainerPanel.add(exp);
             setFontBold(rank);
-            if(object._1().toString().equals(gameController.trainer().name())){
+            if(object._1().equals(gameController.trainer().name())){
                 setFontBold(name);
                 setFontBold(level);
                 setFontBold(exp);
