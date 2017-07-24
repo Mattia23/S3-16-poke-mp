@@ -2,6 +2,7 @@ package controller
 
 import database.remote.DBConnect
 import model.entities.{Owner, Trainer}
+import model.environment.{Audio, AudioImpl}
 import model.game.{Battle, BattleImpl}
 import utilities.Settings
 import view.View
@@ -23,7 +24,7 @@ trait BattleController {
 
   def trainerCanQuit(): Boolean
 
-  def resumeGameAtPokemonCenter(): Unit
+  def resumeGame(): Unit
 }
 
 class BattleControllerImpl(val controller: GameController, val trainer: Trainer, val view: View) extends BattleController {
@@ -33,7 +34,8 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   private var timer: Thread = _
   battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
   showNewView()
-
+  private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
+  audio.loop()
 
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
@@ -78,14 +80,16 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   override def trainerThrowPokeball(): Boolean = {
     battle.pokeball_=(battle.pokeball-1)
     if(!battle.pokeballLaunched()) {
+      new AudioImpl(Settings.CAPTURE_FAILED_SONG)
       pokemonWildAttacksAfterTrainerChoice()
       false
     } else {
+      new AudioImpl(Settings.CAPTURE_SONG)
       timer = new Thread() {
         override def run() {
           battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CAPTURE_POKEMON)
           Thread.sleep(3000)
-          controller.resume()
+          resumeGame()
         }
       }
       timer.start()
@@ -96,7 +100,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   override def trainerCanQuit(): Boolean = {
     if (Random.nextDouble()<0.5) {
       battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_ESCAPE)
-      controller.resume()
+      resumeGame()
       true
     } else {
       pokemonWildAttacksAfterTrainerChoice()
@@ -104,7 +108,8 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
     }
   }
 
-  override def resumeGameAtPokemonCenter(): Unit = {
+  override def resumeGame(): Unit = {
+    audio.stop()
     controller.resume()
   }
 
@@ -120,7 +125,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
         if(pokemonDeadId==MY_POKEMON && !battle.battleFinished) {
           showNewView()
         } else if (pokemonDeadId==WILD_POKEMON) {
-          controller.resume()
+          resumeGame()
         }
 
       }
