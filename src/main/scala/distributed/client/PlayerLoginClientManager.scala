@@ -24,11 +24,11 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
   private var gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
 
-  channel.queueDeclare(Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, false, false, false, null)
+  channel.queueDeclare(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
 
   override def sendPlayer(player: Player): Unit = {
     val playerMessage = PlayerMessage(player)
-    channel.basicPublish("", Settings.PLAYER_CONNECTION_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
+    channel.basicPublish("", Settings.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
   }
 
@@ -47,7 +47,6 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
         val serverPlayersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
         connectedPlayers.putAll(serverPlayersMessage.connectedPlayers)
-        //connectedUsers.values() forEach (user => println(""+user.userId+ " "+user.username))
 
         channel.close()
       }

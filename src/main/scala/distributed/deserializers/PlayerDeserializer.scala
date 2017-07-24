@@ -3,7 +3,7 @@ package distributed.deserializers
 import java.lang.reflect.Type
 
 import com.google.gson.{JsonDeserializationContext, JsonDeserializer, JsonElement}
-import distributed.{Player, PlayerImpl}
+import distributed.Player
 import model.environment.CoordinateImpl
 
 object PlayerDeserializer extends JsonDeserializer[Player] {

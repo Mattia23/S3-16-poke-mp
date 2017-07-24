@@ -43,7 +43,7 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
 
   override def doLogout(): Unit = {
     audio.stop()
-    gameController.terminate()
+    gameController.logout()
     view.showInitialMenu(new InitialMenuControllerImpl(view))
   }
 

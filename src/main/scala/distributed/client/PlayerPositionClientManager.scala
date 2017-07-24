@@ -6,7 +6,6 @@ import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed.Player
 import distributed.deserializers.PlayerPositionMessageDeserializer
-import distributed.messages.PlayerPositionMessageImpl
 import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageImpl}
 import model.environment.Coordinate
 import utilities.Settings

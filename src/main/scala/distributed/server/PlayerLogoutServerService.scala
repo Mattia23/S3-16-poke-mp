@@ -28,7 +28,6 @@ class PlayerLogoutServerService(private val connection: Connection, private val 
         val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerLogoutMessageImpl])
 
         connectedPlayers.remove(logoutMessage.userId)
-        //connectedPlayers.values() forEach (user => println(""+user.userId+ " "+user.position.x+" "+user.position.y))
 
         channel.exchangeDeclare(Settings.PLAYER_LOGOUT_EXCHANGE, "fanout")
         val response = gson.toJson(logoutMessage)

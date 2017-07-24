@@ -59,9 +59,9 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
     while(mapController.isInGame && !stopped){
       if(!mapController.isInPause){
         distributedMapController.connectedPlayers.values() forEach (player =>
-          distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
+          if(distributedMapController.playersTrainerSprites.get(player.userId) == null)
+            distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
       }
-
       try
         Thread.sleep(Settings.GAME_REFRESH_TIME)
       catch {
