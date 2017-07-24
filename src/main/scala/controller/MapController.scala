@@ -113,7 +113,14 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
   }
 
-  override protected def doInteract(direction: Direction): Unit = ???
+  override protected def doInteract(direction: Direction): Unit = {
+    if (!isInPause){
+      var nextPosition: Coordinate = nextTrainerPosition(direction)
+      distributedMapController.connectedPlayers.values() forEach (player =>
+        if(nextPosition equals player.position)
+          println("bella fra"))
+    }
+  }
 
   private def enterInBuilding(building: Building): Unit = {
     distributedMapController.sendTrainerInBuilding(false)

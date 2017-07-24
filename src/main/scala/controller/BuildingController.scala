@@ -140,7 +140,7 @@ class LaboratoryController(private val view: View, private val mapController: Ga
         if(capturedPokemonEmpty) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
             this.pause()
-            view.showInitialPokemonPanel(this, pokemon.pokemonWithLife)
+            this.view.showInitialPokemonPanel(this, pokemon.pokemonWithLife)
           }
         }
       }catch{
