@@ -21,7 +21,7 @@ public class ViewImpl extends JFrame implements View {
 
     public ViewImpl() {
         this.setTitle(WINDOW_TITLE);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.frameDiminsion = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
         this.setSize(frameDiminsion);
         this.setMinimumSize(frameDiminsion);
