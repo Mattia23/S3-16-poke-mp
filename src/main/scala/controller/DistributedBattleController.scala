@@ -1,19 +1,22 @@
 package controller
 
+import database.remote.DBConnect
 import model.entities.{Owner, Trainer}
+import model.environment.{Audio, AudioImpl}
 import model.game.{Battle, TrainersBattle}
 import utilities.Settings
 import view.View
 
-class DistributedBattleController(val controller: GameController, val view: View) extends BattleController {
+class DistributedBattleController(val controller: GameController, val view: View, val otherTrainerUsername: String) extends BattleController {
   private val OTHER_POKEMON: Int = 0
   private val MY_POKEMON: Int = 1
-  private val otherTrainer: Trainer = controller.trainer
+  private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
   val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
   private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
-
+  private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
+  audio.loop()
 
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
@@ -47,7 +50,8 @@ class DistributedBattleController(val controller: GameController, val view: View
     battle.pokeball
   }
 
-  override def resumeGameAtPokemonCenter(): Unit = {
+  override def resumeGame(): Unit = {
+    audio.stop()
     controller.resume()
   }
 

@@ -68,7 +68,7 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
         battleFinished = true
         pointsEarned = 40
         _trainer.updateTrainer(pointsEarned)
-        controller.resumeGameAtPokemonCenter()
+        controller.resumeGame()
       }
     }
   }

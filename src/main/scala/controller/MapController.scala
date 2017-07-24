@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentMap
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
 import distributed.Player
+import distributed.client.{BattleClientManager, BattleClientManagerImpl}
 import model.entities.Trainer
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl}
@@ -113,8 +114,16 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
   }
 
-  override protected def doInteract(direction: Direction): Unit = ???
-
+  override protected def doInteract(direction: Direction): Unit = {
+    if (!isInPause){
+      val nextPosition: Coordinate = nextTrainerPosition(direction)
+      distributedMapController.connectedPlayers.values() forEach (player =>
+        if(nextPosition equals player.position) {
+          val distributedBattle: BattleController = new DistributedBattleController(this: GameController, view: View, player.username: String)
+          val battleClient: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,player.userId,distributedBattle)
+        })
+    }
+  }
   private def enterInBuilding(building: Building): Unit = {
     distributedMapController.sendTrainerInBuilding(false)
     pause()
