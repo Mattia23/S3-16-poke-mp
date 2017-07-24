@@ -32,7 +32,8 @@ public final class DBConnect {
 		if(con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				con = DriverManager.getConnection("jdbc:mysql://lhcp1100.webapps.net:3306/eh2df0us_pokemon_mp", "eh2df0us", "{r87_16fzl:$");
+				con = DriverManager.getConnection("jdbc:mysql://ec2-13-58-204-113.us-east-2.compute.amazonaws.com:3306/poke_mp", "root", "ViroliRicci12");
+				//con = DriverManager.getConnection("jdbc:mysql://lhcp1100.webapps.net:3306/eh2df0us_pokemon_mp", "eh2df0us", "{r87_16fzl:$");
 				//con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
 				st = con.createStatement();
 				MyEncryptor.init();
@@ -122,7 +123,7 @@ public final class DBConnect {
 		try {
 			String query = "SELECT `AUTO_INCREMENT`\n" +
 					"FROM  INFORMATION_SCHEMA.TABLES\n" +
-					"WHERE TABLE_SCHEMA = 'eh2df0us_pokemon_mp'\n" +
+					"WHERE TABLE_SCHEMA = 'poke_mp'\n" +
 					"AND   TABLE_NAME   = '"+tableName+"';";
 			rs = st.executeQuery(query);
 			if(rs.next()){
@@ -302,7 +303,7 @@ public final class DBConnect {
 
 	public static Optional<java.util.List<Tuple3<String, Integer, String>>> getRanking(){
 		try {
-			String query = "SELECT u.name ,u.id ,t.exp_points, u.id_image FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
+			String query = "SELECT u.username ,u.id ,t.exp_points, u.id_image FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
 			rs = st.executeQuery(query);
 			java.util.List<Tuple3<String, Integer, String>> list = new ArrayList();
 			while (rs.next()) {

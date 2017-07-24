@@ -2,6 +2,7 @@ package view;
 
 import controller.GameController;
 import controller.GameMenuController;
+import database.remote.DBConnect;
 import scala.Tuple3;
 import utilities.Settings;
 
@@ -22,20 +23,15 @@ public class RankingPanel extends BasePanel {
         mainPanel.setAutoscrolls(true);
         add(scrollFrame);
 
-        //richiesta al db per la classifica
-        List<Tuple3> trainers = new ArrayList<>();
-        for(int i=0; i<100; i++){
-            trainers.add(new Tuple3("gianni", "8", "immagine2"));
-        }
-        trainers.add(new Tuple3("gian", "8", "immagine2"));
+        List<Tuple3<String,Integer,String>> trainers = DBConnect.getRanking().get();
 
         int i = 1;
-        for(Tuple3 object: trainers){
+        for(Tuple3<String,Integer,String> object: trainers){
             final JPanel trainerPanel = new JPanel(new GridLayout(0,5));
             final JLabel rank = new JLabel(""+i++);
-            final JLabel name = new JLabel(object._1().toString());
-            final JLabel level = new JLabel("Level: "+calculateLevel(Integer.parseInt(object._2().toString())));
-            final JLabel exp = new JLabel("Experience Points: "+object._2().toString());
+            final JLabel name = new JLabel(object._1());
+            final JLabel level = new JLabel("Level: "+calculateLevel(object._2()));
+            final JLabel exp = new JLabel("Experience Points: "+object._2());
             Image myImage;
             ImageIcon myImageIcon = null;
             try {

@@ -4,6 +4,7 @@ import java.util.Optional
 
 import controller.{BattleController, GameController}
 import model.entities.{Owner, PokemonFactory, PokemonWithLife, Trainer}
+import utilities.Settings
 
 trait Battle {
   def trainer: Trainer
@@ -75,7 +76,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
         battleFinished = true
         pointsEarned = 30
         _trainer.updateTrainer(pointsEarned)
-        controller.resumeGameAtPokemonCenter
+        controller.resumeGame
       }
     }
   }
@@ -85,12 +86,15 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
   }
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
-    case 1 => {
+    case Settings.BATTLE_EVENT_CAPTURE_POKEMON => {
       val pointsEarned: Int = (wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
+      if(trainer.favouritePokemons.contains(0)){
+        trainer.addFavouritePokemon(trainer.capturedPokemons.last._1)
+      }
       _round.updatePokemon()
     }
-    case 2 => {
+    case Settings.BATTLE_EVENT_ESCAPE => {
       _trainer.updateTrainer(0)
       _round.updatePokemon()
     }

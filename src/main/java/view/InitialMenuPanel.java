@@ -9,44 +9,43 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
-public class InitialMenuPanel extends BasePanel implements ActionListener {
+public class InitialMenuPanel extends BasePanel implements ActionListener, KeyListener {
 
     private final static int INSETS = 10;
     private InitialMenuController controller;
     private JPanel downPanel;
-    private JButton login;
-    private JButton signIn;
-    private JButton quit;
+    private JButton[] buttons = new JButton[3];
+    private int currentButton = 0;
 
     public InitialMenuPanel(InitialMenuController controller) {
         this.controller = controller;
         this.setLayout(new BorderLayout());
         this.downPanel = new JPanel(new GridBagLayout());
-        this.login = new JButton(Settings.LOGIN_BUTTON());
-        this.signIn = new JButton(Settings.SIGN_IN_BUTTON());
-        this.quit = new JButton(Settings.QUIT_BUTTON());
+        this.buttons[0] = new JButton(Settings.LOGIN_BUTTON());
+        this.buttons[1] = new JButton(Settings.SIGN_IN_BUTTON());
+        this.buttons[2] = new JButton(Settings.QUIT_BUTTON());
 
-        this.login.addActionListener(this);
-        this.signIn.addActionListener(this);
-        this.quit.addActionListener(this);
+        this.buttons[0].addActionListener(this);
+        this.buttons[1].addActionListener(this);
+        this.buttons[2].addActionListener(this);
 
         k = new GridBagConstraints();
         k.gridy = 0;
         k.insets = new Insets(INSETS, INSETS, INSETS, INSETS);
         k.fill = GridBagConstraints.VERTICAL;
-        this.downPanel.add(this.login, k);
-        k.gridy++;
-        this.downPanel.add(this.signIn, k);
-        k.gridy++;
-        this.downPanel.add(this.quit, k);
+        for(JButton button: buttons){
+            this.downPanel.add(button, k);
+            k.gridy++;
+            JUtil.setEnterClick(button);
+            button.addKeyListener(this);
+        }
         this.downPanel.setOpaque(false);
         this.add(downPanel, BorderLayout.SOUTH);
-        JUtil.setFocus(this.login);
-        JUtil.setEnterClick(this.login);
-        JUtil.setEnterClick(this.signIn);
-        JUtil.setEnterClick(this.quit);
+        JUtil.setFocus(this.buttons[0]);
         repaint();
     }
 
@@ -57,4 +56,31 @@ public class InitialMenuPanel extends BasePanel implements ActionListener {
         }
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_DOWN:
+                if (currentButton < buttons.length-1) {
+                    buttons[++currentButton].requestFocus();
+                }
+                break;
+            case KeyEvent.VK_UP:
+                if (currentButton > 0) {
+                    buttons[--currentButton].requestFocus();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

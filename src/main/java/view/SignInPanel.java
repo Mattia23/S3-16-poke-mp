@@ -8,6 +8,10 @@ import scala.Enumeration.Value;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.*;
 
 public class SignInPanel extends BasePanel {
@@ -37,6 +41,13 @@ public class SignInPanel extends BasePanel {
             trainersBox.addItem(trainer);
         }
         trainersBox.setSelectedIndex(0);
+        trainersBox.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                trainersBox.showPopup();
+            }
+        });
+        JUtil.setEscClick(trainersBox, this.backButton);
 
         JButton submit  = new JButton(Settings.SUBMIT_BUTTON());
         Map<String,JTextField> accountData = new HashMap<>();
@@ -46,6 +57,8 @@ public class SignInPanel extends BasePanel {
             this.centralPanel.add(new JLabel(data.toString()), k);
             k.gridx++;
             JTextField textField = new JTextField(20);
+            JUtil.setSubmitEnterClick(textField, submit);
+            JUtil.setEscClick(textField, this.backButton);
             this.centralPanel.add(textField,k);
             k.gridy++;
             accountData.put(data.toString(),textField);
@@ -71,5 +84,7 @@ public class SignInPanel extends BasePanel {
         submit.addActionListener(e -> this.controller.signIn(accountData, this.trainer.id()));
         this.backButton.addActionListener(e -> this.controller.back());
         JUtil.setFocus(accountData.get(AccountData.Name.toString()));
+        JUtil.setEnterClick(submit);
+        JUtil.setEscClick(submit, this.backButton);
     }
 }

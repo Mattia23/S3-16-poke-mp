@@ -36,4 +36,26 @@ public class JUtil {
             }
         });
     }
+
+    public static void setSubmitEnterClick(JComponent jComponent, JButton jButton){
+        jComponent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    jButton.doClick();
+                }
+            }
+        });
+    }
+
+    public static void setEscClick(JComponent jComponent, JButton jButton){
+        jComponent.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+                    jButton.doClick();
+                }
+            }
+        });
+    }
 }
