@@ -27,7 +27,7 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
   override def startBattleRound(myPokemonId: Int, otherPokemonId: Int): Unit = {
     this.myPokemonId = myPokemonId
     this.otherPokemonId = otherPokemonId
-    _trainer.addMetPokemon(otherPokemon.pokemon.id)
+    _trainer.addMetPokemon(otherPokemonId)
     myPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(myPokemonId),Optional.empty()).get()
     otherPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(otherPokemonId),Optional.empty()).get()
     _round = new BattleRoundImpl(myPokemon, myPokemonId, otherPokemon, this)

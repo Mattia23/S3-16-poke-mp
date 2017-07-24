@@ -1,6 +1,7 @@
 package controller
 
 import database.remote.DBConnect
+import distributed.client.BattleClientManager
 import model.entities.{Owner, Trainer}
 import model.environment.{Audio, AudioImpl}
 import model.game.{Battle, TrainersBattle}
@@ -10,6 +11,7 @@ import view.View
 class DistributedBattleController(val controller: GameController, val view: View, val otherTrainerUsername: String) extends BattleController {
   private val OTHER_POKEMON: Int = 0
   private val MY_POKEMON: Int = 1
+  private var battleManager: BattleClientManager = _
   private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
   val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
   private var timer: Thread = _
@@ -18,15 +20,23 @@ class DistributedBattleController(val controller: GameController, val view: View
   private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
   audio.loop()
 
+  def passManager(battleClientManager: BattleClientManager): Unit = {
+    this.battleManager = battleClientManager
+  }
   override def myPokemonAttacks(attackId: Int): Unit = {
+    println("GIOCATORE 1: HO ATTACCATO")
+    //println("GIOCATORE 2: HO ATTACCATO")
     battle.round.myPokemonAttack(attackId)
     view.getBattlePanel.setPokemonLifeProgressBar(battle.otherPokemon.pokemonLife,Owner.WILD.id)
+    this.battleManager.sendBattleMessage(controller.trainer.id,battle.myPokemon.pokemon.id,attackId)
     if(battle.battleFinished || battle.roundFinished) {
       pokemonIsDead(OTHER_POKEMON)
     }
   }
 
   override def otherPokemonAttacks(id: Int): Unit = {
+    println("GIOCATORE 1: HO ATTACCATO")
+    //println("GIOCATORE 2: HO SUBITO")
     battle.round.otherPokemonAttack(id)
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)

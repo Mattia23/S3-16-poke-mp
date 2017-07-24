@@ -1,6 +1,7 @@
 package controller
 
 import database.remote.DBConnect
+import distributed.client.BattleClientManager
 import model.entities.{Owner, Trainer}
 import model.environment.{Audio, AudioImpl}
 import model.game.{Battle, BattleImpl}
@@ -25,6 +26,8 @@ trait BattleController {
   def trainerCanQuit(): Boolean
 
   def resumeGame(): Unit
+
+  def passManager(battleClientManager: BattleClientManager): Unit
 }
 
 class BattleControllerImpl(val controller: GameController, val view: View) extends BattleController {
@@ -145,4 +148,5 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
   }
 
   override def otherPokemonAttacks(id: Int): Unit = {}
+  override def passManager(battleClientManager: BattleClientManager): Unit = {}
 }

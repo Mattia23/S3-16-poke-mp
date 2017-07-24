@@ -123,7 +123,8 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       distributedMapController.connectedPlayers.values() forEach (player =>
         if(nextPosition equals player.position) {
           val distributedBattle: BattleController = new DistributedBattleController(this: GameController, view: View, player.username: String)
-          val battleClient: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,player.userId,distributedBattle)
+          val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,player.userId,distributedBattle)
+          distributedBattle.passManager(battleManager)
         })
     }
   }
