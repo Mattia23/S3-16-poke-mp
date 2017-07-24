@@ -133,8 +133,8 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       semaphore.acquire()
       pause()
-      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
       semaphore.release()
+      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }
 

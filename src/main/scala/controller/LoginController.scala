@@ -48,8 +48,9 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       val connection = DistributedConnectionImpl().connection
       val connectedPlayers = new ConcurrentHashMap[Int, Player]()
 
-      serverInteraction(connection, username, trainer, connectedPlayers)
       MapController(view, trainer, connection, connectedPlayers).start()
+      serverInteraction(connection, username, trainer, connectedPlayers)
+
     } else {
       view.showMessage(Settings.LOGIN_NO_TRAINER_ERROR, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
     }

@@ -21,7 +21,7 @@ public class KeyboardPanel extends BasePanel {
         northPanel.add(expl,BorderLayout.CENTER);
         this.add(northPanel,BorderLayout.NORTH);
 
-        this.centralPanel.add(createLabel("Chat with people: Space"), k);
+        this.centralPanel.add(createLabel("Space: Chat with people"), k);
         k.gridy++;
         this.centralPanel.add(createLabel("Up arrow: trainer moves up/browse choices during battle"), k);
         k.gridy++;
