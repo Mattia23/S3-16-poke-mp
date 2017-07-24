@@ -38,7 +38,7 @@ trait GameController {
   def logout(): Unit
 }
 
-abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController{
+abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
   private final val TRAINER_STEPS = 4
 
   private var agent: GameControllerAgent = _
@@ -67,8 +67,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override final def terminate(): Unit = {
     inGame = false
     doTerminate()
-    if(agent != null)
-      agent.terminate()
+    if (agent != null) agent.terminate()
   }
 
   protected def doTerminate(): Unit
@@ -76,8 +75,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override final def pause(): Unit = {
     inPause = true
     doPause()
-    if(agent != null)
-      agent.terminate()
+    if (agent != null) agent.terminate()
   }
 
   protected def doPause(): Unit
@@ -97,11 +95,9 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   override final def trainerInteract(direction: Direction): Unit = doInteract(direction)
 
-  protected def doInteract(direction: Direction) : Unit
+  protected def doInteract(direction: Direction): Unit
 
-  override def showGameMenu(): Unit = {
-    new GameMenuControllerImpl(view, this)
-  }
+  override def showGameMenu(): Unit = new GameMenuControllerImpl(view, this)
 
   override def logout(): Unit = {
     DBConnect.closeConnection()
@@ -125,7 +121,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
       CoordinateImpl(trainer.coordinate.x - 1, trainer.coordinate.y)
   }
 
-  protected def walk(direction: Direction, nextPosition: Coordinate) : Unit = {
+  protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
     new Thread(() => {
       semaphore.acquire()
       var actualX: Double = trainer.coordinate.x
@@ -224,29 +220,27 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def setTrainerSpriteBack(): Unit = trainer.currentSprite = trainer.sprites.backS
 
   private class GameControllerAgent extends Thread {
-    var stopped: Boolean = false
+    private var stopped: Boolean = false
 
     override def run(): Unit = {
-      while(isInGame && !stopped){
-        if(!isInPause){
+      while (isInGame && !stopped) {
+        if (!isInPause) {
           try
             SwingUtilities.invokeAndWait(() => gamePanel.repaint())
           catch {
-            case e: Exception => System.out.println(e)
+            case e: Exception => println(e)
           }
         }
 
         try
           Thread.sleep(Settings.GAME_REFRESH_TIME)
         catch {
-          case e: InterruptedException => System.out.println(e)
+          case e: InterruptedException => println(e)
         }
       }
     }
 
-    def terminate(): Unit = {
-      stopped = true
-    }
+    def terminate(): Unit = stopped = true
 
   }
 

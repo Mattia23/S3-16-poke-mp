@@ -61,9 +61,11 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
         (building, gameMap.map(x)(y)) match {
           case (LABORATORY_BUILDING, tile:Laboratory) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+            return
           case (POKEMON_CENTER_BUILDING, tile: PokemonCenter) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
             distributedMapController.sendTrainerPosition(lastCoordinates)
+            return
           case _ =>
         }
       }
