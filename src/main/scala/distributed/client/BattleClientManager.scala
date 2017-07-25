@@ -46,7 +46,11 @@ class BattleClientManagerImpl(private val connection: Connection,
         val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
         println(" [x] Received other player attack "+battleMessage.attackId)
         if(battleMessage.attackId == 0){
-          controller.otherPokemonChanges(battleMessage.pokemonId)
+          if(battleMessage.pokemonId == 0){
+            controller.resumeGame()
+          } else {
+            controller.otherPokemonChanges(battleMessage.pokemonId)
+          }
         } else {
           controller.otherPokemonAttacks(battleMessage.attackId)
         }
