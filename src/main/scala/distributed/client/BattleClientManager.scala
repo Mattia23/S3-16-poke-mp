@@ -27,6 +27,7 @@ class BattleClientManagerImpl(private val connection: Connection,
   private val otherChannelName: String = "battle" + otherPlayerId
 
   channel.queueDeclare(myChannelName, false, false, false, null)
+  channel.queueDeclare(otherChannelName, false, false, false, null)
 
   override def sendBattleMessage(trainerId: Int, pokemonId: Int, attackId: Int): Unit = {
     val battleMessage = BattleMessage(trainerId,pokemonId,attackId)
@@ -41,11 +42,10 @@ class BattleClientManagerImpl(private val connection: Connection,
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player in building")
+        println(" [x] Received other player attack")
         val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
         controller.otherPokemonAttacks(battleMessage.attackId)
       }
-
     }
     channel.basicConsume(otherChannelName,true,consumer)
   }

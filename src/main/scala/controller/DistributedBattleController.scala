@@ -22,21 +22,19 @@ class DistributedBattleController(val controller: GameController, val view: View
 
   def passManager(battleClientManager: BattleClientManager): Unit = {
     this.battleManager = battleClientManager
+    this.battleManager.receiveBattleMessage
   }
   override def myPokemonAttacks(attackId: Int): Unit = {
-    println("GIOCATORE 1: HO ATTACCATO")
-    //println("GIOCATORE 2: HO ATTACCATO")
     battle.round.myPokemonAttack(attackId)
     view.getBattlePanel.setPokemonLifeProgressBar(battle.otherPokemon.pokemonLife,Owner.WILD.id)
     this.battleManager.sendBattleMessage(controller.trainer.id,battle.myPokemon.pokemon.id,attackId)
     if(battle.battleFinished || battle.roundFinished) {
+      println("ti ho ucciso")
       pokemonIsDead(OTHER_POKEMON)
     }
   }
 
   override def otherPokemonAttacks(id: Int): Unit = {
-    println("GIOCATORE 1: HO ATTACCATO")
-    //println("GIOCATORE 2: HO SUBITO")
     battle.round.otherPokemonAttack(id)
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
@@ -75,8 +73,10 @@ class DistributedBattleController(val controller: GameController, val view: View
         view.getBattlePanel.pokemonIsDead(pokemonDeadId)
         Thread.sleep(2000)
         if(!battle.battleFinished) {
+          println("nuovo round")
           showNewView()
         } else {
+          println("la battaglia è finita")
           controller.resume()
         }
       }
@@ -85,5 +85,8 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   override def trainerThrowPokeball(): Boolean = {false}
-  override def trainerCanQuit(): Boolean = {false}
+  override def trainerCanQuit(): Boolean = {
+    resumeGame()
+    true
+  }
 }
