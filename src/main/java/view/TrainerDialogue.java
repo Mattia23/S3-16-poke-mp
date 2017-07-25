@@ -23,8 +23,8 @@ public class TrainerDialogue extends DialoguePanel {
             final JButton button = new JButton(text);
             button.addKeyListener(this);
             button.addActionListener(e ->{
-                gameController.resume();
                 this.setVisible(false);
+                gameController.setFocusableOn();
             });
             buttonPanel.add(button);
             buttons.add(button);
