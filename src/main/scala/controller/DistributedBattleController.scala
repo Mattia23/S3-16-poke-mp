@@ -37,7 +37,7 @@ class DistributedBattleController(val controller: GameController, val view: View
     battle.round.otherPokemonAttack(id)
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
-    if(battle.battleFinished || battle.roundFinished) {
+    if(battle.myPokemon.pokemonLife == 0) {
       pokemonIsDead(MY_POKEMON)
     }
   }
@@ -45,6 +45,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   override def otherPokemonChanges(newPokemonId: Int): Unit = {
     battle.round.updatePokemon()
     battle.startBattleRound(battle.getMyPokemonId,newPokemonId)
+    showNewView()
   }
 
   override def changePokemon(): Unit = {
@@ -72,19 +73,14 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   private def pokemonIsDead(pokemonDeadId: Int): Unit = {
-    timer = new Thread() {
-      override def run() {
-        view.getBattlePanel.pokemonIsDead(pokemonDeadId)
-        Thread.sleep(3000)
-        if(!battle.battleFinished) {
-          battleManager.sendBattleMessage(controller.trainer.id,controller.trainer.getFirstAvailableFavouritePokemon,0)
-          showNewView()
-        } else {
-          controller.resume()
-        }
-      }
+
+    view.getBattlePanel.pokemonIsDead(pokemonDeadId)
+    val nextPokemon: Int = controller.trainer.getFirstAvailableFavouritePokemon
+    if(pokemonDeadId == MY_POKEMON && nextPokemon > 0) {
+      battleManager.sendBattleMessage(controller.trainer.id,nextPokemon,0)
+    } else {
+      controller.resume()
     }
-    timer.start()
   }
 
   override def trainerThrowPokeball(): Boolean = {false}
