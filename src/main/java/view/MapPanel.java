@@ -47,7 +47,7 @@ public class MapPanel extends GamePanel{
 
     private void drawOtherTrainers(Graphics g){
         if(!this.distributedMapController.playersTrainerSprites().isEmpty()){
-            for(Player player : this.distributedMapController.connectedPlayers().values()){
+            for(Player player : this.distributedMapController.connectedPlayers().getAll().values()){
                 if(player.isVisible()) {
                     g.drawImage(LoadImage.load((this.distributedMapController.playersTrainerSprites().get(player.userId()))),
                             ((player.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,

@@ -1,10 +1,8 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
-import distributed.Player
+import distributed.ConnectedPlayers
 import distributed.deserializers.PlayerPositionMessageDeserializer
 import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageImpl}
 import model.environment.Coordinate
@@ -13,7 +11,7 @@ import utilities.Settings
 trait PlayerPositionClientManager{
   def sendPlayerPosition(userId: Int, position: Coordinate): Unit
 
-  def receiveOtherPlayerPosition(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
+  def receiveOtherPlayerPosition(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
 object PlayerPositionClientManager {
@@ -33,7 +31,7 @@ class PlayerPositionClientManagerImpl(private val connection: Connection) extend
     println(" [x] Sent position")
   }
 
-  override def receiveOtherPlayerPosition(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
+  override def receiveOtherPlayerPosition(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
 
     channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
     val playerQueue = channel.queueDeclare.getQueue

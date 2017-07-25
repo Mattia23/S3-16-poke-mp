@@ -3,15 +3,14 @@ package controller
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
-import distributed.client._
-import distributed.Player
-import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager}
+import distributed.ConnectedPlayers
+import distributed.client.{NewPlayerInGameClientManager, PlayerInBuildingClientManager, PlayerLogoutClientManager, PlayerPositionClientManager}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
 import utilities.Settings
 
 trait DistributedMapController{
-  def connectedPlayers: ConcurrentMap[Int, Player]
+  def connectedPlayers: ConnectedPlayers
 
   def playersTrainerSprites: ConcurrentMap[Int, String]
 
@@ -23,11 +22,11 @@ trait DistributedMapController{
 }
 
 object DistributedMapController{
-  def apply(mapController: GameController, connection: Connection, connectedPlayers: ConcurrentMap[Int, Player]): DistributedMapController =
+  def apply(mapController: GameController, connection: Connection, connectedPlayers: ConnectedPlayers): DistributedMapController =
     new DistributedMapControllerImpl(mapController, connection, connectedPlayers)
 }
 
-class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConcurrentMap[Int, Player]) extends DistributedMapController{
+class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConnectedPlayers) extends DistributedMapController{
 
   private val trainerId: Int = mapController.trainer.id
   private val newPlayerInGameManager: NewPlayerInGameClientManager = NewPlayerInGameClientManager(connection)
@@ -58,7 +57,7 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
   override def run(): Unit = {
     while(mapController.isInGame && !stopped){
       if(!mapController.isInPause){
-        distributedMapController.connectedPlayers.values() forEach (player =>
+        distributedMapController.connectedPlayers.getAll.values() forEach (player =>
           if(distributedMapController.playersTrainerSprites.get(player.userId) == null)
             distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
       }

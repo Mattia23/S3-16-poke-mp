@@ -1,17 +1,15 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.Player
-import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerLogoutMessageImpl}
+import distributed.ConnectedPlayers
+import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl}
 import utilities.Settings
 
 trait PlayerInBuildingClientManager {
   def sendPlayerIsInBuilding(userId: Int, isInBuilding: Boolean): Unit
 
-  def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
+  def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
 object PlayerInBuildingClientManager {
@@ -36,7 +34,7 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
     println(" [x] Sent player is in building message")
   }
 
-  override def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
+  override def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val consumer = new DefaultConsumer(channel) {
 
       override def handleDelivery(consumerTag: String,

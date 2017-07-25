@@ -1,17 +1,15 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.Player
+import distributed.ConnectedPlayers
 import distributed.messages.{PlayerLogoutMessage, PlayerLogoutMessageImpl}
 import utilities.Settings
 
 trait PlayerLogoutClientManager {
   def sendPlayerLogout(userId: Int): Unit
 
-  def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
+  def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
 object PlayerLogoutClientManager {
@@ -35,7 +33,7 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
     println(" [x] Sent logout message")
   }
 
-  override def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
+  override def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val consumer = new DefaultConsumer(channel) {
 
       override def handleDelivery(consumerTag: String,

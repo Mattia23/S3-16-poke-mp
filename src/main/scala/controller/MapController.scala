@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentMap
 
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
-import distributed.Player
+import distributed.{ConnectedPlayers, Player}
 import model.entities.Trainer
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl}
@@ -15,7 +15,7 @@ import view._
 import scala.util.Random
 
 object MapController {
-  def apply(view: View, _trainer: Trainer, connection: Connection, connectedUsers: ConcurrentMap[Int, Player]): GameController = new MapController(view, _trainer, connection, connectedUsers)
+  def apply(view: View, _trainer: Trainer, connection: Connection, connectedPlayers: ConnectedPlayers): GameController = new MapController(view, _trainer, connection, connectedPlayers)
 
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
@@ -23,12 +23,12 @@ object MapController {
   private final val LABORATORY_BUILDING = "Laboratory"
 }
 
-class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, Player]) extends GameControllerImpl(view, _trainer){
+class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
   import MapController._
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
-  private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedUsers)
+  private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
   private var distributedAgent: DistributedMapControllerAgent = _
   audio = Audio(Settings.MAP_SONG)
 
