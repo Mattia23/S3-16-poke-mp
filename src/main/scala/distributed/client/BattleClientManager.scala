@@ -32,7 +32,6 @@ class BattleClientManagerImpl(private val connection: Connection,
   override def sendBattleMessage(trainerId: Int, pokemonId: Int, attackId: Int): Unit = {
     val battleMessage = BattleMessage(trainerId,pokemonId,attackId)
     channel.basicPublish("", myChannelName, null, gson.toJson(battleMessage).getBytes("UTF-8"))
-    println(" [x] Sent battle info")
   }
 
   override def receiveBattleMessage(): Unit = {
@@ -44,9 +43,12 @@ class BattleClientManagerImpl(private val connection: Connection,
                                   body: Array[Byte]) {
 
         val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
-        println(" [x] Received other player attack "+battleMessage.attackId)
         if(battleMessage.attackId == 0){
-          controller.otherPokemonChanges(battleMessage.pokemonId)
+          if(battleMessage.pokemonId == 0){
+            controller.resumeGame()
+          } else {
+            controller.otherPokemonChanges(battleMessage.pokemonId)
+          }
         } else {
           controller.otherPokemonAttacks(battleMessage.attackId)
         }
