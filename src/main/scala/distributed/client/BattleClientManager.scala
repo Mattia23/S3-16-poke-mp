@@ -27,6 +27,7 @@ class BattleClientManagerImpl(private val connection: Connection,
   private val otherChannelName: String = "battle" + otherPlayerId
 
   channel.queueDeclare(myChannelName, false, false, false, null)
+  channel.queueDeclare(otherChannelName, false, false, false, null)
 
   override def sendBattleMessage(trainerId: Int, pokemonId: Int, attackId: Int): Unit = {
     val battleMessage = BattleMessage(trainerId,pokemonId,attackId)

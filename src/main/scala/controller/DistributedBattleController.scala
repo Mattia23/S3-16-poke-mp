@@ -13,7 +13,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   private val MY_POKEMON: Int = 1
   private var battleManager: BattleClientManager = _
   private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
-  val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
+  private var battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
   private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
@@ -22,10 +22,9 @@ class DistributedBattleController(val controller: GameController, val view: View
 
   def passManager(battleClientManager: BattleClientManager): Unit = {
     this.battleManager = battleClientManager
+    this.battleManager.receiveBattleMessage()
   }
   override def myPokemonAttacks(attackId: Int): Unit = {
-    println("GIOCATORE 1: HO ATTACCATO")
-    //println("GIOCATORE 2: HO ATTACCATO")
     battle.round.myPokemonAttack(attackId)
     view.getBattlePanel.setPokemonLifeProgressBar(battle.otherPokemon.pokemonLife,Owner.WILD.id)
     this.battleManager.sendBattleMessage(controller.trainer.id,battle.myPokemon.pokemon.id,attackId)
@@ -35,8 +34,6 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   override def otherPokemonAttacks(id: Int): Unit = {
-    println("GIOCATORE 1: HO ATTACCATO")
-    //println("GIOCATORE 2: HO SUBITO")
     battle.round.otherPokemonAttack(id)
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
@@ -66,6 +63,8 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   private def showNewView(): Unit = {
+    println("IL NUOVO POKEMON NEL DISTRIBUTED CONTROLLER è "+battle.otherPokemon.pokemon.id)
+    println("IL NUOVO POKEMON NEL DISTRIBUTED CONTROLLER è (PROVA)"+otherTrainer.getFirstAvailableFavouritePokemon)
     view.showBattle(battle.myPokemon,battle.otherPokemon,this)
   }
 
@@ -73,10 +72,12 @@ class DistributedBattleController(val controller: GameController, val view: View
     timer = new Thread() {
       override def run() {
         view.getBattlePanel.pokemonIsDead(pokemonDeadId)
-        Thread.sleep(2000)
+        Thread.sleep(3000)
         if(!battle.battleFinished) {
+          println("nuovo round")
           showNewView()
         } else {
+          println("la battaglia è finita")
           controller.resume()
         }
       }
@@ -85,5 +86,8 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   override def trainerThrowPokeball(): Boolean = {false}
-  override def trainerCanQuit(): Boolean = {false}
+  override def trainerCanQuit(): Boolean = {
+    resumeGame()
+    true
+  }
 }

@@ -122,6 +122,9 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       val nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.values() forEach (player =>
         if(nextPosition equals player.position) {
+          semaphore.acquire()
+          pause()
+          semaphore.release()
           val distributedBattle: BattleController = new DistributedBattleController(this: GameController, view: View, player.username: String)
           val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,player.userId,distributedBattle)
           distributedBattle.passManager(battleManager)
