@@ -35,6 +35,7 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
 
   override def myPokemonKillsOtherPokemon(won: Boolean): Unit = {
     var pointsEarned: Int = 0
+    /*
     if(won){
       roundFinished = true
       val t: Thread = new Thread {
@@ -71,6 +72,7 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
         controller.resumeGame()
       }
     }
+    */
   }
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
@@ -82,4 +84,6 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
   override def pokeballLaunched(): Boolean = {false}
 
   override def getMyPokemonId: Int = this.myPokemonId
+
+  override def getOtherPokemonId: Int = this.otherPokemonId
 }
