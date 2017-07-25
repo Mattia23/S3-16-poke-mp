@@ -47,7 +47,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected var inPause = false
   protected var audio: Audio = _
   protected var gamePanel: GamePanel = _
-  protected val semaphore: Semaphore = new Semaphore(1)
+  protected val waitEndOfMovement: Semaphore = new Semaphore(1)
 
   override var trainerIsMoving: Boolean = false
 
@@ -123,7 +123,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
     new Thread(() => {
-      semaphore.acquire()
+      waitEndOfMovement.acquire()
       var actualX: Double = trainer.coordinate.x
       var actualY: Double = trainer.coordinate.y
       for (_ <- 1 to TRAINER_STEPS) {
@@ -147,7 +147,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
       updateTrainerPosition(nextPosition)
       trainerIsMoving = false
       updateTrainerSprite(direction)
-      semaphore.release()
+      waitEndOfMovement.release()
     }).start()
   }
 

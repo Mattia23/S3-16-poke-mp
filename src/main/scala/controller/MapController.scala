@@ -133,9 +133,9 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      semaphore.acquire()
+      waitEndOfMovement.acquire()
       pause()
-      semaphore.release()
+      waitEndOfMovement.release()
       new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
     }
   }

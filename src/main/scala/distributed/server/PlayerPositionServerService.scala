@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentMap
 import com.google.gson.GsonBuilder
 import com.rabbitmq.client._
 import distributed.deserializers.PlayerPositionMessageDeserializer
-import distributed.{CommunicationService, Player}
+import distributed.Player
 import distributed.messages.PlayerPositionMessageImpl
 import utilities.Settings
 

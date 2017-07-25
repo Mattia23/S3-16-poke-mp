@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentMap
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.messages.PlayerInBuildingMessageImpl
-import distributed.{CommunicationService, Player}
+import distributed.Player
 import utilities.Settings
 
 object PlayerInBuildingServerService {

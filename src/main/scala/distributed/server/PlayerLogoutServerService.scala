@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.{CommunicationService, Player}
+import distributed.Player
 import distributed.messages.PlayerLogoutMessageImpl
 import utilities.Settings
 
