@@ -40,6 +40,8 @@ trait Battle {
   def roundFinished_=(battleFinished: Boolean): Unit
 
   def updatePokemonAndTrainer(event: Int): Unit
+
+  def getMyPokemonId: Int
 }
 
 class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle {
@@ -103,4 +105,6 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
   }
 
   override def startBattleRound(pokemonId: Int, otherPokemon: Int): Unit = {}
+
+  override def getMyPokemonId: Int = 0
 }

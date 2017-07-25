@@ -2,7 +2,7 @@ package controller
 
 import database.remote.DBConnect
 import distributed.client.BattleClientManager
-import model.entities.{Owner, Trainer}
+import model.entities.{Owner, PokemonFactory, Trainer}
 import model.environment.{Audio, AudioImpl}
 import model.game.{Battle, TrainersBattle}
 import utilities.Settings
@@ -42,6 +42,11 @@ class DistributedBattleController(val controller: GameController, val view: View
     }
   }
 
+  override def otherPokemonChanges(newPokemonId: Int): Unit = {
+    battle.round.updatePokemon()
+    battle.startBattleRound(battle.getMyPokemonId,newPokemonId)
+  }
+
   override def changePokemon(): Unit = {
     view.showPokemonChoice(this, controller.trainer)
   }
@@ -72,6 +77,7 @@ class DistributedBattleController(val controller: GameController, val view: View
         view.getBattlePanel.pokemonIsDead(pokemonDeadId)
         Thread.sleep(3000)
         if(!battle.battleFinished) {
+          battleManager.sendBattleMessage(controller.trainer.id,controller.trainer.getFirstAvailableFavouritePokemon,0)
           showNewView()
         } else {
           controller.resume()

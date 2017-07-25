@@ -42,9 +42,14 @@ class BattleClientManagerImpl(private val connection: Connection,
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player attack")
+
         val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
-        controller.otherPokemonAttacks(battleMessage.attackId)
+        println(" [x] Received other player attack "+battleMessage.attackId)
+        if(battleMessage.attackId == 0){
+          controller.otherPokemonChanges(battleMessage.pokemonId)
+        } else {
+          controller.otherPokemonAttacks(battleMessage.attackId)
+        }
       }
     }
     channel.basicConsume(otherChannelName,true,consumer)

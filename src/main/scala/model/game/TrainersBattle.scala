@@ -40,9 +40,8 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
       val t: Thread = new Thread {
         override def run() {
           val newOtherPokemonId = otherTrainer.getFirstAvailableFavouritePokemon
-          println("IL NUOVO POKEMON NEL TRAINERS BATTLE è "+newOtherPokemonId)
           if (newOtherPokemonId > 0) {
-            startBattleRound(myPokemonId, newOtherPokemonId)
+            //startBattleRound(myPokemonId, newOtherPokemonId)
             Thread.sleep(1000)
             roundFinished = false
           } else {
@@ -81,4 +80,6 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
   }
 
   override def pokeballLaunched(): Boolean = {false}
+
+  override def getMyPokemonId: Int = this.myPokemonId
 }

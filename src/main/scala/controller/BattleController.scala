@@ -15,6 +15,8 @@ trait BattleController {
 
   def otherPokemonAttacks(id: Int): Unit
 
+  def otherPokemonChanges(newPokemonId: Int): Unit
+
   def getPokeballAvailableNumber: Int
 
   def trainerThrowPokeball(): Boolean
@@ -149,4 +151,5 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
 
   override def otherPokemonAttacks(id: Int): Unit = {}
   override def passManager(battleClientManager: BattleClientManager): Unit = {}
+  override def otherPokemonChanges(newPokemonId: Int): Unit = {}
 }
