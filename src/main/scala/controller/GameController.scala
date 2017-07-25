@@ -7,7 +7,7 @@ import database.remote.DBConnect
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
-import model.map.{MainTrainerMovement, Movement}
+import model.map.Movement
 import utilities.Settings
 import view._
 
@@ -41,12 +41,11 @@ trait GameController {
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
   private var agent: GameControllerAgent = _
-  //private var fistStep: Boolean = true
   protected var inGame = false
   protected var inPause = false
   protected var audio: Audio = _
   protected var gamePanel: GamePanel = _
-  protected val semaphore: Semaphore = new Semaphore(1)
+  protected val waitEndOfMovement: Semaphore = new Semaphore(1)
   protected var trainerMovement: Movement = _
 
   override var trainerIsMoving: Boolean = false
@@ -123,32 +122,10 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
     new Thread(() => {
-      semaphore.acquire()
+      waitEndOfMovement.acquire()
       trainerMovement.walk(trainer.coordinate, direction, nextPosition)
-     /* var actualX: Double = trainer.coordinate.x
-      var actualY: Double = trainer.coordinate.y
-      for (_ <- 1 to TRAINER_STEPS) {
-        direction match {
-          case Direction.UP =>
-            actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
-            gamePanel.updateCurrentY(actualY)
-          case Direction.DOWN =>
-            actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
-            gamePanel.updateCurrentY(actualY)
-          case Direction.RIGHT =>
-            actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
-            gamePanel.updateCurrentX(actualX)
-          case Direction.LEFT =>
-            actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
-            gamePanel.updateCurrentX(actualX)
-        }
-        updateTrainerSprite(direction)
-        Thread.sleep(Settings.GAME_REFRESH_TIME)
-      }
-      updateTrainerPosition(nextPosition)
-      */
       trainerIsMoving = false
-      semaphore.release()
+      waitEndOfMovement.release()
     }).start()
   }
 
