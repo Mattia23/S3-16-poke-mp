@@ -25,11 +25,11 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
   }
 
   override def startBattleRound(myPokemonId: Int, otherPokemonId: Int): Unit = {
+    myPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(myPokemonId),Optional.empty()).get()
+    otherPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(otherPokemonId),Optional.empty()).get()
     this.myPokemonId = myPokemonId
     this.otherPokemonId = otherPokemonId
     _trainer.addMetPokemon(otherPokemonId)
-    myPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(myPokemonId),Optional.empty()).get()
-    otherPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(otherPokemonId),Optional.empty()).get()
     _round = new BattleRoundImpl(myPokemon, myPokemonId, otherPokemon, this)
   }
 
@@ -37,21 +37,22 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
     var pointsEarned: Int = 0
     if(won){
       roundFinished = true
-      val newOtherPokemonId = otherTrainer.getFirstAvailableFavouritePokemon
-      if(newOtherPokemonId > 0){
-        startBattleRound(myPokemonId, newOtherPokemonId)
-        val t: Thread = new Thread {
-          override def run() {
+      val t: Thread = new Thread {
+        override def run() {
+          val newOtherPokemonId = otherTrainer.getFirstAvailableFavouritePokemon
+          println("IL NUOVO POKEMON NEL TRAINERS BATTLE è "+newOtherPokemonId)
+          if (newOtherPokemonId > 0) {
+            startBattleRound(myPokemonId, newOtherPokemonId)
             Thread.sleep(1000)
             roundFinished = false
+          } else {
+            battleFinished = true
+            pointsEarned = (otherTrainer.level * math.pow(1.2, _trainer.level)).toInt
+            _trainer.updateTrainer(pointsEarned)
           }
         }
-        t.start()
-      } else {
-        battleFinished = true
-        pointsEarned = (otherTrainer.level * math.pow(1.2,_trainer.level)).toInt
-        _trainer.updateTrainer(pointsEarned)
       }
+      t.start()
     } else {
       roundFinished = true
       val newMyPokemonId = _trainer.getFirstAvailableFavouritePokemon

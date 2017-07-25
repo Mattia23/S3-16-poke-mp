@@ -13,7 +13,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   private val MY_POKEMON: Int = 1
   private var battleManager: BattleClientManager = _
   private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
-  val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
+  private var battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
   private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
@@ -29,7 +29,6 @@ class DistributedBattleController(val controller: GameController, val view: View
     view.getBattlePanel.setPokemonLifeProgressBar(battle.otherPokemon.pokemonLife,Owner.WILD.id)
     this.battleManager.sendBattleMessage(controller.trainer.id,battle.myPokemon.pokemon.id,attackId)
     if(battle.battleFinished || battle.roundFinished) {
-      println("ti ho ucciso")
       pokemonIsDead(OTHER_POKEMON)
     }
   }
@@ -71,12 +70,10 @@ class DistributedBattleController(val controller: GameController, val view: View
     timer = new Thread() {
       override def run() {
         view.getBattlePanel.pokemonIsDead(pokemonDeadId)
-        Thread.sleep(2000)
+        Thread.sleep(3000)
         if(!battle.battleFinished) {
-          println("nuovo round")
           showNewView()
         } else {
-          println("la battaglia è finita")
           controller.resume()
         }
       }
