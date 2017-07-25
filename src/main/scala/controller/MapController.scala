@@ -1,5 +1,6 @@
 package controller
 
+import java.util
 import java.util.concurrent.ConcurrentMap
 
 import com.rabbitmq.client.Connection
@@ -117,8 +118,10 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if (!isInPause){
       var nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.values() forEach (player =>
-        if(nextPosition equals player.position)
-          println("bella fra"))
+        if(nextPosition equals player.position){
+          distributedMapController.challengeTrainer(player.userId)
+          this.view.showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("...")))
+        })
     }
   }
 

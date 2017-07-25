@@ -21,6 +21,8 @@ trait DistributedMapController{
 
   def trainerChallengerId: Int = 0
 
+  def challengeTrainer(trainerId: Int): Unit
+
   def playerLogout(): Unit
 }
 
@@ -37,18 +39,20 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
   private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, trainerId)
-  override var trainerChallengerId: Int = 0
 
   newPlayerInGameManager.receiveNewPlayerInGame(trainerId, connectedPlayers)
   playerPositionManager.receiveOtherPlayerPosition(trainerId, connectedPlayers)
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
+  trainerDialogueClientManager.receiveResponse(trainerId, trainerChallengerId)
 
   override val playersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
   override def sendTrainerInBuilding(isInBuilding: Boolean): Unit = playerInBuildingManager.sendPlayerIsInBuilding(trainerId, isInBuilding)
+
+  override def challengeTrainer(trainerId: Int): Unit = trainerDialogueClientManager.sendDialogueRequest(trainerId)
 
   override def playerLogout(): Unit = {
     playerLogoutManager.sendPlayerLogout(trainerId)
