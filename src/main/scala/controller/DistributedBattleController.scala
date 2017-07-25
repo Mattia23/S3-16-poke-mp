@@ -57,6 +57,7 @@ class DistributedBattleController(val controller: GameController, val view: View
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
     myPokemonChanges(id)
+    battleManager.sendBattleMessage(controller.trainer.id,id,0)
   }
 
   override def getPokeballAvailableNumber: Int = {
