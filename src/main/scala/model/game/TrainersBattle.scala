@@ -35,44 +35,10 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
 
   override def myPokemonKillsOtherPokemon(won: Boolean): Unit = {
     var pointsEarned: Int = 0
-    /*
     if(won){
-      roundFinished = true
-      val t: Thread = new Thread {
-        override def run() {
-          val newOtherPokemonId = otherTrainer.getFirstAvailableFavouritePokemon
-          if (newOtherPokemonId > 0) {
-            //startBattleRound(myPokemonId, newOtherPokemonId)
-            Thread.sleep(1000)
-            roundFinished = false
-          } else {
-            battleFinished = true
-            pointsEarned = (otherTrainer.level * math.pow(1.2, _trainer.level)).toInt
-            _trainer.updateTrainer(pointsEarned)
-          }
-        }
-      }
-      t.start()
-    } else {
-      roundFinished = true
-      val newMyPokemonId = _trainer.getFirstAvailableFavouritePokemon
-      if(newMyPokemonId > 0){
-        startBattleRound(newMyPokemonId, otherPokemonId)
-        val t: Thread = new Thread {
-          override def run() {
-            Thread.sleep(1000)
-            roundFinished = false
-          }
-        }
-        t.start()
-      } else {
-        battleFinished = true
-        pointsEarned = 40
-        _trainer.updateTrainer(pointsEarned)
-        controller.resumeGame()
-      }
+      pointsEarned = (otherTrainer.level * math.pow(1.05, _trainer.level)).toInt
+      _trainer.updateTrainer(pointsEarned)
     }
-    */
   }
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {

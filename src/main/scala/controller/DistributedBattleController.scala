@@ -56,9 +56,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
-    battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CHANGE_POKEMON)
-    battle.startBattleRound(id)
-    showNewView()
+    myPokemonChanges(id)
   }
 
   override def getPokeballAvailableNumber: Int = {
@@ -77,18 +75,19 @@ class DistributedBattleController(val controller: GameController, val view: View
   private def myPokemonIsDead: Unit = {
     view.getBattlePanel.pokemonIsDead(MY_POKEMON)
     val nextPokemon: Int = controller.trainer.getFirstAvailableFavouritePokemon
-    println(nextPokemon)
     if(nextPokemon > 0) {
       battleManager.sendBattleMessage(controller.trainer.id,nextPokemon,0)
       myPokemonChanges(nextPokemon)
     } else {
       battleManager.sendBattleMessage(controller.trainer.id,0,0)
+      battle.round.updatePokemon()
       controller.resume()
     }
   }
 
   override def trainerThrowPokeball(): Boolean = {false}
   override def trainerCanQuit(): Boolean = {
+    battleManager.sendBattleMessage(controller.trainer.id,0,0)
     resumeGame()
     true
   }
