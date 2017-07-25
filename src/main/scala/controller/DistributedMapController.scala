@@ -4,16 +4,17 @@ import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
 import distributed.client._
-import distributed.Player
+import distributed.{Player, PlayerPositionDetails}
 import distributed.client.{NewPlayerInGameClientManager, PlayerPositionClientManager}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
+import model.map.{Movement, OtherTrainerMovement}
 import utilities.Settings
 
 trait DistributedMapController{
   def connectedPlayers: ConcurrentMap[Int, Player]
 
-  def playersTrainerSprites: ConcurrentMap[Int, String]
+  def playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]
 
   def sendTrainerPosition(position: Coordinate): Unit
 
@@ -40,7 +41,9 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
 
-  override val playersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
+  override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
+
+  //private val otherTrainerMovement: Movement = new OtherTrainerMovement(playersPositionDetails)
 
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
@@ -58,15 +61,20 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
   override def run(): Unit = {
     while(mapController.isInGame && !stopped){
       if(!mapController.isInPause){
-        distributedMapController.connectedPlayers.values() forEach (player =>
-          if(distributedMapController.playersTrainerSprites.get(player.userId) == null)
-            distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
+        distributedMapController.connectedPlayers.values() forEach (player => addPlayer(player) )
       }
       try
         Thread.sleep(Settings.GAME_REFRESH_TIME)
       catch {
         case e: InterruptedException => System.out.println(e)
       }
+    }
+  }
+
+  private def addPlayer(player: Player): Unit = {
+    if(distributedMapController.playersPositionDetails.get(player.userId) == null) {
+      val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites.selectTrainerSprite(player.idImage).frontS)
+      distributedMapController.playersPositionDetails.put(player.userId, playerDetails)
     }
   }
 

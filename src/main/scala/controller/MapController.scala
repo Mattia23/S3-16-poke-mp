@@ -47,6 +47,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def initView(): Unit = {
     view.showMap(this, distributedMapController, gameMap)
     gamePanel = view.getGamePanel
+    trainerMovement = new MainTrainerMovement(trainer, gamePanel)
   }
 
   private def doFirstLogin(): Unit = {

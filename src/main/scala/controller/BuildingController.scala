@@ -3,7 +3,7 @@ package controller
 import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
-import model.map.{Box, BuildingMap, LaboratoryMap, PokemonCenterMap}
+import model.map._
 import utilities.Settings
 import view._
 
@@ -88,6 +88,7 @@ class PokemonCenterController(private val view: View, private val mapController:
   private def initView(): Unit = {
     view.showPokemonCenter(this, buildingMap)
     gamePanel = view.getGamePanel
+    trainerMovement = new MainTrainerMovement(trainer, gamePanel)
   }
 
   override protected def doInteract(direction: Direction): Unit = {
@@ -133,6 +134,7 @@ class LaboratoryController(private val view: View, private val mapController: Ga
   private def initView(): Unit = {
     view.showLaboratory(this, buildingMap, this.trainer.capturedPokemons.isEmpty)
     gamePanel = view.getGamePanel
+    trainerMovement = new MainTrainerMovement(trainer, gamePanel)
   }
 
   override protected def doInteract(direction: Direction): Unit = {

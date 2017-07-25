@@ -7,6 +7,7 @@ import database.remote.DBConnect
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
+import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
 
@@ -39,15 +40,14 @@ trait GameController {
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
-  private final val TRAINER_STEPS = 4
-
   private var agent: GameControllerAgent = _
-  private var fistStep: Boolean = true
+  //private var fistStep: Boolean = true
   protected var inGame = false
   protected var inPause = false
   protected var audio: Audio = _
   protected var gamePanel: GamePanel = _
   protected val semaphore: Semaphore = new Semaphore(1)
+  protected var trainerMovement: Movement = _
 
   override var trainerIsMoving: Boolean = false
 
@@ -124,7 +124,8 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
     new Thread(() => {
       semaphore.acquire()
-      var actualX: Double = trainer.coordinate.x
+      trainerMovement.walk(trainer.coordinate, direction, nextPosition)
+     /* var actualX: Double = trainer.coordinate.x
       var actualY: Double = trainer.coordinate.y
       for (_ <- 1 to TRAINER_STEPS) {
         direction match {
@@ -145,75 +146,11 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
         Thread.sleep(Settings.GAME_REFRESH_TIME)
       }
       updateTrainerPosition(nextPosition)
+      */
       trainerIsMoving = false
-      updateTrainerSprite(direction)
       semaphore.release()
     }).start()
   }
-
-  private def updateTrainerSprite(direction: Direction): Unit = {
-    if (trainerIsMoving) {
-      direction match {
-        case Direction.UP => trainer.currentSprite match {
-          case BackS(_) =>
-            if (fistStep) {
-              trainer.currentSprite = trainer.sprites.back1
-              fistStep = false
-            } else {
-              trainer.currentSprite = trainer.sprites.back2
-              fistStep = true
-            }
-          case Back1(_) | Back2(_) => trainer.currentSprite = trainer.sprites.backS
-          case _ => trainer.currentSprite = trainer.sprites.back1
-        }
-        case Direction.DOWN => trainer.currentSprite match {
-          case FrontS(_) =>
-            if (fistStep) {
-              trainer.currentSprite = trainer.sprites.front1
-              fistStep = false
-            } else {
-              trainer.currentSprite = trainer.sprites.front2
-              fistStep = true
-            }
-          case Front1(_) | Front2(_) => trainer.currentSprite = trainer.sprites.frontS
-          case _ => trainer.currentSprite = trainer.sprites.front1
-        }
-        case Direction.LEFT => trainer.currentSprite match {
-          case LeftS(_) =>
-            if (fistStep) {
-              trainer.currentSprite = trainer.sprites.left1
-              fistStep = false
-            } else {
-              trainer.currentSprite = trainer.sprites.left2
-              fistStep = true
-            }
-          case Left1(_) | Left2(_) => trainer.currentSprite = trainer.sprites.leftS
-          case _ => trainer.currentSprite = trainer.sprites.left1
-        }
-        case Direction.RIGHT => trainer.currentSprite match {
-          case RightS(_) =>
-            if (fistStep) {
-              trainer.currentSprite = trainer.sprites.right1
-              fistStep = false
-            } else {
-              trainer.currentSprite = trainer.sprites.right2
-              fistStep = true
-            }
-          case Right1(_) | Right2(_) => trainer.currentSprite = trainer.sprites.rightS
-          case _ => trainer.currentSprite = trainer.sprites.right1
-        }
-      }
-    } else {
-      direction match {
-        case Direction.UP => trainer.currentSprite = trainer.sprites.backS
-        case Direction.DOWN => trainer.currentSprite = trainer.sprites.frontS
-        case Direction.LEFT => trainer.currentSprite = trainer.sprites.leftS
-        case Direction.RIGHT => trainer.currentSprite = trainer.sprites.rightS
-      }
-    }
-  }
-
-  private def updateTrainerPosition(coordinate: Coordinate): Unit = trainer.coordinate = CoordinateImpl(coordinate.x, coordinate.y)
 
   protected def setTrainerSpriteFront(): Unit = trainer.currentSprite = trainer.sprites.frontS
 

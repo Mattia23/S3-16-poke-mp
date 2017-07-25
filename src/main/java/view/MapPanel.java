@@ -46,10 +46,10 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawOtherTrainers(Graphics g){
-        if(!this.distributedMapController.playersTrainerSprites().isEmpty()){
+        if(!this.distributedMapController.playersPositionDetails().isEmpty()){
             for(Player player : this.distributedMapController.connectedPlayers().values()){
                 if(player.isVisible()) {
-                    g.drawImage(LoadImage.load((this.distributedMapController.playersTrainerSprites().get(player.userId()))),
+                    g.drawImage(LoadImage.load((this.distributedMapController.playersPositionDetails().get(player.userId()).currentSprite().image())),
                             ((player.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,
                             ((player.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2,
                             null);
