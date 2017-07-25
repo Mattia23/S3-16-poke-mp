@@ -13,6 +13,8 @@ trait BattleRound {
   def otherPokemonAttack(attack: Int): Unit
 
   def updatePokemon(): Unit
+
+  def updateOtherPokemon(): Unit
 }
 
 class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, otherPokemon: PokemonWithLife, battle: Battle) extends  BattleRound{
@@ -48,5 +50,9 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, otherPokem
 
   override def updatePokemon(): Unit = {
     myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
+  }
+
+  override def updateOtherPokemon(): Unit = {
+    otherPokemonBehaviour.updatePokemonTrainer(battle.getOtherPokemonId)
   }
 }

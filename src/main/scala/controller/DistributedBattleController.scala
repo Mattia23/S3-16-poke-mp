@@ -56,6 +56,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
+    battle.round.updateOtherPokemon()
     myPokemonChanges(id)
     battleManager.sendBattleMessage(controller.trainer.id,id,0)
   }
