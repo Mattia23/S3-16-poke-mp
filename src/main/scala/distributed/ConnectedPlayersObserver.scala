@@ -3,7 +3,7 @@ package distributed
 trait ConnectedPlayersObserver {
   def newPlayerAdded()
 
-  def playerUpdated()
+  def playerPositionUpdated()
 
   def playerRemoved()
 }

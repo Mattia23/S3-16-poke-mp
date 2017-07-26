@@ -4,7 +4,7 @@ import model.entities.{Sprite, Trainer, TrainerSprites}
 import model.environment.{Coordinate, CoordinateImpl}
 import view.GamePanel
 
-class MainTrainerMovement(trainer: Trainer, gamePanel: GamePanel) extends MovementImpl{
+case class MainTrainerMovement(trainer: Trainer, gamePanel: GamePanel) extends MovementImpl{
 
   override protected def currentTrainerSprite: Sprite = trainer.currentSprite
 

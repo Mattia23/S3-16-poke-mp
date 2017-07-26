@@ -3,7 +3,7 @@ package distributed
 import java.util
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
-import scala.collection.mutable.ListBuffer
+import model.environment.Coordinate
 
 trait ConnectedPlayers {
   def add(idUser: Int, player: Player): Unit
@@ -15,6 +15,8 @@ trait ConnectedPlayers {
   def getAll: util.Map[Int, Player]
 
   def remove(idUser: Int): Unit
+
+  def updateTrainerPosition(userId: Int, position: Coordinate): Unit
 }
 
 object ConnectedPlayers {
@@ -24,7 +26,7 @@ object ConnectedPlayers {
 class ConnectedPlayersImpl extends ConnectedPlayers with Observable{
   val map: ConcurrentMap[Int, Player] = new ConcurrentHashMap[Int, Player]()
 
-  val observers: ListBuffer[ConnectedPlayersObserver] = ListBuffer[ConnectedPlayersObserver]()
+  var observers: List[ConnectedPlayersObserver] = List[ConnectedPlayersObserver]()
 
   override def add(idUser: Int, player: Player): Unit = {
     map.put(idUser, player)
@@ -40,7 +42,12 @@ class ConnectedPlayersImpl extends ConnectedPlayers with Observable{
     observers foreach( _ playerRemoved())
   }
 
-  override def getAll(): util.Map[Int, Player] = map
+  override def getAll: util.Map[Int, Player] = map
 
-  override def addObserver(observer: ConnectedPlayersObserver): Unit = observers += observer
+  override def addObserver(observer: ConnectedPlayersObserver): Unit = observers = observers :+ observer
+
+  override def updateTrainerPosition(userId: Int, position: Coordinate): Unit = {
+    get(userId).position = position
+    observers foreach( _ playerPositionUpdated())
+  }
 }

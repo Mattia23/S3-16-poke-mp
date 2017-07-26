@@ -48,11 +48,8 @@ class PlayerPositionClientManagerImpl(private val connection: Connection) extend
         gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val otherPlayerPosition = gson.fromJson(message, classOf[PlayerPositionMessageImpl])
 
-        if (otherPlayerPosition.userId != userId) connectedPlayers.get(otherPlayerPosition.userId).position = otherPlayerPosition.position
-
-        /* TODO Aggiornare lo sprite in usersTrainerSprite in base alla direzione,
-        * fare il movimento sulla mappa, fare la receive in DistributedAgent, executor?
-        */
+        if (otherPlayerPosition.userId != userId)
+          connectedPlayers.updateTrainerPosition(otherPlayerPosition.userId, otherPlayerPosition.position)
       }
     }
 

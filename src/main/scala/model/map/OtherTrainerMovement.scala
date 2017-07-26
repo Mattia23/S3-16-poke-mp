@@ -6,7 +6,7 @@ import distributed.PlayerPositionDetails
 import model.entities.{Sprite, TrainerSprites}
 import model.environment.Coordinate
 
-class OtherTrainerMovement(playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]) extends MovementImpl{
+case class OtherTrainerMovement(playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]) extends MovementImpl{
 
   override protected def currentTrainerSprite: Sprite = ???
 

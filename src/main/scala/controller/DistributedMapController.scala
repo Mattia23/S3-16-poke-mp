@@ -26,7 +26,9 @@ object DistributedMapController{
     new DistributedMapControllerImpl(mapController, connection, connectedPlayers)
 }
 
-class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConnectedPlayers) extends DistributedMapController{
+class DistributedMapControllerImpl(private val mapController: GameController,
+                                   private val connection: Connection,
+                                   override val connectedPlayers: ConnectedPlayers) extends DistributedMapController{
 
   private val trainerId: Int = mapController.trainer.id
   private val newPlayerInGameManager: NewPlayerInGameClientManager = NewPlayerInGameClientManager(connection)
