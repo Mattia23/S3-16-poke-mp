@@ -19,9 +19,7 @@ trait DistributedMapController{
 
   def sendTrainerInBuilding(isInBuilding: Boolean): Unit
 
-  def trainerChallengerId: Int = 0
-
-  def challengeTrainer(trainerId: Int): Unit
+  def challengeTrainer(otherTrainerId: Int, wantToFight: Boolean): Unit
 
   def playerLogout(): Unit
 }
@@ -38,13 +36,13 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManager(connection)
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
-  private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, trainerId)
+  private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, mapController)
 
   newPlayerInGameManager.receiveNewPlayerInGame(trainerId, connectedPlayers)
   playerPositionManager.receiveOtherPlayerPosition(trainerId, connectedPlayers)
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
-  trainerDialogueClientManager.receiveResponse(trainerId, trainerChallengerId)
+  trainerDialogueClientManager.receiveResponse()
 
   override val playersTrainerSprites: ConcurrentMap[Int, String] = new ConcurrentHashMap[Int, String]()
 
@@ -52,7 +50,8 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
 
   override def sendTrainerInBuilding(isInBuilding: Boolean): Unit = playerInBuildingManager.sendPlayerIsInBuilding(trainerId, isInBuilding)
 
-  override def challengeTrainer(trainerId: Int): Unit = trainerDialogueClientManager.sendDialogueRequest(trainerId)
+  override def challengeTrainer(otherTrainerId: Int, wantToFight: Boolean): Unit =
+    trainerDialogueClientManager.sendDialogueRequest(otherTrainerId, wantToFight)
 
   override def playerLogout(): Unit = {
     playerLogoutManager.sendPlayerLogout(trainerId)
@@ -68,10 +67,6 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
       if(!mapController.isInPause){
         distributedMapController.connectedPlayers.values() forEach (player =>
           distributedMapController.playersTrainerSprites.put(player.userId, TrainerSprites.selectTrainerSprite(player.idImage).frontS.image))
-        if(distributedMapController.trainerChallengerId != 0){
-          //dialogo tra mapController.trainer.id; distributedMapController.trainerChallengerId
-          //distributedMapController.trainerChallengerId = 0
-        }
       }
 
       try

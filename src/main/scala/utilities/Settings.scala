@@ -285,8 +285,6 @@ object Settings {
 
   val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
 
-  val TRAINER_DIALOGUE_EXCHANGE: String = "trainer_dialogue_exchange"
-
   val PLAYER_LOGOUT_EXCHANGE: String = "player_logout_exchange"
 
   val PLAYER_IN_BUILDING_EXCHANGE: String = "player_in_building_exchange"

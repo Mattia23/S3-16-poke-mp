@@ -1,43 +1,38 @@
 package distributed.client
 
+import com.google.gson.Gson
 import com.rabbitmq.client._
+import controller.{GameController, MapController}
+import distributed.messages.{TrainerDialogueMessage, TrainerDialogueMessageImpl}
 import utilities.Settings
 
 trait TrainerDialogueClientManager {
-  def sendDialogueRequest(userId: Int): Unit
+  def sendDialogueRequest(otherTrainerId: Int, wantToFight: Boolean): Unit
 
-  //def sendFightResponse(userId: Int, accepted: Boolean): Unit
-
-  def receiveResponse(trainerId: Int, trainerChallengerId: Int): Unit
+  def receiveResponse(): Unit
 }
 
 object TrainerDialogueClientManager {
-  def apply(connection: Connection, trainerId: Int): TrainerDialogueClientManager = new TrainerDialogueClientManagerImpl(connection)
+  def apply(connection: Connection, mapController: GameController): TrainerDialogueClientManager = new TrainerDialogueClientManagerImpl(connection, mapController)
 }
 
-class TrainerDialogueClientManagerImpl(private val connection: Connection) extends TrainerDialogueClientManager {
+class TrainerDialogueClientManagerImpl(private val connection: Connection, private val mapController: GameController) extends TrainerDialogueClientManager {
 
+  private val trainerId: Int = mapController.trainer.id
+  private var gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
-  private val playerQueue = channel.queueDeclare.getQueue
+  private val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + trainerId
 
-  channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE, false, false, false, null)
+  channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + trainerId, false, false, false, null)
 
-  /*channel.exchangeDeclare(Settings.TRAINER_DIALOGUE_EXCHANGE, "fanout")
-  channel.queueBind(playerQueue, Settings.TRAINER_DIALOGUE_EXCHANGE, "")*/
-
-  override def sendDialogueRequest(userId: Int): Unit = {
-    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE, null, userId.toString.getBytes("UTF-8"))
-    println(" [x] sent fight request to "+userId)
+  override def sendDialogueRequest(otherTrainerId: Int, wantToFight: Boolean): Unit = {
+    channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherTrainerId, false, false, false, null)
+    val trainerDialogueMessage = TrainerDialogueMessage(trainerId, otherTrainerId, wantToFight)
+    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherTrainerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
+    println(" [x] sent fight request to "+otherTrainerId)
   }
 
-  /*override def sendFightResponse(userId: Int, accepted: Boolean): Unit = {
-    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE+userId, null, accepted.toString.getBytes("UTF-8"))
-    println(" [x] answer to "+userId)
-  }*/
-
-  override def receiveResponse(trainerId: Int, trainerChallengerId: Int): Unit = {
-    val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + trainerId
-    channel.queueDeclare(playerQueue, false, false, false, null)
+  override def receiveResponse(): Unit = {
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -46,17 +41,15 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection) exten
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
         println(" [x] Received fight response")
-        if(body != null && trainerId != 0){
-
-        }
-        val accepted: Boolean = new String(body, "UFT-8").toBoolean
-        if(!accepted){
-          //trainerChallengerId = 0
-        }else{
-          println("sfida accettata")
-        }
-
-        channel.close()
+        val trainerDialogueMessage = gson.fromJson(new String(body, "UTF-8"), classOf[TrainerDialogueMessageImpl])
+        println(trainerDialogueMessage.trainerId, trainerDialogueMessage.otherTrainerId, trainerDialogueMessage.wantToFight)
+        if(trainerDialogueMessage.wantToFight && trainerDialogueMessage.otherTrainerId == trainerId)
+          println("mi hanno sfidato")
+        else if(trainerDialogueMessage.wantToFight)
+          println("hanno accettato la sfida, si parteeeeee")
+        else
+          println("il tipo ha rifiutato la sfida, stronzommerda")
+        //channel.close()
       }
     }
     channel.basicConsume(playerQueue, true, consumer)

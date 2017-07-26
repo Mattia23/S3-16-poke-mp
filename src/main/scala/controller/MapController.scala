@@ -119,7 +119,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       var nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.values() forEach (player =>
         if(nextPosition equals player.position){
-          distributedMapController.challengeTrainer(player.userId)
+          distributedMapController.challengeTrainer(player.userId, true)
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("...")))
         })
     }
