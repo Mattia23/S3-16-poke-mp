@@ -1,18 +1,20 @@
 package distributed.messages
 
-trait TrainerDialogueMessage {
-  def trainerId: Int
+import distributed.Player
 
-  def otherTrainerId: Int
+trait TrainerDialogueMessage {
+  def player: Player
+
+  def otherPlayer: Player
 
   def wantToFight: Boolean
 }
 
 object TrainerDialogueMessage {
-  def apply(trainerId: Int, otherTrainerId: Int, wantToFight: Boolean): TrainerDialogueMessage =
-    new TrainerDialogueMessageImpl(trainerId, otherTrainerId, wantToFight)
+  def apply(player: Player, otherPlayer: Player, wantToFight: Boolean): TrainerDialogueMessage =
+    new TrainerDialogueMessageImpl(player, otherPlayer, wantToFight)
 }
 
-class TrainerDialogueMessageImpl(override val trainerId: Int,
-                                 override val otherTrainerId: Int,
+class TrainerDialogueMessageImpl(override val player: Player,
+                                 override val otherPlayer: Player,
                                  override val wantToFight: Boolean) extends TrainerDialogueMessage

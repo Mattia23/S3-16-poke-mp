@@ -74,6 +74,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
+    //distributedMapController.connectedPlayers.get(trainer.id).isFighting_=(true)
     setFocusableOff()
   }
 
@@ -89,6 +90,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start()
     audio.loop()
+    distributedMapController.connectedPlayers.get(trainer.id).isFighting_=(false)
     setFocusableOn()
   }
 
@@ -117,10 +119,16 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause){
       var nextPosition: Coordinate = nextTrainerPosition(direction)
-      distributedMapController.connectedPlayers.values() forEach (player =>
-        if(nextPosition equals player.position){
-          distributedMapController.challengeTrainer(player.userId, true)
+      distributedMapController.connectedPlayers.values() forEach (otherPlayer =>
+        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
+          println(otherPlayer.isFighting, otherPlayer.username)
+          var plyer2: Player = Player(trainer.id, trainer.name, 2, CoordinateImpl(25,25), true, false)
+          /*val player: Player = distributedMapController.connectedPlayers.get(trainer.id)
+          player.isFighting_=(true)*/
+          distributedMapController.challengeTrainer(plyer2, otherPlayer, true)
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("...")))
+        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("the plaer is dai hai capito")))
         })
     }
   }

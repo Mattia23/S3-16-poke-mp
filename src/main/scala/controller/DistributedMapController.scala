@@ -19,7 +19,7 @@ trait DistributedMapController{
 
   def sendTrainerInBuilding(isInBuilding: Boolean): Unit
 
-  def challengeTrainer(otherTrainerId: Int, wantToFight: Boolean): Unit
+  def challengeTrainer(player: Player, otherPlayer: Player, wantToFight: Boolean): Unit
 
   def playerLogout(): Unit
 }
@@ -50,8 +50,8 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
 
   override def sendTrainerInBuilding(isInBuilding: Boolean): Unit = playerInBuildingManager.sendPlayerIsInBuilding(trainerId, isInBuilding)
 
-  override def challengeTrainer(otherTrainerId: Int, wantToFight: Boolean): Unit =
-    trainerDialogueClientManager.sendDialogueRequest(otherTrainerId, wantToFight)
+  override def challengeTrainer(player: Player, otherPlayer: Player, wantToFight: Boolean): Unit =
+    trainerDialogueClientManager.sendDialogueRequest(player, otherPlayer, wantToFight)
 
   override def playerLogout(): Unit = {
     playerLogoutManager.sendPlayerLogout(trainerId)
