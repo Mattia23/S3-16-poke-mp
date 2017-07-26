@@ -6,22 +6,23 @@ import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Coordinate, Direction}
 import utilities.Settings
-/*
+
 trait Movement {
-  def walk(initialPosition: Coordinate, direction: Direction, nextPosition: Coordinate): Unit
+  def walk(): Unit
+  //def walk(initialPosition: Coordinate, direction: Direction, nextPosition: Coordinate): Unit
 }
-*/
-object Movement{
+
+object MovementImpl{
   private final val TRAINER_STEPS = 4
 }
 
-abstract class Movement(private val initialPosition: Coordinate, private val direction: Direction,
-                        private val nextPosition: Coordinate) extends Callable[Unit]{
-  import Movement._
+abstract class MovementImpl(private val initialPosition: Coordinate, private val direction: Direction,
+                        private val nextPosition: Coordinate) extends Movement{
+  import MovementImpl._
 
   private var fistStep: Boolean = true
 
-  override def call(): Unit = {
+  override def walk(): Unit = {
     var actualX: Double = initialPosition.x
     var actualY: Double = initialPosition.y
     for (_ <- 1 to TRAINER_STEPS) {
@@ -39,6 +40,7 @@ abstract class Movement(private val initialPosition: Coordinate, private val dir
           actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentX(actualX)
       }
+      println("Movement")
       updateTrainerSprite(direction)
       Thread.sleep(Settings.GAME_REFRESH_TIME)
     }

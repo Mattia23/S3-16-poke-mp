@@ -9,7 +9,7 @@ import model.environment.Direction.Direction
 
 case class OtherTrainerMovement(private val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails],
                                 private val _initialPosition: Coordinate, private val _direction: Direction,
-                                private val _nextPosition: Coordinate) extends Movement(_initialPosition, _direction, _nextPosition){
+                                private val _nextPosition: Coordinate) extends MovementImpl(_initialPosition, _direction, _nextPosition){
 
   override protected def currentTrainerSprite: Sprite = ???
 

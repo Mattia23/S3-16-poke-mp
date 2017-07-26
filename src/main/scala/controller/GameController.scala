@@ -11,6 +11,10 @@ import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
 
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success}
+
 trait GameController {
   def trainer: Trainer
 
@@ -41,8 +45,8 @@ trait GameController {
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
   private var agent: GameControllerAgent = _
-  //private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
-  private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+  private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
+  protected val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
 
   protected var inGame = false
   protected var inPause = false
@@ -124,15 +128,19 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
-    //new Thread(() => {
-    waitEndOfMovement.acquire()
-    val future = new FutureTask[Unit](MainTrainerMovement(trainer,gamePanel,trainer.coordinate,direction,nextPosition))
-    executor.execute(future)
-    future.get
-    //trainerMovement.walk(trainer.coordinate, direction, nextPosition)
-    trainerIsMoving = false
-    waitEndOfMovement.release()
-   // }).start()
+      val movement: Movement = MainTrainerMovement(trainer, gamePanel, trainer.coordinate, direction, nextPosition)
+      waitEndOfMovement.acquire()
+      import scala.concurrent.ExecutionContext.Implicits.global
+      ExecutionContext.fromExecutor(executor)
+      val future = Future {
+        movement.walk()
+      }
+      future.onComplete {
+        case Success(value) =>
+          trainerIsMoving = false
+          waitEndOfMovement.release()
+        case Failure(e) => e.printStackTrace()
+      }
   }
 
   protected def setTrainerSpriteFront(): Unit = trainer.currentSprite = trainer.sprites.frontS
