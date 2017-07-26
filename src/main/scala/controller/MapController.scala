@@ -1,10 +1,8 @@
 package controller
 
-import java.util.concurrent.ConcurrentMap
-
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
-import distributed.{ConnectedPlayers, Player}
+import distributed.ConnectedPlayers
 import model.entities.Trainer
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl}
@@ -29,6 +27,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
+  connectedPlayers.addObserver(distributedMapController)
   private var distributedAgent: DistributedMapControllerAgent = _
   audio = Audio(Settings.MAP_SONG)
 

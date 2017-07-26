@@ -4,7 +4,7 @@ import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
 
 import com.rabbitmq.client.Connection
 import distributed.client.{NewPlayerInGameClientManager, PlayerInBuildingClientManager, PlayerLogoutClientManager, PlayerPositionClientManager}
-import distributed.{ConnectedPlayers, Player, PlayerPositionDetails}
+import distributed.{ConnectedPlayers, ConnectedPlayersObserver, Player, PlayerPositionDetails}
 import model.entities.TrainerSprites
 import model.environment.Coordinate
 import utilities.Settings
@@ -26,7 +26,7 @@ object DistributedMapController{
     new DistributedMapControllerImpl(mapController, connection, connectedPlayers)
 }
 
-class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConnectedPlayers) extends DistributedMapController{
+class DistributedMapControllerImpl(private val mapController: GameController, private val connection: Connection, override val connectedPlayers: ConnectedPlayers) extends DistributedMapController with ConnectedPlayersObserver{
 
   private val trainerId: Int = mapController.trainer.id
   private val newPlayerInGameManager: NewPlayerInGameClientManager = NewPlayerInGameClientManager(connection)
@@ -51,6 +51,12 @@ class DistributedMapControllerImpl(private val mapController: GameController, pr
     playerLogoutManager.sendPlayerLogout(trainerId)
     connection.close()
   }
+
+  override def newPlayerAdded(): Unit = ???
+
+  override def playerUpdated(): Unit = ???
+
+  override def playerRemoved(): Unit = ???
 }
 
 class DistributedMapControllerAgent(private val mapController: GameController, private val distributedMapController: DistributedMapController) extends Thread {
