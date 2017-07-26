@@ -32,7 +32,7 @@ class ConnectedPlayersImpl extends ConnectedPlayers{
 
   override def add(userId: Int, player: Player): Unit = {
     map.put(userId, player)
-    observers foreach ( _ newPlayerAdded())
+    observers foreach ( _ newPlayerAdded player)
   }
 
   override def get(userId: Int): Player = map get userId
@@ -41,16 +41,16 @@ class ConnectedPlayersImpl extends ConnectedPlayers{
     map forEach (add(_,_))
   }
 
-  override def remove(idUser: Int): Unit = {
-    map remove idUser
-    observers foreach ( _ playerRemoved())
+  override def remove(userId: Int): Unit = {
+    map remove userId
+    observers foreach ( _ playerRemoved userId)
   }
 
   override def getAll: util.Map[Int, Player] = map
 
   override def updateTrainerPosition(userId: Int, position: Coordinate): Unit = {
     get(userId).position = position
-    observers foreach( _ playerPositionUpdated())
+    observers foreach( _ playerPositionUpdated userId)
   }
 
   override def addObserver(observer: ConnectedPlayersObserver): Unit = observers = observers :+ observer

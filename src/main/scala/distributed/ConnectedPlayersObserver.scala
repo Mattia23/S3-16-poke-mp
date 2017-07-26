@@ -1,9 +1,9 @@
 package distributed
 
 trait ConnectedPlayersObserver {
-  def newPlayerAdded()
+  def newPlayerAdded(player: Player)
 
-  def playerPositionUpdated()
+  def playerPositionUpdated(userId: Int)
 
-  def playerRemoved()
+  def playerRemoved(userId: Int)
 }

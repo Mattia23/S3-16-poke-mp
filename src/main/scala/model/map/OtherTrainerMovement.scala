@@ -5,8 +5,11 @@ import java.util.concurrent.ConcurrentMap
 import distributed.PlayerPositionDetails
 import model.entities.{Sprite, TrainerSprites}
 import model.environment.Coordinate
+import model.environment.Direction.Direction
 
-case class OtherTrainerMovement(playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]) extends MovementImpl{
+case class OtherTrainerMovement(private val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails],
+                                private val _initialPosition: Coordinate, private val _direction: Direction,
+                                private val _nextPosition: Coordinate) extends Movement(_initialPosition, _direction, _nextPosition){
 
   override protected def currentTrainerSprite: Sprite = ???
 

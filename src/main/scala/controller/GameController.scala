@@ -1,13 +1,13 @@
 package controller
 
-import java.util.concurrent.Semaphore
+import java.util.concurrent.{ExecutorService, Executors, FutureTask, Semaphore}
 import javax.swing.SwingUtilities
 
 import database.remote.DBConnect
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
-import model.map.Movement
+import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
 
@@ -41,6 +41,9 @@ trait GameController {
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
   private var agent: GameControllerAgent = _
+  //private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
+  private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+
   protected var inGame = false
   protected var inPause = false
   protected var audio: Audio = _
@@ -121,12 +124,15 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
-    new Thread(() => {
-      waitEndOfMovement.acquire()
-      trainerMovement.walk(trainer.coordinate, direction, nextPosition)
-      trainerIsMoving = false
-      waitEndOfMovement.release()
-    }).start()
+    //new Thread(() => {
+    waitEndOfMovement.acquire()
+    val future = new FutureTask[Unit](MainTrainerMovement(trainer,gamePanel,trainer.coordinate,direction,nextPosition))
+    executor.execute(future)
+    future.get
+    //trainerMovement.walk(trainer.coordinate, direction, nextPosition)
+    trainerIsMoving = false
+    waitEndOfMovement.release()
+   // }).start()
   }
 
   protected def setTrainerSpriteFront(): Unit = trainer.currentSprite = trainer.sprites.frontS

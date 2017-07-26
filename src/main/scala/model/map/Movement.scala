@@ -1,24 +1,27 @@
 package model.map
 
-import model.entities._
-import model.environment.{Coordinate, CoordinateImpl, Direction}
-import model.environment.Direction.Direction
-import utilities.Settings
+import java.util.concurrent.Callable
 
+import model.entities._
+import model.environment.Direction.Direction
+import model.environment.{Coordinate, Direction}
+import utilities.Settings
+/*
 trait Movement {
   def walk(initialPosition: Coordinate, direction: Direction, nextPosition: Coordinate): Unit
 }
-
-object MovementImpl{
+*/
+object Movement{
   private final val TRAINER_STEPS = 4
 }
 
-abstract class MovementImpl() extends Movement{
-  import MovementImpl._
+abstract class Movement(private val initialPosition: Coordinate, private val direction: Direction,
+                        private val nextPosition: Coordinate) extends Callable[Unit]{
+  import Movement._
 
   private var fistStep: Boolean = true
 
-  override def walk(initialPosition: Coordinate, direction: Direction, nextPosition: Coordinate): Unit = {
+  override def call(): Unit = {
     var actualX: Double = initialPosition.x
     var actualY: Double = initialPosition.y
     for (_ <- 1 to TRAINER_STEPS) {

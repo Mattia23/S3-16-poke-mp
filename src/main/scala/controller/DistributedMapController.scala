@@ -6,7 +6,9 @@ import com.rabbitmq.client.Connection
 import distributed.client.{NewPlayerInGameClientManager, PlayerInBuildingClientManager, PlayerLogoutClientManager, PlayerPositionClientManager}
 import distributed.{ConnectedPlayers, ConnectedPlayersObserver, Player, PlayerPositionDetails}
 import model.entities.TrainerSprites
-import model.environment.Coordinate
+import model.environment.Direction.Direction
+import model.environment.{Coordinate, CoordinateImpl, Direction}
+import model.map.{Movement, OtherTrainerMovement}
 import utilities.Settings
 
 trait DistributedMapController{
@@ -43,7 +45,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
 
   override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
 
-  //private val otherTrainerMovement: Movement = new OtherTrainerMovement(playersPositionDetails)
+  //private val otherTrainerMovement: Movement = OtherTrainerMovement(playersPositionDetails)
 
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
@@ -54,13 +56,27 @@ class DistributedMapControllerImpl(private val mapController: GameController,
     connection.close()
   }
 
-  override def newPlayerAdded(): Unit = ???
+  override def newPlayerAdded(player: Player): Unit = {
+    val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites.selectTrainerSprite(player.idImage).frontS)
+    playersPositionDetails.put(player.userId, playerDetails)
+  }
 
-  override def playerPositionUpdated(): Unit = ???
+  override def playerPositionUpdated(userId: Int): Unit = {
+    val initialPosition = CoordinateImpl(playersPositionDetails.get(userId).coordinateX.asInstanceOf[Int], playersPositionDetails.get(userId).coordinateY.asInstanceOf[Int])
+    val nextPosition = connectedPlayers.get(userId).position
+    val direction: Direction = (initialPosition, nextPosition) match {
+      case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 + 1 => Direction.RIGHT
+      case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 - 1 => Direction.LEFT
+      case (CoordinateImpl(_, y1), CoordinateImpl(_, y2)) if y2 == y1 + 1 => Direction.DOWN
+      case _ => Direction.UP
+    }
+    //otherTrainerMovement.walk(initialPosition, direction, nextPosition)
+  }
 
-  override def playerRemoved(): Unit = ???
-}
+  override def playerRemoved(userId: Int): Unit = playersPositionDetails.remove(userId)
+//}
 
+/*
 class DistributedMapControllerAgent(private val mapController: GameController, private val distributedMapController: DistributedMapController) extends Thread {
   var stopped: Boolean = false
 
@@ -87,5 +103,5 @@ class DistributedMapControllerAgent(private val mapController: GameController, p
   def terminate(): Unit = {
     stopped = true
   }
-
+*/
 }

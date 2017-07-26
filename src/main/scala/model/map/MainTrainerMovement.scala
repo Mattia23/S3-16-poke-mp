@@ -1,10 +1,13 @@
 package model.map
 
 import model.entities.{Sprite, Trainer, TrainerSprites}
+import model.environment.Direction.Direction
 import model.environment.{Coordinate, CoordinateImpl}
 import view.GamePanel
 
-case class MainTrainerMovement(trainer: Trainer, gamePanel: GamePanel) extends MovementImpl{
+case class MainTrainerMovement(private val trainer: Trainer, private val gamePanel: GamePanel,
+                               private val _initialPosition: Coordinate, private val _direction: Direction,
+                               private val _nextPosition: Coordinate) extends Movement(_initialPosition, _direction, _nextPosition){
 
   override protected def currentTrainerSprite: Sprite = trainer.currentSprite
 
