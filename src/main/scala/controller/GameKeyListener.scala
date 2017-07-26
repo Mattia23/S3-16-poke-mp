@@ -16,7 +16,6 @@ class GameKeyListener(val gameController: GameController) extends KeyListener{
 
   override def keyPressed(e: KeyEvent): Unit = {
     if(!this.gameController.trainerIsMoving) {
-      println("muovo")
       e.getKeyCode match {
         case MOVE_DOWN | MOVE_LEFT | MOVE_RIGHT | MOVE_UP =>
           this.gameController.trainerIsMoving = true

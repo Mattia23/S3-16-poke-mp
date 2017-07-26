@@ -1,6 +1,6 @@
 package controller
 
-import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap}
+import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap, ExecutorService, Executors}
 
 import com.rabbitmq.client.Connection
 import distributed.client.{NewPlayerInGameClientManager, PlayerInBuildingClientManager, PlayerLogoutClientManager, PlayerPositionClientManager}
@@ -9,7 +9,8 @@ import model.entities.TrainerSprites
 import model.environment.Direction.Direction
 import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.map.{Movement, OtherTrainerMovement}
-import utilities.Settings
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait DistributedMapController{
   def connectedPlayers: ConnectedPlayers
@@ -38,14 +39,16 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
 
+  private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
+  protected val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
+  private implicit val executionContext = ExecutionContext.fromExecutor(executor)
+
   newPlayerInGameManager.receiveNewPlayerInGame(trainerId, connectedPlayers)
   playerPositionManager.receiveOtherPlayerPosition(trainerId, connectedPlayers)
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
 
   override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
-
-  //private val otherTrainerMovement: Movement = OtherTrainerMovement(playersPositionDetails)
 
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
@@ -70,38 +73,12 @@ class DistributedMapControllerImpl(private val mapController: GameController,
       case (CoordinateImpl(_, y1), CoordinateImpl(_, y2)) if y2 == y1 + 1 => Direction.DOWN
       case _ => Direction.UP
     }
-    //otherTrainerMovement.walk(initialPosition, direction, nextPosition)
+    val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, initialPosition, direction, nextPosition,
+      TrainerSprites.selectTrainerSprite(connectedPlayers.get(userId).idImage))
+    Future {
+      movement.walk()
+    }
   }
 
   override def playerRemoved(userId: Int): Unit = playersPositionDetails.remove(userId)
-//}
-
-/*
-class DistributedMapControllerAgent(private val mapController: GameController, private val distributedMapController: DistributedMapController) extends Thread {
-  var stopped: Boolean = false
-
-  override def run(): Unit = {
-    while(mapController.isInGame && !stopped){
-      if(!mapController.isInPause){
-       distributedMapController.connectedPlayers.getAll.values() forEach (player => addPlayer(player) )
-      }
-      try
-        Thread.sleep(Settings.GAME_REFRESH_TIME)
-      catch {
-        case e: InterruptedException => System.out.println(e)
-      }
-    }
-  }
-
-  private def addPlayer(player: Player): Unit = {
-    if(distributedMapController.playersPositionDetails.get(player.userId) == null) {
-      val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites.selectTrainerSprite(player.idImage).frontS)
-      distributedMapController.playersPositionDetails.put(player.userId, playerDetails)
-    }
-  }
-
-  def terminate(): Unit = {
-    stopped = true
-  }
-*/
 }

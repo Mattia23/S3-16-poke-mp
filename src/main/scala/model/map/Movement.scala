@@ -1,7 +1,5 @@
 package model.map
 
-import java.util.concurrent.Callable
-
 import model.entities._
 import model.environment.Direction.Direction
 import model.environment.{Coordinate, Direction}
@@ -9,7 +7,6 @@ import utilities.Settings
 
 trait Movement {
   def walk(): Unit
-  //def walk(initialPosition: Coordinate, direction: Direction, nextPosition: Coordinate): Unit
 }
 
 object MovementImpl{
@@ -40,7 +37,6 @@ abstract class MovementImpl(private val initialPosition: Coordinate, private val
           actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentX(actualX)
       }
-      println("Movement")
       updateTrainerSprite(direction)
       Thread.sleep(Settings.GAME_REFRESH_TIME)
     }
@@ -104,7 +100,7 @@ abstract class MovementImpl(private val initialPosition: Coordinate, private val
 
   protected def currentTrainerSprite_=(sprite: Sprite): Unit
 
-  protected var trainerSprites: TrainerSprites
+  protected val trainerSprites: TrainerSprites
 
   protected def updateCurrentX(actualX: Double): Unit
 

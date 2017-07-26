@@ -50,12 +50,16 @@ public class MapPanel extends GamePanel{
             for(Player player : this.distributedMapController.connectedPlayers().getAll().values()){
                 if(player.isVisible()) {
                     g.drawImage(LoadImage.load((this.distributedMapController.playersPositionDetails().get(player.userId()).currentSprite().image())),
-                            ((player.position().x() * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,
-                            ((player.position().y() * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2,
+                            ((coordinateInPixels(this.distributedMapController.playersPositionDetails().get(player.userId()).coordinateX())) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,
+                            ((coordinateInPixels(this.distributedMapController.playersPositionDetails().get(player.userId()).coordinateY())) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2,
                             null);
                 }
             }
         }
+    }
+
+    private int coordinateInPixels(double currentCoordinate) {
+        return (int)(currentCoordinate * Settings.TILE_PIXEL());
     }
 
     private void drawTrainer(Graphics g){

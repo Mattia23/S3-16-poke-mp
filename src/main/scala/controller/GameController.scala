@@ -1,6 +1,6 @@
 package controller
 
-import java.util.concurrent.{ExecutorService, Executors, FutureTask, Semaphore}
+import java.util.concurrent.{ExecutorService, Executors, Semaphore}
 import javax.swing.SwingUtilities
 
 import database.remote.DBConnect
@@ -11,8 +11,7 @@ import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 trait GameController {
@@ -45,8 +44,8 @@ trait GameController {
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
   private var agent: GameControllerAgent = _
-  private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
-  protected val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
+  private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+  private implicit val executionContext = ExecutionContext.fromExecutor(executor)
 
   protected var inGame = false
   protected var inPause = false
@@ -130,13 +129,12 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
       val movement: Movement = MainTrainerMovement(trainer, gamePanel, trainer.coordinate, direction, nextPosition)
       waitEndOfMovement.acquire()
-      import scala.concurrent.ExecutionContext.Implicits.global
-      ExecutionContext.fromExecutor(executor)
+
       val future = Future {
         movement.walk()
       }
       future.onComplete {
-        case Success(value) =>
+        case Success(_) =>
           trainerIsMoving = false
           waitEndOfMovement.release()
         case Failure(e) => e.printStackTrace()

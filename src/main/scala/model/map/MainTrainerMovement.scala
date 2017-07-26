@@ -13,7 +13,7 @@ case class MainTrainerMovement(private val trainer: Trainer, private val gamePan
 
   override protected def currentTrainerSprite_=(sprite: Sprite): Unit = trainer.currentSprite = sprite
 
-  override protected var trainerSprites: TrainerSprites = trainer.sprites
+  override protected val trainerSprites: TrainerSprites = trainer.sprites
 
   override protected def updateCurrentX(actualX: Double): Unit = gamePanel.updateCurrentX(actualX)
 
