@@ -30,8 +30,8 @@ class PokemonDBTest extends FunSuite {
   test("Check the lists of possible wild pokemon") {
     assert(PokedexConnect.getPossibleWildPokemon(1).get().size == 10)
     assert(PokedexConnect.getPossibleWildPokemon(5).get().size == 12)
-    assert(PokedexConnect.getPossibleWildPokemon(10).get().size == 42)
-    assert(PokedexConnect.getPossibleWildPokemon(20).get().size == 32)
+    assert(PokedexConnect.getPossibleWildPokemon(10).get().size == 41)
+    assert(PokedexConnect.getPossibleWildPokemon(20).get().size == 33)
     assert(PokedexConnect.getPossibleWildPokemon(30).get().size == 30)
     assert(PokedexConnect.getPossibleWildPokemon(50).get().size == 10)
     assert(PokedexConnect.getPossibleWildPokemon(100).get().size == 6)
@@ -52,9 +52,6 @@ class PokemonDBTest extends FunSuite {
     val p1: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(5)).get()
     val p2: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
     val p3: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get()
-    println("1) ID:"+p1.pokemon.id+" NAME:"+p1.pokemon.name+" LEVEL:"+p1.pokemon.level+" EXP:"+p1.pokemon.experiencePoints+" LEV_EXP:"+p1.pokemon.levelExperience+" LIFE:"+p1.pokemonLife)
-    println("2) ID:"+p2.pokemon.id+" NAME:"+p2.pokemon.name+" LEVEL:"+p2.pokemon.level+" EXP:"+p2.pokemon.experiencePoints+" LEV_EXP:"+p2.pokemon.levelExperience+" LIFE:"+p2.pokemonLife)
-    println("3) ID:"+p3.pokemon.id+" NAME:"+p3.pokemon.name+" LEVEL:"+p3.pokemon.level+" EXP:"+p3.pokemon.experiencePoints+" LEV_EXP:"+p3.pokemon.levelExperience+" LIFE:"+p3.pokemonLife)
   }
 
 }
