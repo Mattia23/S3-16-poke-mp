@@ -31,9 +31,9 @@ class PlayerLoginServerService(private val connection: Connection, private val c
         val player = playerMessage.player
 
         val response = gson.toJson(ConnectedPlayersMessage(connectedPlayers))
-        val respondeQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + player.userId
-        channel.queueDeclare(respondeQueue, false, false, false, null)
-        channel.basicPublish("", respondeQueue, null, response.getBytes("UTF-8"))
+        val responseQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + player.userId
+        channel.queueDeclare(responseQueue, false, false, false, null)
+        channel.basicPublish("", responseQueue, null, response.getBytes("UTF-8"))
         println("server: send connected player")
         connectedPlayers.put(player.userId, player)
 
