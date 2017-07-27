@@ -9,7 +9,6 @@ import model.map.GameMap;
 import utilities.Settings;
 
 import java.awt.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class MapPanel extends GamePanel{
@@ -40,8 +39,8 @@ public class MapPanel extends GamePanel{
                                 && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                                 && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
                     g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),
-                            ((x * Settings.TILE_PIXEL()) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2 ,
-                            ((y  * Settings.TILE_PIXEL()) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2 ,
+                            this.calculateCoordinate(x, this.getCurrentX()),
+                            this.calculateCoordinate(y, this.getCurrentY()),
                             null);
                 }
             }
@@ -55,23 +54,27 @@ public class MapPanel extends GamePanel{
                 if(player.isVisible()) {
                     PlayerPositionDetails positionDetails = map.get(player.userId());
                     g.drawImage(LoadImage.load((positionDetails.currentSprite().image())),
-                            ((coordinateInPixels(positionDetails.coordinateX())) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,
-                            ((coordinateInPixels(positionDetails.coordinateY())) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2,
+                            this.calculateCoordinate(positionDetails.coordinateX(), this.getCurrentX()),
+                            this.calculateCoordinate(positionDetails.coordinateY(), this.getCurrentY()),
                             null);
                 }
             }
         }
     }
 
-    private int coordinateInPixels(double currentCoordinate) {
-        return (int)(currentCoordinate * Settings.TILE_PIXEL());
-    }
-
     private void drawTrainer(Graphics g){
-        g.drawImage(LoadImage.load(mapController.trainer().currentSprite().image()),
+        g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
                 Settings.FRAME_SIDE() / 2,
                 Settings.FRAME_SIDE() / 2,
                 null);
+    }
+
+    private int calculateCoordinate(double coordinate, int centerCoordinate) {
+        return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.FRAME_SIDE() / 2;
+    }
+
+    private int coordinateInPixels(double currentCoordinate) {
+        return (int)(currentCoordinate * Settings.TILE_PIXEL());
     }
 
 }

@@ -40,7 +40,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
 
   private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
-  protected val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
+  private val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
   private implicit val executionContext = ExecutionContext.fromExecutor(executor)
 
   newPlayerInGameManager.receiveNewPlayerInGame(trainerId, connectedPlayers)
