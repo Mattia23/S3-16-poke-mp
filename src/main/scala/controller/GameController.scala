@@ -109,7 +109,12 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def doInteract(direction: Direction): Unit
 
-  override def showGameMenu(): Unit = new GameMenuControllerImpl(view, this)
+  override def showGameMenu(): Unit = {
+    sendPlayerIsFighting(true)
+    new GameMenuControllerImpl(view, this)
+  }
+
+  def sendPlayerIsFighting(isFighting: Boolean): Unit
 
   override def logout(): Unit = {
     DBConnect.closeConnection()

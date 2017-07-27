@@ -79,7 +79,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
-    //distributedMapController.connectedPlayers.get(trainer.id).isFighting_=(true)
     setFocusableOff()
   }
 
@@ -131,7 +130,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
           currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
           showDialogue(currentDialogue)
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
-          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is already fighting...")))
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
         })
     }
   }
