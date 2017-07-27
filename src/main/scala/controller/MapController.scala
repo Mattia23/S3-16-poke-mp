@@ -32,6 +32,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedUsers)
   private var distributedAgent: DistributedMapControllerAgent = _
+  private var currentDialogue: DialoguePanel = _
   audio = Audio(Settings.MAP_SONG)
 
 
@@ -124,16 +125,16 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if (!isInPause){
       var nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.values() forEach (otherPlayer =>
-        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
-          println(otherPlayer.isFighting, otherPlayer.username)
-          var plyer2: Player = Player(trainer.id, trainer.name, 2, CoordinateImpl(25,25), true, false)
+        if((nextPosition equals otherPlayer.position) /*&&  !otherPlayer.isFighting*/){
+          //var plyer2: Player = Player(trainer.id, trainer.name, 2, CoordinateImpl(25,25), true, false)
           /*val player: Player = distributedMapController.connectedPlayers.get(trainer.id)
           player.isFighting_=(true)*/
-          distributedMapController.challengeTrainer(plyer2, otherPlayer, true)
-          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("...")))
-        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+          distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
+          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
+          showDialogue(currentDialogue)
+        }/*else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("the plaer is dai hai capito")))
-        })
+        }*/)
     }
   }
 
@@ -164,5 +165,19 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doLogout(): Unit = {
     distributedMapController.playerLogout()
     terminate()
+  }
+
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
+    semaphore.acquire()
+    pause()
+    semaphore.release()
+    val otherPlayerUsername = connectedUsers.get(otherPlayerId).username
+    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername)
+    val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
+    distributedBattle.passManager(battleManager)
+  }
+
+  override def hideCurrentDialogue(): Unit = {
+    currentDialogue.setVisible(false)
   }
 }

@@ -3,18 +3,24 @@ package distributed.messages
 import distributed.Player
 
 trait TrainerDialogueMessage {
-  def player: Player
+  def firstPlayerId: Int
 
-  def otherPlayer: Player
+  def firstPlayerName: String
+
+  def secondPlayerId: Int
 
   def wantToFight: Boolean
+
+  def isFirst: Boolean
 }
 
 object TrainerDialogueMessage {
-  def apply(player: Player, otherPlayer: Player, wantToFight: Boolean): TrainerDialogueMessage =
-    new TrainerDialogueMessageImpl(player, otherPlayer, wantToFight)
+  def apply(firstPlayerId: Int, firstPlayerName: String, secondPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): TrainerDialogueMessage =
+    new TrainerDialogueMessageImpl(firstPlayerId, firstPlayerName, secondPlayerId, wantToFight, isFirst)
 }
 
-class TrainerDialogueMessageImpl(override val player: Player,
-                                 override val otherPlayer: Player,
-                                 override val wantToFight: Boolean) extends TrainerDialogueMessage
+class TrainerDialogueMessageImpl(override val firstPlayerId: Int,
+                                 override val firstPlayerName: String,
+                                 override val secondPlayerId: Int,
+                                 override val wantToFight: Boolean,
+                                 override val isFirst: Boolean) extends TrainerDialogueMessage

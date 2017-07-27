@@ -1,5 +1,6 @@
 package controller
 
+import com.rabbitmq.client.Connection
 import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
@@ -109,6 +110,9 @@ class PokemonCenterController(private val view: View, private val mapController:
     }
   }
 
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = ???
+
+  override def hideCurrentDialogue(): Unit = ???
 }
 
 class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
@@ -155,5 +159,8 @@ class LaboratoryController(private val view: View, private val mapController: Ga
     }
   }
 
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = ???
+
+  override def hideCurrentDialogue(): Unit = ???
 }
 

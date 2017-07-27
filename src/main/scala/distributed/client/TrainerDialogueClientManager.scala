@@ -4,25 +4,28 @@ import java.util
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
-import controller.{GameController}
+import controller.{BattleController, DistributedBattleController, GameController}
 import distributed.Player
-import distributed.deserializers.TrainerDialogueMessageDeserializers
+import view.View
+//import distributed.deserializers.TrainerDialogueMessageDeserializers
 import distributed.messages.{TrainerDialogueMessage, TrainerDialogueMessageImpl}
 import utilities.Settings
 import view.{ClassicDialoguePanel, TrainerDialoguePanel}
 
 trait TrainerDialogueClientManager {
-  def player: Player
+  def playerId: Int
 
-  def player_=(otherTrainer: Player): Unit
+  def playerId_=(playerId: Int): Unit
 
-  def otherPlayer: Player
+  def otherPlayerId: Int
 
-  def otherPlayer_=(otherTrainer: Player): Unit
+  def otherPlayerId_=(otherPlayerId: Int): Unit
 
-  def sendDialogueRequest(player: Player, otherPlayer: Player, wantToFight: Boolean): Unit
+  def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit
 
   def receiveResponse(): Unit
+
+  def createBattle(): Unit
 }
 
 object TrainerDialogueClientManager {
@@ -31,21 +34,20 @@ object TrainerDialogueClientManager {
 
 class TrainerDialogueClientManagerImpl(private val connection: Connection, private val mapController: GameController) extends TrainerDialogueClientManager {
 
-  private val trainerId: Int = mapController.trainer.id
   private var gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
-  private val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + trainerId
-  override var player: Player = _
-  override var otherPlayer: Player = _
+  override var playerId: Int = mapController.trainer.id
+  override var otherPlayerId: Int = _
+  var otherPlayerName: String = _
+  private val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
+  private var yourPlayerIsFirst = true
 
-  channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + trainerId, false, false, false, null)
+  channel.queueDeclare(playerQueue, false, false, false, null)
 
-  override def sendDialogueRequest(player: Player, otherPlayer: Player, wantToFight: Boolean): Unit = {
-    this.player = player
-    channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayer.userId, false, false, false, null)
-    val trainerDialogueMessage = TrainerDialogueMessage(player, otherPlayer, wantToFight)
-    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayer.userId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
-    println(" [x] sent fight request to "+otherPlayer.userId)
+  override def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit = {
+    val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.name, otherPlayerId, wantToFight, isFirst)
+    channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
+    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
   }
 
   override def receiveResponse(): Unit = {
@@ -56,25 +58,30 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received fight response")
-        val gson = new GsonBuilder().registerTypeAdapter(classOf[TrainerDialogueMessageImpl], TrainerDialogueMessageDeserializers).create()
+        //val gson = new GsonBuilder().registerTypeAdapter(classOf[TrainerDialogueMessageImpl], TrainerDialogueMessageDeserializers).create()
         val trainerDialogueMessage = gson.fromJson(new String(body, "UTF-8"), classOf[TrainerDialogueMessageImpl])
-        otherPlayer = trainerDialogueMessage.player
-        if(trainerDialogueMessage.wantToFight && !trainerDialogueMessage.otherPlayer.isFighting) {
-          println("mi hanno sfidato")
-          trainerDialogueMessage.otherPlayer.isFighting_=(true)
-          mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this, util.Arrays.asList(trainerDialogueMessage.otherPlayer.userId + " ti ha sfidato")))
+        otherPlayerId = trainerDialogueMessage.firstPlayerId
+        otherPlayerName = trainerDialogueMessage.firstPlayerName
+        if(trainerDialogueMessage.wantToFight && trainerDialogueMessage.isFirst) {
+          //trainerDialogueMessage.otherPlayer.isFighting_=(true)
+          yourPlayerIsFirst = false
+          mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this,
+            util.Arrays.asList(otherPlayerName + " ti ha sfidato")))
         }
         else if(trainerDialogueMessage.wantToFight){
-          //TODO parte la sfida
-          println("hanno accettato la sfida, si parteeeeee")
+          createBattle()
         }
         else if(!trainerDialogueMessage.wantToFight){
-          mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayer.userId + " ha rifiutato la sfida, stronzommerda")))
+          mapController.hideCurrentDialogue()
+          mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }
         //channel.close()
       }
     }
     channel.basicConsume(playerQueue, true, consumer)
+  }
+
+  override def createBattle(): Unit = {
+    mapController.createDistributedBattle(otherPlayerId, yourPlayerIsFirst)
   }
 }
