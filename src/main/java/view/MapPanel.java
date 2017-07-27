@@ -3,11 +3,14 @@ package view;
 import controller.DistributedMapController;
 import controller.GameController;
 import distributed.Player;
+import distributed.PlayerPositionDetails;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
 
 import java.awt.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class MapPanel extends GamePanel{
 
@@ -46,12 +49,14 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawOtherTrainers(Graphics g){
+        ConcurrentMap<Object, PlayerPositionDetails> map = this.distributedMapController.playersPositionDetails();
         if(!this.distributedMapController.playersPositionDetails().isEmpty()){
             for(Player player : this.distributedMapController.connectedPlayers().getAll().values()){
                 if(player.isVisible()) {
-                    g.drawImage(LoadImage.load((this.distributedMapController.playersPositionDetails().get(player.userId()).currentSprite().image())),
-                            ((coordinateInPixels(this.distributedMapController.playersPositionDetails().get(player.userId()).coordinateX())) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,
-                            ((coordinateInPixels(this.distributedMapController.playersPositionDetails().get(player.userId()).coordinateY())) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2,
+                    PlayerPositionDetails positionDetails = map.get(player.userId());
+                    g.drawImage(LoadImage.load((positionDetails.currentSprite().image())),
+                            ((coordinateInPixels(positionDetails.coordinateX())) - super.getCurrentX()) + Settings.FRAME_SIDE() / 2,
+                            ((coordinateInPixels(positionDetails.coordinateY())) - super.getCurrentY()) + Settings.FRAME_SIDE() / 2,
                             null);
                 }
             }

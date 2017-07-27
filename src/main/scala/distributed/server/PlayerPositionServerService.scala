@@ -13,7 +13,7 @@ object PlayerPositionServerService {
   def apply(connection: Connection, connectedUsers: ConcurrentMap[Int, Player]): CommunicationService = new PlayerPositionServerService(connection, connectedUsers)
 }
 
-class PlayerPositionServerService(private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, Player]) extends CommunicationService {
+class PlayerPositionServerService(private val connection: Connection, private val connectedPlayers: ConcurrentMap[Int, Player]) extends CommunicationService {
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_POSITION_CHANNEL_QUEUE, false, false, false, null)
@@ -28,7 +28,7 @@ class PlayerPositionServerService(private val connection: Connection, private va
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val positionMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerPositionMessageImpl])
 
-        connectedUsers.get(positionMessage.userId).position = positionMessage.position
+        connectedPlayers.get(positionMessage.userId).position = positionMessage.position
 
         channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
         val response = gson.toJson(positionMessage)

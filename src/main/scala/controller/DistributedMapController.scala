@@ -65,8 +65,11 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   }
 
   override def playerPositionUpdated(userId: Int): Unit = {
-    val initialPosition = CoordinateImpl(playersPositionDetails.get(userId).coordinateX.asInstanceOf[Int], playersPositionDetails.get(userId).coordinateY.asInstanceOf[Int])
-    val nextPosition = connectedPlayers.get(userId).position
+    val positionDetails: PlayerPositionDetails = playersPositionDetails.get(userId)
+    val player: Player = connectedPlayers.get(userId)
+
+    val initialPosition = CoordinateImpl(positionDetails.coordinateX.asInstanceOf[Int], positionDetails.coordinateY.asInstanceOf[Int])
+    val nextPosition = player.position
     val direction: Direction = (initialPosition, nextPosition) match {
       case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 + 1 => Direction.RIGHT
       case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 - 1 => Direction.LEFT
@@ -74,7 +77,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
       case _ => Direction.UP
     }
     val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, initialPosition, direction, nextPosition,
-      TrainerSprites.selectTrainerSprite(connectedPlayers.get(userId).idImage))
+      TrainerSprites.selectTrainerSprite(player.idImage))
     Future {
       movement.walk()
     }
