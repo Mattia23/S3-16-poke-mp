@@ -80,7 +80,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
         case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 + 1 => direction = Direction.RIGHT
         case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 - 1 => direction = Direction.LEFT
         case (CoordinateImpl(_, y1), CoordinateImpl(_, y2)) if y2 == y1 + 1 => direction = Direction.DOWN
-        case _ => Direction.UP
+        case _ => direction = Direction.UP
       }
 
       val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, initialPosition, direction, nextPosition,
