@@ -26,7 +26,7 @@ class PlayerPositionServerService(private val connection: Connection, private va
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val positionMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerPositionMessageImpl])
 
-        if (connectedPlayers.containsUser(positionMessage.userId)) {
+        if (connectedPlayers.containsPlayer(positionMessage.userId)) {
           connectedPlayers.get(positionMessage.userId).position = positionMessage.position
 
           channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")

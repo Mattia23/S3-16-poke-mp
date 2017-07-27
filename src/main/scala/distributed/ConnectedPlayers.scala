@@ -16,7 +16,7 @@ trait ConnectedPlayers {
 
   def remove(userId: Int): Unit
 
-  def containsUser(userId: Int): Boolean
+  def containsPlayer(userId: Int): Boolean
 
   def updateTrainerPosition(userId: Int, position: Coordinate): Unit
 
@@ -50,7 +50,7 @@ class ConnectedPlayersImpl extends ConnectedPlayers{
 
   override def getAll: util.Map[Int, Player] = map
 
-  override def containsUser(userId: Int): Boolean = map.containsKey(userId)
+  override def containsPlayer(userId: Int): Boolean = map.containsKey(userId)
 
   override def updateTrainerPosition(userId: Int, position: Coordinate): Unit = {
       get(userId).position = position
