@@ -3,17 +3,14 @@ package app
 import java.util.concurrent.ConcurrentHashMap
 
 import distributed.{DistributedConnectionImpl, Player}
-import distributed.server.{PlayerInBuildingServerService, PlayerLoginServerService, PlayerLogoutServerService, PlayerPositionServerService}
+import distributed.server._
 
 object ServerMain extends App{
-
-  val connectedUsers = new ConcurrentHashMap[Int, Player]()
   val connection = DistributedConnectionImpl().connection
-  PlayerLoginServerService(connection, connectedUsers).start()
-  PlayerPositionServerService(connection, connectedUsers).start()
-  PlayerInBuildingServerService(connection, connectedUsers).start()
-  PlayerLogoutServerService(connection, connectedUsers).start()
+  val connectedUsers = new ConcurrentHashMap[Int, Player]()
 
-  //ServerConnection.close()
-
+  CommunicationService(CommunicationService.Service.PlayerLogin, connection, connectedUsers).start()
+  CommunicationService(CommunicationService.Service.PlayerPosition, connection, connectedUsers).start()
+  CommunicationService(CommunicationService.Service.PlayerInBuilding, connection, connectedUsers).start()
+  CommunicationService(CommunicationService.Service.PlayerLogout, connection, connectedUsers).start()
 }
