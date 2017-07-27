@@ -26,12 +26,14 @@ class PlayerPositionServerService(private val connection: Connection, private va
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val positionMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerPositionMessageImpl])
 
-        connectedPlayers.get(positionMessage.userId).position = positionMessage.position
+        if (connectedPlayers.containsUser(positionMessage.userId)) {
+          connectedPlayers.get(positionMessage.userId).position = positionMessage.position
 
-        channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
-        val response = gson.toJson(positionMessage)
-        channel.basicPublish(Settings.PLAYER_POSITION_EXCHANGE, "", null, response.getBytes("UTF-8"))
-        println("server: send player position")
+          channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
+          val response = gson.toJson(positionMessage)
+          channel.basicPublish(Settings.PLAYER_POSITION_EXCHANGE, "", null, response.getBytes("UTF-8"))
+          println("server: send player position")
+        }
       }
     }
 
