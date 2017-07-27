@@ -125,7 +125,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       var nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
-          sendPlayerIsFighting(true)
           distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
           currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
           showDialogue(currentDialogue)
