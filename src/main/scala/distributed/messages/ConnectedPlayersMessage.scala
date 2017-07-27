@@ -1,15 +1,14 @@
 package distributed.messages
 
-import java.util.concurrent.ConcurrentMap
-
+import java.util
 import distributed.Player
 
 trait ConnectedPlayersMessage {
-  def connectedPlayers: ConcurrentMap[Int, Player]
+  def connectedPlayers: util.Map[Int, Player]
 }
 
 object ConnectedPlayersMessage {
-  def apply(connectedPlayers: ConcurrentMap[Int, Player]): ConnectedPlayersMessage = new ConnectedPlayersMessageImpl(connectedPlayers)
+  def apply(connectedPlayers: util.Map[Int, Player]): ConnectedPlayersMessage = new ConnectedPlayersMessageImpl(connectedPlayers)
 }
 
-class ConnectedPlayersMessageImpl(override val connectedPlayers: ConcurrentMap[Int, Player]) extends ConnectedPlayersMessage
+class ConnectedPlayersMessageImpl(override val connectedPlayers: util.Map[Int, Player]) extends ConnectedPlayersMessage

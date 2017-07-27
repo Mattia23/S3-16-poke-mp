@@ -1,18 +1,16 @@
 package distributed.server
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.Player
+import distributed.ConnectedPlayers
 import distributed.messages.PlayerLogoutMessageImpl
 import utilities.Settings
 
 object PlayerLogoutServerService {
-  def apply(connection: Connection, connectedPlayers: ConcurrentMap[Int, Player]): CommunicationService = new PlayerLogoutServerService(connection, connectedPlayers)
+  def apply(connection: Connection, connectedPlayers: ConnectedPlayers): CommunicationService = new PlayerLogoutServerService(connection, connectedPlayers)
 }
 
-class PlayerLogoutServerService(private val connection: Connection, private val connectedPlayers: ConcurrentMap[Int, Player]) extends CommunicationService{
+class PlayerLogoutServerService(private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_LOGOUT_CHANNEL_QUEUE, false, false, false, null)

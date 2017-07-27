@@ -1,18 +1,16 @@
 package distributed.server
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
+import distributed.ConnectedPlayers
 import distributed.messages.PlayerInBuildingMessageImpl
-import distributed.Player
 import utilities.Settings
 
 object PlayerInBuildingServerService {
-  def apply(connection: Connection, connectedPlayers: ConcurrentMap[Int, Player]): PlayerInBuildingServerService = new PlayerInBuildingServerService(connection, connectedPlayers)
+  def apply(connection: Connection, connectedPlayers: ConnectedPlayers): PlayerInBuildingServerService = new PlayerInBuildingServerService(connection, connectedPlayers)
 }
 
-class PlayerInBuildingServerService (private val connection: Connection, private val connectedPlayers: ConcurrentMap[Int, Player]) extends CommunicationService{
+class PlayerInBuildingServerService (private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_IN_BUILDING_CHANNEL_QUEUE, false, false, false, null)
