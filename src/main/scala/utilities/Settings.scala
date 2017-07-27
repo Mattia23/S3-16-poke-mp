@@ -277,6 +277,8 @@ object Settings {
 
   val PLAYER_LOGOUT_CHANNEL_QUEUE: String = "player_logout"
 
+  val TRAINER_DIALOGUE_CHANNEL_QUEUE: String = "trainer_dialogue"
+
   val PLAYER_IN_BUILDING_CHANNEL_QUEUE: String = "player_in_building"
 
   val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
