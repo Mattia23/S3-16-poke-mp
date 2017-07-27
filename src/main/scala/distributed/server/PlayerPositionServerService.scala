@@ -24,7 +24,7 @@ class PlayerPositionServerService(private val connection: Connection, private va
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]): Unit = {
-        println("server: received player position")
+        //println("server: received player position")
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val positionMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerPositionMessageImpl])
 
@@ -33,7 +33,7 @@ class PlayerPositionServerService(private val connection: Connection, private va
         channel.exchangeDeclare(Settings.PLAYER_POSITION_EXCHANGE, "fanout")
         val response = gson.toJson(positionMessage)
         channel.basicPublish(Settings.PLAYER_POSITION_EXCHANGE, "", null, response.getBytes("UTF-8"))
-        println("server: send player position")
+        //println("server: send player position")
       }
     }
 

@@ -58,12 +58,12 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        //val gson = new GsonBuilder().registerTypeAdapter(classOf[TrainerDialogueMessageImpl], TrainerDialogueMessageDeserializers).create()
+
         val trainerDialogueMessage = gson.fromJson(new String(body, "UTF-8"), classOf[TrainerDialogueMessageImpl])
         otherPlayerId = trainerDialogueMessage.firstPlayerId
         otherPlayerName = trainerDialogueMessage.firstPlayerName
         if(trainerDialogueMessage.wantToFight && trainerDialogueMessage.isFirst) {
-          //trainerDialogueMessage.otherPlayer.isFighting_=(true)
+          mapController.sendPlayerIsFighting(true)
           yourPlayerIsFirst = false
           mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this,
             util.Arrays.asList(otherPlayerName + " ti ha sfidato")))
@@ -72,6 +72,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
           createBattle()
         }
         else if(!trainerDialogueMessage.wantToFight){
+          mapController.sendPlayerIsFighting(false)
           mapController.hideCurrentDialogue()
           mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }

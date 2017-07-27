@@ -85,6 +85,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override protected def doResume(): Unit = {
     distributedMapController.sendTrainerInBuilding(true)
+    sendPlayerIsFighting(false)
     if(trainer.getFirstAvailableFavouritePokemon <= 0) {
       DBConnect.rechangeAllTrainerPokemon(trainer.id)
       setTrainerSpriteFront()
@@ -95,7 +96,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start()
     audio.loop()
-    //distributedMapController.connectedPlayers.get(trainer.id).isFighting_=(false)
     setFocusableOn()
   }
 
@@ -125,16 +125,14 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if (!isInPause){
       var nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.values() forEach (otherPlayer =>
-        if((nextPosition equals otherPlayer.position) /*&&  !otherPlayer.isFighting*/){
-          //var plyer2: Player = Player(trainer.id, trainer.name, 2, CoordinateImpl(25,25), true, false)
-          /*val player: Player = distributedMapController.connectedPlayers.get(trainer.id)
-          player.isFighting_=(true)*/
+        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
+          sendPlayerIsFighting(true)
           distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
           currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
           showDialogue(currentDialogue)
-        }/*else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
-          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("the plaer is dai hai capito")))
-        }*/)
+        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is already fighting...")))
+        })
     }
   }
 
@@ -155,6 +153,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
+      sendPlayerIsFighting(true)
       semaphore.acquire()
       pause()
       semaphore.release()
@@ -179,5 +178,9 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override def hideCurrentDialogue(): Unit = {
     currentDialogue.setVisible(false)
+  }
+
+  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {
+    distributedMapController.sendTrainerIsFighting(isFighting)
   }
 }
