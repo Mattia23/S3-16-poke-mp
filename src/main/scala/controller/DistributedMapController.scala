@@ -70,16 +70,32 @@ class DistributedMapControllerImpl(private val mapController: GameController,
 
     val initialPosition = CoordinateImpl(positionDetails.coordinateX.asInstanceOf[Int], positionDetails.coordinateY.asInstanceOf[Int])
     val nextPosition = player.position
-    val direction: Direction = (initialPosition, nextPosition) match {
-      case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 + 1 => Direction.RIGHT
-      case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 - 1 => Direction.LEFT
-      case (CoordinateImpl(_, y1), CoordinateImpl(_, y2)) if y2 == y1 + 1 => Direction.DOWN
-      case _ => Direction.UP
+    var direction: Direction = null
+
+    (initialPosition, nextPosition) match {
+      case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 + 1 =>
+        direction = Direction.RIGHT
+        doMovement()
+      case (CoordinateImpl(x1, _), CoordinateImpl(x2, _)) if x2 == x1 - 1 =>
+        direction = Direction.LEFT
+        doMovement()
+      case (CoordinateImpl(_, y1), CoordinateImpl(_, y2)) if y2 == y1 + 1 =>
+        direction = Direction.DOWN
+        doMovement()
+      case (CoordinateImpl(_, y1), CoordinateImpl(_, y2)) if y2 == y1 - 1 =>
+        direction = Direction.UP
+        doMovement()
+      case _ =>
+        positionDetails.coordinateX = nextPosition.x
+        positionDetails.coordinateY = nextPosition.y
     }
-    val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, initialPosition, direction, nextPosition,
-      TrainerSprites.selectTrainerSprite(player.idImage))
-    Future {
-      movement.walk()
+
+    def doMovement(): Unit = {
+      val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, initialPosition, direction, nextPosition,
+        TrainerSprites.selectTrainerSprite(player.idImage))
+      Future {
+        movement.walk()
+      }
     }
   }
 

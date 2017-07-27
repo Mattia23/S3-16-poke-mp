@@ -17,7 +17,7 @@ abstract class MovementImpl(private val initialPosition: Coordinate, private val
                         private val nextPosition: Coordinate) extends Movement{
   import MovementImpl._
 
-  private var fistStep: Boolean = true
+  private var firstStep: Boolean = true
 
   override def walk(): Unit = {
     var actualX: Double = initialPosition.x
@@ -47,48 +47,48 @@ abstract class MovementImpl(private val initialPosition: Coordinate, private val
     direction match {
       case Direction.UP => currentTrainerSprite match {
         case BackS(_) =>
-          if (fistStep) {
+          if (firstStep) {
             currentTrainerSprite = trainerSprites.back1
-            fistStep = false
+            firstStep = false
           } else {
             currentTrainerSprite = trainerSprites.back2
-            fistStep = true
+            firstStep = true
           }
         case Back1(_) | Back2(_) => currentTrainerSprite = trainerSprites.backS
         case _ => currentTrainerSprite = trainerSprites.back1
       }
       case Direction.DOWN => currentTrainerSprite match {
         case FrontS(_) =>
-          if (fistStep) {
+          if (firstStep) {
             currentTrainerSprite = trainerSprites.front1
-            fistStep = false
+            firstStep = false
           } else {
             currentTrainerSprite = trainerSprites.front2
-            fistStep = true
+            firstStep = true
           }
         case Front1(_) | Front2(_) => currentTrainerSprite = trainerSprites.frontS
         case _ => currentTrainerSprite = trainerSprites.front1
       }
       case Direction.LEFT => currentTrainerSprite match {
         case LeftS(_) =>
-          if (fistStep) {
+          if (firstStep) {
             currentTrainerSprite = trainerSprites.left1
-            fistStep = false
+            firstStep = false
           } else {
             currentTrainerSprite = trainerSprites.left2
-            fistStep = true
+            firstStep = true
           }
         case Left1(_) | Left2(_) => currentTrainerSprite = trainerSprites.leftS
         case _ => currentTrainerSprite = trainerSprites.left1
       }
       case Direction.RIGHT => currentTrainerSprite match {
         case RightS(_) =>
-          if (fistStep) {
+          if (firstStep) {
             currentTrainerSprite = trainerSprites.right1
-            fistStep = false
+            firstStep = false
           } else {
             currentTrainerSprite = trainerSprites.right2
-            fistStep = true
+            firstStep = true
           }
         case Right1(_) | Right2(_) => currentTrainerSprite = trainerSprites.rightS
         case _ => currentTrainerSprite = trainerSprites.right1
