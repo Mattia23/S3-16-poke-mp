@@ -87,6 +87,7 @@ class DistributedBattleController(val controller: GameController, val view: View
     }
   }
 
+  override def isDistributedBattle: Boolean = true
   override def trainerThrowPokeball(): Boolean = {false}
   override def trainerCanQuit(): Boolean = {
     battleManager.sendBattleMessage(controller.trainer.id,0,0)

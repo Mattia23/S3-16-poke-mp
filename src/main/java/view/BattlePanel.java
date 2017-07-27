@@ -124,6 +124,9 @@ public class BattlePanel extends ImagePanel implements BattleView {
             trainerChoices.get(s).setFocusable(false);
             southWestPanel.add(trainerChoices.get(s));
         }
+        if(controller.isDistributedBattle()) {
+            trainerChoices.get("Pokeball").setEnabled(false);
+        }
         JPanel southEastPanel = new JPanel();
         gridLayout = new GridLayout(2,2);
         gridLayout.setVgap(10);
@@ -233,11 +236,20 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             changeButtons();
                             displayPanel.setVisible(true);
                             attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" UTILIZZA " + att +"!");
-                            Thread.sleep(3000);
-                            attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" UTILIZZA " +
-                            wildPokemonAttacks[new Random().nextInt(wildPokemonAttacks.length)].toUpperCase()+"!");
-                            Thread.sleep(3000);
-                            displayPanel.setVisible(false);
+                            if(controller.isDistributedBattle()) {
+                                blockButtons(true);
+                                for(String c : trainerChoices.keySet()) {
+                                    trainerChoices.get(c).setVisible(false);
+                                }
+                                Thread.sleep(3000);
+                                attackExplanation.setText("E' IL TURNO DEL TUO AVVERSARIO");
+                            } else {
+                                Thread.sleep(3000);
+                                attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" UTILIZZA " +
+                                        wildPokemonAttacks[new Random().nextInt(wildPokemonAttacks.length)].toUpperCase()+"!");
+                                Thread.sleep(3000);
+                                displayPanel.setVisible(false);
+                            }
                             index = 0;
                             Object[] names = trainerChoices.keySet().toArray();
                             frame.getRootPane().setDefaultButton(trainerChoices.get(names[index].toString()));
@@ -247,7 +259,6 @@ public class BattlePanel extends ImagePanel implements BattleView {
                     }
                 };
                 t.start();
-
             });
         }
         this.addKeyListener(new KeyListener() {
@@ -301,6 +312,15 @@ public class BattlePanel extends ImagePanel implements BattleView {
             attacks.get(att).setVisible(attacksAreVisible);
         }
     }
+    private void blockButtons(boolean flag) {
+        for(String c : trainerChoices.keySet()) {
+            trainerChoices.get(c).setEnabled(!flag);
+        }
+        trainerChoices.get("Pokeball").setEnabled(false);
+        for(String att : attacks.keySet()) {
+            attacks.get(att).setEnabled(!flag);
+        }
+    }
     private void getWildPokemonAttack() {
         wildPokemonAttacks = new String[]{PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._1()).get()._1(),
                 PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._2()).get()._1(),
@@ -311,6 +331,13 @@ public class BattlePanel extends ImagePanel implements BattleView {
     @Override
     public void setPokemonLife() {
         myPokemonLife.setText(pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
+        if(controller.isDistributedBattle()) {
+            blockButtons(false);
+            for(String c : trainerChoices.keySet()) {
+                trainerChoices.get(c).setVisible(true);
+            }
+            displayPanel.setVisible(false);
+        }
     }
     @Override
     public void setPokemonLifeProgressBar(int life, int owner) {
@@ -335,6 +362,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
                     Thread.sleep(3000);
                     displayPanel.setVisible(false);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
