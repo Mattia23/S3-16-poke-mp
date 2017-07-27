@@ -18,7 +18,7 @@ object PlayerInBuildingClientManager {
 
 class PlayerInBuildingClientManagerImpl(private val connection: Connection) extends PlayerInBuildingClientManager {
 
-  private var gson: Gson = new Gson()
+  private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
 
   private val playerQueue = channel.queueDeclare.getQueue

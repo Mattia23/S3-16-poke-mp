@@ -8,10 +8,10 @@ import model.environment.Coordinate
 import model.environment.Direction.Direction
 
 case class OtherTrainerMovement(private val userId: Int, private val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails],
-                                private val _initialPosition: Coordinate, private val _direction: Direction,
-                                private val _nextPosition: Coordinate,
+                                private val initialPosition: Coordinate, private val direction: Direction,
+                                private val nextPosition: Coordinate,
                                 override protected val trainerSprites: TrainerSprites)
-                                extends MovementImpl(_initialPosition, _direction, _nextPosition){
+                                extends MovementImpl(initialPosition, direction, nextPosition){
 
   private val playerPositionDetails: PlayerPositionDetails = playersPositionDetails.get(userId)
 

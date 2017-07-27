@@ -6,8 +6,8 @@ import model.environment.{Coordinate, CoordinateImpl}
 import view.GamePanel
 
 case class MainTrainerMovement(private val trainer: Trainer, private val gamePanel: GamePanel,
-                               private val _initialPosition: Coordinate, private val _direction: Direction,
-                               private val _nextPosition: Coordinate) extends MovementImpl(_initialPosition, _direction, _nextPosition){
+                               private val initialPosition: Coordinate, private val direction: Direction,
+                               private val nextPosition: Coordinate) extends MovementImpl(initialPosition, direction, nextPosition){
 
   override protected def currentTrainerSprite: Sprite = trainer.currentSprite
 

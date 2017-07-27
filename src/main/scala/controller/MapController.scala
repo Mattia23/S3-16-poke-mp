@@ -28,14 +28,11 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
   connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
- // private var distributedAgent: DistributedMapControllerAgent = _
   audio = Audio(Settings.MAP_SONG)
 
 
   override protected def doStart(): Unit = {
     initView()
- //   distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-  //  distributedAgent.start()
     if(trainer.capturedPokemons.isEmpty){
       doFirstLogin()
     }else {
@@ -72,7 +69,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override protected def doPause(): Unit = {
-  //  if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
     gamePanel.setFocusable(false)
@@ -87,14 +83,11 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
     trainer.coordinate = lastCoordinates
     initView()
-  //  distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-  //  distributedAgent.start()
     audio.loop()
     gamePanel.setFocusable(true)
   }
 
   override protected def doTerminate(): Unit = {
-  //  if(distributedAgent != null) distributedAgent.terminate()
     audio.stop()
   }
 

@@ -1,7 +1,6 @@
 package controller
 
 import java.util.Optional
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JOptionPane
 
 import com.rabbitmq.client.Connection
