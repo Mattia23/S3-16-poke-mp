@@ -45,6 +45,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
   channel.queueDeclare(playerQueue, false, false, false, null)
 
   override def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit = {
+    mapController.sendPlayerIsFighting(wantToFight)
     val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.name, otherPlayerId, wantToFight, isFirst)
     channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
     channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
