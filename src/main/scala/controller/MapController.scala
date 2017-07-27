@@ -1,5 +1,6 @@
 package controller
 
+import java.util
 import java.util.concurrent.ConcurrentMap
 
 import com.rabbitmq.client.Connection
@@ -31,6 +32,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedUsers)
   private var distributedAgent: DistributedMapControllerAgent = _
+  private var currentDialogue: DialoguePanel = _
   audio = Audio(Settings.MAP_SONG)
 
 
@@ -77,7 +79,8 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
-    gamePanel.setFocusable(false)
+    //distributedMapController.connectedPlayers.get(trainer.id).isFighting_=(true)
+    setFocusableOff()
   }
 
   override protected def doResume(): Unit = {
@@ -92,7 +95,8 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
     distributedAgent.start()
     audio.loop()
-    gamePanel.setFocusable(true)
+    //distributedMapController.connectedPlayers.get(trainer.id).isFighting_=(false)
+    setFocusableOn()
   }
 
   override protected def doTerminate(): Unit = {
@@ -119,18 +123,21 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause){
-      val nextPosition: Coordinate = nextTrainerPosition(direction)
-      distributedMapController.connectedPlayers.values() forEach (player =>
-        if(nextPosition equals player.position) {
-          semaphore.acquire()
-          pause()
-          semaphore.release()
-          val distributedBattle: BattleController = new DistributedBattleController(this: GameController, view: View, player.username: String)
-          val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,player.userId,distributedBattle)
-          distributedBattle.passManager(battleManager)
-        })
+      var nextPosition: Coordinate = nextTrainerPosition(direction)
+      distributedMapController.connectedPlayers.values() forEach (otherPlayer =>
+        if((nextPosition equals otherPlayer.position) /*&&  !otherPlayer.isFighting*/){
+          //var plyer2: Player = Player(trainer.id, trainer.name, 2, CoordinateImpl(25,25), true, false)
+          /*val player: Player = distributedMapController.connectedPlayers.get(trainer.id)
+          player.isFighting_=(true)*/
+          distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
+          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
+          showDialogue(currentDialogue)
+        }/*else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList("the plaer is dai hai capito")))
+        }*/)
     }
   }
+
   private def enterInBuilding(building: Building): Unit = {
     distributedMapController.sendTrainerInBuilding(false)
     pause()
@@ -158,5 +165,19 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doLogout(): Unit = {
     distributedMapController.playerLogout()
     terminate()
+  }
+
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
+    semaphore.acquire()
+    pause()
+    semaphore.release()
+    val otherPlayerUsername = connectedUsers.get(otherPlayerId).username
+    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername)
+    val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
+    distributedBattle.passManager(battleManager)
+  }
+
+  override def hideCurrentDialogue(): Unit = {
+    currentDialogue.setVisible(false)
   }
 }

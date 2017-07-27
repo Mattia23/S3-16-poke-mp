@@ -18,7 +18,7 @@ public class ClassicDialoguePanel extends DialoguePanel {
         buttons.get(0).setText("bye");
         buttons.get(0).addActionListener(e -> {
             response = buttons.get(0).getText();
-            gameController.resume();
+            gameController.setFocusableOn();
             this.setVisible(false);
         });
     }

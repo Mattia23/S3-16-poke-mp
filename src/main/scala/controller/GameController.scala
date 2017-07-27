@@ -36,6 +36,16 @@ trait GameController {
   def showGameMenu(): Unit
 
   def logout(): Unit
+
+  def showDialogue(dialoguePanel: DialoguePanel): Unit
+
+  def setFocusableOn(): Unit
+
+  def setFocusableOff(): Unit
+
+  def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
+
+  def hideCurrentDialogue(): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
@@ -244,4 +254,12 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   }
 
+  override def showDialogue(dialoguePanel: DialoguePanel): Unit = {
+    setFocusableOff()
+    this.view.showDialogue(dialoguePanel)
+  }
+
+  override def setFocusableOn(): Unit = this.gamePanel.setFocusable(true)
+
+  override def setFocusableOff(): Unit = this.gamePanel.setFocusable(false)
 }

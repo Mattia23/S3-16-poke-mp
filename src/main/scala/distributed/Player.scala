@@ -16,14 +16,19 @@ trait Player {
   def isVisible: Boolean
 
   def isVisible_=(visible: Boolean): Unit
+
+  /*def isFighting: Boolean
+
+  def isFighting_=(isFighting: Boolean): Unit*/
 }
 
 object Player {
-  def apply(userId: Int, username: String, idImage: Int, position: Coordinate, isVisible: Boolean): Player =
-    new PlayerImpl(userId, username, idImage, position, isVisible)
+  def apply(userId: Int, username: String, idImage: Int, position: Coordinate, isVisible: Boolean/*, isFighting: Boolean*/): Player =
+    new PlayerImpl(userId, username, idImage, position, isVisible/*, isFighting*/)
 }
 
 class PlayerImpl(override val userId: Int, override val username: String,
-                 override val idImage: Int, override var position: Coordinate, override var isVisible: Boolean) extends Player
+                 override val idImage: Int, override var position: Coordinate,
+                 override var isVisible: Boolean/*, override var isFighting: Boolean*/) extends Player
 
 
