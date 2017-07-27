@@ -32,6 +32,8 @@ trait BattleController {
   def passManager(battleClientManager: BattleClientManager): Unit
 
   def isDistributedBattle: Boolean = false
+
+  def yourPlayerIsFirst: Boolean = false
 }
 
 class BattleControllerImpl(val controller: GameController, val view: View) extends BattleController {

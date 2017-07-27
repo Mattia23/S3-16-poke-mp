@@ -172,7 +172,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     pause()
     semaphore.release()
     val otherPlayerUsername = connectedUsers.get(otherPlayerId).username
-    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername)
+    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
     val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
     distributedBattle.passManager(battleManager)
   }

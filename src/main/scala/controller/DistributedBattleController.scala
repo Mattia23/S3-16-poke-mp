@@ -8,13 +8,11 @@ import model.game.{Battle, TrainersBattle}
 import utilities.Settings
 import view.View
 
-class DistributedBattleController(val controller: GameController, val view: View, val otherTrainerUsername: String) extends BattleController {
-  private val OTHER_POKEMON: Int = 0
+class DistributedBattleController(val controller: GameController, val view: View, val otherTrainerUsername: String, val playerIsFirst: Boolean) extends BattleController {
   private val MY_POKEMON: Int = 1
   private var battleManager: BattleClientManager = _
   private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
   private val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
-  private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
   private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
@@ -88,6 +86,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   }
 
   override def isDistributedBattle: Boolean = true
+  override def yourPlayerIsFirst: Boolean = playerIsFirst
   override def trainerThrowPokeball(): Boolean = {false}
   override def trainerCanQuit(): Boolean = {
     battleManager.sendBattleMessage(controller.trainer.id,0,0)

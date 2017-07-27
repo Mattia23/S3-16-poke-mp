@@ -126,6 +126,9 @@ public class BattlePanel extends ImagePanel implements BattleView {
         }
         if(controller.isDistributedBattle()) {
             trainerChoices.get("Pokeball").setEnabled(false);
+            if(!controller.yourPlayerIsFirst()) {
+                blockButtons(true);
+            }
         }
         JPanel southEastPanel = new JPanel();
         gridLayout = new GridLayout(2,2);
