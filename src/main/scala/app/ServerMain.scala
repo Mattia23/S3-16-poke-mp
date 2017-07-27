@@ -3,7 +3,7 @@ package app
 import java.util.concurrent.ConcurrentHashMap
 
 import distributed.{DistributedConnectionImpl, Player}
-import distributed.server.{PlayerInBuildingServerService, PlayerLoginServerService, PlayerLogoutServerService, PlayerPositionServerService}
+import distributed.server._
 
 object ServerMain extends App{
 
@@ -12,6 +12,7 @@ object ServerMain extends App{
   PlayerLoginServerService(connection, connectedUsers).start()
   PlayerPositionServerService(connection, connectedUsers).start()
   PlayerInBuildingServerService(connection, connectedUsers).start()
+  PlayerIsFightingServerService(connection, connectedUsers).start()
   PlayerLogoutServerService(connection, connectedUsers).start()
 
   //ServerConnection.close()

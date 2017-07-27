@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentMap
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.Player
-import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerLogoutMessageImpl}
+import distributed.messages.{PlayerIsFightingMessage, PlayerInBuildingMessageImpl, PlayerLogoutMessageImpl}
 import utilities.Settings
 
 trait PlayerInBuildingClientManager {
@@ -31,7 +31,7 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
   channel.queueBind(playerQueue, Settings.PLAYER_IN_BUILDING_EXCHANGE, "")
 
   override def sendPlayerIsInBuilding(userId: Int, isInBuilding: Boolean): Unit = {
-    val playerInBuildingMessage = PlayerInBuildingMessage(userId, isInBuilding)
+    val playerInBuildingMessage = PlayerIsFightingMessage(userId, isInBuilding)
     channel.basicPublish("", Settings.PLAYER_IN_BUILDING_CHANNEL_QUEUE, null, gson.toJson(playerInBuildingMessage).getBytes("UTF-8"))
     println(" [x] Sent player is in building message")
   }

@@ -60,7 +60,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
   private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedPlayers: ConcurrentHashMap[Int, Player]) = {
     val playerConnectionClientManager = PlayerLoginClientManager(connection)
 
-    val player = Player(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION, true/*, false*/)
+    val player = Player(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION, true, false)
     if (trainer.capturedPokemonId.isEmpty) player.isVisible = false
 
     playerConnectionClientManager.sendPlayer(player)
