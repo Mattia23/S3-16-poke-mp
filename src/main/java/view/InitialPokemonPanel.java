@@ -25,48 +25,24 @@ public class InitialPokemonPanel extends JPanel {
         final JPanel buttonPanel = new JPanel();
         final JRadioButton yes = new JRadioButton("yes");
         final JRadioButton no = new JRadioButton("no");
-
-        yes.requestFocus();
-        yes.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_SPACE) {
-                    int autoIncrementCaptured = DBConnect.getAutoIncrement("pokemon");
-                    final PokemonBehaviour pokemonBehaviour = new PokemonBehaviourImpl(pokemonWithLife);
-                    buildingController.trainer().addMetPokemon(pokemonWithLife.pokemon().id());
-                    pokemonBehaviour.insertPokemonIntoDB(buildingController.trainer().id());
-                    buildingController.trainer().updateTrainer(0);
-                    buildingController.trainer().addFavouritePokemon(autoIncrementCaptured);
-                    buildingController.resume();
-                }
-            }
+        yes.addActionListener(e ->{
+            int autoIncrementCaptured = DBConnect.getAutoIncrement("pokemon");
+            final PokemonBehaviour pokemonBehaviour = new PokemonBehaviourImpl(pokemonWithLife);
+            buildingController.trainer().addMetPokemon(pokemonWithLife.pokemon().id());
+            pokemonBehaviour.insertPokemonIntoDB(buildingController.trainer().id());
+            buildingController.trainer().updateTrainer(0);
+            buildingController.trainer().addFavouritePokemon(autoIncrementCaptured);
+            buildingController.resume();
         });
-        no.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_SPACE) {
-                    buildingController.resume();
-                }
-            }
-        });
+        no.addActionListener(e -> buildingController.resume());
         buttonGroup.add(yes);
         buttonGroup.add(no);
         buttonPanel.add(new JLabel("Do you choose this Pokémon?"), buttonPanel);
         buttonPanel.add(yes, buttonPanel);
         buttonPanel.add(no, buttonPanel);
         add(buttonPanel, BorderLayout.SOUTH);
-        yes.setSelected(true);
-        yes.addAncestorListener(new AncestorListener() {
-            @Override
-            public void ancestorAdded(AncestorEvent ae) {
-                yes.requestFocus();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) { }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) { }
-        });
+        no.setSelected(true);
+        no.requestFocus();
+        JUtil.setFocus(no);
     }
 }

@@ -66,6 +66,12 @@ abstract class BuildingController(private val view: View, private val mapControl
     mapController.terminate()
   }
 
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
+
+  override def hideCurrentDialogue(): Unit = {}
+
+  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {}
+
 }
 
 
@@ -108,12 +114,6 @@ class PokemonCenterController(private val view: View, private val mapController:
       }
     }
   }
-
-  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
-
-  override def hideCurrentDialogue(): Unit = {}
-
-  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {}
 }
 
 class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
@@ -159,11 +159,5 @@ class LaboratoryController(private val view: View, private val mapController: Ga
       }
     }
   }
-
-  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = ???
-
-  override def hideCurrentDialogue(): Unit = ???
-
-  override def sendPlayerIsFighting(isFighting: Boolean): Unit = ???
 }
 
