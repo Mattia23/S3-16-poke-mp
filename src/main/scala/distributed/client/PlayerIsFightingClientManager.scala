@@ -4,14 +4,14 @@ import java.util.concurrent.ConcurrentMap
 
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.Player
+import distributed.{ConnectedPlayers, Player}
 import distributed.messages.{PlayerIsFightingMessage, PlayerIsFightingMessageImpl}
 import utilities.Settings
 
 trait PlayerIsFightingClientManager {
   def sendPlayerIsFighting(userId: Int, isInBuilding: Boolean): Unit
 
-  def receiveOtherPlayerIsFighting(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
+  def receiveOtherPlayerIsFighting(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
 object PlayerIsFightingClientManager {
@@ -20,7 +20,7 @@ object PlayerIsFightingClientManager {
 
 class PlayerIsFightingClientManagerImpl(private val connection: Connection) extends PlayerIsFightingClientManager {
 
-  private var gson: Gson = new Gson()
+  private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
 
   private val playerQueue = channel.queueDeclare.getQueue
@@ -36,7 +36,7 @@ class PlayerIsFightingClientManagerImpl(private val connection: Connection) exte
     println(" [x] Sent player is fighting message")
   }
 
-  override def receiveOtherPlayerIsFighting(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
+  override def receiveOtherPlayerIsFighting(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val consumer = new DefaultConsumer(channel) {
 
       override def handleDelivery(consumerTag: String,
@@ -46,7 +46,7 @@ class PlayerIsFightingClientManagerImpl(private val connection: Connection) exte
         println(" [x] Received other player is fighting")
         val playerIsFightingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerIsFightingMessageImpl])
 
-        if (playerIsFightingMessage.userId != userId)
+        if (playerIsFightingMessage.userId != userId && connectedPlayers.containsPlayer(playerIsFightingMessage.userId))
           connectedPlayers.get(playerIsFightingMessage.userId).isFighting = playerIsFightingMessage.isFighting
       }
 

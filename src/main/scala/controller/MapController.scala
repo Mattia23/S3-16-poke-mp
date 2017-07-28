@@ -1,12 +1,11 @@
 package controller
 
 import java.util
-import java.util.concurrent.ConcurrentMap
 
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
-import distributed.Player
 import distributed.client.{BattleClientManager, BattleClientManagerImpl}
+import distributed.{ConnectedPlayers, ConnectedPlayersObserver}
 import model.entities.Trainer
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl}
@@ -17,7 +16,7 @@ import view._
 import scala.util.Random
 
 object MapController {
-  def apply(view: View, _trainer: Trainer, connection: Connection, connectedUsers: ConcurrentMap[Int, Player]): GameController = new MapController(view, _trainer, connection, connectedUsers)
+  def apply(view: View, _trainer: Trainer, connection: Connection, connectedPlayers: ConnectedPlayers): GameController = new MapController(view, _trainer, connection, connectedPlayers)
 
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
@@ -25,21 +24,19 @@ object MapController {
   private final val LABORATORY_BUILDING = "Laboratory"
 }
 
-class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedUsers: ConcurrentMap[Int, Player]) extends GameControllerImpl(view, _trainer){
+class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
   import MapController._
 
   private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
-  private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedUsers)
-  private var distributedAgent: DistributedMapControllerAgent = _
+  private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
+  connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
   private var currentDialogue: DialoguePanel = _
   audio = Audio(Settings.MAP_SONG)
 
 
   override protected def doStart(): Unit = {
     initView()
-    distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-    distributedAgent.start()
     if(trainer.capturedPokemons.isEmpty){
       doFirstLogin()
     }else {
@@ -64,6 +61,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
         (building, gameMap.map(x)(y)) match {
           case (LABORATORY_BUILDING, tile:Laboratory) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
+            distributedMapController.sendTrainerPosition(lastCoordinates)
             return
           case (POKEMON_CENTER_BUILDING, tile: PokemonCenter) =>
             lastCoordinates = CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y + 1)
@@ -76,7 +74,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override protected def doPause(): Unit = {
-    if(distributedAgent != null) distributedAgent.terminate()
     lastCoordinates = trainer.coordinate
     audio.stop()
     setFocusableOff()
@@ -92,20 +89,17 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     }
     trainer.coordinate = lastCoordinates
     initView()
-    distributedAgent = new DistributedMapControllerAgent(this, distributedMapController)
-    distributedAgent.start()
     audio.loop()
     setFocusableOn()
   }
 
   override protected def doTerminate(): Unit = {
-    if(distributedAgent != null) distributedAgent.terminate()
     audio.stop()
   }
 
   override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
-      val nextPosition = nextTrainerPosition(direction)
+      if(direction != null) nextPosition = nextTrainerPosition(direction)
       val tile = gameMap.map(nextPosition.x)(nextPosition.y)
       tile match {
         case tile:Building
@@ -117,20 +111,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
           if(tile.isInstanceOf[TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }
-    }
-  }
-
-  override protected def doInteract(direction: Direction): Unit = {
-    if (!isInPause){
-      var nextPosition: Coordinate = nextTrainerPosition(direction)
-      distributedMapController.connectedPlayers.values() forEach (otherPlayer =>
-        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
-          distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
-          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
-          showDialogue(currentDialogue)
-        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
-          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
-        })
     }
   }
 
@@ -152,10 +132,24 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       sendPlayerIsFighting(true)
-      semaphore.acquire()
+      waitEndOfMovement.acquire()
       pause()
-      semaphore.release()
+      waitEndOfMovement.release()
       new BattleControllerImpl(this: GameController, view: View)
+    }
+  }
+
+  override protected def doInteract(direction: Direction): Unit = {
+    if (!isInPause){
+      val nextPosition: Coordinate = nextTrainerPosition(direction)
+      distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
+        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
+          distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
+          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
+          showDialogue(currentDialogue)
+        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
+        })
     }
   }
 
@@ -165,10 +159,8 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
-    semaphore.acquire()
     pause()
-    semaphore.release()
-    val otherPlayerUsername = connectedUsers.get(otherPlayerId).username
+    val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
     val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
     val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
     distributedBattle.passManager(battleManager)

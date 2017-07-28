@@ -1,4 +1,4 @@
-package model.game
+package model.battle
 
 import database.remote.DBConnect
 import model.entities.{PokemonBehaviour, PokemonBehaviourImpl, PokemonWithLife}

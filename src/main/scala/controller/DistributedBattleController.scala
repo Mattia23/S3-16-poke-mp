@@ -4,7 +4,7 @@ import database.remote.DBConnect
 import distributed.client.BattleClientManager
 import model.entities.{Owner, Trainer}
 import model.environment.{Audio, AudioImpl}
-import model.game.{Battle, TrainersBattle}
+import model.battle.{Battle, TrainersBattle}
 import utilities.Settings
 import view.View
 

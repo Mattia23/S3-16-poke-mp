@@ -21,7 +21,7 @@ class BattleClientManagerImpl(private val connection: Connection,
                               private val otherPlayerId: Int,
                               private val controller: BattleController) extends BattleClientManager {
 
-  private var gson: Gson = new Gson()
+  private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
   private val myChannelName: String = "battle" + myPlayerId
   private val otherChannelName: String = "battle" + otherPlayerId

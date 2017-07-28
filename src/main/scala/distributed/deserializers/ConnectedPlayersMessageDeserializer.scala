@@ -1,7 +1,7 @@
 package distributed.deserializers
 
 import java.lang.reflect.Type
-import java.util.concurrent.ConcurrentHashMap
+import java.util
 
 import com.google.gson.{GsonBuilder, JsonDeserializationContext, JsonDeserializer, JsonElement}
 import distributed.Player
@@ -11,8 +11,8 @@ object ConnectedPlayersMessageDeserializer extends JsonDeserializer[ConnectedPla
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ConnectedPlayersMessage = {
     val jsonConnectedPlayersMessage = json.getAsJsonObject
     val jsonConnectedPlayers = jsonConnectedPlayersMessage.get("connectedPlayers").getAsJsonObject
-    val gson = new GsonBuilder().registerTypeAdapter(classOf[ConcurrentHashMap[Int, Player]], ConnectedPlayersDeserializer).create()
-    val serverPlayers = gson.fromJson(jsonConnectedPlayers, classOf[ConcurrentHashMap[Int, Player]])
+    val gson = new GsonBuilder().registerTypeAdapter(classOf[util.HashMap[Int, Player]], ConnectedPlayersDeserializer).create()
+    val serverPlayers = gson.fromJson(jsonConnectedPlayers, classOf[util.HashMap[Int, Player]])
     ConnectedPlayersMessage(serverPlayers)
   }
 }

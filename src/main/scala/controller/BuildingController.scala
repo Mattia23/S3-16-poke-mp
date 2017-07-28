@@ -4,7 +4,7 @@ import com.rabbitmq.client.Connection
 import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
-import model.map.{Box, BuildingMap, LaboratoryMap, PokemonCenterMap}
+import model.map._
 import utilities.Settings
 import view._
 
@@ -13,7 +13,6 @@ import scala.collection.JavaConverters._
 abstract class BuildingController(private val view: View, private val mapController: GameController, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
 
   protected var buildingMap: BuildingMap
-  protected var nextPosition: Coordinate = _
 
   this.setTrainerSpriteBack()
 

@@ -34,7 +34,7 @@ object TrainerDialogueClientManager {
 
 class TrainerDialogueClientManagerImpl(private val connection: Connection, private val mapController: GameController) extends TrainerDialogueClientManager {
 
-  private var gson: Gson = new Gson()
+  private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
   override var playerId: Int = mapController.trainer.id
   override var otherPlayerId: Int = _
