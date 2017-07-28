@@ -119,12 +119,12 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
     new GameMenuControllerImpl(view, this)
   }
 
-  def sendPlayerIsFighting(isFighting: Boolean): Unit
-
   override def logout(): Unit = {
     DBConnect.closeConnection()
     doLogout()
   }
+
+  protected def doLogout(): Unit
 
   override def showDialogue(dialoguePanel: DialoguePanel): Unit = {
     setFocusableOff()
@@ -134,8 +134,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   override def setFocusableOn(): Unit = this.gamePanel.setFocusable(true)
 
   override def setFocusableOff(): Unit = this.gamePanel.setFocusable(false)
-
-  protected def doLogout(): Unit
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
@@ -170,8 +168,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def setTrainerSpriteFront(): Unit = trainer.currentSprite = trainer.sprites.frontS
 
   protected def setTrainerSpriteBack(): Unit = trainer.currentSprite = trainer.sprites.backS
-
-
 
 
   private class GameControllerAgent extends Thread {
