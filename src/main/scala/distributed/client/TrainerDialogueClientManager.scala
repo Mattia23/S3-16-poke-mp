@@ -75,7 +75,6 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
         }
         else if(!trainerDialogueMessage.wantToFight){
           mapController.sendPlayerIsFighting(false)
-          mapController.hideCurrentDialogue()
           mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }
         //channel.close()

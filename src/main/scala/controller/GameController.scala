@@ -49,8 +49,6 @@ trait GameController {
 
   def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
 
-  def hideCurrentDialogue(): Unit
-
   def sendPlayerIsFighting(isFighting: Boolean): Unit
 }
 
