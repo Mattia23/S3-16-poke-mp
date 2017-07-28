@@ -1,6 +1,7 @@
 package distributed
 
-import model.environment.Coordinate
+import model.environment.{Coordinate, CoordinateImpl}
+import utilities.Settings
 
 trait Player {
   def userId: Int
@@ -16,14 +17,14 @@ trait Player {
   def isVisible: Boolean
 
   def isVisible_=(visible: Boolean): Unit
+
+  def isFighting: Boolean
+
+  def isFighting_=(isFighting: Boolean): Unit
 }
 
-object Player {
-  def apply(userId: Int, username: String, idImage: Int, position: Coordinate, isVisible: Boolean): Player =
-    new PlayerImpl(userId, username, idImage, position, isVisible)
-}
-
-class PlayerImpl(override val userId: Int, override val username: String,
-                 override val idImage: Int, override var position: Coordinate, override var isVisible: Boolean) extends Player
+case class PlayerImpl(override val userId: Int, override val username: String,
+                 override val idImage: Int, override var position: Coordinate = Settings.INITIAL_PLAYER_POSITION,
+                 override var isVisible: Boolean = true, override var isFighting: Boolean = false) extends Player
 
 

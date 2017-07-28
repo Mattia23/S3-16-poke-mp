@@ -1,17 +1,15 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.Player
-import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerLogoutMessageImpl}
+import distributed.ConnectedPlayers
+import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerIsFightingMessage, PlayerLogoutMessageImpl}
 import utilities.Settings
 
 trait PlayerInBuildingClientManager {
   def sendPlayerIsInBuilding(userId: Int, isInBuilding: Boolean): Unit
 
-  def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
+  def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
 object PlayerInBuildingClientManager {
@@ -20,7 +18,7 @@ object PlayerInBuildingClientManager {
 
 class PlayerInBuildingClientManagerImpl(private val connection: Connection) extends PlayerInBuildingClientManager {
 
-  private var gson: Gson = new Gson()
+  private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
 
   private val playerQueue = channel.queueDeclare.getQueue
@@ -36,7 +34,7 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
     println(" [x] Sent player is in building message")
   }
 
-  override def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
+  override def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val consumer = new DefaultConsumer(channel) {
 
       override def handleDelivery(consumerTag: String,
@@ -46,7 +44,7 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
         println(" [x] Received other player in building")
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
-        if (playerInBuildingMessage.userId != userId)
+        if (playerInBuildingMessage.userId != userId && connectedPlayers.containsPlayer(playerInBuildingMessage.userId))
           connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
       }
 

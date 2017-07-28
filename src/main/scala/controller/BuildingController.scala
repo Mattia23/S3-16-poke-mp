@@ -1,9 +1,10 @@
 package controller
 
+import com.rabbitmq.client.Connection
 import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
-import model.map.{Box, BuildingMap, LaboratoryMap, PokemonCenterMap}
+import model.map._
 import utilities.Settings
 import view._
 
@@ -12,7 +13,6 @@ import scala.collection.JavaConverters._
 abstract class BuildingController(private val view: View, private val mapController: GameController, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
 
   protected var buildingMap: BuildingMap
-  protected var nextPosition: Coordinate = _
 
   this.setTrainerSpriteBack()
 
@@ -52,12 +52,12 @@ abstract class BuildingController(private val view: View, private val mapControl
   }
 
   override protected def doPause(): Unit = {
-    this.gamePanel.setFocusable(false)
+    setFocusableOff()
     this.audio.stop()
   }
 
   override protected def doResume(): Unit = {
-    this.gamePanel.setFocusable(true)
+    setFocusableOn()
     this.audio.loop()
   }
 
@@ -65,6 +65,12 @@ abstract class BuildingController(private val view: View, private val mapControl
     terminate()
     mapController.terminate()
   }
+
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
+
+  override def hideCurrentDialogue(): Unit = {}
+
+  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {}
 
 }
 
@@ -96,8 +102,8 @@ class PokemonCenterController(private val view: View, private val mapController:
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
         if(nextPosition equals buildingMap.npc.coordinate){
-          this.pause()
-          this.view.showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
+          //this.pause()
+          showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(tile.isInstanceOf[Box]){
           this.pause()
@@ -108,7 +114,6 @@ class PokemonCenterController(private val view: View, private val mapController:
       }
     }
   }
-
 }
 
 class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
@@ -140,13 +145,13 @@ class LaboratoryController(private val view: View, private val mapController: Ga
       if(direction != null) nextPosition = nextTrainerPosition(direction)
       try{
         if(nextPosition equals buildingMap.npc.coordinate){
-          this.pause()
-          this.view.showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
+          //this.pause()
+          showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
         if(capturedPokemonEmpty) {
           for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
             this.pause()
-            view.showInitialPokemonPanel(this, pokemon.pokemonWithLife)
+            this.view.showInitialPokemonPanel(this, pokemon.pokemonWithLife)
           }
         }
       }catch{
@@ -154,6 +159,5 @@ class LaboratoryController(private val view: View, private val mapController: Ga
       }
     }
   }
-
 }
 

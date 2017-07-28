@@ -1,7 +1,5 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
 import distributed._
@@ -12,7 +10,7 @@ import utilities.Settings
 trait PlayerLoginClientManager{
   def sendPlayer(player: Player): Unit
 
-  def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit
+  def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
 object PlayerLoginClientManager {
@@ -32,7 +30,7 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
     println(" [x] Sent message")
   }
 
-  override def receivePlayersConnected(userId: Int, connectedPlayers: ConcurrentMap[Int, Player]): Unit = {
+  override def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val playerQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
     channel.queueDeclare(playerQueue, false, false, false, null)
 
@@ -46,7 +44,7 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
         val serverPlayersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
-        connectedPlayers.putAll(serverPlayersMessage.connectedPlayers)
+        connectedPlayers.addAll(serverPlayersMessage.connectedPlayers)
 
         channel.close()
       }

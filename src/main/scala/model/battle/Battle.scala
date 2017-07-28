@@ -1,4 +1,4 @@
-package model.game
+package model.battle
 
 import java.util.Optional
 
@@ -13,13 +13,17 @@ trait Battle {
 
   def startBattleRound(pokemonId: Int): Unit
 
+  def startBattleRound(myPokemonId: Int, otherPokemonId: Int): Unit
+
   def myPokemon: PokemonWithLife
 
   def myPokemon_=(myPokemon:PokemonWithLife): Unit
 
-  def wildPokemon: PokemonWithLife
+  def otherPokemon: PokemonWithLife
 
-  def myPokemonKillsWildPokemon(won: Boolean): Unit
+  def otherPokemon_=(otherPokemon: PokemonWithLife): Unit
+
+  def myPokemonKillsOtherPokemon(won: Boolean): Unit
 
   def pokeball_=(pokeball: Int): Unit
 
@@ -36,6 +40,10 @@ trait Battle {
   def roundFinished_=(battleFinished: Boolean): Unit
 
   def updatePokemonAndTrainer(event: Int): Unit
+
+  def getMyPokemonId: Int
+
+  def getOtherPokemonId: Int
 }
 
 class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle {
@@ -46,27 +54,27 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
   override def round: BattleRound = _round
   override var pokeball: Int = 3
   override var myPokemon: PokemonWithLife = _
-  override val wildPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(this._trainer.level)).get()
+  override var otherPokemon: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(this._trainer.level)).get()
 
   override def startBattleRound(pokemonId: Int): Unit = {
-    _trainer.addMetPokemon(wildPokemon.pokemon.id)
+    _trainer.addMetPokemon(otherPokemon.pokemon.id)
     myPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(pokemonId),Optional.empty()).get()
-    _round = new BattleRoundImpl(myPokemon, pokemonId, wildPokemon, this)
+    _round = new BattleRoundImpl(myPokemon, pokemonId, otherPokemon, this)
   }
 
-  override def myPokemonKillsWildPokemon(won: Boolean): Unit = {
+  override def myPokemonKillsOtherPokemon(won: Boolean): Unit = {
     var pointsEarned: Int = 0
     if(won){
       battleFinished = true
-      pointsEarned = (wildPokemon.pokemon.level * math.pow(1.2,_trainer.level)).toInt
+      pointsEarned = (otherPokemon.pokemon.level * math.pow(1.2,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
     } else {
       roundFinished = true
-      var newPokemonId = _trainer.getFirstAvailableFavouritePokemon
+      val newPokemonId = _trainer.getFirstAvailableFavouritePokemon
       if(newPokemonId > 0){
         startBattleRound(newPokemonId)
         val t: Thread = new Thread {
-          override def run {
+          override def run() {
             Thread.sleep(1000)
             roundFinished = false
           }
@@ -76,7 +84,7 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
         battleFinished = true
         pointsEarned = 30
         _trainer.updateTrainer(pointsEarned)
-        controller.resumeGame
+        controller.resumeGame()
       }
     }
   }
@@ -86,17 +94,20 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
   }
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
-    case Settings.BATTLE_EVENT_CAPTURE_POKEMON => {
-      val pointsEarned: Int = (wildPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
+    case Settings.BATTLE_EVENT_CAPTURE_POKEMON =>
+      val pointsEarned: Int = (otherPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
       if(trainer.favouritePokemons.contains(0)){
         trainer.addFavouritePokemon(trainer.capturedPokemons.last._1)
       }
       _round.updatePokemon()
-    }
-    case Settings.BATTLE_EVENT_ESCAPE => {
+    case Settings.BATTLE_EVENT_ESCAPE =>
       _trainer.updateTrainer(0)
       _round.updatePokemon()
-    }
   }
+
+  override def startBattleRound(pokemonId: Int, otherPokemon: Int): Unit = {}
+
+  override def getMyPokemonId: Int = 0
+  override def getOtherPokemonId: Int = 0
 }

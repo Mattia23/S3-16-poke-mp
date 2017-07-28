@@ -88,5 +88,8 @@ class LaboratoryMap extends BuildingMap{
   setBasicTilesInMap()
   setNotWalkableArea()
 
-  override val pokemonNpc: List[PokemonCharacter] = List(new Bulbasaur, new Charmander, new Squirtle)
+  private val bulbasaur: Bulbasaur = Bulbasaur()
+  private val charmander: Charmander = Charmander()
+  private val squirtle: Squirtle = Squirtle()
+  override val pokemonNpc: List[PokemonCharacter] = List(bulbasaur, charmander, squirtle)
 }

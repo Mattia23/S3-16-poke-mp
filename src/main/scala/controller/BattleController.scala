@@ -1,9 +1,10 @@
 package controller
 
 import database.remote.DBConnect
+import distributed.client.BattleClientManager
 import model.entities.{Owner, Trainer}
 import model.environment.{Audio, AudioImpl}
-import model.game.{Battle, BattleImpl}
+import model.battle.{Battle, BattleImpl}
 import utilities.Settings
 import view.View
 
@@ -12,7 +13,9 @@ import scala.util.Random
 trait BattleController {
   def myPokemonAttacks(attackId: Int): Unit
 
-  def pokemonWildAttacks(): Unit
+  def otherPokemonAttacks(id: Int): Unit
+
+  def otherPokemonChanges(newPokemonId: Int): Unit
 
   def getPokeballAvailableNumber: Int
 
@@ -25,26 +28,32 @@ trait BattleController {
   def trainerCanQuit(): Boolean
 
   def resumeGame(): Unit
+
+  def passManager(battleClientManager: BattleClientManager): Unit
+
+  def isDistributedBattle: Boolean = false
+
+  def yourPlayerIsFirst: Boolean = false
 }
 
-class BattleControllerImpl(val controller: GameController, val trainer: Trainer, val view: View) extends BattleController {
+class BattleControllerImpl(val controller: GameController, val view: View) extends BattleController {
   private val WILD_POKEMON: Int = 0
   private val MY_POKEMON: Int = 1
-  val battle: Battle = new BattleImpl(trainer,this)
+  val battle: Battle = new BattleImpl(controller.trainer,this)
   private var timer: Thread = _
-  battle.startBattleRound(trainer.getFirstAvailableFavouritePokemon)
+  battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon)
   showNewView()
   private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
   audio.loop()
 
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
-    view.getBattlePanel.setPokemonLifeProgressBar(battle.wildPokemon.pokemonLife,Owner.WILD.id)
+    view.getBattlePanel.setPokemonLifeProgressBar(battle.otherPokemon.pokemonLife,Owner.WILD.id)
     if(!battle.battleFinished) {
       timer = new Thread() {
         override def run() {
           Thread.sleep(3000)
-          pokemonWildAttacks()
+          otherPokemonAttacks()
         }
       }
       timer.start()
@@ -53,8 +62,8 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
     }
   }
 
-  override def pokemonWildAttacks(): Unit = {
-    battle.round.wildPokemonAttack(Random.nextInt(3)+1)
+  private def otherPokemonAttacks(): Unit = {
+    battle.round.otherPokemonAttack(view.getBattlePanel.getOtherPokemonAttacks()(Random.nextInt(3)))
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
     if(battle.roundFinished) {
@@ -63,7 +72,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   }
 
   override def changePokemon(): Unit = {
-    view.showPokemonChoice(this, this.trainer)
+    view.showPokemonChoice(this, controller.trainer)
   }
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
@@ -114,7 +123,7 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
   }
 
   private def showNewView(): Unit = {
-    view.showBattle(battle.myPokemon,battle.wildPokemon,this)
+    view.showBattle(battle.myPokemon,battle.otherPokemon,this)
   }
 
   private def pokemonIsDead(pokemonDeadId: Int): Unit = {
@@ -138,9 +147,13 @@ class BattleControllerImpl(val controller: GameController, val trainer: Trainer,
       override def run() {
       view.getBattlePanel.pokemonWildAttacksAfterTrainerChoice()
       Thread.sleep(2000)
-      pokemonWildAttacks()
+      otherPokemonAttacks()
       }
     }
     timer.start()
   }
+
+  override def otherPokemonAttacks(id: Int): Unit = {}
+  override def passManager(battleClientManager: BattleClientManager): Unit = {}
+  override def otherPokemonChanges(newPokemonId: Int): Unit = {}
 }

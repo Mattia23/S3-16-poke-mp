@@ -1,13 +1,12 @@
 package controller
 
 import java.util.Optional
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JOptionPane
 
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
 import distributed.client.PlayerLoginClientManager
-import distributed.{DistributedConnectionImpl, Player}
+import distributed.{ConnectedPlayers, DistributedConnectionImpl, PlayerImpl}
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
@@ -46,10 +45,11 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
       val connection = DistributedConnectionImpl().connection
-      val connectedPlayers = new ConcurrentHashMap[Int, Player]()
+      val connectedPlayers = ConnectedPlayers()
+      val mapController = MapController(view, trainer, connection, connectedPlayers)
 
-      MapController(view, trainer, connection, connectedPlayers).start()
       serverInteraction(connection, username, trainer, connectedPlayers)
+      mapController.start()
       initialMenuController.stopMainMusic()
 
     } else {
@@ -57,10 +57,10 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     }
   }
 
-  private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedPlayers: ConcurrentHashMap[Int, Player]) = {
+  private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedPlayers: ConnectedPlayers) = {
     val playerConnectionClientManager = PlayerLoginClientManager(connection)
 
-    val player = Player(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION, true)
+    val player = PlayerImpl(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites))
     if (trainer.capturedPokemonId.isEmpty) player.isVisible = false
 
     playerConnectionClientManager.sendPlayer(player)
