@@ -18,6 +18,7 @@ public class RankingPanel extends BasePanel {
     public RankingPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
+        mainPanel.setOpaque(false);
         final JScrollPane scrollFrame = new JScrollPane(mainPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         mainPanel.setAutoscrolls(true);
@@ -27,33 +28,24 @@ public class RankingPanel extends BasePanel {
 
         int i = 1;
         for(Tuple3<String,Integer,String> object: trainers){
-            final JPanel trainerPanel = new JPanel(new GridLayout(0,5));
-            final JLabel rank = new JLabel(""+i++);
-            final JLabel name = new JLabel(object._1());
-            final JLabel level = new JLabel("Level: "+calculateLevel(object._2()));
-            final JLabel exp = new JLabel("Experience Points: "+object._2());
+            final JPanel trainerPanel = new JPanel(new GridLayout(0,2));
+            final JLabel info = new JLabel( i++ + "   " + object._1() + "  Level: "+calculateLevel(object._2()) + "  Exp Points: "+object._2());
             Image myImage;
             ImageIcon myImageIcon = null;
+            int imgId = Integer.parseInt(object._3()) + 1;
             try {
-                myImage = ImageIO.read(getClass().getResource(gameController.trainer().sprites().frontS().image()));
+                myImage = ImageIO.read(getClass().getResource(Settings.TRAINER_IMAGES_FOLDER() + imgId +"FS.png"));
                 myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            trainerPanel.add(rank);
+            trainerPanel.setOpaque(false);
+            trainerPanel.add(info);
             trainerPanel.add(new JLabel(myImageIcon));
-            trainerPanel.add(name);
-            trainerPanel.add(level);
-            trainerPanel.add(exp);
-            setFontBold(rank);
-            if(object._1().toString().equals(gameController.trainer().name())){
-                setFontBold(name);
-                setFontBold(level);
-                setFontBold(exp);
+            if(object._1().equals(gameController.trainer().name())){
+                setFontBold(info);
             }else{
-                setFont(name);
-                setFont(level);
-                setFont(exp);
+                setFont(info);
             }
             mainPanel.add(trainerPanel);
         }
@@ -67,11 +59,11 @@ public class RankingPanel extends BasePanel {
     }
 
     private void setFontBold(final JLabel label){
-        label.setFont(new Font("Courier", Font.BOLD, 12));
+        label.setFont(new Font("Verdana", Font.BOLD, 12));
     }
 
     private void setFont(final JLabel label){
-        label.setFont(new Font("Courier", Font.PLAIN, 12));
+        label.setFont(new Font("Verdana", Font.PLAIN, 12));
     }
 
     private int calculateLevel(int experiencePoints) {

@@ -3,7 +3,7 @@ package distributed.client
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.ConnectedPlayers
-import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl}
+import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerIsFightingMessage, PlayerLogoutMessageImpl}
 import utilities.Settings
 
 trait PlayerInBuildingClientManager {
@@ -43,7 +43,6 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
                                   body: Array[Byte]) {
         println(" [x] Received other player in building")
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
-
         if (playerInBuildingMessage.userId != userId)
           connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
       }

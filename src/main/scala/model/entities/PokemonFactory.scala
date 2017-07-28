@@ -103,8 +103,8 @@ object PokemonFactory {
 
   private def generateAttacksPokemon(id: Int): (Int,Int,Int,Int) = {
     val attacksList: java.util.List[Integer] = PokedexConnect.getAttacksList(id)
-    (attacksList.get(Random.nextInt(attacksList.size())),attacksList.get(Random.nextInt(attacksList.size())),
-      attacksList.get(Random.nextInt(attacksList.size())),attacksList.get(Random.nextInt(attacksList.size())))
+    (attacksList.get(Random.nextInt(attacksList.size()/4)), attacksList.get(attacksList.size()/4+Random.nextInt(attacksList.size()/4)),
+      attacksList.get((attacksList.size()/4)*2+Random.nextInt(attacksList.size()/4)), (attacksList.size()/4)*3 + Random.nextInt(attacksList.size()/4))
   }
 
 }

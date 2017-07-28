@@ -49,10 +49,6 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
 
     protected abstract void setFinalButtons();
 
-    public String getValue(){
-        return response;
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {
 

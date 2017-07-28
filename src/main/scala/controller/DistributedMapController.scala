@@ -21,6 +21,10 @@ trait DistributedMapController{
 
   def sendTrainerInBuilding(isInBuilding: Boolean): Unit
 
+  def sendTrainerIsFighting(isInBuilding: Boolean): Unit
+
+  def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit
+
   def playerLogout(): Unit
 }
 
@@ -38,6 +42,8 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   private val playerPositionManager: PlayerPositionClientManager = PlayerPositionClientManager(connection)
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
+  private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, mapController)
+  private val playerIsFightingManager: PlayerIsFightingClientManager = PlayerIsFightingClientManager(connection)
 
   private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
   private val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
@@ -47,12 +53,19 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   playerPositionManager.receiveOtherPlayerPosition(trainerId, connectedPlayers)
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
+  trainerDialogueClientManager.receiveResponse()
+  playerIsFightingManager.receiveOtherPlayerIsFighting(trainerId, connectedPlayers)
 
   override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
 
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
   override def sendTrainerInBuilding(isInBuilding: Boolean): Unit = playerInBuildingManager.sendPlayerIsInBuilding(trainerId, isInBuilding)
+
+  override def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit =
+    trainerDialogueClientManager.sendDialogueRequest(otherPlayerId, wantToFight, isFirst)
+
+  override def sendTrainerIsFighting(isFighting: Boolean): Unit = playerIsFightingManager.sendPlayerIsFighting(trainerId, isFighting)
 
   override def playerLogout(): Unit = {
     playerLogoutManager.sendPlayerLogout(trainerId)

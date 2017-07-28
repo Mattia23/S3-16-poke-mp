@@ -1,8 +1,13 @@
 package controller
 
+import java.util
+import java.util.concurrent.ConcurrentMap
+
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
 import distributed.{ConnectedPlayers, ConnectedPlayersObserver}
+import distributed.Player
+import distributed.client.{BattleClientManager, BattleClientManagerImpl}
 import model.entities.Trainer
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl}
@@ -28,6 +33,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
   connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
+  private var currentDialogue: DialoguePanel = _
   audio = Audio(Settings.MAP_SONG)
 
 
@@ -72,11 +78,12 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override protected def doPause(): Unit = {
     lastCoordinates = trainer.coordinate
     audio.stop()
-    gamePanel.setFocusable(false)
+    setFocusableOff()
   }
 
   override protected def doResume(): Unit = {
     distributedMapController.sendTrainerInBuilding(true)
+    sendPlayerIsFighting(false)
     if(trainer.getFirstAvailableFavouritePokemon <= 0) {
       DBConnect.rechangeAllTrainerPokemon(trainer.id)
       setTrainerSpriteFront()
@@ -85,7 +92,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     trainer.coordinate = lastCoordinates
     initView()
     audio.loop()
-    gamePanel.setFocusable(true)
+    setFocusableOn()
   }
 
   override protected def doTerminate(): Unit = {
@@ -126,17 +133,48 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
+      sendPlayerIsFighting(true)
       waitEndOfMovement.acquire()
       pause()
       waitEndOfMovement.release()
-      new BattleControllerImpl(this: GameController, trainer: Trainer, view: View)
+      new BattleControllerImpl(this: GameController, view: View)
     }
   }
 
-  override protected def doInteract(direction: Direction): Unit = ???
+  override protected def doInteract(direction: Direction): Unit = {
+    if (!isInPause){
+      var nextPosition: Coordinate = nextTrainerPosition(direction)
+      distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
+        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
+          distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
+          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
+          showDialogue(currentDialogue)
+        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
+        })
+    }
+  }
 
   override protected def doLogout(): Unit = {
     distributedMapController.playerLogout()
     terminate()
+  }
+
+  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
+    waitEndOfMovement.acquire()
+    pause()
+    waitEndOfMovement.release()
+    val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
+    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
+    val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
+    distributedBattle.passManager(battleManager)
+  }
+
+  override def hideCurrentDialogue(): Unit = {
+    currentDialogue.setVisible(false)
+  }
+
+  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {
+    distributedMapController.sendTrainerIsFighting(isFighting)
   }
 }
