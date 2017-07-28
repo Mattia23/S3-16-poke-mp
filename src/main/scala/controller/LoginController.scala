@@ -46,9 +46,9 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       val trainer = optionalTrainer.get()
       val connection = DistributedConnectionImpl().connection
       val connectedPlayers = ConnectedPlayers()
-
-      MapController(view, trainer, connection, connectedPlayers).start()
+      val mapController = MapController(view, trainer, connection, connectedPlayers)
       serverInteraction(connection, username, trainer, connectedPlayers)
+      mapController.start()
       initialMenuController.stopMainMusic()
 
     } else {
