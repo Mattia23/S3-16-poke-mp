@@ -277,7 +277,11 @@ object Settings {
 
   val PLAYER_LOGOUT_CHANNEL_QUEUE: String = "player_logout"
 
+  val TRAINER_DIALOGUE_CHANNEL_QUEUE: String = "trainer_dialogue"
+
   val PLAYER_IN_BUILDING_CHANNEL_QUEUE: String = "player_in_building"
+
+  val PLAYER_IS_FIGHTING_CHANNEL_QUEUE: String = "player_is_fighting"
 
   val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
 
@@ -286,6 +290,8 @@ object Settings {
   val PLAYER_LOGOUT_EXCHANGE: String = "player_logout_exchange"
 
   val PLAYER_IN_BUILDING_EXCHANGE: String = "player_in_building_exchange"
+
+  val PLAYER_IS_FIGHTING_EXCHANGE: String = "player_is_fighting_exchange"
 
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 

@@ -40,6 +40,18 @@ trait GameController {
   def showGameMenu(): Unit
 
   def logout(): Unit
+
+  def showDialogue(dialoguePanel: DialoguePanel): Unit
+
+  def setFocusableOn(): Unit
+
+  def setFocusableOff(): Unit
+
+  def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
+
+  def hideCurrentDialogue(): Unit
+
+  def sendPlayerIsFighting(isFighting: Boolean): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
@@ -102,12 +114,26 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   protected def doInteract(direction: Direction): Unit
 
-  override def showGameMenu(): Unit = new GameMenuControllerImpl(view, this)
+  override def showGameMenu(): Unit = {
+    sendPlayerIsFighting(true)
+    new GameMenuControllerImpl(view, this)
+  }
+
+  def sendPlayerIsFighting(isFighting: Boolean): Unit
 
   override def logout(): Unit = {
     DBConnect.closeConnection()
     doLogout()
   }
+
+  override def showDialogue(dialoguePanel: DialoguePanel): Unit = {
+    setFocusableOff()
+    this.view.showDialogue(dialoguePanel)
+  }
+
+  override def setFocusableOn(): Unit = this.gamePanel.setFocusable(true)
+
+  override def setFocusableOff(): Unit = this.gamePanel.setFocusable(false)
 
   protected def doLogout(): Unit
 
@@ -144,6 +170,9 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def setTrainerSpriteFront(): Unit = trainer.currentSprite = trainer.sprites.frontS
 
   protected def setTrainerSpriteBack(): Unit = trainer.currentSprite = trainer.sprites.backS
+
+
+
 
   private class GameControllerAgent extends Thread {
     private var stopped: Boolean = false

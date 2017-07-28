@@ -10,18 +10,20 @@ trait BattleRound {
 
   def myPokemonAttack(idAttack: Int): Unit
 
-  def wildPokemonAttack(attack: Int): Unit
+  def otherPokemonAttack(attack: Int): Unit
 
   def updatePokemon(): Unit
+
+  def updateOtherPokemon(): Unit
 }
 
-class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemon: PokemonWithLife, battle: Battle) extends  BattleRound{
+class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, otherPokemon: PokemonWithLife, battle: Battle) extends  BattleRound{
   var myPokemonBehaviour: PokemonBehaviour = new PokemonBehaviourImpl(myPokemon)
-  var wildPokemonBehaviour: PokemonBehaviour = new PokemonBehaviourImpl(wildPokemon)
+  var otherPokemonBehaviour: PokemonBehaviour = new PokemonBehaviourImpl(otherPokemon)
 
   override def pokeballLaunched(): Boolean = {
-    if((wildPokemon.pokemonLife * wildPokemon.pokemon.experiencePoints) / battle.trainer.level < Random.nextInt(300) + 1500) {
-      wildPokemonBehaviour.insertPokemonIntoDB(battle.trainer.id)
+    if((otherPokemon.pokemonLife * otherPokemon.pokemon.experiencePoints) / battle.trainer.level < Random.nextInt(300) + 1500) {
+      otherPokemonBehaviour.insertPokemonIntoDB(battle.trainer.id)
       return true
     }
     false
@@ -29,24 +31,28 @@ class BattleRoundImpl(myPokemon: PokemonWithLife, myPokemonIdDB: Int, wildPokemo
 
   override def myPokemonAttack(idAttack: Int): Unit = {
     val damage: Int = myPokemonBehaviour.launchAttack(idAttack)
-    wildPokemonBehaviour.undergoAttack(damage)
-    if(!wildPokemonBehaviour.isAlive){
-      myPokemonBehaviour.growExperiencePoints(wildPokemonBehaviour.giveExperiencePoints)
+    otherPokemonBehaviour.undergoAttack(damage)
+    if(!otherPokemonBehaviour.isAlive){
+      myPokemonBehaviour.growExperiencePoints(otherPokemonBehaviour.giveExperiencePoints)
       updatePokemon()
-      battle.myPokemonKillsWildPokemon(true)
+      battle.myPokemonKillsOtherPokemon(true)
     }
   }
 
-  override def wildPokemonAttack(attack: Int): Unit ={
-    val damage: Int = wildPokemonBehaviour.launchAttack(attack)
+  override def otherPokemonAttack(attack: Int): Unit ={
+    val damage: Int = otherPokemonBehaviour.launchAttack(attack)
     myPokemonBehaviour.undergoAttack(damage)
     if(!myPokemonBehaviour.isAlive){
       updatePokemon()
-      battle.myPokemonKillsWildPokemon(false)
+      battle.myPokemonKillsOtherPokemon(false)
     }
   }
 
   override def updatePokemon(): Unit = {
     myPokemonBehaviour.updatePokemonTrainer(myPokemonIdDB)
+  }
+
+  override def updateOtherPokemon(): Unit = {
+    otherPokemonBehaviour.updatePokemonTrainer(battle.getOtherPokemonId)
   }
 }

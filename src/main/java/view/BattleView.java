@@ -1,5 +1,7 @@
 package view;
 
+import java.util.List;
+
 public interface BattleView {
     void setPokemonLife();
 
@@ -8,4 +10,6 @@ public interface BattleView {
     void pokemonIsDead(int owner);
 
     void pokemonWildAttacksAfterTrainerChoice();
+
+    int[] getOtherPokemonAttacks();
 }
