@@ -21,15 +21,18 @@ class PlayerInBuildingServerService (private val connection: Connection, private
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]): Unit = {
-
+        println("server: received player in building")
         val gson = new Gson()
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
-        connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
+        if (connectedPlayers.containsPlayer(playerInBuildingMessage.userId)) {
+          connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
 
-        channel.exchangeDeclare(Settings.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
-        val response = gson.toJson(playerInBuildingMessage)
-        channel.basicPublish(Settings.PLAYER_IN_BUILDING_EXCHANGE, "", null, response.getBytes("UTF-8"))
+          channel.exchangeDeclare(Settings.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
+          val response = gson.toJson(playerInBuildingMessage)
+          channel.basicPublish(Settings.PLAYER_IN_BUILDING_EXCHANGE, "", null, response.getBytes("UTF-8"))
+          println("server: send player in building")
+        }
       }
     }
 

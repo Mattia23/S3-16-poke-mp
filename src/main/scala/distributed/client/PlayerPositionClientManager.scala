@@ -48,7 +48,7 @@ class PlayerPositionClientManagerImpl(private val connection: Connection) extend
         gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val otherPlayerPosition = gson.fromJson(message, classOf[PlayerPositionMessageImpl])
 
-        if (otherPlayerPosition.userId != userId)
+        if (otherPlayerPosition.userId != userId && connectedPlayers.containsPlayer(otherPlayerPosition.userId))
           connectedPlayers.updateTrainerPosition(otherPlayerPosition.userId, otherPlayerPosition.position)
       }
     }
