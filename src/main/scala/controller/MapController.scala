@@ -99,7 +99,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
-      val nextPosition = nextTrainerPosition(direction)
+      if(direction != null) nextPosition = nextTrainerPosition(direction)
       val tile = gameMap.map(nextPosition.x)(nextPosition.y)
       tile match {
         case tile:Building
@@ -141,7 +141,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause){
-      var nextPosition: Coordinate = nextTrainerPosition(direction)
+      val nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
           distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
@@ -159,9 +159,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
-    waitEndOfMovement.acquire()
     pause()
-    waitEndOfMovement.release()
     val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
     val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
     val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)

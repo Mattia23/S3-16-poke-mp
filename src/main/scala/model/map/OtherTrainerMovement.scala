@@ -1,7 +1,5 @@
 package model.map
 
-import java.util.concurrent.ConcurrentMap
-
 import distributed.PlayerPositionDetails
 import model.entities.{Sprite, TrainerSprites}
 import model.environment.Coordinate
@@ -10,7 +8,7 @@ case class OtherTrainerMovement(private val userId: Int,
                                 private val playersPositionDetails: Map[Int, PlayerPositionDetails],
                                 override protected val trainerSprites: TrainerSprites) extends MovementImpl{
 
-  private val playerPositionDetails: PlayerPositionDetails = playersPositionDetails(userId)//playersPositionDetails.get(userId)
+  private val playerPositionDetails: PlayerPositionDetails = playersPositionDetails(userId)
 
   override protected def currentTrainerSprite: Sprite = playerPositionDetails.currentSprite
 
@@ -20,6 +18,7 @@ case class OtherTrainerMovement(private val userId: Int,
 
   override protected def updateCurrentY(actualY: Double): Unit = playerPositionDetails.coordinateY = actualY
 
-  override protected def updateTrainerPosition(nextPosition: Coordinate): Unit = {}
+  override protected def updateTrainerPosition(nextPosition: Coordinate): Unit = playersPositionDetails + (userId -> playerPositionDetails)
+
 
 }

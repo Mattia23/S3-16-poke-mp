@@ -1,4 +1,4 @@
-package model.game
+package model.battle
 
 import java.util.Optional
 

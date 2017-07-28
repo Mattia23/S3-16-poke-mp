@@ -65,6 +65,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected var gamePanel: GamePanel = _
   protected val waitEndOfMovement: Semaphore = new Semaphore(1)
   protected var trainerMovement: Movement = _
+  protected var nextPosition: Coordinate = _
 
   override var trainerIsMoving: Boolean = false
 

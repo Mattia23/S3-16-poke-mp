@@ -1,9 +1,7 @@
 package distributed.server
 
-import java.util.concurrent.ConcurrentMap
-
 import com.rabbitmq.client.Connection
-import distributed.{ConnectedPlayers, Player}
+import distributed.ConnectedPlayers
 
 trait CommunicationService {
   def start()
