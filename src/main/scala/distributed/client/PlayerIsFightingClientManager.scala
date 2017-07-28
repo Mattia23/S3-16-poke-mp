@@ -46,7 +46,7 @@ class PlayerIsFightingClientManagerImpl(private val connection: Connection) exte
         println(" [x] Received other player is fighting")
         val playerIsFightingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerIsFightingMessageImpl])
 
-        if (playerIsFightingMessage.userId != userId)
+        if (playerIsFightingMessage.userId != userId && connectedPlayers.containsPlayer(playerIsFightingMessage.userId))
           connectedPlayers.get(playerIsFightingMessage.userId).isFighting = playerIsFightingMessage.isFighting
       }
 

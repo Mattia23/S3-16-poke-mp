@@ -25,5 +25,33 @@ object PlayerPositionDetails {
     new PlayerPositionDetailsImpl(id, coordinateX, coordinateY, currentSprite)
 }
 
-class PlayerPositionDetailsImpl(override val id: Int, override var coordinateX: Double,
-                                override var coordinateY: Double, override var currentSprite: Sprite) extends PlayerPositionDetails
+class PlayerPositionDetailsImpl(private val _id: Int, private var _coordinateX: Double,
+                                private var _coordinateY: Double, private var _currentSprite: Sprite) extends PlayerPositionDetails {
+  override def id: Int = synchronized {
+    _id
+  }
+
+  override def coordinateX: Double = synchronized {
+    _coordinateX
+  }
+
+  override def coordinateX_=(x: Double): Unit = synchronized {
+    _coordinateX = x
+  }
+
+  override def coordinateY: Double = synchronized {
+    _coordinateY
+  }
+
+  override def coordinateY_=(y: Double): Unit = synchronized {
+    _coordinateY = y
+  }
+
+  override def currentSprite: Sprite = synchronized {
+    _currentSprite
+  }
+
+  override def currentSprite_=(sprite: Sprite): Unit = synchronized {
+    _currentSprite = sprite
+  }
+}

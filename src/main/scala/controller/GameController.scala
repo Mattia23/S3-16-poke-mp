@@ -151,11 +151,11 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   }
 
   protected def walk(direction: Direction, nextPosition: Coordinate): Unit = {
-      val movement: Movement = MainTrainerMovement(trainer, gamePanel, trainer.coordinate, direction, nextPosition)
+      val movement: Movement = MainTrainerMovement(trainer, gamePanel)
       waitEndOfMovement.acquire()
 
       val future = Future {
-        movement.walk()
+        movement.walk(trainer.coordinate, direction, nextPosition)
       }
       future.onComplete {
         case Success(_) =>

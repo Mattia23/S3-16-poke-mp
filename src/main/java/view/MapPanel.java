@@ -9,7 +9,6 @@ import model.map.GameMap;
 import utilities.Settings;
 
 import java.awt.*;
-import java.util.concurrent.ConcurrentMap;
 
 public class MapPanel extends GamePanel{
 
@@ -48,11 +47,15 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawOtherTrainers(Graphics g){
-        ConcurrentMap<Object, PlayerPositionDetails> map = this.distributedMapController.playersPositionDetails();
-        if(!this.distributedMapController.playersPositionDetails().isEmpty()){
+        //ConcurrentMap<Object, PlayerPositionDetails> map = this.distributedMapController.playersPositionDetails();
+        java.util.Map<Object, PlayerPositionDetails> map = scala.collection.JavaConverters
+                .mapAsJavaMapConverter(this.distributedMapController.playersPositionDetails()).asJava();
+        //Map<Object, PlayerPositionDetails> map = this.distributedMapController.playersPositionDetails();
+        if(!map.isEmpty()){
             for(Player player : this.distributedMapController.connectedPlayers().getAll().values()){
                 if(player.isVisible()) {
                     PlayerPositionDetails positionDetails = map.get(player.userId());
+                    System.out.println("position: x " + positionDetails.coordinateX() + " y " +positionDetails.coordinateY());
                     g.drawImage(LoadImage.load((positionDetails.currentSprite().image())),
                             this.calculateCoordinate(positionDetails.coordinateX(), this.getCurrentX()),
                             this.calculateCoordinate(positionDetails.coordinateY(), this.getCurrentY()),
