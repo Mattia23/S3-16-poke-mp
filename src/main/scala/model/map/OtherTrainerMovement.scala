@@ -25,6 +25,6 @@ case class OtherTrainerMovement(private val userId: Int,
 
   override protected def updateCurrentY(actualY: Double): Unit = playerPositionDetails.coordinateY = actualY
 
-  override protected def updateTrainerPosition(nextPosition: Coordinate): Unit = {}
+  override protected def updateTrainerPosition(nextPosition: Coordinate): Unit = playersPositionDetails.replace(userId, playerPositionDetails)
 
 }
