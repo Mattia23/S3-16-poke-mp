@@ -81,7 +81,7 @@ class DistributedBattleController(val controller: GameController, val view: View
     } else {
       battleManager.sendBattleMessage(controller.trainer.id,0,0)
       battle.round.updatePokemon()
-      controller.resume()
+      resumeGame()
     }
   }
 
