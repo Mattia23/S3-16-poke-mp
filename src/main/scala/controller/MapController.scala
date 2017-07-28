@@ -1,13 +1,11 @@
 package controller
 
 import java.util
-import java.util.concurrent.ConcurrentMap
 
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
-import distributed.{ConnectedPlayers, ConnectedPlayersObserver}
-import distributed.Player
 import distributed.client.{BattleClientManager, BattleClientManagerImpl}
+import distributed.{ConnectedPlayers, ConnectedPlayersObserver}
 import model.entities.Trainer
 import model.environment.Direction.Direction
 import model.environment.{Audio, Coordinate, CoordinateImpl}
@@ -146,7 +144,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       var nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
-          distributedMapController.challengeTrainer(otherPlayer.userId, true, true)
+          distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
           currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
           showDialogue(currentDialogue)
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){

@@ -6,7 +6,7 @@ import javax.swing.JOptionPane
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
 import distributed.client.PlayerLoginClientManager
-import distributed.{ConnectedPlayers, DistributedConnectionImpl, Player, PlayerImpl}
+import distributed.{ConnectedPlayers, DistributedConnectionImpl, PlayerImpl}
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
@@ -46,8 +46,8 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       val trainer = optionalTrainer.get()
       val connection = DistributedConnectionImpl().connection
       val connectedPlayers = ConnectedPlayers()
-
       val mapController = MapController(view, trainer, connection, connectedPlayers)
+
       serverInteraction(connection, username, trainer, connectedPlayers)
       mapController.start()
       initialMenuController.stopMainMusic()
