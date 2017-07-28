@@ -6,7 +6,7 @@ import javax.swing.JOptionPane
 import com.rabbitmq.client.Connection
 import database.remote.DBConnect
 import distributed.client.PlayerLoginClientManager
-import distributed.{ConnectedPlayers, DistributedConnectionImpl, Player}
+import distributed.{ConnectedPlayers, DistributedConnectionImpl, Player, PlayerImpl}
 import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
@@ -59,7 +59,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
   private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedPlayers: ConnectedPlayers) = {
     val playerConnectionClientManager = PlayerLoginClientManager(connection)
 
-    val player = Player(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites), Settings.INITIAL_PLAYER_POSITION, true, false)
+    val player = PlayerImpl(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites))
     if (trainer.capturedPokemonId.isEmpty) player.isVisible = false
 
     playerConnectionClientManager.sendPlayer(player)
