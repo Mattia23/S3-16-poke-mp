@@ -16,7 +16,7 @@ object CommunicationService {
     val PlayerInBuilding, PlayerLogin, PlayerLogout, PlayerPosition, PlayerIsFighting = Value
   }
 
-  def apply(service: CommunicationService.Service.Value, connection: Connection, connectedPlayers: ConnectedPlayers): CommunicationService = service match {
+  def apply(service: Service.Value, connection: Connection, connectedPlayers: ConnectedPlayers): CommunicationService = service match {
     case Service.PlayerInBuilding => PlayerInBuildingServerService(connection, connectedPlayers)
     case Service.PlayerLogin => PlayerLoginServerService(connection, connectedPlayers)
     case Service.PlayerLogout => PlayerLogoutServerService(connection, connectedPlayers)
