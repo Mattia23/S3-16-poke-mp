@@ -82,7 +82,7 @@ class Doctor extends StaticCharacter{
   override val dialogue: List[String] = List(DIALOGUE_1, DIALOGUE_2)
 }
 
-abstract class PokemonCharacter extends StaticCharacter{
+trait PokemonCharacter extends StaticCharacter{
 
   override def HEIGHT: Int = 32
 
@@ -91,32 +91,45 @@ abstract class PokemonCharacter extends StaticCharacter{
   def pokemonWithLife: PokemonWithLife
 }
 
-class Bulbasaur extends PokemonCharacter{
-  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
+object PokemonCharacter{
+  object InitialPokemon extends Enumeration{
+    type InitialPokemon = Value
+    val Bulbasaur, Charmander, Squirtle = Value
+  }
 
-  override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
-
-  override def coordinate: Coordinate = CoordinateImpl(8, 4)
-
-  override def dialogue: List[String] = List("Bulbasaaaaur")
+  def apply(pokemon: InitialPokemon.Value): PokemonCharacter = pokemon match {
+    case InitialPokemon.Bulbasaur => Bulbasaur()
+    case InitialPokemon.Charmander => Charmander()
+    case InitialPokemon.Squirtle => Squirtle()
+  }
 }
 
-class Charmander extends PokemonCharacter{
-  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(4), Optional.of(1)).get()
+case class Bulbasaur() extends PokemonCharacter{
+  override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
 
-  override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "charmander.png")
+  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
 
-  override def coordinate: Coordinate = CoordinateImpl(9, 4)
+  override val coordinate: Coordinate = CoordinateImpl(8, 4)
 
-  override def dialogue: List[String] = List("Chaaaarmandeeer")
+  override val dialogue: List[String] = List("Bulbasaaaaur")
 }
 
-class Squirtle extends PokemonCharacter{
-  override def pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
+case class Charmander() extends PokemonCharacter{
+  override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(4), Optional.of(1)).get()
 
-  override def image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "squirtle.png")
+  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "charmander.png")
 
-  override def coordinate: Coordinate = CoordinateImpl(10, 4)
+  override val coordinate: Coordinate = CoordinateImpl(9, 4)
 
-  override def dialogue: List[String] = List("Squeroo squerooo")
+  override val dialogue: List[String] = List("Chaaaarmandeeer")
+}
+
+case class Squirtle() extends PokemonCharacter{
+  override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
+
+  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "squirtle.png")
+
+  override val coordinate: Coordinate = CoordinateImpl(10, 4)
+
+  override val dialogue: List[String] = List("Squeroo squerooo")
 }
