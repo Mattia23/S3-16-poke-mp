@@ -115,7 +115,6 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
   protected def doInteract(direction: Direction): Unit
 
   override def showGameMenu(): Unit = {
-    sendPlayerIsFighting(true)
     new GameMenuControllerImpl(view, this)
   }
 
