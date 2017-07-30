@@ -1,31 +1,21 @@
 package view;
 
 import controller.BattleController;
-import database.remote.DBConnect;
-import javafx.scene.control.RadioButton;
 import model.entities.PokemonWithLife;
 import model.entities.Trainer;
-import scala.Tuple2;
 import scala.Tuple3;
-import scala.collection.JavaConverters;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.*;
-import java.util.List;
 
 class PokemonChoicePanel extends TeamPanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
-    private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
 
 

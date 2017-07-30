@@ -1,18 +1,18 @@
 package distributed.server
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.messages.PlayerIsFightingMessageImpl
-import distributed.{ConnectedPlayers, Player}
+import distributed.ConnectedPlayers
 import utilities.Settings
 
 object PlayerIsFightingServerService {
-  def apply(connection: Connection, connectedPlayers: ConnectedPlayers): PlayerIsFightingServerService = new PlayerIsFightingServerService(connection, connectedPlayers)
+  def apply(connection: Connection, connectedPlayers: ConnectedPlayers): PlayerIsFightingServerService =
+    new PlayerIsFightingServerService(connection, connectedPlayers)
 }
 
-class PlayerIsFightingServerService (private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
+class PlayerIsFightingServerService (private val connection: Connection,
+                                     private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
     channel.queueDeclare(Settings.PLAYER_IS_FIGHTING_CHANNEL_QUEUE, false, false, false, null)

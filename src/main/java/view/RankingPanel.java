@@ -10,12 +10,11 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class RankingPanel extends BasePanel {
+class RankingPanel extends BasePanel {
 
-    public RankingPanel(GameMenuController gameMenuController, GameController gameController) {
+    RankingPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         mainPanel.setOpaque(false);

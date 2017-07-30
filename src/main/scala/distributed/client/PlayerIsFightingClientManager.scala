@@ -1,10 +1,8 @@
 package distributed.client
 
-import java.util.concurrent.ConcurrentMap
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import distributed.{ConnectedPlayers, Player}
+import distributed.ConnectedPlayers
 import distributed.messages.{PlayerIsFightingMessage, PlayerIsFightingMessageImpl}
 import utilities.Settings
 

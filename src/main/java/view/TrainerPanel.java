@@ -10,9 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class TrainerPanel extends BasePanel {
+class TrainerPanel extends BasePanel {
 
-    public TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
+    TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -33,9 +33,6 @@ public class TrainerPanel extends BasePanel {
         k.gridy++;
         this.centralPanel.add(new JLabel("Posizione in classifica:"),k);
         this.centralPanel.add(new JLabel(String.valueOf(DBConnect.getTrainerRank(gameController.trainer().id()))),k);
-        k.gridy++;
-        this.centralPanel.add(new JLabel("Battaglie vinte:"),k);
-        this.centralPanel.add(new JLabel(),k);
         this.backButton.addActionListener(e -> {
             gameController.resume();
             gameController.pause();

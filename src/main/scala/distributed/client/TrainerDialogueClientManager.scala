@@ -78,7 +78,6 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
           mapController.hideCurrentDialogue()
           mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }
-        //channel.close()
       }
     }
     channel.basicConsume(playerQueue, true, consumer)
