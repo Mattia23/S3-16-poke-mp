@@ -2,7 +2,7 @@ package distributed.client
 
 import com.google.gson.Gson
 import com.rabbitmq.client._
-import controller.BattleController
+import controller.DistributedBattleController
 import distributed.messages.{BattleMessage, BattleMessageImpl}
 
 trait BattleClientManager {
@@ -12,14 +12,14 @@ trait BattleClientManager {
 }
 
 object BattleClientManager {
-  def apply(connection: Connection, myPlayerId: Int, otherPlayerId: Int, controller: BattleController): BattleClientManager =
+  def apply(connection: Connection, myPlayerId: Int, otherPlayerId: Int, controller: DistributedBattleController): BattleClientManager =
     new BattleClientManagerImpl(connection, myPlayerId, otherPlayerId, controller)
 }
 
 class BattleClientManagerImpl(private val connection: Connection,
                               private val myPlayerId: Int,
                               private val otherPlayerId: Int,
-                              private val controller: BattleController) extends BattleClientManager {
+                              private val controller: DistributedBattleController) extends BattleClientManager {
 
   private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()

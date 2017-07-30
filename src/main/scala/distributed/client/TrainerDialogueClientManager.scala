@@ -4,7 +4,7 @@ import java.util
 
 import com.google.gson.{Gson, GsonBuilder}
 import com.rabbitmq.client._
-import controller.{BattleController, DistributedBattleController, GameController}
+import controller.{BattleController, DistributedBattleControllerImpl, GameController}
 import distributed.Player
 import view.View
 //import distributed.deserializers.TrainerDialogueMessageDeserializers

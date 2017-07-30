@@ -161,7 +161,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
     pause()
     val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
-    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
+    val distributedBattle: DistributedBattleController = new DistributedBattleControllerImpl(this, view, otherPlayerUsername,yourPlayerIsFirst)
     val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
     distributedBattle.passManager(battleManager)
   }
