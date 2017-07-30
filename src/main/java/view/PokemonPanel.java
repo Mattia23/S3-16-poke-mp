@@ -12,6 +12,10 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * PokemonPanel draws every info that a Pokemon captured by the trainer has: name, image, level, experience points,
+ * life and attacks.
+ */
 public class PokemonPanel extends BasePanel {
     private final JLabel pokemonImage = new JLabel();
     private final JLabel pokemonName = new JLabel();
@@ -40,6 +44,10 @@ public class PokemonPanel extends BasePanel {
         }
     }
 
+    /**
+     * Set the pokemon passed as parameter and print all his info
+     * @param pokemonWithLife the pokemon that the trainer wants info about
+     */
     public void setPokemon(final PokemonWithLife pokemonWithLife){
         Image myImage;
         ImageIcon myImageIcon = null;

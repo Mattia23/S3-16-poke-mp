@@ -10,6 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * This Panel paints a Pokedex with every Pokemon a trainer met with his id, name and image and a Pokeball if the
+ * trainer has alreay captured it.
+ */
 class PokedexPanel extends  BasePanel{
     private static final int INFO_FONT_SIZE = Settings.FRAME_SIDE()/32;
     private static final int FONT_SIZE = Settings.FRAME_SIDE()/25;

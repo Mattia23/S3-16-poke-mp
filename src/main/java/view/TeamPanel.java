@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * TeamPanel draws the trainer's Pokemons taking part to the team (the six favourite Pokemons of the trainer). It shows
+ * just basic info about every Pokemon (icon, name, life and level). It allows to choose a Pokemon to see detailed infos
+ * about it.
+ */
 class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);

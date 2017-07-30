@@ -14,10 +14,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
+/**
+ * PokemonChoicPanel extends TeamPanel and it is used when you need to make the trainer choose a different Pokemon
+ * (for example during a battle).
+ */
 class PokemonChoicePanel extends TeamPanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
-
 
     PokemonChoicePanel(BattleController controller, Trainer trainer) {
         super(null, null, trainer);

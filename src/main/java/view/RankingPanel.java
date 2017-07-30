@@ -12,6 +12,10 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * RankingPanel print the ranking with every user in the database and put in bold the current playin trainer. In this
+ * panel you can read the ranking position, the player username, his level, his experience points and his avatar.
+ */
 class RankingPanel extends BasePanel {
 
     RankingPanel(GameMenuController gameMenuController, GameController gameController) {

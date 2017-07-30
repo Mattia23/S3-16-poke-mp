@@ -10,6 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * TrainerPanel shows main info about the playing trainer (avatar, name, level, experience points and ranking position).
+ */
 class TrainerPanel extends BasePanel {
 
     TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
@@ -25,13 +28,13 @@ class TrainerPanel extends BasePanel {
         this.centralPanel.add(new JLabel(myImageIcon));
         this.centralPanel.add(new JLabel(gameController.trainer().username()),k);
         k.gridy++;
-        this.centralPanel.add(new JLabel("Livello:"),k);
+        this.centralPanel.add(new JLabel("Level:"),k);
         this.centralPanel.add(new JLabel(""+gameController.trainer().level()),k);
         k.gridy++;
-        this.centralPanel.add(new JLabel("Esperienza"),k);
+        this.centralPanel.add(new JLabel("Experience points: "),k);
         this.centralPanel.add(new JLabel(""+gameController.trainer().experiencePoints()),k);
         k.gridy++;
-        this.centralPanel.add(new JLabel("Posizione in classifica:"),k);
+        this.centralPanel.add(new JLabel("Ranking position: "),k);
         this.centralPanel.add(new JLabel(String.valueOf(DBConnect.getTrainerRank(gameController.trainer().id()))),k);
         this.backButton.addActionListener(e -> {
             gameController.resume();
