@@ -4,15 +4,15 @@ import database.remote.DBConnect
 import distributed.client.BattleClientManager
 import model.entities.{Owner, Trainer}
 import model.environment.{Audio, AudioImpl}
-import model.battle.{Battle, TrainersBattle}
+import model.battle.{TrainersBattle, TrainersBattleImpl}
 import utilities.Settings
 import view.View
 
-class DistributedBattleController(val controller: GameController, val view: View, val otherTrainerUsername: String, val playerIsFirst: Boolean) extends BattleController {
+class DistributedBattleController(private val controller: GameController, private val view: View, private val otherTrainerUsername: String, val playerIsFirst: Boolean) extends BattleController {
   private val MY_POKEMON: Int = 1
   private var battleManager: BattleClientManager = _
   private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
-  private val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
+  private val battle: TrainersBattle = new TrainersBattleImpl(controller.trainer,this,otherTrainer)
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
   private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
@@ -33,7 +33,7 @@ class DistributedBattleController(val controller: GameController, val view: View
     view.getBattlePanel.setPokemonLife()
     view.getBattlePanel.setPokemonLifeProgressBar(battle.myPokemon.pokemonLife,Owner.TRAINER.id)
     if(battle.myPokemon.pokemonLife == 0) {
-      myPokemonIsDead
+      myPokemonIsDead()
     }
   }
 
@@ -72,7 +72,7 @@ class DistributedBattleController(val controller: GameController, val view: View
     view.showBattle(battle.myPokemon,battle.otherPokemon,this)
   }
 
-  private def myPokemonIsDead: Unit = {
+  private def myPokemonIsDead(): Unit = {
     view.getBattlePanel.pokemonIsDead(MY_POKEMON)
     val nextPokemon: Int = controller.trainer.getFirstAvailableFavouritePokemon
     if(nextPokemon > 0) {

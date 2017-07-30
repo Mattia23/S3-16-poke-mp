@@ -127,7 +127,7 @@ public class ViewImpl extends JFrame implements View {
 
     @Override
     public void showTeamPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.setPanel(new TeamPanel(gameMenuController, gameController));
+        this.setPanel(new TeamPanel(gameMenuController, gameController, gameController.trainer()));
     }
 
     @Override

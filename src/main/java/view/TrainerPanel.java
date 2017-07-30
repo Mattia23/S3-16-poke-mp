@@ -23,7 +23,7 @@ public class TrainerPanel extends BasePanel {
             e.printStackTrace();
         }
         this.centralPanel.add(new JLabel(myImageIcon));
-        this.centralPanel.add(new JLabel(gameController.trainer().name()),k);
+        this.centralPanel.add(new JLabel(gameController.trainer().username()),k);
         k.gridy++;
         this.centralPanel.add(new JLabel("Livello:"),k);
         this.centralPanel.add(new JLabel(""+gameController.trainer().level()),k);

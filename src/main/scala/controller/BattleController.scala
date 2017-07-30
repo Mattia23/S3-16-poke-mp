@@ -1,8 +1,7 @@
 package controller
 
-import database.remote.DBConnect
 import distributed.client.BattleClientManager
-import model.entities.{Owner, Trainer}
+import model.entities.Owner
 import model.environment.{Audio, AudioImpl}
 import model.battle.{Battle, BattleImpl}
 import utilities.Settings
@@ -36,7 +35,7 @@ trait BattleController {
   def yourPlayerIsFirst: Boolean = false
 }
 
-class BattleControllerImpl(val controller: GameController, val view: View) extends BattleController {
+class BattleControllerImpl(private val controller: GameController, private val view: View) extends BattleController {
   private val WILD_POKEMON: Int = 0
   private val MY_POKEMON: Int = 1
   val battle: Battle = new BattleImpl(controller.trainer,this)
@@ -88,7 +87,7 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
 
   override def trainerThrowPokeball(): Boolean = {
     battle.pokeball_=(battle.pokeball-1)
-    if(!battle.pokeballLaunched()) {
+    if(!battle.pokemonIsCaptured()) {
       new AudioImpl(Settings.CAPTURE_FAILED_SONG)
       pokemonWildAttacksAfterTrainerChoice()
       false

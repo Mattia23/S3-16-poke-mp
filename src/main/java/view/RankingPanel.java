@@ -42,7 +42,7 @@ public class RankingPanel extends BasePanel {
             trainerPanel.setOpaque(false);
             trainerPanel.add(info);
             trainerPanel.add(new JLabel(myImageIcon));
-            if(object._1().equals(gameController.trainer().name())){
+            if(object._1().equals(gameController.trainer().username())){
                 setFontBold(info);
             }else{
                 setFont(info);
