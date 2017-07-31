@@ -1,6 +1,5 @@
 package model.battle
 
-import database.remote.DBConnect
 import model.entities.{PokemonBehaviour, PokemonBehaviourImpl, PokemonWithLife}
 
 import scala.util.Random

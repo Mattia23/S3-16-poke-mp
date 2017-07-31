@@ -2,7 +2,7 @@ package controller
 
 import model.environment.{Audio, AudioImpl}
 import utilities.Settings
-import view.{InitialMenuPanel, LoginPanel, View}
+import view.View
 
 trait InitialMenuController {
   def view: View

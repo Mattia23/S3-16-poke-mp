@@ -281,7 +281,7 @@ object Settings {
 
   val PLAYER_IN_BUILDING_CHANNEL_QUEUE: String = "player_in_building"
 
-  val PLAYER_IS_FIGHTING_CHANNEL_QUEUE: String = "player_is_fighting"
+  val PLAYER_IS_BUSY_CHANNEL_QUEUE: String = "player_is_busy"
 
   val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
 
@@ -291,7 +291,7 @@ object Settings {
 
   val PLAYER_IN_BUILDING_EXCHANGE: String = "player_in_building_exchange"
 
-  val PLAYER_IS_FIGHTING_EXCHANGE: String = "player_is_fighting_exchange"
+  val PLAYER_IS_BUSY_EXCHANGE: String = "player_is_busy_exchange"
 
   val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
 

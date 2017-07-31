@@ -1,10 +1,9 @@
 package controller
 
-import database.remote.DBConnect
 import distributed.client.BattleClientManager
-import model.entities.{Owner, Trainer}
-import model.environment.{Audio, AudioImpl}
 import model.battle.{Battle, BattleImpl}
+import model.entities.Owner
+import model.environment.{Audio, AudioImpl}
 import utilities.Settings
 import view.View
 

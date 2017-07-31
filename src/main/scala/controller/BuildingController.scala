@@ -1,6 +1,5 @@
 package controller
 
-import com.rabbitmq.client.Connection
 import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
@@ -66,7 +65,7 @@ abstract class BuildingController(private val view: View, private val mapControl
     mapController.terminate()
   }
 
-  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
+  override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
 
   override def hideCurrentDialogue(): Unit = {}
 

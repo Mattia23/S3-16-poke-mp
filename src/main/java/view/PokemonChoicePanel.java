@@ -2,7 +2,6 @@ package view;
 
 import controller.BattleController;
 import database.remote.DBConnect;
-import javafx.scene.control.RadioButton;
 import model.entities.Trainer;
 import scala.Tuple2;
 import utilities.Settings;

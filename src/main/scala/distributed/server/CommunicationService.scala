@@ -19,6 +19,6 @@ object CommunicationService {
     case Service.PlayerLogin => PlayerLoginServerService(connection, connectedPlayers)
     case Service.PlayerLogout => PlayerLogoutServerService(connection, connectedPlayers)
     case Service.PlayerPosition => PlayerPositionServerService(connection, connectedPlayers)
-    case Service.PlayerIsFighting => PlayerIsFightingServerService(connection, connectedPlayers)
+    case Service.PlayerIsFighting => PlayerIsBusyServerService(connection, connectedPlayers)
   }
 }
