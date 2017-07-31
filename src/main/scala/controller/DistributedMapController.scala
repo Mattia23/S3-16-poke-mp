@@ -16,10 +16,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait DistributedMapController{
   def connectedPlayers: ConnectedPlayers
 
-  //def playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]
-  def playersPositionDetails: Map[Int, PlayerPositionDetails]
-
-  def playersPositionDetails_=(map: Map[Int, PlayerPositionDetails]): Unit
+  def playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]
 
   def sendTrainerPosition(position: Coordinate): Unit
 
@@ -60,8 +57,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   trainerDialogueClientManager.receiveResponse()
   playerIsFightingManager.receiveOtherPlayerIsFighting(trainerId, connectedPlayers)
 
-  override var playersPositionDetails: Map[Int, PlayerPositionDetails] = Map[Int, PlayerPositionDetails]()
-  /*ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()*/
+  override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
 
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
@@ -79,12 +75,11 @@ class DistributedMapControllerImpl(private val mapController: GameController,
 
   override def newPlayerAdded(player: Player): Unit = {
     val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites.selectTrainerSprite(player.idImage).frontS)
-    playersPositionDetails = playersPositionDetails + (player.userId -> playerDetails)
-   // playersPositionDetails.put(player.userId, playerDetails)
+    playersPositionDetails.put(player.userId, playerDetails)
   }
 
   override def playerPositionUpdated(userId: Int): Unit = {
-    val positionDetails: PlayerPositionDetails = playersPositionDetails(userId)//playersPositionDetails.get(userId)
+    val positionDetails: PlayerPositionDetails = playersPositionDetails.get(userId)
     val player: Player = connectedPlayers.get(userId)
 
     val initialPosition = CoordinateImpl(positionDetails.coordinateX.asInstanceOf[Int], positionDetails.coordinateY.asInstanceOf[Int])
@@ -109,5 +104,5 @@ class DistributedMapControllerImpl(private val mapController: GameController,
     }
   }
 
-  override def playerRemoved(userId: Int): Unit = playersPositionDetails = playersPositionDetails - userId //playersPositionDetails.remove(userId)
+  override def playerRemoved(userId: Int): Unit = playersPositionDetails.remove(userId)
 }
