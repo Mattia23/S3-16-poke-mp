@@ -53,7 +53,7 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
   }
 
   override def showGameMenu(): Unit = {
-    gameController.sendPlayerIsFighting(true)
+    gameController.sendTrainerIsBusy(true)
     view.showGameMenuPanel(this)
   }
 

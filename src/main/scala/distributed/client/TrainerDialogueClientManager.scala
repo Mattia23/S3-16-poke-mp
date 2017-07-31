@@ -41,7 +41,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
   channel.queueDeclare(playerQueue, false, false, false, null)
 
   override def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit = {
-    mapController.sendPlayerIsFighting(wantToFight)
+    mapController.sendTrainerIsBusy(wantToFight)
     yourPlayerIsFirst = isFirst
     val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.name, otherPlayerId, wantToFight, isFirst)
     channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
@@ -61,7 +61,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
         otherPlayerId = trainerDialogueMessage.firstPlayerId
         otherPlayerName = trainerDialogueMessage.firstPlayerName
         if(trainerDialogueMessage.wantToFight && trainerDialogueMessage.isFirst) {
-          mapController.sendPlayerIsFighting(true)
+          mapController.sendTrainerIsBusy(true)
           yourPlayerIsFirst = false
           mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this,
             util.Arrays.asList(otherPlayerName + " ti ha sfidato")))
@@ -70,7 +70,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
           createBattle()
         }
         else if(!trainerDialogueMessage.wantToFight){
-          mapController.sendPlayerIsFighting(false)
+          mapController.sendTrainerIsBusy(false)
           mapController.hideCurrentDialogue()
           mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }

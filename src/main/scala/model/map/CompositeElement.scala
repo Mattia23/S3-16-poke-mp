@@ -1,5 +1,7 @@
 package model.map
 
+import model.map.CompositeElement.CompositeElementValue.CompositeElementValue
+
 trait CompositeElement {
   def tile: Tile
   def topTile: Tile
@@ -12,42 +14,54 @@ trait CompositeElement {
   def bottomRightTile: Tile
 }
 
-case class Lake() extends  CompositeElement{
-  override val tile = Water()
+object CompositeElement {
+  object CompositeElementValue extends Enumeration {
+    type CompositeElementValue = Value
+    val Lake, Square = Value
+  }
 
-  override val topTile = WaterMarginTop()
+  def apply(element: CompositeElementValue): CompositeElement = element match {
+    case CompositeElementValue.Lake => Lake()
+    case CompositeElementValue.Square => Square()
+  }
 
-  override val topLeftTile = WaterMarginTopLeft()
+  case class Lake() extends  CompositeElement{
+    override val tile = Water()
 
-  override val topRightTile = WaterMarginTopRight()
+    override val topTile = WaterMarginTop()
 
-  override val leftTile = WaterMarginLeft()
+    override val topLeftTile = WaterMarginTopLeft()
 
-  override val rightTile = WaterMarginRight()
+    override val topRightTile = WaterMarginTopRight()
 
-  override val bottomTile = WaterMarginBottom()
+    override val leftTile = WaterMarginLeft()
 
-  override val bottomLeftTile = WaterMarginBottomLeft()
+    override val rightTile = WaterMarginRight()
 
-  override val bottomRightTile = WaterMarginBottomRight()
-}
+    override val bottomTile = WaterMarginBottom()
 
-case class Square() extends  CompositeElement{
-  override val tile = Road()
+    override val bottomLeftTile = WaterMarginBottomLeft()
 
-  override val topTile = RoadMarginTop()
+    override val bottomRightTile = WaterMarginBottomRight()
+  }
 
-  override val topLeftTile = RoadMarginTopLeft()
+  case class Square() extends  CompositeElement{
+    override val tile = Road()
 
-  override val topRightTile = RoadMarginTopRight()
+    override val topTile = RoadMarginTop()
 
-  override val leftTile = RoadMarginLeft()
+    override val topLeftTile = RoadMarginTopLeft()
 
-  override val rightTile = RoadMarginRight()
+    override val topRightTile = RoadMarginTopRight()
 
-  override val bottomTile = RoadMarginBottom()
+    override val leftTile = RoadMarginLeft()
 
-  override val bottomLeftTile = RoadMarginBottomLeft()
+    override val rightTile = RoadMarginRight()
 
-  override val bottomRightTile = RoadMarginBottomRight()
+    override val bottomTile = RoadMarginBottom()
+
+    override val bottomLeftTile = RoadMarginBottomLeft()
+
+    override val bottomRightTile = RoadMarginBottomRight()
+  }
 }

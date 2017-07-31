@@ -69,7 +69,7 @@ abstract class BuildingController(private val view: View, private val mapControl
 
   override def hideCurrentDialogue(): Unit = {}
 
-  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {}
+  override def sendTrainerIsBusy(isFighting: Boolean): Unit = {}
 
 }
 

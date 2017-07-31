@@ -81,7 +81,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override protected def doResume(): Unit = {
     distributedMapController.sendTrainerInBuilding(true)
-    sendPlayerIsFighting(false)
+    sendTrainerIsBusy(false)
     if(trainer.getFirstAvailableFavouritePokemon <= 0) {
       DBConnect.rechangeAllTrainerPokemon(trainer.id)
       setTrainerSpriteFront()
@@ -131,7 +131,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private def randomPokemonAppearance(): Unit = {
     val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
-      sendPlayerIsFighting(true)
+      sendTrainerIsBusy(true)
       waitEndOfMovement.acquire()
       pause()
       waitEndOfMovement.release()

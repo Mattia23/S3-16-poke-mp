@@ -23,9 +23,7 @@ object Trainers extends Enumeration {
   type Trainers = Value
   val Boy1, Boy2, Girl1, Girl2 = Value
 
-  def valueSetAsJavaList(): java.util.List[Trainers] = {
-    values.toList.asJava
-  }
+  def valueSetAsJavaList(): java.util.List[Trainers] = values.toList.asJava
 }
 
 object TrainerSprites {
