@@ -71,7 +71,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   }
 
   override def newPlayerAdded(player: Player): Unit = {
-    val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites.selectTrainerSprite(player.idImage).frontS)
+    val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites(player.idImage).frontS)
     playersPositionDetails.put(player.userId, playerDetails)
   }
 
@@ -94,7 +94,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
         case _ => direction = Direction.UP
       }
 
-      val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, TrainerSprites.selectTrainerSprite(player.idImage))
+      val movement: Movement = OtherTrainerMovement(userId, playersPositionDetails, TrainerSprites(player.idImage))
       Future {
         movement.walk(initialPosition, direction, nextPosition)
       }

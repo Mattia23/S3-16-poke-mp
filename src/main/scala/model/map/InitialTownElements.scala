@@ -1,7 +1,7 @@
 package model.map
 
 import model.environment.CoordinateImpl
-import model.map.CompositeElement.CompositeElementValue
+import model.map.CompositeElement.{Lake, Square}
 import utilities.Settings
 
 case class InitialTownElements() extends MapElementsImpl {
@@ -11,8 +11,8 @@ case class InitialTownElements() extends MapElementsImpl {
   addTallGrass()
   addTrees()
 
-  addCompositeElement(CompositeElement(CompositeElementValue.Square), CoordinateImpl(21,21), CoordinateImpl(28,28))
-  addCompositeElement(CompositeElement(CompositeElementValue.Square), CoordinateImpl(6,35), CoordinateImpl(16,45))
+  addCompositeElement(Square(), CoordinateImpl(21,21), CoordinateImpl(28,28))
+  addCompositeElement(Square(), CoordinateImpl(6,35), CoordinateImpl(16,45))
   addRoadFromSquareToPokemonCenter()
   addRoadFromSquareToLaboratory()
   addRoadFromSquareToBottomLeftLake()
@@ -51,9 +51,9 @@ case class InitialTownElements() extends MapElementsImpl {
   }
 
   private def addLakes(): Unit ={
-    addCompositeElement(CompositeElement(CompositeElementValue.Lake),CoordinateImpl(4,5), CoordinateImpl(20,10))
-    addCompositeElement(CompositeElement(CompositeElementValue.Lake),CoordinateImpl(40,40), CoordinateImpl(48,48))
-    addCompositeElement(CompositeElement(CompositeElementValue.Lake),CoordinateImpl(10,28), CoordinateImpl(19,30))
+    addCompositeElement(Lake(),CoordinateImpl(4,5), CoordinateImpl(20,10))
+    addCompositeElement(Lake(),CoordinateImpl(40,40), CoordinateImpl(48,48))
+    addCompositeElement(Lake(),CoordinateImpl(10,28), CoordinateImpl(19,30))
   }
 
   private def addTallGrass(): Unit ={

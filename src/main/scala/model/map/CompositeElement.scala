@@ -1,7 +1,5 @@
 package model.map
 
-import model.map.CompositeElement.CompositeElementValue.CompositeElementValue
-
 trait CompositeElement {
   def tile: Tile
   def topTile: Tile
@@ -15,16 +13,6 @@ trait CompositeElement {
 }
 
 object CompositeElement {
-  object CompositeElementValue extends Enumeration {
-    type CompositeElementValue = Value
-    val Lake, Square = Value
-  }
-
-  def apply(element: CompositeElementValue): CompositeElement = element match {
-    case CompositeElementValue.Lake => Lake()
-    case CompositeElementValue.Square => Square()
-  }
-
   case class Lake() extends  CompositeElement{
     override val tile = Water()
 

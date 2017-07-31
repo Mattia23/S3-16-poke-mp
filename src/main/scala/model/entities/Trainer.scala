@@ -60,11 +60,11 @@ class TrainerImpl(override val name: String, private val idImage: Int, override 
 
   override val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
   override var level: Int = calculateLevel()
-  override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
+  override val sprites: TrainerSprites = TrainerSprites(idImage)
   override var currentSprite: Sprite = sprites.frontS
   override var pokedex: Pokedex = new PokedexImpl(id)
   override var favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
-  override var capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
+  override var capturedPokemons: List[(Int, Int)] = DBConnect.getCapturedPokemonList(id).get()
   override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
 
   private def calculateLevel(): Int = {

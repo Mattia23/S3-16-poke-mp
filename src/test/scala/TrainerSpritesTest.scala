@@ -5,7 +5,7 @@ import utilities.Settings
 class TrainerSpritesTest extends FunSuite{
   def fixture =
     new {
-      val trainerSprites: TrainerSprites = TrainerSprites.selectTrainerSprite(0)
+      val trainerSprites: TrainerSprites = TrainerSprites(0)
     }
 
   test("Sprites with ID 0 should have Trainer1 sprites") {
