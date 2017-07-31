@@ -18,6 +18,10 @@ import java.util.List;
  */
 class RankingPanel extends BasePanel {
 
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
     RankingPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));

@@ -29,7 +29,13 @@ class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
     List<Tuple3<JRadioButton,PokemonWithLife,Integer>> buttonList = new ArrayList<>();
+    private ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     * @param trainer instance of trainer
+     */
     TeamPanel(GameMenuController gameMenuController, GameController gameController, Trainer trainer) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
         JLabel infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
@@ -81,7 +87,6 @@ class TeamPanel extends BasePanel{
                     first = false;
                 }
                 buttonList.add(new Tuple3<>(radioButton,pokemonWithLife, pokemonId));
-                ButtonGroup pokemonButtonGroup = new ButtonGroup();
                 pokemonButtonGroup.add(radioButton);
                 this.centralPanel.add(radioButton, k);
                 k.gridy++;

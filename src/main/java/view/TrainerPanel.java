@@ -15,6 +15,10 @@ import java.io.IOException;
  */
 class TrainerPanel extends BasePanel {
 
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
     TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
         Image myImage;

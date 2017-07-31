@@ -20,6 +20,10 @@ class PokedexPanel extends  BasePanel{
     private static final int POKEMON_SIDE = (int) (Settings.FRAME_SIDE()/5.8);
     private static final int POKEBALL_SIDE = Settings.FRAME_SIDE()/22;
 
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
     PokedexPanel(GameMenuController gameMenuController, GameController gameController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
         JPanel northPanel = new JPanel(new BorderLayout());

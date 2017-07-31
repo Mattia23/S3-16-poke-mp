@@ -22,6 +22,10 @@ class PokemonChoicePanel extends TeamPanel{
     private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
     private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
 
+    /**
+     * @param controller instance of BattleController
+     * @param trainer instance of trainer
+     */
     PokemonChoicePanel(BattleController controller, Trainer trainer) {
         super(null, null, trainer);
         this.backButton.setVisible(false);
