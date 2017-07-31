@@ -8,11 +8,11 @@ class GameMapTest extends FunSuite{
     new {
       val gameMap = GameMapImpl(10,10)
       val coordinate = CoordinateImpl(0,0)
-      val tallGrass =TallGrass()
+      val tallGrass = TallGrass()
       val pokemonCenter = PokemonCenter(coordinate)
     }
 
-  test("A game map should be filled with grass tile") {
+  test("A game map should be filled with grass tiles") {
     val f = fixture
     f.gameMap.map foreach (element => element foreach ( element2 => assert(element2.isInstanceOf[Grass])))
   }
