@@ -36,7 +36,6 @@ abstract class MovementImpl extends Movement{
           actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentX(actualX)
       }
-      println("walk: x " + actualX + " y "+actualY)
       updateTrainerSprite(direction)
       Thread.sleep(Settings.GAME_REFRESH_TIME)
     }

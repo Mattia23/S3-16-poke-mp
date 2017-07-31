@@ -3,7 +3,7 @@ package distributed.client
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.ConnectedPlayers
-import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerIsFightingMessage, PlayerLogoutMessageImpl}
+import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerIsBusyMessage, PlayerLogoutMessageImpl}
 import utilities.Settings
 
 trait PlayerInBuildingClientManager {

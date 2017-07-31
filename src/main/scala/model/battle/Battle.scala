@@ -2,7 +2,7 @@ package model.battle
 
 import java.util.Optional
 
-import controller.{BattleController, GameController}
+import controller.BattleController
 import model.entities.{Owner, PokemonFactory, PokemonWithLife, Trainer}
 import utilities.Settings
 

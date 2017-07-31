@@ -1,6 +1,6 @@
 package distributed
 
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.Coordinate
 import utilities.Settings
 
 trait Player {
@@ -18,13 +18,13 @@ trait Player {
 
   def isVisible_=(visible: Boolean): Unit
 
-  def isFighting: Boolean
+  def isBusy: Boolean
 
-  def isFighting_=(isFighting: Boolean): Unit
+  def isBusy_=(isFighting: Boolean): Unit
 }
 
 case class PlayerImpl(override val userId: Int, override val username: String,
                  override val idImage: Int, override var position: Coordinate = Settings.INITIAL_PLAYER_POSITION,
-                 override var isVisible: Boolean = true, override var isFighting: Boolean = false) extends Player
+                 override var isVisible: Boolean = true, override var isBusy: Boolean = false) extends Player
 
 

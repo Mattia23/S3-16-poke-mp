@@ -4,8 +4,6 @@ import controller.InitialMenuController;
 import utilities.Settings;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

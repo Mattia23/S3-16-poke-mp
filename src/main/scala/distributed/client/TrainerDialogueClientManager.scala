@@ -1,13 +1,9 @@
 package distributed.client
 
 import java.util
-
-import com.google.gson.{Gson, GsonBuilder}
+import com.google.gson.Gson
 import com.rabbitmq.client._
-import controller.{BattleController, DistributedBattleController, GameController}
-import distributed.Player
-import view.View
-//import distributed.deserializers.TrainerDialogueMessageDeserializers
+import controller.GameController
 import distributed.messages.{TrainerDialogueMessage, TrainerDialogueMessageImpl}
 import utilities.Settings
 import view.{ClassicDialoguePanel, TrainerDialoguePanel}
@@ -85,6 +81,6 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
   }
 
   override def createBattle(): Unit = {
-    mapController.createDistributedBattle(otherPlayerId, yourPlayerIsFirst)
+    mapController.createTrainersBattle(otherPlayerId, yourPlayerIsFirst)
   }
 }

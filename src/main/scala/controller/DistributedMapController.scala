@@ -1,7 +1,6 @@
 package controller
 
 import java.util.concurrent.{ConcurrentHashMap, ConcurrentMap, ExecutorService, Executors}
-
 import com.rabbitmq.client.Connection
 import distributed.client._
 import distributed.{ConnectedPlayers, ConnectedPlayersObserver, Player, PlayerPositionDetails}
@@ -9,8 +8,6 @@ import model.entities.TrainerSprites
 import model.environment.Direction.Direction
 import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.map.{Movement, OtherTrainerMovement}
-
-import scala.collection.immutable.HashMap
 import scala.concurrent.{ExecutionContext, Future}
 
 trait DistributedMapController{
@@ -44,7 +41,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
   private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, mapController)
-  private val playerIsFightingManager: PlayerIsFightingClientManager = PlayerIsFightingClientManager(connection)
+  private val playerIsFightingManager: PlayerIsBusyClientManager = PlayerIsBusyClientManager(connection)
 
   private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
   private val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
@@ -55,7 +52,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
   trainerDialogueClientManager.receiveResponse()
-  playerIsFightingManager.receiveOtherPlayerIsFighting(trainerId, connectedPlayers)
+  playerIsFightingManager.receiveOtherPlayerIsBusy(trainerId, connectedPlayers)
 
   override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
 
@@ -66,7 +63,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   override def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit =
     trainerDialogueClientManager.sendDialogueRequest(otherPlayerId, wantToFight, isFirst)
 
-  override def sendTrainerIsFighting(isFighting: Boolean): Unit = playerIsFightingManager.sendPlayerIsFighting(trainerId, isFighting)
+  override def sendTrainerIsFighting(isFighting: Boolean): Unit = playerIsFightingManager.sendPlayerIsBusy(trainerId, isFighting)
 
   override def playerLogout(): Unit = {
     playerLogoutManager.sendPlayerLogout(trainerId)

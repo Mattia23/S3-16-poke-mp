@@ -1,7 +1,7 @@
 package model.entities
 
 import database.remote.DBConnect
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.Coordinate
 import utilities.Settings
 
 trait Trainer {

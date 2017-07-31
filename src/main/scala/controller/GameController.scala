@@ -47,11 +47,11 @@ trait GameController {
 
   def setFocusableOff(): Unit
 
-  def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
+  def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
 
   def hideCurrentDialogue(): Unit
 
-  def sendPlayerIsFighting(isFighting: Boolean): Unit
+  def sendTrainerIsBusy(isBusy: Boolean): Unit
 }
 
 abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {

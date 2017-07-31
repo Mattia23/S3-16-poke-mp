@@ -143,11 +143,11 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     if (!isInPause){
       val nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
-        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
+        if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isBusy){
           distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
           currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
           showDialogue(currentDialogue)
-        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
+        }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isBusy){
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
         })
     }
@@ -158,7 +158,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     terminate()
   }
 
-  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
+  override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
     pause()
     val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
     val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
@@ -170,7 +170,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     currentDialogue.setVisible(false)
   }
 
-  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {
-    distributedMapController.sendTrainerIsFighting(isFighting)
+  override def sendTrainerIsBusy(isBusy: Boolean): Unit = {
+    distributedMapController.sendTrainerIsFighting(isBusy)
   }
 }

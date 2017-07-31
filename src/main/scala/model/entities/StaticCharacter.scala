@@ -3,7 +3,6 @@ package model.entities
 import java.awt.Image
 import java.util.Optional
 
-import model.entities.Oak.{DIALOGUE_1, DIALOGUE_2, DIALOGUE_3, DIALOGUE_4}
 import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 import view.LoadImage

@@ -1,6 +1,6 @@
 package model.map
 
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.CoordinateImpl
 import utilities.Settings
 
 case class InitialTownElements() extends MapElementsImpl {

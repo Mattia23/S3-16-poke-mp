@@ -1,8 +1,6 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

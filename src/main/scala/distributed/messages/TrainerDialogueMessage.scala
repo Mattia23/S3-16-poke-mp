@@ -1,7 +1,5 @@
 package distributed.messages
 
-import distributed.Player
-
 trait TrainerDialogueMessage {
   def firstPlayerId: Int
 
