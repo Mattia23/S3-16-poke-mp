@@ -44,6 +44,8 @@ abstract class MovementImpl extends Movement{
   }
 
   private def updateTrainerSprite(direction: Direction): Unit = {
+    import Sprite._
+
     direction match {
       case Direction.UP => currentTrainerSprite match {
         case BackS(_) =>

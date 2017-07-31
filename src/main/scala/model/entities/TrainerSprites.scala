@@ -29,6 +29,8 @@ object Trainers extends Enumeration {
 }
 
 object TrainerSprites {
+  import Sprite._
+
   case class Trainer1() extends TrainerSprites {
     override val back1 = Back1(Settings.TRAINER_1_BACK_1_IMAGE_STRING)
 

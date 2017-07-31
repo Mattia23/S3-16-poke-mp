@@ -1,4 +1,4 @@
-import model.entities.{TrainerSprites, Trainers}
+import model.entities.TrainerSprites
 import org.scalatest.FunSuite
 import utilities.Settings
 
@@ -17,7 +17,7 @@ class TrainerSpritesTest extends FunSuite{
     val f = fixture
     assert(f.trainerSprites.frontS.image equals Settings.TRAINER_1_FRONT_S_IMAGE_STRING)
   }
-  
+
   test("Trainer3 should have ID 2") {
     assert(TrainerSprites.getIdImageFromTrainerSprite(TrainerSprites.Trainer3()) == 2)
   }
