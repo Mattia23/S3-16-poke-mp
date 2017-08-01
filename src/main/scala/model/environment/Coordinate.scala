@@ -2,6 +2,7 @@ package model.environment
 
 trait Coordinate {
   def x: Int
+
   def y: Int
 }
 
