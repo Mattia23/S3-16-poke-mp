@@ -15,7 +15,7 @@ class TrainerSpritesTest extends FunSuite{
 
   test("Trainer1 should have TRAINER_1_FRONT_S_IMAGE_STRING sprite") {
     val f = fixture
-    assert(f.trainerSprites.frontS.image equals Settings.TRAINER_1_FRONT_S_IMAGE_STRING)
+    assert(f.trainerSprites.frontS.image equals Settings.Images.TRAINER_1_FRONT_S_IMAGE_STRING)
   }
 
   test("Trainer3 should have ID 2") {
