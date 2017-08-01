@@ -21,6 +21,15 @@ import view.AccountData;
 
 import javax.swing.*;
 
+/**
+ * DBConnect is a class composed by static methods to manage the connection with the remote database. This class
+ * contains methods to save new data in the database but also to get info about users, their respective favourite or captured Pokemons, info about Pokemons stored
+ * in the database (life, level, experience, attack...). The remote database is composed by four tables that contains:
+ *  1) User data
+ *  2) Trainer data (more related to the game like his six favourite Pokemons)
+ *  3) Pokemon captured by all the trainers with their data (attacks, life...)
+ *  4) Pokemon ids met by every trainer
+ */
 public final class DBConnect {
 	private static Connection con;
 	private static Statement st;
@@ -56,6 +65,14 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Insert a new user into the database (with name, surname, email, username, password and avatar id)
+     * and create his respective trainer (experience points, favourite pokemons).
+     * @param accountData a Map with all the user data (Name, Surname, Email, Username, Password)
+     * @param id_image avatar id chosen by the user
+     * @return true if the username chose is available and the sign up went well, false if the username chosen is
+     *         already used
+     */
 	public static boolean insertCredentials(Map<String,JTextField> accountData, int id_image) {
 		initConnection();
 		try {
@@ -97,6 +114,13 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Check if the username and password used during sign in are correct and, if so, return true; return false if
+     * the username doesn't exist or if the password is not correct.
+     * @param username username used by the user
+     * @param password password used by the user
+     * @return true if username and password are correct, false in the opposite case
+     */
 	public static boolean checkCredentials(String username, String password) {
 		initConnection();
 		try {
@@ -131,6 +155,11 @@ public final class DBConnect {
 		return true;
 	}
 
+    /**
+     * Get the next id that will be used by the database in the table passed as an argument.
+     * @param tableName name of the table you want to get autoincrement from
+     * @return next id of the table passed as an argument (autoincrement of that table)
+     */
 	public static int getAutoIncrement(String tableName){
 		try {
 			String query = "SELECT `AUTO_INCREMENT`\n" +
@@ -147,6 +176,10 @@ public final class DBConnect {
 		return 0;
 	}
 
+    /**
+     * Delete all the user data related to the username passed as argument
+     * @param username username of the user you want to delete
+     */
 	public static void deleteUserAndRelatedData(String username){
 		initConnection();
 		int id = getTrainerIdFromUsername(username).get();
@@ -164,6 +197,11 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Check if the Pokemon with the id passed as argument has life or not.
+     * @param pokemonId the id of the Pokemon
+     * @return true if the Pokemon has life bigger than 0, false in the opposite case
+     */
 	public static Boolean pokemonHasLife(int pokemonId){
 		initConnection();
 		String query = "select life from pokemon where id_db =  '" + pokemonId + "'";
@@ -180,6 +218,11 @@ public final class DBConnect {
 		return false;
 	}
 
+    /**
+     * Get all the Pokemon infos stored in the database related to the Pokemon id passed as argument.
+     * @param databaseId Pokemon id of the the database
+     * @return an Optional of a Map with all the data of the requested Pokemon
+     */
 	public static Optional<Map> getPokemonFromDB(int databaseId) {
 		initConnection();
 		try {
@@ -209,6 +252,12 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Update the Pokemon with the id passed as argument in the database with new level, experience points,
+     * level experience, life.
+     * @param map An HashMap with Pokemon data
+     * @param id_db the id of the Pokemon you want to update
+     */
 	public static void updatePokemon(HashMap<String, String> map, int id_db) {
 		initConnection();
 		try {
@@ -226,6 +275,11 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Insert a new Pokemon in the db when a trainer captures it.
+     * @param pokemon the PokemonWithlife instance of the captured Pokemon
+     * @param trainerId id mof the trainer that captured the Pokemon
+     */
 	public static void insertWildPokemonIntoDB(PokemonWithLife pokemon, int trainerId) {
 		initConnection();
 		try {
@@ -242,6 +296,11 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Return the id associated to a username if it exists
+     * @param username username of the user you need the database id
+     * @return an Optional of the id or an Optional of empty if username doesn't exist
+     */
 	public static Optional<Integer> getTrainerIdFromUsername(String username){
 		initConnection();
 		try {
@@ -257,6 +316,11 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Return a new Trainer with the data related with the username passed as argument
+     * @param username username of the user related to the trainer
+     * @return an Optional of Trainer
+     */
 	public static Optional<Trainer> getTrainerFromDB(String username) {
 		initConnection();
 		int id = getTrainerIdFromUsername(username).get();
@@ -279,14 +343,20 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Update a trainer in the database with new experience points and a new list of favourite Pokemons
+     * @param id id of the trainer you want to update
+     * @param experiencePoints updated experience points of the trainer
+     * @param pokemon List of the the trainer's favourite Pokemons
+     */
 	public static void updateTrainer(int id, int experiencePoints, List<Int> pokemon){
 		initConnection();
 		try {
-			String pokemonQuery = "";
+			StringBuilder pokemonQuery = new StringBuilder();
 			int n = 0;
 			scala.collection.Iterator it = pokemon.iterator();
 			while(it.hasNext()){
-				pokemonQuery += ", id_pokemon"+ ++n +" = '"+it.next().toString()+"'";
+				pokemonQuery.append(", id_pokemon").append(++n).append(" = '").append(it.next().toString()).append("'");
 			}
 			String query = "update trainers set exp_points = '"+experiencePoints+"'"+pokemonQuery+" where id = '"+id+"'";
 			st.executeUpdate(query);
@@ -295,6 +365,11 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Return the ranking position of the trainer id passed as argument
+     * @param id id of the trainer
+     * @return trainer's ranking position if the id is found, -1 in the opposite case
+     */
 	public static int getTrainerRank(int id){
 		try {
 			String query = "SELECT u.name ,u.id ,t.exp_points FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
@@ -313,6 +388,11 @@ public final class DBConnect {
 		return -1;
 	}
 
+    /**
+     * Return a complete ranking with every trainer in the database and their infos (username, experience points and
+     * avatar id.
+     * @return An Optional of List of Tuple3 with username, experience points and avatar id
+     */
 	public static Optional<java.util.List<Tuple3<String, Integer, String>>> getRanking(){
 		try {
 			String query = "SELECT u.username ,u.id ,t.exp_points, u.id_image FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
@@ -329,10 +409,15 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
-	public static void addMetPokemon(int trainerId, int pokemon){
+    /**
+     * Add a new met Pokemon for the trainer id passed as argument.
+     * @param trainerId id of the trainer that met the Pokemon
+     * @param pokemonId id of the Pokemon met by the trainer
+     */
+	public static void addMetPokemon(int trainerId, int pokemonId){
 		initConnection();
 		String q = "Insert into pokemon_met (id,id_trainer,id_pokemon) " +
-				"value (NULL,'"+trainerId+"','"+pokemon+"')";
+				"value (NULL,'"+trainerId+"','"+pokemonId+"')";
 		try {
 			st.executeUpdate(q);
 		} catch (SQLException e) {
@@ -340,6 +425,11 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Update all the favourite Pokemons of a specific trainer.
+     * @param trainerId id of the trainer to update
+     * @param list new list of the favourite Pokemons
+     */
 	public static void setAllFavouritePokemon(int trainerId, java.util.List list){
 		initConnection();
 		String q = "update trainers set id_pokemon1='"+list.get(0)+"',id_pokemon2='"+list.get(1)+"'," +
@@ -352,6 +442,12 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Add one favourite pokemon in a specific position of the list
+     * @param trainerId id of the trainer
+     * @param pokemonId id of the new favourite pokemon
+     * @param pos position (from 1 to 6) where the new Pokemon id must be added
+     */
 	public static void addFavouritePokemon(int trainerId, int pokemonId, int pos){
 		initConnection();
 		String q = "update trainers set id_pokemon"+pos+" = '"+pokemonId+"' where id = '"+trainerId+"'";
@@ -362,6 +458,11 @@ public final class DBConnect {
 		}
 	}
 
+    /**
+     * Return the list of the favoutite Pokemons of a specific trainer
+     * @param trainerId id of the trainer
+     * @return Optional of a list with the six favourite Pokemons of the trainer id passed as argument
+     */
 	public static Optional<List<Int>> getFavouritePokemonList(int trainerId){
 		initConnection();
 		String query = "select * from trainers where id =  '" + trainerId + "'";
@@ -381,6 +482,12 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Return the list of the captured Pokemons (containing the unique id on the database and the local id of the
+     * pokemon) related to a specific trainer
+     * @param trainerId id of the trainer
+     * @return Optional of a list with all the captured Pokemons of the trainer id passed as argument
+     */
 	public static Optional<List<scala.Tuple2<Int,Int>>> getCapturedPokemonList(int trainerId){
 		initConnection();
 		String query = "select * from pokemon where id_trainer =  '" + trainerId + "'";
@@ -388,7 +495,7 @@ public final class DBConnect {
 		try {
 			rs = st.executeQuery(query);
 			while(rs.next()){
-				scala.Tuple2<Integer,Integer> tupla = new Tuple2<>(rs.getInt("id_db"),rs.getInt("id_pokemon"));
+				scala.Tuple2<Integer,Integer> tupla = new Tuple2<Integer,Integer>(rs.getInt("id_db"),rs.getInt("id_pokemon"));
 				pokemonList.add(tupla);
 			}
 			List list = JavaConverters.asScalaBuffer(pokemonList).toList();
@@ -399,6 +506,12 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Return the list of the captured Pokemons (containing only the local id of the Pokemon) related to a
+     * specific trainer
+     * @param trainerId id of the trainer
+     * @return Optional of a list with the local ids of the Pokemons captured by the trainer id passed as argument
+     */
 	public static Optional<List<Int>> getCapturedPokemonIdList(int trainerId){
 		initConnection();
 		String query = "select * from pokemon where id_trainer =  '" + trainerId + "'";
@@ -416,6 +529,11 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Return a list with all the local ids of the pokemons met by a specific trainer
+     * @param trainerId id of the trainer
+     * @return list with all the local ids of the pokemons met by a specific trainer
+     */
 	public static Optional<List<Int>> getMetPokemonList(int trainerId){
 		initConnection();
 		String query = "select id_pokemon from pokemon_met where id_trainer =  '" + trainerId + "'";
@@ -433,7 +551,7 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
-	public static Optional<String> getPokemonMaxLife(int databaseId) {
+	private static Optional<String> getPokemonMaxLife(int databaseId) {
 		initConnection();
 		try {
 			String query = "select * from pokemon where id_db = '"+databaseId+"'";
@@ -447,6 +565,10 @@ public final class DBConnect {
 		return Optional.empty();
 	}
 
+    /**
+     * Set the maximum life for the six favourite Pokemons of a specific trainer
+     * @param trainerId id of the trainer
+     */
 	public static void rechangeAllTrainerPokemon(int trainerId) {
 		initConnection();
 		List trainerPokemon = getFavouritePokemonList(trainerId).get();

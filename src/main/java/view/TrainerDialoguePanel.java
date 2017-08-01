@@ -1,10 +1,6 @@
 package view;
 
-import controller.BattleController;
-import controller.DistributedBattleController;
 import controller.GameController;
-import distributed.client.BattleClientManager;
-import distributed.client.BattleClientManagerImpl;
 import distributed.client.TrainerDialogueClientManager;
 import utilities.Settings;
 

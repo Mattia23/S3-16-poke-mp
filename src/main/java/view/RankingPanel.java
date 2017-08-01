@@ -10,12 +10,19 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class RankingPanel extends BasePanel {
+/**
+ * RankingPanel print the ranking with every user in the database and put in bold the current playin trainer. In this
+ * panel you can read the ranking position, the player username, his level, his experience points and his avatar.
+ */
+class RankingPanel extends BasePanel {
 
-    public RankingPanel(GameMenuController gameMenuController, GameController gameController) {
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
+    RankingPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         mainPanel.setOpaque(false);
@@ -42,7 +49,7 @@ public class RankingPanel extends BasePanel {
             trainerPanel.setOpaque(false);
             trainerPanel.add(info);
             trainerPanel.add(new JLabel(myImageIcon));
-            if(object._1().equals(gameController.trainer().name())){
+            if(object._1().equals(gameController.trainer().username())){
                 setFontBold(info);
             }else{
                 setFont(info);
