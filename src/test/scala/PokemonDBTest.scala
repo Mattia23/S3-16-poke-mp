@@ -1,5 +1,4 @@
 import java.util.Optional
-import javax.swing.{JFrame, JPanel}
 
 import model.entities.{Owner, PokemonFactory, PokemonWithLife}
 import database.local.PokedexConnect

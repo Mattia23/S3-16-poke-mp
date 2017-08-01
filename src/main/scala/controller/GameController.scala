@@ -49,8 +49,6 @@ trait GameController {
 
   def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
 
-  def hideCurrentDialogue(): Unit
-
   def sendTrainerIsBusy(isBusy: Boolean): Unit
 }
 

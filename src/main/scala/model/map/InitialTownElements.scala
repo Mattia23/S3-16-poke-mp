@@ -5,6 +5,7 @@ import model.map.CompositeElement.{Lake, Square}
 import utilities.Settings
 
 case class InitialTownElements() extends MapElementsImpl {
+  import Tile._
 
   addBuildings()
   addLakes()
@@ -18,13 +19,13 @@ case class InitialTownElements() extends MapElementsImpl {
   addRoadFromSquareToBottomLeftLake()
   addRoadFromSquareToTopTallGrass()
 
-  private def addBuildings(): Unit ={
+  private def addBuildings() ={
     addTile(PokemonCenter(CoordinateImpl(10,19)), CoordinateImpl(10,19))
     addTile(Laboratory(CoordinateImpl(40,20)), CoordinateImpl(40,20))
   }
 
   import Settings.Constants._
-  private def addTrees(): Unit ={
+  private def addTrees() = {
     for (x <- 0 until MAP_WIDTH)
       for (y <- 0 until MAP_HEIGHT)
         if (x == 0 || x == MAP_WIDTH - 1 || y == 0 || y == MAP_HEIGHT - 1) addTile(Tree(), CoordinateImpl(x,y))
@@ -51,13 +52,13 @@ case class InitialTownElements() extends MapElementsImpl {
     addTileInMultipleCoordinates(Tree(), trees)
   }
 
-  private def addLakes(): Unit ={
+  private def addLakes() = {
     addCompositeElement(Lake(),CoordinateImpl(4,5), CoordinateImpl(20,10))
     addCompositeElement(Lake(),CoordinateImpl(40,40), CoordinateImpl(48,48))
     addCompositeElement(Lake(),CoordinateImpl(10,28), CoordinateImpl(19,30))
   }
 
-  private def addTallGrass(): Unit ={
+  private def addTallGrass() = {
     addMultipleElements(TallGrass(), CoordinateImpl(1,1), CoordinateImpl(42,4))
     addMultipleElements(TallGrass(), CoordinateImpl(1,5), CoordinateImpl(3,10))
     addMultipleElements(TallGrass(), CoordinateImpl(1,19), CoordinateImpl(9,23))
@@ -72,7 +73,7 @@ case class InitialTownElements() extends MapElementsImpl {
     addMultipleElements(TallGrass(), CoordinateImpl(33,31), CoordinateImpl(41,37))
   }
 
-  private def addRoadFromSquareToPokemonCenter(): Unit = {
+  private def addRoadFromSquareToPokemonCenter() = {
     for (x <- 9 to 21)  x match {
       case 9 =>
         addTile(RoadMarginTopLeft(),CoordinateImpl(x,24))
@@ -92,7 +93,7 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
-  private def addRoadFromSquareToLaboratory(): Unit = {
+  private def addRoadFromSquareToLaboratory() = {
     for (x <- 28 to 47)  x match {
       case 28 =>
         addTile(Road(), CoordinateImpl(x,24))
@@ -112,7 +113,7 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
-  private def addRoadFromSquareToBottomLeftLake(): Unit = {
+  private def addRoadFromSquareToBottomLeftLake() = {
     for (y <- 28 to 46)  y match {
       case 28 =>
         addTile(Road(), CoordinateImpl(23,y))
@@ -150,7 +151,7 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
-  private def addRoadFromSquareToTopTallGrass(): Unit = {
+  private def addRoadFromSquareToTopTallGrass() = {
     for (y <- 6 to 21)  y match {
       case 6 =>
         addTile(RoadMarginTopLeft(),CoordinateImpl(23,y))

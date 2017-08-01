@@ -13,6 +13,8 @@ trait CompositeElement {
 }
 
 object CompositeElement {
+  import Tile._
+
   case class Lake() extends  CompositeElement{
     override val tile = Water()
 

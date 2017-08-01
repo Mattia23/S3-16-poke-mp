@@ -31,7 +31,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
   connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
-  private var currentDialogue: DialoguePanel = _
   audio = Audio(Settings.Audio.MAP_SONG)
 
 
@@ -108,7 +107,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
         case _ if tile.walkable =>
           walk(direction, nextPosition)
           distributedMapController.sendTrainerPosition(nextPosition)
-          if(tile.isInstanceOf[TallGrass]) randomPokemonAppearance()
+          if(tile.isInstanceOf[Tile.TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }
     }
@@ -145,8 +144,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isBusy){
           distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
-          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
-          showDialogue(currentDialogue)
+          showDialogue(new WaitingTrainerDialoguePanel(otherPlayer.username))
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isBusy){
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
         })
@@ -161,13 +159,9 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
     pause()
     val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
-    val distributedBattle: BattleController = new DistributedBattleController(this, view, otherPlayerUsername,yourPlayerIsFirst)
+    val distributedBattle: DistributedBattleController = new DistributedBattleControllerImpl(this, view, otherPlayerUsername,yourPlayerIsFirst)
     val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
     distributedBattle.passManager(battleManager)
-  }
-
-  override def hideCurrentDialogue(): Unit = {
-    currentDialogue.setVisible(false)
   }
 
   override def sendTrainerIsBusy(isBusy: Boolean): Unit = {

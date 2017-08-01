@@ -18,17 +18,17 @@ object Audio{
 
 class AudioImpl(song: String) extends  Audio{
 
-  private val audio: AudioInputStream = AudioSystem.getAudioInputStream(getClass.getResource(song))
+  private val audio: AudioInputStream = AudioSystem getAudioInputStream getClass.getResource(song)
   private val clip: Clip = AudioSystem.getClip
-  clip.open(audio)
+  clip open audio
   play()
 
   override def play(): Unit = clip.start()
 
   override def stop(): Unit = {
     clip.stop()
-    clip.setMicrosecondPosition(0)
+    clip setMicrosecondPosition 0
   }
 
-  override def loop(): Unit = clip.loop(Clip.LOOP_CONTINUOUSLY)
+  override def loop(): Unit = clip loop Clip.LOOP_CONTINUOUSLY
 }

@@ -5,6 +5,8 @@ import controller.GameMenuController;
 import model.entities.Owner;
 import model.entities.PokemonFactory;
 import model.entities.PokemonWithLife;
+import model.entities.Trainer;
+import scala.Tuple3;
 import utilities.Settings;
 
 import javax.imageio.ImageIO;
@@ -14,27 +16,34 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TeamPanel extends BasePanel{
+/**
+ * TeamPanel draws the trainer's Pokemons taking part to the team (the six favourite Pokemons of the trainer). It shows
+ * just basic info about every Pokemon (icon, name, life and level). It allows to choose a Pokemon to see detailed infos
+ * about it.
+ */
+class TeamPanel extends BasePanel{
     private static final int FONT_SIZE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.034);
     private static final int iconSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.1177);
-    private static final int infoSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.05);
-    ButtonGroup pokemonButtonGroup = new ButtonGroup();
+    List<Tuple3<JRadioButton,PokemonWithLife,Integer>> buttonList = new ArrayList<>();
+    private ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
-    public TeamPanel(GameMenuController gameMenuController, GameController gameController) {
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     * @param trainer instance of trainer
+     */
+    TeamPanel(GameMenuController gameMenuController, GameController gameController, Trainer trainer) {
         this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pokemon-choice.png");
+        JLabel infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
+        this.downPanel.add(infoText, BorderLayout.CENTER);
+        List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
+        Boolean first = true;
         Image myImage;
         ImageIcon myImageIcon = null;
-        try {
-            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.IMAGES_FOLDER() + "info.png"));
-            myImageIcon = new ImageIcon(myImage.getScaledInstance(infoSide,infoSide,java.awt.Image.SCALE_SMOOTH));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List pokemonList = scala.collection.JavaConverters.seqAsJavaList(gameController.trainer().favouritePokemons());
-        Boolean first = true;
         k.insets = new Insets(1,1,1,1);
         for(Object pokemon: pokemonList){
             if(Integer.parseInt(pokemon.toString()) != 0){
@@ -77,6 +86,7 @@ public class TeamPanel extends BasePanel{
                     JUtil.setFocus(radioButton);
                     first = false;
                 }
+                buttonList.add(new Tuple3<>(radioButton,pokemonWithLife, pokemonId));
                 pokemonButtonGroup.add(radioButton);
                 this.centralPanel.add(radioButton, k);
                 k.gridy++;

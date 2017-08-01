@@ -16,6 +16,7 @@ public class MapPanel extends GamePanel{
     private GameMap gameMap;
     private GameController mapController;
     private DistributedMapController distributedMapController;
+    private static final int OFFSET = 2;
 
     public MapPanel(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
         super(mapController);
@@ -34,13 +35,18 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawMapElements(Graphics g){
-        int OFFSET = 2;
-        int initialX = (((this.getCurrentX() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentX() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
-        int finalX = (((this.getCurrentX() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET >= Settings.Constants$.MODULE$.MAP_WIDTH() ) ? Settings.Constants$.MODULE$.MAP_WIDTH() : ((this.getCurrentX() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
-        int initialY = (((this.getCurrentY() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentY() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
-        int finalY = (((this.getCurrentY() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET >= Settings.Constants$.MODULE$.MAP_HEIGHT() ) ? Settings.Constants$.MODULE$.MAP_HEIGHT() : ((this.getCurrentY() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
-        for (int x = initialX; x < finalX; x++) {
-            for (int y = initialY; y < finalY; y++) {
+        int initialX = calculateInitialCoordinate(this.getCurrentX());
+        int finalX = calculateFinalCoordinate(this.getCurrentX());
+        int initialY = calculateInitialCoordinate(this.getCurrentY());
+        int finalY = calculateFinalCoordinate(this.getCurrentY());
+
+        int initialMapX = (initialX <= 0 ) ? 0 : initialX;
+        int finalMapX = (finalX >= Settings.Constants$.MODULE$.MAP_WIDTH() ) ? Settings.Constants$.MODULE$.MAP_WIDTH() : finalX;
+        int initialMapY = (initialY <= 0 ) ? 0 : initialY;
+        int finalMapY = (finalY >= Settings.Constants$.MODULE$.MAP_HEIGHT() ) ? Settings.Constants$.MODULE$.MAP_HEIGHT() : finalY;
+
+        for (int x = initialMapX; x < finalMapX; x++) {
+            for (int y = initialMapY; y < finalMapY; y++) {
                 if (!(this.gameMap.map()[x][y] instanceof Building)) {
                     g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),
                             this.calculateCoordinate(x, this.getCurrentX()),
@@ -49,6 +55,14 @@ public class MapPanel extends GamePanel{
                 }
             }
         }
+    }
+
+    private int calculateInitialCoordinate(int centerCoordinate){
+        return ((centerCoordinate - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
+    }
+
+    private int calculateFinalCoordinate(int centerCoordinate){
+        return ((centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
     }
 
     private void drawBuildings(Graphics g) {
@@ -81,19 +95,19 @@ public class MapPanel extends GamePanel{
         }
     }
 
-    private void drawTrainer(Graphics g){
-        g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
-                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
-                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
-                null);
-    }
-
     private int calculateCoordinate(double coordinate, int centerCoordinate) {
         return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2;
     }
 
     private int coordinateInPixels(double currentCoordinate) {
         return (int)(currentCoordinate * Settings.Constants$.MODULE$.TILE_PIXEL());
+    }
+
+    private void drawTrainer(Graphics g){
+        g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
+                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
+                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
+                null);
     }
 
 }

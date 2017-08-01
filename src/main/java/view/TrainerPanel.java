@@ -10,9 +10,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class TrainerPanel extends BasePanel {
+/**
+ * TrainerPanel shows main info about the playing trainer (avatar, name, level, experience points and ranking position).
+ */
+class TrainerPanel extends BasePanel {
 
-    public TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
+    TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "trainer.jpg");
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -23,19 +30,16 @@ public class TrainerPanel extends BasePanel {
             e.printStackTrace();
         }
         this.centralPanel.add(new JLabel(myImageIcon));
-        this.centralPanel.add(new JLabel(gameController.trainer().name()),k);
+        this.centralPanel.add(new JLabel(gameController.trainer().username()),k);
         k.gridy++;
-        this.centralPanel.add(new JLabel("Livello:"),k);
+        this.centralPanel.add(new JLabel("Level:"),k);
         this.centralPanel.add(new JLabel(""+gameController.trainer().level()),k);
         k.gridy++;
-        this.centralPanel.add(new JLabel("Esperienza"),k);
+        this.centralPanel.add(new JLabel("Experience points: "),k);
         this.centralPanel.add(new JLabel(""+gameController.trainer().experiencePoints()),k);
         k.gridy++;
-        this.centralPanel.add(new JLabel("Posizione in classifica:"),k);
+        this.centralPanel.add(new JLabel("Ranking position: "),k);
         this.centralPanel.add(new JLabel(String.valueOf(DBConnect.getTrainerRank(gameController.trainer().id()))),k);
-        k.gridy++;
-        this.centralPanel.add(new JLabel("Battaglie vinte:"),k);
-        this.centralPanel.add(new JLabel(),k);
         this.backButton.addActionListener(e -> {
             gameController.resume();
             gameController.pause();

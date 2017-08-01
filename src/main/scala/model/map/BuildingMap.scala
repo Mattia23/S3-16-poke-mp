@@ -6,10 +6,11 @@ import model.entities._
 import model.environment.{Coordinate, CoordinateImpl, MatrixCoordinate}
 import utilities.Settings
 import view.LoadImage
+import Tile._
 
-trait BuildingMap extends BasicMap{
+trait BuildingMap extends BasicMap{  
   def image: Image
-  def matriciesNotWalkable: List[MatrixCoordinate]
+  def matricesNotWalkable: List[MatrixCoordinate]
   def npc: StaticCharacter
   def npc_=(staticCharacter: StaticCharacter): Unit = npc = staticCharacter
   def entryCoordinate: Coordinate
@@ -17,9 +18,9 @@ trait BuildingMap extends BasicMap{
   def pokemonNpc: List[PokemonCharacter]
 
   protected def setNotWalkableArea(): Unit = {
-    for(matrixNotWalkable <- matriciesNotWalkable){
-      for( i <- matrixNotWalkable.startCoordinate.x to matrixNotWalkable.endCoordiante.x){
-        for( j <- matrixNotWalkable.startCoordinate.y to matrixNotWalkable.endCoordiante.y){
+    for(matrixNotWalkable <- matricesNotWalkable){
+      for( i <- matrixNotWalkable.startCoordinate.x to matrixNotWalkable.endCoordinate.x){
+        for( j <- matrixNotWalkable.startCoordinate.y to matrixNotWalkable.endCoordinate.y){
           map(i)(j) = Barrier()
         }
       }
@@ -45,7 +46,7 @@ class PokemonCenterMap extends BuildingMap{
 
   override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "pokemon-center.png")
 
-  override val matriciesNotWalkable: List[MatrixCoordinate] =
+  override val matricesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(14,1)),
       new MatrixCoordinate(CoordinateImpl(4,2),CoordinateImpl(10,3)),
       new MatrixCoordinate(CoordinateImpl(0,5),CoordinateImpl(1,6)),
@@ -73,7 +74,7 @@ class LaboratoryMap extends BuildingMap{
 
   override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "laboratory.png")
 
-  override val matriciesNotWalkable: List[MatrixCoordinate] =
+  override val matricesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),
       new MatrixCoordinate(CoordinateImpl(0,3),CoordinateImpl(2,4)),
       new MatrixCoordinate(CoordinateImpl(1,5),CoordinateImpl(2,5)),
@@ -88,8 +89,8 @@ class LaboratoryMap extends BuildingMap{
   setBasicTilesInMap()
   setNotWalkableArea()
 
-  private val bulbasaur: Bulbasaur = Bulbasaur()
-  private val charmander: Charmander = Charmander()
-  private val squirtle: Squirtle = Squirtle()
+  private val bulbasaur: PokemonCharacter = PokemonCharacter(PokemonCharacter.InitialPokemon.Bulbasaur)
+  private val charmander: PokemonCharacter = PokemonCharacter(PokemonCharacter.InitialPokemon.Charmander)
+  private val squirtle: PokemonCharacter = PokemonCharacter(PokemonCharacter.InitialPokemon.Squirtle)
   override val pokemonNpc: List[PokemonCharacter] = List(bulbasaur, charmander, squirtle)
 }

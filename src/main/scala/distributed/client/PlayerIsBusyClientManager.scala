@@ -6,9 +6,24 @@ import distributed.ConnectedPlayers
 import distributed.messages.{PlayerIsBusyMessage, PlayerIsBusyMessageImpl}
 import utilities.Settings
 
-trait PlayerIsBusyClientManager {
-  def sendPlayerIsBusy(userId: Int, isInBuilding: Boolean): Unit
 
+/**
+  * PlayerIsBusyClientManager sends and receives PlayerIsBusyMessages and update the related attributed for the
+  * local variable of the connected user.
+  */
+trait PlayerIsBusyClientManager {
+  /**
+    * Send a new message updating the attribute isFighting for a specific user id.
+    * @param userId id of the user to update
+    * @param isBusy boolean that indicates if the player is busy (true) or not (false)
+    */
+  def sendPlayerIsBusy(userId: Int, isBusy: Boolean): Unit
+
+  /**
+    * Receive a new IsBusyMessage and update the local connected players.
+    * @param userId id of the playing trainer
+    * @param connectedPlayers connected players in the current map
+    */
   def receiveOtherPlayerIsBusy(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
@@ -16,6 +31,10 @@ object PlayerIsBusyClientManager {
   def apply(connection: Connection): PlayerIsBusyClientManager = new PlayerIsBusyClientManagerImpl(connection)
 }
 
+/**
+  * @inheritdoc
+  * @param connection instance of Connection with RabbitMQ
+  */
 class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends PlayerIsBusyClientManager {
 
   private val gson: Gson = new Gson()
@@ -29,12 +48,18 @@ class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends 
   channel.exchangeDeclare(Constants.PLAYER_IS_BUSY_EXCHANGE, "fanout")
   channel.queueBind(playerQueue, Constants.PLAYER_IS_BUSY_EXCHANGE, "")
 
-  override def sendPlayerIsBusy(userId: Int, isInBuilding: Boolean): Unit = {
-    val playerIsBusyMessage = PlayerIsBusyMessage(userId, isInBuilding)
+  /**
+    * @inheritdoc
+    */
+  override def sendPlayerIsBusy(userId: Int, isBusy: Boolean): Unit = {
+    val playerIsBusyMessage = PlayerIsBusyMessage(userId, isBusy)
     channel.basicPublish("", Constants.PLAYER_IS_BUSY_CHANNEL_QUEUE, null, gson.toJson(playerIsBusyMessage).getBytes("UTF-8"))
     println(" [x] Sent player is busy message")
   }
 
+  /**
+    * @inheritdoc
+    */
   override def receiveOtherPlayerIsBusy(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val consumer = new DefaultConsumer(channel) {
 
@@ -42,7 +67,7 @@ class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends 
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player is fighting")
+        println(" [x] Received other player is busy")
         val playerIsBusyMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerIsBusyMessageImpl])
 
         if (playerIsBusyMessage.userId != userId && connectedPlayers.containsPlayer(playerIsBusyMessage.userId))
