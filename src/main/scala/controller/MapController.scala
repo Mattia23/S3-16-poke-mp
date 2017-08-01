@@ -31,7 +31,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
   connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
-  private var currentDialogue: DialoguePanel = _
   audio = Audio(Settings.MAP_SONG)
 
 
@@ -145,8 +144,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isFighting){
           distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
-          currentDialogue = new ClassicDialoguePanel(this, util.Arrays.asList("Waiting for an answer from " + otherPlayer.username))
-          showDialogue(currentDialogue)
+          showDialogue(new WaitingTrainerDialoguePanel(otherPlayer.username))
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isFighting){
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
         })
@@ -164,10 +162,6 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
     val distributedBattle: DistributedBattleController = new DistributedBattleControllerImpl(this, view, otherPlayerUsername,yourPlayerIsFirst)
     val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
     distributedBattle.passManager(battleManager)
-  }
-
-  override def hideCurrentDialogue(): Unit = {
-    currentDialogue.setVisible(false)
   }
 
   override def sendPlayerIsFighting(isFighting: Boolean): Unit = {
