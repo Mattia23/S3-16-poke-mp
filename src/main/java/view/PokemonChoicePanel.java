@@ -19,8 +19,8 @@ import java.io.IOException;
  * (for example during a battle).
  */
 class PokemonChoicePanel extends TeamPanel{
-    private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
-    private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
+    private static final int FONT_SIZE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.034);
+    private static final int infoSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.05);
 
     /**
      * @param controller instance of BattleController
@@ -32,7 +32,7 @@ class PokemonChoicePanel extends TeamPanel{
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.IMAGES_FOLDER() + "info.png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.IMAGES_FOLDER() + "info.png"));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(infoSide,infoSide, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();

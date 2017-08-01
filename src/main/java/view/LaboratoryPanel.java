@@ -23,8 +23,8 @@ public class LaboratoryPanel extends BuildingPanel {
         if(emptyCaptures){
             for(int i = 0; i < laboratoryMap.pokemonNpc().length(); i++){
                 g.drawImage(laboratoryMap.pokemonNpc().apply(i).image(),
-                        super.centerX + laboratoryMap.pokemonNpc().apply(i).coordinate().x()* Settings.TILE_PIXEL(),
-                        super.centerY + laboratoryMap.pokemonNpc().apply(i).coordinate().y()*Settings.TILE_PIXEL(), this);
+                        super.centerX + laboratoryMap.pokemonNpc().apply(i).coordinate().x()* Settings.Constants$.MODULE$.TILE_PIXEL(),
+                        super.centerY + laboratoryMap.pokemonNpc().apply(i).coordinate().y()*Settings.Constants$.MODULE$.TILE_PIXEL(), this);
             }
         }
     }

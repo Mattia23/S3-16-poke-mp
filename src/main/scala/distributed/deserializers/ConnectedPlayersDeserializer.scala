@@ -13,7 +13,7 @@ object ConnectedPlayersDeserializer extends JsonDeserializer[util.Map[Int, Playe
     val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerImpl], PlayerDeserializer).create()
     val map = new util.HashMap[Int, Player]()
 
-    jsonKeys forEach(key => map.put(key.toInt, gson.fromJson(jsonConnectedPlayers.get(key), classOf[PlayerImpl])))
+    jsonKeys forEach (key => map.put(key.toInt, gson.fromJson(jsonConnectedPlayers get key, classOf[PlayerImpl])))
 
     map
   }

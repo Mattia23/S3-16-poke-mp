@@ -1,7 +1,6 @@
 package distributed.client
 
 import java.util
-
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import controller.GameController
@@ -67,8 +66,10 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
   val playerId: Int = mapController.trainer.id
   override var otherPlayerId: Int = _
   var otherPlayerName: String = _
-  private val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
   private var yourPlayerIsFirst = true
+
+  import Settings._
+  private val playerQueue = Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
 
   channel.queueDeclare(playerQueue, false, false, false, null)
 
@@ -76,11 +77,11 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
     * @inheritdoc
     */
   override def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit = {
-    mapController.sendPlayerIsFighting(wantToFight)
+    mapController.sendTrainerIsBusy(wantToFight)
     yourPlayerIsFirst = isFirst
     val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.username, otherPlayerId, wantToFight, isFirst)
-    channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
-    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
+    channel.queueDeclare(Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
+    channel.basicPublish("", Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
   }
 
   /**
@@ -99,7 +100,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
         otherPlayerId = trainerDialogueMessage.firstPlayerId
         otherPlayerName = trainerDialogueMessage.firstPlayerName
         if(trainerDialogueMessage.wantToFight && trainerDialogueMessage.isFirst) {
-          mapController.sendPlayerIsFighting(true)
+          mapController.sendTrainerIsBusy(true)
           yourPlayerIsFirst = false
           mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this,
             util.Arrays.asList(otherPlayerName + " ti ha sfidato")))
@@ -108,7 +109,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
           createBattle()
         }
         else if(!trainerDialogueMessage.wantToFight){
-          mapController.sendPlayerIsFighting(false)
+          mapController.sendTrainerIsBusy(false)
           mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }
       }
@@ -120,6 +121,6 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
     * @inheritdoc
     */
   override def createBattle(): Unit = {
-    mapController.createDistributedBattle(otherPlayerId, yourPlayerIsFirst)
+    mapController.createTrainersBattle(otherPlayerId, yourPlayerIsFirst)
   }
 }

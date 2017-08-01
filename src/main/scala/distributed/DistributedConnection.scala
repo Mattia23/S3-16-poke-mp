@@ -19,12 +19,13 @@ class DistributedConnectionImpl extends DistributedConnection{
   create()
 
   private def create() = {
+    import Settings._
     val factory = new ConnectionFactory
-    factory.setHost("ec2-13-58-204-113.us-east-2.compute.amazonaws.com")
-    factory.setPort(5672)
-    factory.setUsername("guest")
-    factory.setPassword("guest")
-   // factory.setHost(Settings.LOCAL_HOST_ADDRESS)
+   // factory.setHost(Constants.REMOTE_HOST_ADDRESS)
+   // factory.setPort(Constants.REMOTE_HOST_PORT)
+   // factory.setUsername(Constants.REMOTE_HOST_USERNAME)
+   // factory.setPassword(Constants.REMOTE_HOST_PASSWORD)
+    factory.setHost(Constants.LOCAL_HOST_ADDRESS)
     _connection = factory.newConnection
   }
 

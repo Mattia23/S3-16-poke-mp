@@ -62,7 +62,7 @@ public class GameMenuPanel extends JPanel{
         final Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.GAME_MENU_IMAGES() + imageName));
+            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.GAME_MENU_IMAGES() + imageName));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();

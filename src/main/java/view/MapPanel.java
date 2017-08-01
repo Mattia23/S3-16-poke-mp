@@ -9,12 +9,14 @@ import model.map.GameMap;
 import utilities.Settings;
 
 import java.awt.*;
+import java.util.concurrent.ConcurrentMap;
 
 public class MapPanel extends GamePanel{
 
     private GameMap gameMap;
     private GameController mapController;
     private DistributedMapController distributedMapController;
+    private static final int OFFSET = 2;
 
     public MapPanel(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
         super(mapController);
@@ -25,7 +27,6 @@ public class MapPanel extends GamePanel{
 
     @Override
     protected void doPaint(Graphics g) {
-        long time = System.currentTimeMillis();
         drawMapElements(g);
         drawBuildings(g);
         drawOtherTrainers(g);
@@ -33,13 +34,18 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawMapElements(Graphics g){
-        int OFFSET = 2;
-        int initialX = (((this.getCurrentX() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentX() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET;
-        int finalX = (((this.getCurrentX() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET >= Settings.MAP_WIDTH() ) ? Settings.MAP_WIDTH() : ((this.getCurrentX() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET;
-        int initialY = (((this.getCurrentY() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentY() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET;
-        int finalY = (((this.getCurrentY() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET >= Settings.MAP_HEIGHT() ) ? Settings.MAP_HEIGHT() : ((this.getCurrentY() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET;
-        for (int x = initialX; x < finalX; x++) {
-            for (int y = initialY; y < finalY; y++) {
+        int initialX = calculateInitialCoordinate(this.getCurrentX());
+        int finalX = calculateFinalCoordinate(this.getCurrentX());
+        int initialY = calculateInitialCoordinate(this.getCurrentY());
+        int finalY = calculateFinalCoordinate(this.getCurrentY());
+
+        int initialMapX = (initialX <= 0 ) ? 0 : initialX;
+        int finalMapX = (finalX >= Settings.Constants$.MODULE$.MAP_WIDTH() ) ? Settings.Constants$.MODULE$.MAP_WIDTH() : finalX;
+        int initialMapY = (initialY <= 0 ) ? 0 : initialY;
+        int finalMapY = (finalY >= Settings.Constants$.MODULE$.MAP_HEIGHT() ) ? Settings.Constants$.MODULE$.MAP_HEIGHT() : finalY;
+
+        for (int x = initialMapX; x < finalMapX; x++) {
+            for (int y = initialMapY; y < finalMapY; y++) {
                 if (!(this.gameMap.map()[x][y] instanceof Building)) {
                     g.drawImage(LoadImage.load(this.gameMap.map()[x][y].image()),
                             this.calculateCoordinate(x, this.getCurrentX()),
@@ -50,9 +56,17 @@ public class MapPanel extends GamePanel{
         }
     }
 
+    private int calculateInitialCoordinate(int centerCoordinate){
+        return ((centerCoordinate - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
+    }
+
+    private int calculateFinalCoordinate(int centerCoordinate){
+        return ((centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
+    }
+
     private void drawBuildings(Graphics g) {
-        for (int x = 0; x < Settings.MAP_WIDTH(); x++) {
-            for (int y = 0; y < Settings.MAP_HEIGHT(); y++) {
+        for (int x = 0; x < Settings.Constants$.MODULE$.MAP_WIDTH(); x++) {
+            for (int y = 0; y < Settings.Constants$.MODULE$.MAP_HEIGHT(); y++) {
                 if ((this.gameMap.map()[x][y] instanceof Building
                     && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                     && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
@@ -66,8 +80,7 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawOtherTrainers(Graphics g){
-        java.util.Map<Object, PlayerPositionDetails> map = scala.collection.JavaConverters
-                .mapAsJavaMapConverter(this.distributedMapController.playersPositionDetails()).asJava();
+        ConcurrentMap<Object, PlayerPositionDetails> map = this.distributedMapController.playersPositionDetails();
         if(!map.isEmpty()){
             for(Player player : this.distributedMapController.connectedPlayers().getAll().values()){
                 if(player.isVisible()) {
@@ -81,19 +94,19 @@ public class MapPanel extends GamePanel{
         }
     }
 
-    private void drawTrainer(Graphics g){
-        g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
-                Settings.FRAME_SIDE() / 2,
-                Settings.FRAME_SIDE() / 2,
-                null);
-    }
-
     private int calculateCoordinate(double coordinate, int centerCoordinate) {
-        return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.FRAME_SIDE() / 2;
+        return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2;
     }
 
     private int coordinateInPixels(double currentCoordinate) {
-        return (int)(currentCoordinate * Settings.TILE_PIXEL());
+        return (int)(currentCoordinate * Settings.Constants$.MODULE$.TILE_PIXEL());
+    }
+
+    private void drawTrainer(Graphics g){
+        g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
+                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
+                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
+                null);
     }
 
 }

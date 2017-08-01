@@ -1,8 +1,8 @@
 package controller
 
+import model.battle.{Battle, BattleImpl}
 import model.entities.Owner
 import model.environment.{Audio, AudioImpl}
-import model.battle.{Battle, BattleImpl}
 import utilities.Settings
 import view.View
 
@@ -81,7 +81,7 @@ class BattleControllerImpl(private val controller: GameController, private val v
   private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon)
   showNewView()
-  private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
+  private val audio: Audio = new AudioImpl(Settings.Audio.POKEMON_WILD_SONG)
   audio.loop()
 
   /**
@@ -130,7 +130,7 @@ class BattleControllerImpl(private val controller: GameController, private val v
     * @param id id of the new trainer's Pokemon
     */
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
-    battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CHANGE_POKEMON)
+    battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CHANGE_POKEMON)
     battle.startBattleRound(id)
     showNewView()
     pokemonWildAttacksAfterTrainerChoice()
@@ -151,14 +151,14 @@ class BattleControllerImpl(private val controller: GameController, private val v
   override def trainerThrowPokeball(): Boolean = {
     battle.pokeball_=(battle.pokeball-1)
     if(!battle.pokemonIsCaptured()) {
-      new AudioImpl(Settings.CAPTURE_FAILED_SONG)
+      Audio(Settings.Audio.CAPTURE_FAILED_SONG)
       pokemonWildAttacksAfterTrainerChoice()
       false
     } else {
-      new AudioImpl(Settings.CAPTURE_SONG)
+      Audio(Settings.Audio.CAPTURE_SONG)
       timer = new Thread() {
         override def run() {
-          battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CAPTURE_POKEMON)
+          battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CAPTURE_POKEMON)
           Thread.sleep(3000)
           resumeGame()
         }
@@ -174,7 +174,7 @@ class BattleControllerImpl(private val controller: GameController, private val v
     */
   override def trainerCanQuit(): Boolean = {
     if (Random.nextDouble()<0.5) {
-      battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_ESCAPE)
+      battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_ESCAPE)
       resumeGame()
       true
     } else {

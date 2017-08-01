@@ -1,7 +1,7 @@
 package model.entities
 
 import database.remote.DBConnect
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.Coordinate
 import utilities.Settings
 
 /**
@@ -167,14 +167,14 @@ trait Trainer {
   */
 class TrainerImpl(override val username: String, private val idImage: Int, override var experiencePoints: Int) extends Trainer{
 
-  override var coordinate: Coordinate = Settings.INITIAL_PLAYER_POSITION
+  override var coordinate: Coordinate = Settings.Constants.INITIAL_PLAYER_POSITION
   override val id: Int = DBConnect.getTrainerIdFromUsername(username).get()
   override var level: Int = calculateLevel()
-  override val sprites: TrainerSprites = TrainerSprites.selectTrainerSprite(idImage)
+  override val sprites: TrainerSprites = TrainerSprites(idImage)
   override var currentSprite: Sprite = sprites.frontS
   override var pokedex: Pokedex = new PokedexImpl(id)
   override var favouritePokemons: List[Int] = DBConnect.getFavouritePokemonList(id).get()
-  override var capturedPokemons: List[Tuple2[Int,Int]] = DBConnect.getCapturedPokemonList(id).get()
+  override var capturedPokemons: List[(Int, Int)] = DBConnect.getCapturedPokemonList(id).get()
   override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
 
   /**
@@ -182,10 +182,11 @@ class TrainerImpl(override val username: String, private val idImage: Int, overr
     * @return trainer's level
     */
   private def calculateLevel(): Int = {
-    var level: Double = Settings.INITIAL_TRAINER_LEVEL
-    var step: Double = Settings.LEVEL_STEP
+    import Settings._
+    var level: Double = Constants.INITIAL_TRAINER_LEVEL
+    var step: Double = Constants.LEVEL_STEP
     while(this.experiencePoints > step ){
-      step = step + Settings.LEVEL_STEP*math.pow(2,level)
+      step = step + Constants.LEVEL_STEP*math.pow(2,level)
       level += 1
     }
     level.toInt

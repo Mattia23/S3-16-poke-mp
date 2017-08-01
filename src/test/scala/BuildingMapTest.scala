@@ -1,6 +1,7 @@
 
 import model.map._
 import org.scalatest.FunSuite
+import model.map.Tile._
 
 class BuildingMapTest extends FunSuite{
 
@@ -27,9 +28,9 @@ class BuildingMapTest extends FunSuite{
   }
 
   def testBarrier(buildingMap: BuildingMap): Unit = {
-    for(matrixNotWalkable <- buildingMap.matriciesNotWalkable){
-      for( i <- matrixNotWalkable.startCoordinate.x to matrixNotWalkable.endCoordiante.x){
-        for( j <- matrixNotWalkable.startCoordinate.y to matrixNotWalkable.endCoordiante.y){
+    for(matrixNotWalkable <- buildingMap.matricesNotWalkable){
+      for( i <- matrixNotWalkable.startCoordinate.x to matrixNotWalkable.endCoordinate.x){
+        for( j <- matrixNotWalkable.startCoordinate.y to matrixNotWalkable.endCoordinate.y){
           assert(buildingMap.map(i)(j).isInstanceOf[Barrier])
         }
       }
