@@ -18,11 +18,11 @@ import java.util.Map;
 import java.util.Random;
 
 public class BattlePanel extends ImagePanel implements BattleView {
-    private final static int IMAGE_POKEMON_SIZE = Settings.FRAME_SIDE() / 4;
-    private final static int FONT_SIZE = (int)(Settings.FRAME_SIDE() * 0.034);
-    private final static int FONT_LIFE_SIZE = (int)(Settings.FRAME_SIDE() * 0.02);
-    private final static int PROGRESS_BAR_W = (int)(Settings.FRAME_SIDE() * 0.23437);
-    private final static int PROGRESS_BAR_H = (int)(Settings.FRAME_SIDE() * 0.021648);
+    private final static int IMAGE_POKEMON_SIZE = Settings.Constants$.MODULE$.FRAME_SIDE() / 4;
+    private final static int FONT_SIZE = (int)(Settings.Constants$.MODULE$.FRAME_SIDE() * 0.034);
+    private final static int FONT_LIFE_SIZE = (int)(Settings.Constants$.MODULE$.FRAME_SIDE() * 0.02);
+    private final static int PROGRESS_BAR_W = (int)(Settings.Constants$.MODULE$.FRAME_SIDE() * 0.23437);
+    private final static int PROGRESS_BAR_H = (int)(Settings.Constants$.MODULE$.FRAME_SIDE() * 0.021648);
     private final static Dimension[] POKEMON_IMG_POSE = {newDimension(0.65,0.10),newDimension(0.11,0.48)};
     private final static Dimension[] POKEMON_NAME_POSE = {newDimension(0.08,0.165),newDimension(0.57,0.565)};
     private final static Dimension[] POKEMON_LEVEL_POSE = {newDimension(0.06,0.205),newDimension(0.55,0.61)};
@@ -31,7 +31,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
     private final static Dimension POKEMON_LEV_EXP_POSE = newDimension(0.64,0.666);
     private PokemonWithLife[] pokemonEntities;
     private JButton[] pokemonImages = new JButton[]{new JButton(),new JButton()};
-    private String[] pokemonSide = new String[]{Settings.POKEMON_IMAGES_FRONT_FOLDER(),Settings.POKEMON_IMAGES_BACK_FOLDER()};
+    private String[] pokemonSide = new String[]{Settings.Images$.MODULE$.POKEMON_IMAGES_FRONT_FOLDER(),Settings.Images$.MODULE$.POKEMON_IMAGES_BACK_FOLDER()};
     private JTextField[] pokemonNames = new JTextField[]{new JTextField(),new JTextField()};
     private JTextField[] pokemonLevels = new JTextField[]{new JTextField(),new JTextField()};
     private JProgressBar[] pokemonProgressBar = new JProgressBar[]{new JProgressBar(0,100),new JProgressBar(0,100)};
@@ -48,14 +48,14 @@ public class BattlePanel extends ImagePanel implements BattleView {
     private Timer t;
     private int pokeballX = 0;
     private int pokeballY = 0;
-    private Image pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
+    private Image pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeball.png");
     private JPanel displayPanel = new JPanel(new BorderLayout());
     private JLabel attackExplanation = new JLabel();
     private BattleController controller;
 
     public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame, BattleController controller) {
         this.controller = controller;
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "battle.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "battle.png");
         this.pokemonEntities = new PokemonWithLife[]{otherPokemon, myPokemon};
         this.setLayout(null);
         this.setFocusable(true);
@@ -102,14 +102,14 @@ public class BattlePanel extends ImagePanel implements BattleView {
     }
 
     private void createTrainerChoicesGraphic() {
-        displayPanel.setBounds(Settings.FRAME_SIDE()/40,(int)(Settings.FRAME_SIDE()*0.72),(int)(Settings.FRAME_SIDE()*0.9),Settings.FRAME_SIDE()/5);
+        displayPanel.setBounds(Settings.Constants$.MODULE$.FRAME_SIDE()/40,(int)(Settings.Constants$.MODULE$.FRAME_SIDE()*0.72),(int)(Settings.Constants$.MODULE$.FRAME_SIDE()*0.9),Settings.Constants$.MODULE$.FRAME_SIDE()/5);
         displayPanel.setBackground(Color.white);
         attackExplanation.setHorizontalAlignment(JLabel.CENTER);
         displayPanel.add(attackExplanation,BorderLayout.CENTER);
         this.add(displayPanel);
         displayPanel.setVisible(false);
         JPanel southPanel = new JPanel(new BorderLayout());
-        southPanel.setBounds(Settings.FRAME_SIDE()/40,(int)(Settings.FRAME_SIDE()*0.72),(int)(Settings.FRAME_SIDE()*0.9),Settings.FRAME_SIDE()/5);
+        southPanel.setBounds(Settings.Constants$.MODULE$.FRAME_SIDE()/40,(int)(Settings.Constants$.MODULE$.FRAME_SIDE()*0.72),(int)(Settings.Constants$.MODULE$.FRAME_SIDE()*0.9),Settings.Constants$.MODULE$.FRAME_SIDE()/5);
         southPanel.setOpaque(false);
         JPanel southWestPanel = new JPanel();
         GridLayout gridLayout = new GridLayout(4,1);
@@ -135,7 +135,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
         gridLayout.setVgap(10);
         gridLayout.setHgap(10);
         southEastPanel.setLayout(gridLayout);
-        southEastPanel.setBounds(Settings.FRAME_SIDE()/35,(int)(Settings.FRAME_SIDE()*0.72),(int)Settings.FRAME_SIDE(),Settings.FRAME_SIDE()/5);
+        southEastPanel.setBounds(Settings.Constants$.MODULE$.FRAME_SIDE()/35,(int)(Settings.Constants$.MODULE$.FRAME_SIDE()*0.72),(int)Settings.Constants$.MODULE$.FRAME_SIDE(),Settings.Constants$.MODULE$.FRAME_SIDE()/5);
         southEastPanel.setOpaque(false);
         int[] pokemonAttacks = {(int)pokemonEntities[1].pokemon().attacks()._1(),(int)pokemonEntities[1].pokemon().attacks()._2(),
                 (int)pokemonEntities[1].pokemon().attacks()._3(),(int)pokemonEntities[1].pokemon().attacks()._4()};
@@ -165,15 +165,15 @@ public class BattlePanel extends ImagePanel implements BattleView {
             trainerChoices.get("Pokeball").setEnabled(false);
             pokeballAnimation = true;
             pokemonIsInThePokeball = false;
-            pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
-            pokeballX = (int)(POKEMON_IMG_POSE[1].width+Settings.FRAME_SIDE()*0.1);
+            pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeball.png");
+            pokeballX = (int)(POKEMON_IMG_POSE[1].width+Settings.Constants$.MODULE$.FRAME_SIDE()*0.1);
             pokeballY = POKEMON_IMG_POSE[1].height;
             t = new Timer(10,(ActionEvent ex) -> {
                 if(pokeballY > POKEMON_IMG_POSE[0].height && !pokemonIsInThePokeball){
                     pokeballX += 5;
                     pokeballY -= 5;
                 } else if (pokeballY <= POKEMON_IMG_POSE[0].height && !pokemonIsInThePokeball) {
-                    pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballOpen.png");
+                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballOpen.png");
                     pokemonIsInThePokeball = true;
                     Thread animation = new Thread(){
                         @Override
@@ -181,14 +181,14 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             super.run();
                             try {
                                 Thread.sleep(1000);
-                                pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeball.png");
+                                pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeball.png");
                                 pokemonImages[0].setVisible(false);
                                 Thread.sleep(1500);
                                 if(controller.trainerThrowPokeball()) {
-                                    pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballRed.png");
+                                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballRed.png");
                                     Thread.sleep(1000);
                                 } else {
-                                    pokeballImage = LoadImage.load(Settings.POKEBALL_IMAGES() + "pokeballOpen.png");
+                                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballOpen.png");
                                     pokemonImages[0].setVisible(true);
                                     Thread.sleep(1000);
                                     pokeballAnimation = false;
@@ -297,7 +297,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
     }
 
     private static Dimension newDimension(Double d1, Double d2) {
-        return new Dimension((int)(Settings.FRAME_SIDE()*d1),(int)(Settings.FRAME_SIDE()*d2));
+        return new Dimension((int)(Settings.Constants$.MODULE$.FRAME_SIDE()*d1),(int)(Settings.Constants$.MODULE$.FRAME_SIDE()*d2));
     }
     private void createJTextField(JTextField jTextField,String text) {
         jTextField.setText(text);

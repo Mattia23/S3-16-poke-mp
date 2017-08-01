@@ -13,7 +13,7 @@ import java.io.IOException;
 public class TrainerPanel extends BasePanel {
 
     public TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "trainer.jpg");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "trainer.jpg");
         Image myImage;
         ImageIcon myImageIcon = null;
         try {

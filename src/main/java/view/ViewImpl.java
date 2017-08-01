@@ -22,7 +22,7 @@ public class ViewImpl extends JFrame implements View {
     public ViewImpl() {
         this.setTitle(WINDOW_TITLE);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.frameDiminsion = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
+        this.frameDiminsion = new Dimension(Settings.Constants$.MODULE$.FRAME_SIDE(), Settings.Constants$.MODULE$.FRAME_SIDE());
         this.setSize(frameDiminsion);
         this.setMinimumSize(frameDiminsion);
         this.setLocationRelativeTo(null);
@@ -43,7 +43,7 @@ public class ViewImpl extends JFrame implements View {
     private void setDialogue(final JPanel panel){
         final DialoguePanel dialoguePanel = (DialoguePanel) panel;
         this.getContentPane().add(dialoguePanel, BorderLayout.SOUTH);
-        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));
+        dialoguePanel.setPreferredSize(new Dimension(0, Settings.Constants$.MODULE$.SCREEN_WIDTH()/12));
         this.revalidate();
         this.repaint();
     }

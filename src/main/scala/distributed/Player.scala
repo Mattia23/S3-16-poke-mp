@@ -24,7 +24,7 @@ trait Player {
 }
 
 case class PlayerImpl(override val userId: Int, override val username: String,
-                 override val idImage: Int, override var position: Coordinate = Settings.INITIAL_PLAYER_POSITION,
+                 override val idImage: Int, override var position: Coordinate = Settings.Constants.INITIAL_PLAYER_POSITION,
                  override var isVisible: Boolean = true, override var isBusy: Boolean = false) extends Player
 
 

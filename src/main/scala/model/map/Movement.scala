@@ -21,23 +21,25 @@ abstract class MovementImpl extends Movement{
   override def walk(initialPosition: Coordinate, direction: Direction, nextPosition: Coordinate): Unit = {
     var actualX: Double = initialPosition.x
     var actualY: Double = initialPosition.y
+
+    import Settings.Constants._
     for (_ <- 1 to TRAINER_STEPS) {
       direction match {
         case Direction.UP =>
-          actualY = actualY - (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
+          actualY = actualY - (TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentY(actualY)
         case Direction.DOWN =>
-          actualY = actualY + (Settings.TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
+          actualY = actualY + (TILE_HEIGHT.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentY(actualY)
         case Direction.RIGHT =>
-          actualX = actualX + (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
+          actualX = actualX + (TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentX(actualX)
         case Direction.LEFT =>
-          actualX = actualX - (Settings.TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
+          actualX = actualX - (TILE_WIDTH.asInstanceOf[Double] / TRAINER_STEPS)
           updateCurrentX(actualX)
       }
       updateTrainerSprite(direction)
-      Thread.sleep(Settings.GAME_REFRESH_TIME)
+      Thread.sleep(GAME_REFRESH_TIME)
     }
     updateTrainerPosition(nextPosition)
   }

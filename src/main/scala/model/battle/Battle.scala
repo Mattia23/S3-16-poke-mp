@@ -94,14 +94,14 @@ class BattleImpl(_trainer: Trainer, controller: BattleController) extends Battle
   }
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
-    case Settings.BATTLE_EVENT_CAPTURE_POKEMON =>
+    case Settings.Constants.BATTLE_EVENT_CAPTURE_POKEMON =>
       val pointsEarned: Int = (otherPokemon.pokemon.level * math.pow(1.3,_trainer.level)).toInt
       _trainer.updateTrainer(pointsEarned)
       if(trainer.favouritePokemons.contains(0)){
         trainer.addFavouritePokemon(trainer.capturedPokemons.last._1)
       }
       _round.updatePokemon()
-    case Settings.BATTLE_EVENT_ESCAPE =>
+    case Settings.Constants.BATTLE_EVENT_ESCAPE =>
       _trainer.updateTrainer(0)
       _round.updatePokemon()
   }

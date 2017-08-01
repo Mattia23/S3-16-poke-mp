@@ -27,12 +27,12 @@ object MapController {
 class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
   import MapController._
 
-  private val gameMap = MapCreator.create(Settings.MAP_HEIGHT, Settings.MAP_WIDTH, InitialTownElements())
+  private val gameMap = MapCreator.create(Settings.Constants.MAP_HEIGHT, Settings.Constants.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
   connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
   private var currentDialogue: DialoguePanel = _
-  audio = Audio(Settings.MAP_SONG)
+  audio = Audio(Settings.Audio.MAP_SONG)
 
 
   override protected def doStart(): Unit = {

@@ -14,7 +14,9 @@ object PlayerLoginServerService {
 class PlayerLoginServerService(private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService {
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
-    channel.queueDeclare(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
+
+    import Settings._
+    channel.queueDeclare(Constants.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -29,20 +31,20 @@ class PlayerLoginServerService(private val connection: Connection, private val c
         val player = playerMessage.player
 
         val response = gson.toJson(ConnectedPlayersMessage(connectedPlayers.getAll))
-        val responseQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + player.userId
+        val responseQueue = Constants.PLAYERS_CONNECTED_CHANNEL_QUEUE + player.userId
         channel.queueDeclare(responseQueue, false, false, false, null)
         channel.basicPublish("", responseQueue, null, response.getBytes("UTF-8"))
         println("server: send connected player")
         connectedPlayers.add(player.userId, player)
 
-        channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
+        channel.exchangeDeclare(Constants.NEW_PLAYER_EXCHANGE, "fanout")
         val newPlayerResponse = gson.toJson(playerMessage)
-        channel.basicPublish(Settings.NEW_PLAYER_EXCHANGE, "", null, newPlayerResponse.getBytes("UTF-8"))
+        channel.basicPublish(Constants.NEW_PLAYER_EXCHANGE, "", null, newPlayerResponse.getBytes("UTF-8"))
         println("server: send new player")
       }
     }
 
-    channel.basicConsume(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, true, consumer)
+    channel.basicConsume(Constants.PLAYER_LOGIN_CHANNEL_QUEUE, true, consumer)
   }
 
 }

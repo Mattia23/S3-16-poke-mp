@@ -18,17 +18,17 @@ import java.util.List;
 import java.util.Optional;
 
 public class TeamPanel extends BasePanel{
-    private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
-    private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
-    private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
+    private static final int FONT_SIZE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.034);
+    private static final int iconSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.1177);
+    private static final int infoSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.05);
     ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
     public TeamPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pokemon-choice.png");
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.IMAGES_FOLDER() + "info.png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.IMAGES_FOLDER() + "info.png"));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(infoSide,infoSide,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class TeamPanel extends BasePanel{
                 String s = pokemonWithLife.pokemon().name().toUpperCase() + "   Life: " + pokemonWithLife.pokemonLife() + "/" +
                         pokemonWithLife.pokemon().experiencePoints() + "   Lv:  " + pokemonWithLife.pokemon().level();
                 try {
-                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
+                    myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.POKEMON_IMAGES_ICON_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
                     myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
                 } catch (IOException e) {
                     e.printStackTrace();

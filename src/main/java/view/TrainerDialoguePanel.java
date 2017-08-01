@@ -21,7 +21,7 @@ public class TrainerDialoguePanel extends DialoguePanel {
         countDown = new Thread(() -> {
             int i = 15;
             while(running){
-                buttons.get(1).setText(Settings.TRAINER_DIALOGUE_BUTTON().get(1) + "(" + i + ")");
+                buttons.get(1).setText(Settings.Strings$.MODULE$.TRAINER_DIALOGUE_BUTTON().get(1) + "(" + i + ")");
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -38,7 +38,7 @@ public class TrainerDialoguePanel extends DialoguePanel {
     protected void setFinalButtons() {
         buttonPanel.removeAll();
         buttons.clear();
-        for(String text: Settings.TRAINER_DIALOGUE_BUTTON()){
+        for(String text: Settings.Strings$.MODULE$.TRAINER_DIALOGUE_BUTTON()){
             final JButton button = new JButton(text);
             button.addKeyListener(this);
             button.addActionListener(e ->{

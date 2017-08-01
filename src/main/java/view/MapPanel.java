@@ -35,10 +35,10 @@ public class MapPanel extends GamePanel{
 
     private void drawMapElements(Graphics g){
         int OFFSET = 2;
-        int initialX = (((this.getCurrentX() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentX() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET;
-        int finalX = (((this.getCurrentX() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET >= Settings.MAP_WIDTH() ) ? Settings.MAP_WIDTH() : ((this.getCurrentX() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET;
-        int initialY = (((this.getCurrentY() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentY() - Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) - OFFSET;
-        int finalY = (((this.getCurrentY() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET >= Settings.MAP_HEIGHT() ) ? Settings.MAP_HEIGHT() : ((this.getCurrentY() + Settings.FRAME_SIDE() / 2) / Settings.TILE_PIXEL()) + OFFSET;
+        int initialX = (((this.getCurrentX() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentX() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
+        int finalX = (((this.getCurrentX() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET >= Settings.Constants$.MODULE$.MAP_WIDTH() ) ? Settings.Constants$.MODULE$.MAP_WIDTH() : ((this.getCurrentX() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
+        int initialY = (((this.getCurrentY() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET <= 0 ) ? 0 : ((this.getCurrentY() - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
+        int finalY = (((this.getCurrentY() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET >= Settings.Constants$.MODULE$.MAP_HEIGHT() ) ? Settings.Constants$.MODULE$.MAP_HEIGHT() : ((this.getCurrentY() + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
         for (int x = initialX; x < finalX; x++) {
             for (int y = initialY; y < finalY; y++) {
                 if (!(this.gameMap.map()[x][y] instanceof Building)) {
@@ -52,8 +52,8 @@ public class MapPanel extends GamePanel{
     }
 
     private void drawBuildings(Graphics g) {
-        for (int x = 0; x < Settings.MAP_WIDTH(); x++) {
-            for (int y = 0; y < Settings.MAP_HEIGHT(); y++) {
+        for (int x = 0; x < Settings.Constants$.MODULE$.MAP_WIDTH(); x++) {
+            for (int y = 0; y < Settings.Constants$.MODULE$.MAP_HEIGHT(); y++) {
                 if ((this.gameMap.map()[x][y] instanceof Building
                     && (((Building) this.gameMap.map()[x][y]).topLeftCoordinate().x() == x)
                     && (((Building) this.gameMap.map()[x][y])).topLeftCoordinate().y() == y)) {
@@ -83,17 +83,17 @@ public class MapPanel extends GamePanel{
 
     private void drawTrainer(Graphics g){
         g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
-                Settings.FRAME_SIDE() / 2,
-                Settings.FRAME_SIDE() / 2,
+                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
+                Settings.Constants$.MODULE$.FRAME_SIDE() / 2,
                 null);
     }
 
     private int calculateCoordinate(double coordinate, int centerCoordinate) {
-        return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.FRAME_SIDE() / 2;
+        return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2;
     }
 
     private int coordinateInPixels(double currentCoordinate) {
-        return (int)(currentCoordinate * Settings.TILE_PIXEL());
+        return (int)(currentCoordinate * Settings.Constants$.MODULE$.TILE_PIXEL());
     }
 
 }

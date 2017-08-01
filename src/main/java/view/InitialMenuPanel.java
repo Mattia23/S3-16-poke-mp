@@ -23,9 +23,9 @@ public class InitialMenuPanel extends BasePanel implements ActionListener, KeyLi
         this.controller = controller;
         this.setLayout(new BorderLayout());
         this.downPanel = new JPanel(new GridBagLayout());
-        this.buttons[0] = new JButton(Settings.LOGIN_BUTTON());
-        this.buttons[1] = new JButton(Settings.SIGN_IN_BUTTON());
-        this.buttons[2] = new JButton(Settings.QUIT_BUTTON());
+        this.buttons[0] = new JButton(Settings.Strings$.MODULE$.LOGIN_BUTTON());
+        this.buttons[1] = new JButton(Settings.Strings$.MODULE$.SIGN_IN_BUTTON());
+        this.buttons[2] = new JButton(Settings.Strings$.MODULE$.QUIT_BUTTON());
 
         this.buttons[0].addActionListener(this);
         this.buttons[1].addActionListener(this);

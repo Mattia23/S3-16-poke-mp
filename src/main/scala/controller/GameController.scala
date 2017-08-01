@@ -184,7 +184,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
         }
 
         try
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
+          Thread.sleep(Settings.Constants.GAME_REFRESH_TIME)
         catch {
           case e: InterruptedException => println(e)
         }

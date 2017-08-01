@@ -43,7 +43,7 @@ class PokemonCenterMap extends BuildingMap{
 
   override val npc: StaticCharacter = new Doctor
 
-  override val image: Image = LoadImage.load(Settings.MAP_IMAGES_FOLDER + "pokemon-center.png")
+  override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "pokemon-center.png")
 
   override val matriciesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(14,1)),
@@ -71,7 +71,7 @@ class LaboratoryMap extends BuildingMap{
 
   override var npc: StaticCharacter = new Oak
 
-  override val image: Image = LoadImage.load(Settings.MAP_IMAGES_FOLDER + "laboratory.png")
+  override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "laboratory.png")
 
   override val matriciesNotWalkable: List[MatrixCoordinate] =
     List(new MatrixCoordinate(CoordinateImpl(0,0),CoordinateImpl(12,1)),

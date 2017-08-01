@@ -27,7 +27,7 @@ trait GameMenuController{
 
 class GameMenuControllerImpl(private var view: View, private val gameController: GameController) extends GameMenuController{
 
-  private val audio: Audio = new AudioImpl(Settings.MENU_SONG)
+  private val audio: Audio = new AudioImpl(Settings.Audio.MENU_SONG)
   audio.loop()
   showGameMenu()
 

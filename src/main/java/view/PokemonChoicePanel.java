@@ -19,17 +19,17 @@ import java.util.*;
 import java.util.List;
 
 public class PokemonChoicePanel extends BasePanel{
-    private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
+    private static final int FONT_SIZE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.034);
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
     private List<Tuple2<JRadioButton,Integer>> buttonList = new ArrayList<>();
     private JButton info;
     private JLabel infoText;
-    private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
-    private static final int infoSide = (int) (Settings.FRAME_SIDE() * 0.05);
+    private static final int iconSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.1177);
+    private static final int infoSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.05);
 
 
     public PokemonChoicePanel(BattleController controller, Trainer trainer) {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pokemon-choice.png");
         this.backButton.setVisible(false);
         this.infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
         this.infoText.setVisible(false);
@@ -37,7 +37,7 @@ public class PokemonChoicePanel extends BasePanel{
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.IMAGES_FOLDER() + "info.png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.IMAGES_FOLDER() + "info.png"));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(infoSide,infoSide,java.awt.Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class PokemonChoicePanel extends BasePanel{
                 String s = pokemonMap.get("name").toString().toUpperCase() + "   Life: " + pokemonMap.get("lifePoints").toString() + "/" +
                         pokemonMap.get("experiencePoints").toString() + "   Lv:  " + pokemonMap.get("level").toString();
                 try {
-                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonMap.get("id").toString() + ".png"));
+                    myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.POKEMON_IMAGES_ICON_FOLDER() + pokemonMap.get("id").toString() + ".png"));
                     myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
                 } catch (IOException e) {
                     e.printStackTrace();

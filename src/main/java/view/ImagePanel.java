@@ -10,7 +10,7 @@ public class ImagePanel extends JPanel {
     protected Image imagePanel;
 
     public ImagePanel() {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "menu.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "menu.png");
     }
 
     @Override

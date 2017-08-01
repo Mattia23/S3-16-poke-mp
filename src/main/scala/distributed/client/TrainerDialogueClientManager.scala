@@ -35,8 +35,10 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
   override var playerId: Int = mapController.trainer.id
   override var otherPlayerId: Int = _
   var otherPlayerName: String = _
-  private val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
   private var yourPlayerIsFirst = true
+
+  import Settings._
+  private val playerQueue = Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
 
   channel.queueDeclare(playerQueue, false, false, false, null)
 
@@ -44,8 +46,8 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
     mapController.sendTrainerIsBusy(wantToFight)
     yourPlayerIsFirst = isFirst
     val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.name, otherPlayerId, wantToFight, isFirst)
-    channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
-    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
+    channel.queueDeclare(Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
+    channel.basicPublish("", Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
   }
 
   override def receiveResponse(): Unit = {

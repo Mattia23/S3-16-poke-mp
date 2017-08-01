@@ -13,7 +13,9 @@ object PlayerInBuildingServerService {
 class PlayerInBuildingServerService (private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
-    channel.queueDeclare(Settings.PLAYER_IN_BUILDING_CHANNEL_QUEUE, false, false, false, null)
+
+    import Settings._
+    channel.queueDeclare(Constants.PLAYER_IN_BUILDING_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -28,14 +30,14 @@ class PlayerInBuildingServerService (private val connection: Connection, private
         if (connectedPlayers.containsPlayer(playerInBuildingMessage.userId)) {
           connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
 
-          channel.exchangeDeclare(Settings.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
+          channel.exchangeDeclare(Constants.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
           val response = gson.toJson(playerInBuildingMessage)
-          channel.basicPublish(Settings.PLAYER_IN_BUILDING_EXCHANGE, "", null, response.getBytes("UTF-8"))
+          channel.basicPublish(Constants.PLAYER_IN_BUILDING_EXCHANGE, "", null, response.getBytes("UTF-8"))
           println("server: send player in building")
         }
       }
     }
 
-    channel.basicConsume(Settings.PLAYER_IN_BUILDING_CHANNEL_QUEUE, true, consumer)
+    channel.basicConsume(Constants.PLAYER_IN_BUILDING_CHANNEL_QUEUE, true, consumer)
   }
 }

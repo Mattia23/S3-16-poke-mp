@@ -78,7 +78,7 @@ class PokemonCenterController(private val view: View, private val mapController:
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
-  audio = Audio(Settings.POKEMONCENTER_SONG)
+  audio = Audio(Settings.Audio.POKEMONCENTER_SONG)
 
   override protected def doStart(): Unit = {
     super.doStart()
@@ -121,7 +121,7 @@ class LaboratoryController(private val view: View, private val mapController: Ga
   if(!capturedPokemonEmpty) buildingMap.npc = new OakAfterChoise
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
-  audio = Audio(Settings.LABORATORY_SONG)
+  audio = Audio(Settings.Audio.LABORATORY_SONG)
 
   override protected def doStart(): Unit = {
     super.doStart()

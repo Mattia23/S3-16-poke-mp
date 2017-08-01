@@ -22,16 +22,17 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
   private var gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
 
-  channel.queueDeclare(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
+  import Settings._
+  channel.queueDeclare(Constants.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
 
   override def sendPlayer(player: Player): Unit = {
     val playerMessage = PlayerMessage(player)
-    channel.basicPublish("", Settings.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
+    channel.basicPublish("", Constants.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
     println(" [x] Sent message")
   }
 
   override def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
-    val playerQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
+    val playerQueue = Constants.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
     channel.queueDeclare(playerQueue, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {

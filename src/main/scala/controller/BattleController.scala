@@ -42,7 +42,7 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
   private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon)
   showNewView()
-  private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
+  private val audio: Audio = new AudioImpl(Settings.Audio.POKEMON_WILD_SONG)
   audio.loop()
 
   override def myPokemonAttacks(attackId: Int): Unit = {
@@ -75,7 +75,7 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
   }
 
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
-    battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CHANGE_POKEMON)
+    battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CHANGE_POKEMON)
     battle.startBattleRound(id)
     showNewView()
     pokemonWildAttacksAfterTrainerChoice()
@@ -88,14 +88,14 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
   override def trainerThrowPokeball(): Boolean = {
     battle.pokeball_=(battle.pokeball-1)
     if(!battle.pokeballLaunched()) {
-      new AudioImpl(Settings.CAPTURE_FAILED_SONG)
+      new AudioImpl(Settings.Audio.CAPTURE_FAILED_SONG)
       pokemonWildAttacksAfterTrainerChoice()
       false
     } else {
-      new AudioImpl(Settings.CAPTURE_SONG)
+      new AudioImpl(Settings.Audio.CAPTURE_SONG)
       timer = new Thread() {
         override def run() {
-          battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CAPTURE_POKEMON)
+          battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CAPTURE_POKEMON)
           Thread.sleep(3000)
           resumeGame()
         }
@@ -107,7 +107,7 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
 
   override def trainerCanQuit(): Boolean = {
     if (Random.nextDouble()<0.5) {
-      battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_ESCAPE)
+      battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_ESCAPE)
       resumeGame()
       true
     } else {

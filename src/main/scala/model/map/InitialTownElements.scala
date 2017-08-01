@@ -23,10 +23,11 @@ case class InitialTownElements() extends MapElementsImpl {
     addTile(Laboratory(CoordinateImpl(40,20)), CoordinateImpl(40,20))
   }
 
+  import Settings.Constants._
   private def addTrees(): Unit ={
-    for (x <- 0 until Settings.MAP_WIDTH)
-      for (y <- 0 until Settings.MAP_HEIGHT)
-        if (x == 0 || x == Settings.MAP_WIDTH - 1 || y == 0 || y == Settings.MAP_HEIGHT - 1) addTile(Tree(), CoordinateImpl(x,y))
+    for (x <- 0 until MAP_WIDTH)
+      for (y <- 0 until MAP_HEIGHT)
+        if (x == 0 || x == MAP_WIDTH - 1 || y == 0 || y == MAP_HEIGHT - 1) addTile(Tree(), CoordinateImpl(x,y))
 
     addMultipleElements(Tree(), CoordinateImpl(1,18), CoordinateImpl(14,18))
     addMultipleElements(Tree(), CoordinateImpl(6,34), CoordinateImpl(8,34))

@@ -10,7 +10,7 @@ import java.awt.*;
 public class KeyboardPanel extends BasePanel {
 
     public KeyboardPanel (GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "keyboard.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "keyboard.png");
 
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);

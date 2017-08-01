@@ -42,7 +42,7 @@ class TrainersBattle(_trainer: Trainer, controller: BattleController, val otherT
   }
 
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
-    case Settings.BATTLE_EVENT_ESCAPE =>
+    case Settings.Constants.BATTLE_EVENT_ESCAPE =>
       _trainer.updateTrainer(0)
       _round.updatePokemon()
   }

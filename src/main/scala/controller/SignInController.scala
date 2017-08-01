@@ -36,20 +36,21 @@ class SignInControllerImpl(private val initialMenuController: InitialMenuControl
       val username = accountData.get(AccountData.Username.toString).getText()
       val password = accountData.get(AccountData.Password.toString).getText()
 
+      import Settings._
       (name, surname, email, username, password) match {
-        case _ if name.length < NAME_MIN_LENGTH => view.showMessage(Settings.SIGN_IN_NAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
-        case _ if surname.length < SURNAME_MIN_LENGTH => view.showMessage(Settings.SIGN_IN_SURNAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
-        case _ if !email.contains(String.valueOf('@')) | !email.contains(String.valueOf('.')) => view.showMessage(Settings.SIGN_IN_EMAIL_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
-        case _ if username.length < USERNAME_MIN_LENGTH => view.showMessage(Settings.SIGN_IN_USERNAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
-        case _ if password.length < PASSWORD_MIN_LENGTH => view.showMessage(Settings.SIGN_IN_PASSWORD_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
+        case _ if name.length < NAME_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_NAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
+        case _ if surname.length < SURNAME_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_SURNAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
+        case _ if !email.contains(String.valueOf('@')) | !email.contains(String.valueOf('.')) => view.showMessage(Strings.SIGN_IN_EMAIL_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
+        case _ if username.length < USERNAME_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_USERNAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
+        case _ if password.length < PASSWORD_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_PASSWORD_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
         case _ =>
 
 
           if(DBConnect.insertCredentials(accountData, idImage)) {
-            view.showMessage(Settings.CORRECT_SIGN_IN,SIGN_IN_SUCCEEDED,JOptionPane.INFORMATION_MESSAGE)
+            view.showMessage(Strings.CORRECT_SIGN_IN,SIGN_IN_SUCCEEDED,JOptionPane.INFORMATION_MESSAGE)
             view showInitialMenu initialMenuController
           } else {
-            view.showMessage(Settings.SIGN_IN_FAILED,SIGN_IN_FAILED, JOptionPane.ERROR_MESSAGE)
+            view.showMessage(Strings.SIGN_IN_FAILED,SIGN_IN_FAILED, JOptionPane.ERROR_MESSAGE)
           }
       }
     }).start()

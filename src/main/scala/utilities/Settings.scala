@@ -3,315 +3,323 @@ package utilities
 import java.awt.{Dimension, Toolkit}
 import java.util
 
-import model.environment.{Coordinate, CoordinateImpl}
+import model.environment.CoordinateImpl
 
 object Settings {
 
-  val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
+  object Constants {
+    lazy val SCREEN_DIMENSION: Dimension = Toolkit.getDefaultToolkit.getScreenSize
 
-  val GAME_REFRESH_TIME: Int = 100
+    lazy val GAME_REFRESH_TIME = 100
 
-  val SCREEN_WIDTH: Int = SCREEN_DIMENSION.width
+    lazy val SCREEN_WIDTH: Int = SCREEN_DIMENSION.width
 
-  val SCREEN_HEIGHT: Int = SCREEN_DIMENSION.height
+    lazy val SCREEN_HEIGHT: Int = SCREEN_DIMENSION.height
 
-  val FRAME_SIDE: Int = SCREEN_WIDTH / 3
+    lazy val FRAME_SIDE: Int = SCREEN_WIDTH / 3
 
-  val MAP_WIDTH: Int = 50
+    lazy val MAP_WIDTH = 50
 
-  val MAP_HEIGHT: Int = 50
+    lazy val MAP_HEIGHT = 50
 
-  val TILE_HEIGHT: Int = 1
+    lazy val TILE_HEIGHT = 1
 
-  val TILE_WIDTH: Int = 1
+    lazy val TILE_WIDTH = 1
 
-  val TILE_PIXEL: Int = 32
+    lazy val TILE_PIXEL = 32
 
-  val POKEMON_CENTER_HEIGHT = 5
+    lazy val POKEMON_CENTER_HEIGHT = 5
 
-  val POKEMON_CENTER_WIDTH = 5
+    lazy val POKEMON_CENTER_WIDTH = 5
 
-  val POKEMON_CENTER_DOOR_X = 2
+    lazy val POKEMON_CENTER_DOOR_X = 2
 
-  val POKEMON_CENTER_DOOR_Y = 4
+    lazy val POKEMON_CENTER_DOOR_Y = 4
 
-  val LABORATORY_HEIGHT = 4
+    lazy val LABORATORY_HEIGHT = 4
 
-  val LABORATORY_WIDTH = 7
+    lazy val LABORATORY_WIDTH = 7
 
-  val LABORATORY_DOOR_X = 3
+    lazy val LABORATORY_DOOR_X = 3
 
-  val LABORATORY_DOOR_Y = 3
+    lazy val LABORATORY_DOOR_Y = 3
 
-  val PANELS_FOLDER: String =  "/panels/"
+    lazy val DATABASE_FOLDER =  "/database/"
 
-  val IMAGES_FOLDER: String =  "/images/"
+    lazy val INITIAL_TRAINER_LEVEL = 1
 
-  val MAP_ELEMENTS_IMAGES_FOLDER: String = IMAGES_FOLDER + "mapElements/"
+    lazy val LEVEL_STEP = 50
 
-  val POKEMON_IMAGES: String = IMAGES_FOLDER + "pokemon/"
+    lazy val BATTLE_EVENT_CHANGE_POKEMON = 1
 
-  val POKEBALL_IMAGES: String = IMAGES_FOLDER + "pokeball/"
+    lazy val BATTLE_EVENT_CAPTURE_POKEMON = 1
 
-  val GAME_MENU_IMAGES: String = IMAGES_FOLDER + "gameMenu/"
+    lazy val BATTLE_EVENT_ESCAPE = 2
 
-  val POKEMON_IMAGES_FRONT_FOLDER: String = POKEMON_IMAGES + "front/"
+    lazy val LOCAL_HOST_ADDRESS = "localhost"
 
-  val POKEMON_IMAGES_BACK_FOLDER: String = POKEMON_IMAGES + "back/"
+    lazy val REMOTE_HOST_ADDRESS = "ec2-13-58-204-113.us-east-2.compute.amazonaws.com"
 
-  val POKEMON_IMAGES_ICON_FOLDER: String = POKEMON_IMAGES + "icon/"
+    lazy val REMOTE_HOST_PORT = 5672
 
-  val TRAINER_IMAGES_FOLDER: String = IMAGES_FOLDER + "trainer/"
+    lazy val REMOTE_HOST_USERNAME = "guest"
 
-  val GRASS_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "grass.png"
+    lazy val REMOTE_HOST_PASSWORD = "guest"
 
-  val TALL_GRASS_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER+ "tall-grass.png"
+    lazy val PLAYER_LOGIN_CHANNEL_QUEUE = "player_connection"
 
-  val LABORATORY_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "laboratory.png"
+    lazy val PLAYERS_CONNECTED_CHANNEL_QUEUE = "players_connected"
 
-  val POKEMON_CENTER_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "pokemon-center.png"
+    lazy val PLAYER_POSITION_CHANNEL_QUEUE = "player_position"
 
-  val TREE_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "tree.png"
+    lazy val PLAYER_LOGOUT_CHANNEL_QUEUE = "player_logout"
 
-  val WATER_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water.png"
+    lazy val TRAINER_DIALOGUE_CHANNEL_QUEUE = "trainer_dialogue"
 
-  val WATER_MARGIN_TOP_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-top-left.png"
+    lazy val PLAYER_IN_BUILDING_CHANNEL_QUEUE = "player_in_building"
 
-  val WATER_MARGIN_TOP_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-top-right.png"
+    lazy val PLAYER_IS_BUSY_CHANNEL_QUEUE = "player_is_busy"
 
-  val WATER_MARGIN_TOP_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-top.png"
+    lazy val PLAYER_POSITION_EXCHANGE = "player_position_exchange"
 
-  val WATER_MARGIN_BOTTOM_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-bottom-left.png"
+    lazy val NEW_PLAYER_EXCHANGE = "new_player_exchange"
 
-  val WATER_MARGIN_BOTTOM_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-bottom-right.png"
+    lazy val PLAYER_LOGOUT_EXCHANGE = "player_logout_exchange"
 
-  val WATER_MARGIN_BOTTOM_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-bottom.png"
+    lazy val PLAYER_IN_BUILDING_EXCHANGE = "player_in_building_exchange"
 
-  val WATER_MARGIN_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-left.png"
+    lazy val PLAYER_IS_BUSY_EXCHANGE = "player_is_busy_exchange"
 
-  val WATER_MARGIN_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-right.png"
+    lazy val INITIAL_PLAYER_POSITION = CoordinateImpl(25, 25)
+  }
 
-  val ROAD_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road.png"
+  object Audio {
+    lazy val AUDIO_FOLDER = "/audio/"
 
-  val ROAD_MARGIN_TOP_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-top-left.png"
+    lazy val MAIN_SONG: String = AUDIO_FOLDER + "opening-theme.wav"
 
-  val ROAD_MARGIN_TOP_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-top-right.png"
+    lazy val MAP_SONG: String = AUDIO_FOLDER + "base-music.wav"
 
-  val ROAD_MARGIN_TOP_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-top.png"
+    lazy val POKEMONCENTER_SONG: String = AUDIO_FOLDER + "pokemoncenter.wav"
 
-  val ROAD_MARGIN_BOTTOM_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-bottom-left.png"
+    lazy val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
 
-  val ROAD_MARGIN_BOTTOM_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-bottom-right.png"
+    lazy val HEALING_SOUND: String = AUDIO_FOLDER + "healing.wav"
 
-  val ROAD_MARGIN_BOTTOM_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-bottom.png"
+    lazy val MENU_SONG: String = AUDIO_FOLDER + "menu.wav"
 
-  val ROAD_MARGIN_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-left.png"
+    lazy val POKEMON_WILD_SONG: String = AUDIO_FOLDER + "pokemon-wild.wav"
 
-  val ROAD_MARGIN_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-right.png"
+    lazy val CAPTURE_SONG: String = AUDIO_FOLDER + "pokemon-capture.wav"
 
-  val TRAINER_1_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1B1.png"
+    lazy val CAPTURE_FAILED_SONG: String = AUDIO_FOLDER + "pokemon-capture-failed.wav"
+  }
 
-  val TRAINER_1_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1B2.png"
+  object Images {
+    lazy val PANELS_FOLDER  =  "/panels/"
 
-  val TRAINER_1_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1BS.png"
+    lazy val IMAGES_FOLDER =  "/images/"
 
-  val TRAINER_1_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1F1.png"
+    lazy val MAP_IMAGES_FOLDER = "/images/maps/"
 
-  val TRAINER_1_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1F2.png"
+    lazy val CHARACTER_IMAGES_FOLDER = "/images/characters/"
 
-  val TRAINER_1_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1FS.png"
+    lazy val MAP_ELEMENTS_IMAGES_FOLDER: String = IMAGES_FOLDER + "mapElements/"
 
-  val TRAINER_1_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1L1.png"
+    lazy val POKEMON_IMAGES: String = IMAGES_FOLDER + "pokemon/"
 
-  val TRAINER_1_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1L2.png"
+    lazy val POKEBALL_IMAGES: String = IMAGES_FOLDER + "pokeball/"
 
-  val TRAINER_1_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1LS.png"
+    lazy val GAME_MENU_IMAGES: String = IMAGES_FOLDER + "gameMenu/"
 
-  val TRAINER_1_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1R1.png"
+    lazy val POKEMON_IMAGES_FRONT_FOLDER: String = POKEMON_IMAGES + "front/"
 
-  val TRAINER_1_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1R2.png"
+    lazy val POKEMON_IMAGES_BACK_FOLDER: String = POKEMON_IMAGES + "back/"
 
-  val TRAINER_1_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1RS.png"
+    lazy val POKEMON_IMAGES_ICON_FOLDER: String = POKEMON_IMAGES + "icon/"
 
-  val TRAINER_2_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2B1.png"
+    lazy val TRAINER_IMAGES_FOLDER: String = IMAGES_FOLDER + "trainer/"
 
-  val TRAINER_2_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2B2.png"
+    lazy val GRASS_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "grass.png"
 
-  val TRAINER_2_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2BS.png"
+    lazy val TALL_GRASS_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER+ "tall-grass.png"
 
-  val TRAINER_2_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2F1.png"
+    lazy val LABORATORY_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "laboratory.png"
 
-  val TRAINER_2_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2F2.png"
+    lazy val POKEMON_CENTER_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "pokemon-center.png"
 
-  val TRAINER_2_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2FS.png"
+    lazy val TREE_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "tree.png"
 
-  val TRAINER_2_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2L1.png"
+    lazy val WATER_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water.png"
 
-  val TRAINER_2_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2L2.png"
+    lazy val WATER_MARGIN_TOP_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-top-left.png"
 
-  val TRAINER_2_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2LS.png"
+    lazy val WATER_MARGIN_TOP_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-top-right.png"
 
-  val TRAINER_2_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2R1.png"
+    lazy val WATER_MARGIN_TOP_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-top.png"
 
-  val TRAINER_2_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2R2.png"
+    lazy val WATER_MARGIN_BOTTOM_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-bottom-left.png"
 
-  val TRAINER_2_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2RS.png"
+    lazy val WATER_MARGIN_BOTTOM_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-bottom-right.png"
 
-  val TRAINER_3_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3B1.png"
+    lazy val WATER_MARGIN_BOTTOM_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-bottom.png"
 
-  val TRAINER_3_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3B2.png"
+    lazy val WATER_MARGIN_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-left.png"
 
-  val TRAINER_3_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3BS.png"
+    lazy val WATER_MARGIN_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "water-margin-right.png"
 
-  val TRAINER_3_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3F1.png"
+    lazy val ROAD_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road.png"
 
-  val TRAINER_3_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3F2.png"
+    lazy val ROAD_MARGIN_TOP_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-top-left.png"
 
-  val TRAINER_3_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3FS.png"
+    lazy val ROAD_MARGIN_TOP_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-top-right.png"
 
-  val TRAINER_3_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3L1.png"
+    lazy val ROAD_MARGIN_TOP_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-top.png"
 
-  val TRAINER_3_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3L2.png"
+    lazy val ROAD_MARGIN_BOTTOM_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-bottom-left.png"
 
-  val TRAINER_3_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3LS.png"
+    lazy val ROAD_MARGIN_BOTTOM_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-bottom-right.png"
 
-  val TRAINER_3_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3R1.png"
+    lazy val ROAD_MARGIN_BOTTOM_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-bottom.png"
 
-  val TRAINER_3_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3R2.png"
+    lazy val ROAD_MARGIN_LEFT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-left.png"
 
-  val TRAINER_3_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3RS.png"
+    lazy val ROAD_MARGIN_RIGHT_IMAGE_STRING: String = MAP_ELEMENTS_IMAGES_FOLDER + "road-margin-right.png"
 
-  val TRAINER_4_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4B1.png"
+    lazy val TRAINER_1_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1B1.png"
 
-  val TRAINER_4_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4B2.png"
+    lazy val TRAINER_1_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1B2.png"
 
-  val TRAINER_4_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4BS.png"
+    lazy val TRAINER_1_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1BS.png"
 
-  val TRAINER_4_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4F1.png"
+    lazy val TRAINER_1_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1F1.png"
 
-  val TRAINER_4_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4F2.png"
+    lazy val TRAINER_1_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1F2.png"
 
-  val TRAINER_4_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4FS.png"
+    lazy val TRAINER_1_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1FS.png"
 
-  val TRAINER_4_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4L1.png"
+    lazy val TRAINER_1_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1L1.png"
 
-  val TRAINER_4_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4L2.png"
+    lazy val TRAINER_1_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1L2.png"
 
-  val TRAINER_4_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4LS.png"
+    lazy val TRAINER_1_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1LS.png"
 
-  val TRAINER_4_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4R1.png"
+    lazy val TRAINER_1_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1R1.png"
 
-  val TRAINER_4_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4R2.png"
+    lazy val TRAINER_1_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1R2.png"
 
-  val TRAINER_4_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4RS.png"
+    lazy val TRAINER_1_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "1RS.png"
 
-  val DATABASE_FOLDER: String =  "/database/"
+    lazy val TRAINER_2_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2B1.png"
 
-  val INITIAL_TRAINER_LEVEL: Int = 1
+    lazy val TRAINER_2_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2B2.png"
 
-  val LEVEL_STEP: Int = 50
+    lazy val TRAINER_2_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2BS.png"
 
-  val MAP_IMAGES_FOLDER = "/images/maps/"
+    lazy val TRAINER_2_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2F1.png"
 
-  val CHARACTER_IMAGES_FOLDER = "/images/characters/"
+    lazy val TRAINER_2_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2F2.png"
 
-  val CLASSIC_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("next")
+    lazy val TRAINER_2_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2FS.png"
 
-  val DOCTOR_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
+    lazy val TRAINER_2_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2L1.png"
 
-  val TRAINER_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("fight", "bye")
+    lazy val TRAINER_2_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2L2.png"
 
-  val AUDIO_FOLDER: String = "/audio/"
+    lazy val TRAINER_2_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2LS.png"
 
-  val MAIN_SONG: String = AUDIO_FOLDER + "opening-theme.wav"
+    lazy val TRAINER_2_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2R1.png"
 
-  val MAP_SONG: String = AUDIO_FOLDER + "base-music.wav"
+    lazy val TRAINER_2_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2R2.png"
 
-  val POKEMONCENTER_SONG: String = AUDIO_FOLDER + "pokemoncenter.wav"
+    lazy val TRAINER_2_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "2RS.png"
 
-  val LABORATORY_SONG: String = AUDIO_FOLDER + "laboratory.wav"
+    lazy val TRAINER_3_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3B1.png"
 
-  val HEALING_SOUND: String = AUDIO_FOLDER + "healing.wav"
+    lazy val TRAINER_3_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3B2.png"
 
-  val MENU_SONG: String = AUDIO_FOLDER + "menu.wav"
+    lazy val TRAINER_3_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3BS.png"
 
-  val POKEMON_WILD_SONG: String = AUDIO_FOLDER + "pokemon-wild.wav"
+    lazy val TRAINER_3_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3F1.png"
 
-  val CAPTURE_SONG: String = AUDIO_FOLDER + "pokemon-capture.wav"
+    lazy val TRAINER_3_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3F2.png"
 
-  val CAPTURE_FAILED_SONG: String = AUDIO_FOLDER + "pokemon-capture-failed.wav"
+    lazy val TRAINER_3_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3FS.png"
 
-  val LOGIN_BUTTON: String =  "Login"
+    lazy val TRAINER_3_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3L1.png"
 
-  val SIGN_IN_BUTTON: String =  "Sign in"
+    lazy val TRAINER_3_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3L2.png"
 
-  val QUIT_BUTTON: String =  "Quit"
+    lazy val TRAINER_3_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3LS.png"
 
-  val SUBMIT_BUTTON: String =  "Submit"
+    lazy val TRAINER_3_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3R1.png"
 
-  val USERNAME: String =  "Username"
+    lazy val TRAINER_3_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3R2.png"
 
-  val PASSWORD: String =  "Password"
+    lazy val TRAINER_3_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "3RS.png"
 
-  val BATTLE_EVENT_CHANGE_POKEMON: Int = 1
+    lazy val TRAINER_4_BACK_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4B1.png"
 
-  val BATTLE_EVENT_CAPTURE_POKEMON: Int = 1
+    lazy val TRAINER_4_BACK_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4B2.png"
 
-  val BATTLE_EVENT_ESCAPE: Int = 2
+    lazy val TRAINER_4_BACK_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4BS.png"
 
-  val LOCAL_HOST_ADDRESS: String = "localhost"
+    lazy val TRAINER_4_FRONT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4F1.png"
 
-  val REMOTE_HOST_ADDRESS: String = "ec2-13-58-204-113.us-east-2.compute.amazonaws.com"
+    lazy val TRAINER_4_FRONT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4F2.png"
 
-  val REMOTE_HOST_PORT: Int = 5672
+    lazy val TRAINER_4_FRONT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4FS.png"
 
-  val REMOTE_HOST_USERNAME: String = "guest"
+    lazy val TRAINER_4_LEFT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4L1.png"
 
-  val REMOTE_HOST_PASSWORD: String = "guest"
+    lazy val TRAINER_4_LEFT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4L2.png"
 
-  val PLAYER_LOGIN_CHANNEL_QUEUE: String = "player_connection"
+    lazy val TRAINER_4_LEFT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4LS.png"
 
-  val PLAYERS_CONNECTED_CHANNEL_QUEUE: String = "players_connected"
+    lazy val TRAINER_4_RIGHT_1_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4R1.png"
 
-  val PLAYER_POSITION_CHANNEL_QUEUE: String = "player_position"
+    lazy val TRAINER_4_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4R2.png"
 
-  val PLAYER_LOGOUT_CHANNEL_QUEUE: String = "player_logout"
+    lazy val TRAINER_4_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4RS.png"
+  }
 
-  val TRAINER_DIALOGUE_CHANNEL_QUEUE: String = "trainer_dialogue"
+  object Strings {
+    lazy val CLASSIC_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("next")
 
-  val PLAYER_IN_BUILDING_CHANNEL_QUEUE: String = "player_in_building"
+    lazy val DOCTOR_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
 
-  val PLAYER_IS_BUSY_CHANNEL_QUEUE: String = "player_is_busy"
+    lazy val TRAINER_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("fight", "bye")
 
-  val PLAYER_POSITION_EXCHANGE: String = "player_position_exchange"
+    lazy val LOGIN_BUTTON =  "Login"
 
-  val NEW_PLAYER_EXCHANGE: String = "new_player_exchange"
+    lazy val SIGN_IN_BUTTON =  "Sign in"
 
-  val PLAYER_LOGOUT_EXCHANGE: String = "player_logout_exchange"
+    lazy val QUIT_BUTTON =  "Quit"
 
-  val PLAYER_IN_BUILDING_EXCHANGE: String = "player_in_building_exchange"
+    lazy val SUBMIT_BUTTON =  "Submit"
 
-  val PLAYER_IS_BUSY_EXCHANGE: String = "player_is_busy_exchange"
+    lazy val USERNAME =  "Username"
 
-  val INITIAL_PLAYER_POSITION: Coordinate = CoordinateImpl(25, 25)
+    lazy val PASSWORD =  "Password"
 
-  val LOGIN_ERROR_USERNAME_PASSWORD_EMPTY: String = "Username and/or password must not be empty"
+    lazy val LOGIN_ERROR_USERNAME_PASSWORD_EMPTY = "Username and/or password must not be empty"
 
-  val LOGIN_ERROR_WRONG_USERNAME_PASSWORD: String = "Wrong username or password"
+    lazy val LOGIN_ERROR_WRONG_USERNAME_PASSWORD = "Wrong username or password"
 
-  val LOGIN_NO_TRAINER_ERROR: String = "There is no trainer for this user"
+    lazy val LOGIN_NO_TRAINER_ERROR = "There is no trainer for this user"
 
-  val SIGN_IN_NAME_ERROR: String = "Name must be at least 3 characters"
+    lazy val SIGN_IN_NAME_ERROR = "Name must be at least 3 characters"
 
-  val SIGN_IN_SURNAME_ERROR: String = "Surname must be at least 3 characters"
+    lazy val SIGN_IN_SURNAME_ERROR = "Surname must be at least 3 characters"
 
-  val SIGN_IN_EMAIL_ERROR: String = "Wrong e-mail"
+    lazy val SIGN_IN_EMAIL_ERROR = "Wrong e-mail"
 
-  val SIGN_IN_USERNAME_ERROR: String = "Username must be at least 4 characters"
+    lazy val SIGN_IN_USERNAME_ERROR = "Username must be at least 4 characters"
 
-  val SIGN_IN_PASSWORD_ERROR: String = "Password must be at least 7 characters"
+    lazy val SIGN_IN_PASSWORD_ERROR = "Password must be at least 7 characters"
 
-  val CORRECT_SIGN_IN: String = "Successful sign-in"
+    lazy val CORRECT_SIGN_IN = "Successful sign-in"
 
-  val SIGN_IN_FAILED: String = "Username not available"
+    lazy val SIGN_IN_FAILED = "Username not available"
+  }
 }

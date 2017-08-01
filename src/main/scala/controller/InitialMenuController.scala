@@ -16,7 +16,7 @@ trait InitialMenuController {
 
 class InitialMenuControllerImpl(override val view: View) extends InitialMenuController{
 
-  private val audio: Audio = new AudioImpl(Settings.MAIN_SONG)
+  private val audio: Audio = new AudioImpl(Settings.Audio.MAIN_SONG)
   audio.loop()
 
   show()
@@ -26,12 +26,11 @@ class InitialMenuControllerImpl(override val view: View) extends InitialMenuCont
   override def processEvent(event: String): Unit = {
     new Thread(() => {
       event match {
-        case Settings.LOGIN_BUTTON => new LoginControllerImpl(this, view)
-        case Settings.SIGN_IN_BUTTON => new SignInControllerImpl(this, view)
-        case Settings.QUIT_BUTTON => {
+        case Settings.Strings.LOGIN_BUTTON => new LoginControllerImpl(this, view)
+        case Settings.Strings.SIGN_IN_BUTTON => new SignInControllerImpl(this, view)
+        case Settings.Strings.QUIT_BUTTON =>
           stopMainMusic()
           System exit 0
-        }
         case _ =>
       }
     }).start()

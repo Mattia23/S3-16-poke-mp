@@ -23,7 +23,7 @@ public class SignInPanel extends BasePanel {
 
     public SignInPanel(SignInController controller) {
         this.controller = controller;
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "sign-in.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "sign-in.png");
 
         this.trainerImage = TrainerSprites$.MODULE$.apply(BASIC_TRAINER_ID).frontS().image();
         this.trainer = TrainerSprites.Trainers$.MODULE$.Boy1();
@@ -47,7 +47,7 @@ public class SignInPanel extends BasePanel {
         });
         JUtil.setEscClick(trainersBox, this.backButton);
 
-        JButton submit  = new JButton(Settings.SUBMIT_BUTTON());
+        JButton submit  = new JButton(Settings.Strings$.MODULE$.SUBMIT_BUTTON());
         Map<String,JTextField> accountData = new HashMap<>();
 
         for(AccountData data : AccountData.values()) {

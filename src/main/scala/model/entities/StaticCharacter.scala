@@ -35,7 +35,7 @@ class Oak extends StaticCharacter{
 
   override val HEIGHT: Int = 40
 
-  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "oak.png")
+  override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "oak.png")
 
   override def coordinate: Coordinate = CoordinateImpl(6, 4)
 
@@ -74,7 +74,7 @@ class Doctor extends StaticCharacter{
 
   override val HEIGHT: Int = 82
 
-  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "doctor.png")
+  override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "doctor.png")
 
   override def coordinate: Coordinate = CoordinateImpl(7, 3)
 
@@ -106,7 +106,7 @@ object PokemonCharacter{
 case class Bulbasaur() extends PokemonCharacter{
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
 
-  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
+  override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
 
   override val coordinate: Coordinate = CoordinateImpl(8, 4)
 
@@ -116,7 +116,7 @@ case class Bulbasaur() extends PokemonCharacter{
 case class Charmander() extends PokemonCharacter{
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(4), Optional.of(1)).get()
 
-  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "charmander.png")
+  override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "charmander.png")
 
   override val coordinate: Coordinate = CoordinateImpl(9, 4)
 
@@ -126,7 +126,7 @@ case class Charmander() extends PokemonCharacter{
 case class Squirtle() extends PokemonCharacter{
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
 
-  override val image: Image = LoadImage.load(Settings.CHARACTER_IMAGES_FOLDER + "squirtle.png")
+  override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "squirtle.png")
 
   override val coordinate: Coordinate = CoordinateImpl(10, 4)
 

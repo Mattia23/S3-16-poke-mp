@@ -23,14 +23,15 @@ class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends 
 
   private val playerQueue = channel.queueDeclare.getQueue
 
-  channel.queueDeclare(Settings.PLAYER_IS_BUSY_CHANNEL_QUEUE, false, false, false, null)
+  import Settings._
+  channel.queueDeclare(Constants.PLAYER_IS_BUSY_CHANNEL_QUEUE, false, false, false, null)
 
-  channel.exchangeDeclare(Settings.PLAYER_IS_BUSY_EXCHANGE, "fanout")
-  channel.queueBind(playerQueue, Settings.PLAYER_IS_BUSY_EXCHANGE, "")
+  channel.exchangeDeclare(Constants.PLAYER_IS_BUSY_EXCHANGE, "fanout")
+  channel.queueBind(playerQueue, Constants.PLAYER_IS_BUSY_EXCHANGE, "")
 
   override def sendPlayerIsBusy(userId: Int, isInBuilding: Boolean): Unit = {
     val playerIsBusyMessage = PlayerIsBusyMessage(userId, isInBuilding)
-    channel.basicPublish("", Settings.PLAYER_IS_BUSY_CHANNEL_QUEUE, null, gson.toJson(playerIsBusyMessage).getBytes("UTF-8"))
+    channel.basicPublish("", Constants.PLAYER_IS_BUSY_CHANNEL_QUEUE, null, gson.toJson(playerIsBusyMessage).getBytes("UTF-8"))
     println(" [x] Sent player is busy message")
   }
 

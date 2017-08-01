@@ -21,8 +21,9 @@ class NewPlayerInGameClientManagerImpl(private val connection: Connection) exten
   private val channel: Channel = connection.createChannel()
   private val playerQueue = channel.queueDeclare.getQueue
 
-  channel.exchangeDeclare(Settings.NEW_PLAYER_EXCHANGE, "fanout")
-  channel.queueBind(playerQueue, Settings.NEW_PLAYER_EXCHANGE, "")
+  import Settings._
+  channel.exchangeDeclare(Constants.NEW_PLAYER_EXCHANGE, "fanout")
+  channel.queueBind(playerQueue, Constants.NEW_PLAYER_EXCHANGE, "")
 
   override def receiveNewPlayerInGame(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
 

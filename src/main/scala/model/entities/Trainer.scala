@@ -56,7 +56,7 @@ trait Trainer {
 
 class TrainerImpl(override val name: String, private val idImage: Int, override var experiencePoints: Int) extends Trainer{
 
-  private var _coordinate: Coordinate = Settings.INITIAL_PLAYER_POSITION
+  private var _coordinate: Coordinate = Settings.Constants.INITIAL_PLAYER_POSITION
 
   override val id: Int = DBConnect.getTrainerIdFromUsername(name).get()
   override var level: Int = calculateLevel()
@@ -68,10 +68,11 @@ class TrainerImpl(override val name: String, private val idImage: Int, override 
   override var capturedPokemonId: List[Int] = DBConnect.getCapturedPokemonIdList(id).get()
 
   private def calculateLevel(): Int = {
-    var level: Double = Settings.INITIAL_TRAINER_LEVEL
-    var step: Double = Settings.LEVEL_STEP
+    import Settings._
+    var level: Double = Constants.INITIAL_TRAINER_LEVEL
+    var step: Double = Constants.LEVEL_STEP
     while(this.experiencePoints > step ){
-      step = step + Settings.LEVEL_STEP*math.pow(2,level)
+      step = step + Constants.LEVEL_STEP*math.pow(2,level)
       level += 1
     }
     level.toInt

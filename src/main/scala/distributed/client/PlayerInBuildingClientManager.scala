@@ -3,7 +3,7 @@ package distributed.client
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import distributed.ConnectedPlayers
-import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl, PlayerIsBusyMessage, PlayerLogoutMessageImpl}
+import distributed.messages.{PlayerInBuildingMessage, PlayerInBuildingMessageImpl}
 import utilities.Settings
 
 trait PlayerInBuildingClientManager {
@@ -23,14 +23,15 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
 
   private val playerQueue = channel.queueDeclare.getQueue
 
-  channel.queueDeclare(Settings.PLAYER_IN_BUILDING_CHANNEL_QUEUE, false, false, false, null)
+  import Settings._
+  channel.queueDeclare(Constants.PLAYER_IN_BUILDING_CHANNEL_QUEUE, false, false, false, null)
 
-  channel.exchangeDeclare(Settings.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
-  channel.queueBind(playerQueue, Settings.PLAYER_IN_BUILDING_EXCHANGE, "")
+  channel.exchangeDeclare(Constants.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
+  channel.queueBind(playerQueue, Constants.PLAYER_IN_BUILDING_EXCHANGE, "")
 
   override def sendPlayerIsInBuilding(userId: Int, isInBuilding: Boolean): Unit = {
     val playerInBuildingMessage = PlayerInBuildingMessage(userId, isInBuilding)
-    channel.basicPublish("", Settings.PLAYER_IN_BUILDING_CHANNEL_QUEUE, null, gson.toJson(playerInBuildingMessage).getBytes("UTF-8"))
+    channel.basicPublish("", Constants.PLAYER_IN_BUILDING_CHANNEL_QUEUE, null, gson.toJson(playerInBuildingMessage).getBytes("UTF-8"))
     println(" [x] Sent player is in building message")
   }
 

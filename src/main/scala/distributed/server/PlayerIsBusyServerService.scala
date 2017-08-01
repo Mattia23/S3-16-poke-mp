@@ -13,7 +13,9 @@ object PlayerIsBusyServerService {
 class PlayerIsBusyServerService(private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
-    channel.queueDeclare(Settings.PLAYER_IS_BUSY_CHANNEL_QUEUE, false, false, false, null)
+
+    import Settings._
+    channel.queueDeclare(Constants.PLAYER_IS_BUSY_CHANNEL_QUEUE, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
 
@@ -27,14 +29,14 @@ class PlayerIsBusyServerService(private val connection: Connection, private val 
 
         connectedPlayers.get(playerIsBusyMessage.userId).isBusy = playerIsBusyMessage.isBusy
 
-        channel.exchangeDeclare(Settings.PLAYER_IS_BUSY_EXCHANGE, "fanout")
+        channel.exchangeDeclare(Constants.PLAYER_IS_BUSY_EXCHANGE, "fanout")
         val response = gson.toJson(playerIsBusyMessage)
-        channel.basicPublish(Settings.PLAYER_IS_BUSY_EXCHANGE, "", null, response.getBytes("UTF-8"))
+        channel.basicPublish(Constants.PLAYER_IS_BUSY_EXCHANGE, "", null, response.getBytes("UTF-8"))
         println("server: send player is fighting")
       }
     }
 
-    channel.basicConsume(Settings.PLAYER_IS_BUSY_CHANNEL_QUEUE, true, consumer)
+    channel.basicConsume(Constants.PLAYER_IS_BUSY_CHANNEL_QUEUE, true, consumer)
   }
 }
 

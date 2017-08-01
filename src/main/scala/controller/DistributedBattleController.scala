@@ -15,7 +15,7 @@ class DistributedBattleController(val controller: GameController, val view: View
   private val battle: Battle = new TrainersBattle(controller.trainer,this,otherTrainer)
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
-  private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
+  private val audio: Audio = new AudioImpl(Settings.Audio.POKEMON_WILD_SONG)
   audio.loop()
 
   def passManager(battleClientManager: BattleClientManager): Unit = {
