@@ -85,7 +85,9 @@ class DistributedBattleControllerImpl(private val controller: GameController,
       myPokemonIsDead()
     }
   }
-
+  /**
+    * When a trainer change pokemon, update the value in the database and change the view
+    */
   private def myPokemonChanges(newPokemonId: Int): Unit = {
     battle.round.updatePokemon()
     battle.startBattleRound(newPokemonId,battle.getOtherPokemonId)
@@ -135,11 +137,15 @@ class DistributedBattleControllerImpl(private val controller: GameController,
     audio.stop()
     controller.resume()
   }
-
+  /**
+    * Show a new view when the round changes
+    */
   private def showNewView(): Unit = {
     view.showBattle(battle.myPokemon,battle.otherPokemon,this)
   }
-
+  /**
+    * When a pokemon dead, manage the situation
+    */
   private def myPokemonIsDead(): Unit = {
     view.getBattlePanel.pokemonIsDead(MY_POKEMON)
     val nextPokemon: Int = controller.trainer.getFirstAvailableFavouritePokemon

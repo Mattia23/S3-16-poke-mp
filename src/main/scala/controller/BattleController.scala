@@ -190,11 +190,15 @@ class BattleControllerImpl(private val controller: GameController, private val v
     audio.stop()
     controller.resume()
   }
-
+  /**
+    * Show a new view when the round changes
+    */
   private def showNewView(): Unit = {
     view.showBattle(battle.myPokemon,battle.otherPokemon,this)
   }
-
+  /**
+    * When a pokemon dead, manage the situation
+    */
   private def pokemonIsDead(pokemonDeadId: Int): Unit = {
     timer = new Thread() {
       override def run() {
@@ -210,7 +214,9 @@ class BattleControllerImpl(private val controller: GameController, private val v
     }
     timer.start()
   }
-
+  /**
+    * When trainer changes pokemon or launch a pokeball, can't attack too. So this method allows to wild pokemon to attacks.
+    */
   private def pokemonWildAttacksAfterTrainerChoice(): Unit = {
     timer = new Thread() {
       override def run() {

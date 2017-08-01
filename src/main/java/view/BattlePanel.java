@@ -332,7 +332,9 @@ public class BattlePanel extends ImagePanel implements BattleView {
                 PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._3()).get()._1(),
                 PokedexConnect.getPokemonAttack((int) pokemonEntities[0].pokemon().attacks()._4()).get()._1()};
     }
-
+    /**
+     * @inheritdoc
+     */
     @Override
     public void setPokemonLife() {
         myPokemonLife.setText(pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
@@ -344,15 +346,24 @@ public class BattlePanel extends ImagePanel implements BattleView {
             displayPanel.setVisible(false);
         }
     }
+    /**
+     * @inheritdoc
+     */
     @Override
     public void setPokemonLifeProgressBar(int life, int owner) {
         if (owner == Owner.TRAINER().id()) { pokemonProgressBar[1].setValue(life); }
         else { pokemonProgressBar[0].setValue(life); }
     }
+    /**
+     * @inheritdoc
+     */
     @Override
     public void pokemonIsDead(int i) {
         pokemonImages[i].setVisible(false);
     }
+    /**
+     * @inheritdoc
+     */
     @Override
     public void pokemonWildAttacksAfterTrainerChoice() {
         Thread t = new Thread() {
@@ -373,11 +384,17 @@ public class BattlePanel extends ImagePanel implements BattleView {
         };
         t.start();
     }
+    /**
+     * @inheritdoc
+     */
     @Override
     public int[] getOtherPokemonAttacks() { return new int[]{(Integer)pokemonEntities[0].pokemon().attacks()._1(),
             (Integer)pokemonEntities[0].pokemon().attacks()._2(), (Integer)pokemonEntities[0].pokemon().attacks()._3(),
-            (Integer)pokemonEntities[0].pokemon().attacks()._4()}; }
-
+            (Integer)pokemonEntities[0].pokemon().attacks()._4()};
+    }
+    /**
+     * @inheritdoc
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
