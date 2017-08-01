@@ -61,5 +61,7 @@ public class TrainerDialoguePanel extends DialoguePanel {
         buttons.get(1).addActionListener(e ->{
             trainerDialogueClientManager.sendDialogueRequest(trainerDialogueClientManager.otherPlayerId(), false, false);
         });
+        buttons.get(0).requestFocus();
+        JUtil.setFocus(buttons.get(0));
     }
 }

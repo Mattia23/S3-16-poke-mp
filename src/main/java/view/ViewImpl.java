@@ -18,6 +18,7 @@ public class ViewImpl extends JFrame implements View {
     private Dimension frameDiminsion;
     private BattleView battlePanel;
     private GamePanel gamePanel;
+    private DialoguePanel currentDialogue;
 
     public ViewImpl() {
         this.setTitle(WINDOW_TITLE);
@@ -41,9 +42,12 @@ public class ViewImpl extends JFrame implements View {
     }
 
     private void setDialogue(final JPanel panel){
-        final DialoguePanel dialoguePanel = (DialoguePanel) panel;
-        this.getContentPane().add(dialoguePanel, BorderLayout.SOUTH);
-        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));
+        if(currentDialogue != null && currentDialogue.isVisible()){
+            currentDialogue.setVisible(false);
+        }
+        currentDialogue = (DialoguePanel) panel;
+        this.getContentPane().add(currentDialogue, BorderLayout.SOUTH);
+        currentDialogue.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));
         this.revalidate();
         this.repaint();
     }
