@@ -25,7 +25,8 @@ object LoginControllerImpl {
   private final val LOGIN_FAILED: String = "LOGIN FAILED"
 }
 
-class LoginControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends LoginController{
+class LoginControllerImpl(private val initialMenuController: InitialMenuController,
+                          private val view: View) extends LoginController{
 
   import LoginControllerImpl._
   view showLogin this

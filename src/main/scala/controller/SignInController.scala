@@ -27,7 +27,8 @@ object SignInControllerImpl{
   private final val SIGN_IN_FAILED = "SIGN IN FAILED"
 }
 
-class SignInControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends SignInController{
+class SignInControllerImpl(private val initialMenuController: InitialMenuController,
+                           private val view: View) extends SignInController{
 
   import SignInControllerImpl._
   view showSignIn this

@@ -10,7 +10,8 @@ object GameMap {
   def apply(height: Int, width: Int): GameMap = new GameMapImpl(height: Int, width)
 }
 
-class GameMapImpl(override val height: Int, override val width: Int) extends GameMap{
+class GameMapImpl(override val height: Int,
+                  override val width: Int) extends GameMap{
 
   override val map = Array.ofDim[Tile](height,width)
   initMap()

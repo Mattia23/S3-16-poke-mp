@@ -13,10 +13,10 @@ trait Audio {
 }
 
 object Audio{
-  def apply(song: String): Audio = new AudioImpl(song: String)
+  def apply(song: String): Audio = new AudioImpl(song)
 }
 
-class AudioImpl(song: String) extends  Audio{
+class AudioImpl(private val song: String) extends  Audio{
 
   private val audio: AudioInputStream = AudioSystem getAudioInputStream getClass.getResource(song)
   private val clip: Clip = AudioSystem.getClip

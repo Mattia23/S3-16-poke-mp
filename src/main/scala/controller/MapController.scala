@@ -24,7 +24,10 @@ object MapController {
   def apply(view: View, _trainer: Trainer, connection: Connection, connectedPlayers: ConnectedPlayers): GameController = new MapController(view, _trainer, connection, connectedPlayers)
 }
 
-class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
+class MapController(private val view: View,
+                    private val _trainer: Trainer,
+                    private val connection: Connection,
+                    private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
   import MapController._
 
   private val gameMap = MapCreator.create(Settings.Constants.MAP_HEIGHT, Settings.Constants.MAP_WIDTH, InitialTownElements())

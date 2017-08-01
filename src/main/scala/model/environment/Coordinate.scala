@@ -11,4 +11,5 @@ object Coordinate {
   implicit def tuple2ToCoordinate(t: (Int, Int)): Coordinate = CoordinateImpl(t._1, t._2)
 }
 
-case class CoordinateImpl(override val x: Int, override val y: Int) extends Coordinate
+case class CoordinateImpl(override val x: Int,
+                          override val y: Int) extends Coordinate

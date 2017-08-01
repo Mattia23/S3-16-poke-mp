@@ -52,7 +52,8 @@ trait GameController {
   def sendTrainerIsBusy(isBusy: Boolean): Unit
 }
 
-abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
+abstract class GameControllerImpl(private var view: View,
+                                  override val trainer: Trainer) extends GameController {
   private var agent: GameControllerAgent = _
   private val executor: ExecutorService = Executors.newSingleThreadExecutor()
   private implicit val executionContext = ExecutionContext fromExecutor executor
