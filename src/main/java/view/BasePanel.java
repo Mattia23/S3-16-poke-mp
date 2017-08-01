@@ -10,6 +10,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * This class permit to refactor some elements (GridBag structure and back button), used in different panels
+ */
 public class BasePanel extends ImagePanel {
 
     private static final long serialVersionUID = 1L;
