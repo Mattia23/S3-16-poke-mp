@@ -27,7 +27,6 @@ public class MapPanel extends GamePanel{
 
     @Override
     protected void doPaint(Graphics g) {
-        long time = System.currentTimeMillis();
         drawMapElements(g);
         drawBuildings(g);
         drawOtherTrainers(g);

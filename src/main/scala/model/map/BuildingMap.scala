@@ -12,7 +12,7 @@ trait BuildingMap extends BasicMap{
   def image: Image
   def matricesNotWalkable: List[MatrixCoordinate]
   def npc: StaticCharacter
-  def npc_=(staticCharacter: StaticCharacter): Unit = npc = staticCharacter
+  def npc_=(staticCharacter: StaticCharacter): Unit
   def entryCoordinate: Coordinate
 
   def pokemonNpc: List[PokemonCharacter]
@@ -42,7 +42,7 @@ class PokemonCenterMap extends BuildingMap{
   override def width: Int = 15
   override val map: Array[Array[Tile]]= Array.ofDim[Tile](width, height)
 
-  override val npc: StaticCharacter = new Doctor
+  override var npc: StaticCharacter = new Doctor
 
   override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "pokemon-center.png")
 
@@ -68,7 +68,7 @@ class PokemonCenterMap extends BuildingMap{
 class LaboratoryMap extends BuildingMap{
   override val height: Int = 13
   override val width: Int = 13
-  override val map: Array[Array[Tile]]= Array.ofDim[Tile](width, height)
+  override val map: Array[Array[Tile]] = Array.ofDim[Tile](width, height)
 
   override var npc: StaticCharacter = new Oak
 
