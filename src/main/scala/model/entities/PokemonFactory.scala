@@ -6,6 +6,11 @@ import database.remote.DBConnect
 import scala.collection.mutable
 import scala.util.Random
 
+/**
+  * PokemonFactory is a static class that returns an instance of a pokemon:
+  *  - if the pokemon is wild, the pokemon will be created from zero (the level of the trainer allows to create pokemon even more rare and strong).
+  *  - if the pokemon is owned by a trainer, the class get the values in input from the database online.
+  */
 object PokemonFactory {
   private final val LEVEL_STEP_ONE: Int = 10
   private final val LEVEL_STEP_TWO: Int = 20
@@ -60,7 +65,11 @@ object PokemonFactory {
       Optional.of(pokemon)
     }
   }
-
+  /**
+    * Create the wild pokemon, considering the level of the trainer and the rarity of the pokemon.
+    * When the coach level grows, you can find more Pokemon. Established the pokemon list that can be found,
+    * a probability algorithm is created based on the rarity of pokemon.
+    */
   private def generateCasualPokemonId(trainerLevel: Int): Int = {
     var indexRandomList: mutable.Map[Range,Int] = mutable.HashMap()
     if(trainerLevel < LEVEL_STEP_ONE) {
@@ -82,7 +91,10 @@ object PokemonFactory {
     }
     pokemonId
   }
-
+  /**
+    * The level of the pokemon is created beetwen a possible range (contained in the database). Within this range,
+    * the level of the pokemon will be generated considering the coach level.
+    */
   private def generateLevelPokemon(trainerLevel: Int, pokemonId: Int): Int = {
     val min: Int = PokedexConnect.getMinLevelWildPokemon(pokemonId)
     val max: Int = PokedexConnect.getMaxLevelWildPokemon(pokemonId)
@@ -95,12 +107,16 @@ object PokemonFactory {
       min + 2*x + Random.nextInt(x)
     }
   }
-
+  /**
+    * A simple calculation to create the pokemon experience
+    */
   private def generateExperiencePokemon(id: Int, level: Int): Int = {
     val baseExp: Int = PokedexConnect.getBaseExperiencePokemon(id).get()
     baseExp + level*4 - 4
   }
-
+  /**
+    * The attacks of the pokemon are created randomly, getting 4 attacks from the list of the possible attacks that the pokemon can learn
+    */
   private def generateAttacksPokemon(id: Int): (Int,Int,Int,Int) = {
     val attacksList: java.util.List[Integer] = PokedexConnect.getAttacksList(id)
     (attacksList.get(Random.nextInt(attacksList.size()/4)), attacksList.get(attacksList.size()/4+Random.nextInt(attacksList.size()/4)),
