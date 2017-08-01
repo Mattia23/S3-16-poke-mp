@@ -16,21 +16,24 @@ import view._
 import scala.util.Random
 
 object MapController {
-  def apply(view: View, _trainer: Trainer, connection: Connection, connectedPlayers: ConnectedPlayers): GameController = new MapController(view, _trainer, connection, connectedPlayers)
-
   private final val RANDOM_MAX_VALUE = 10
   private final val MIN_VALUE_TO_FIND_POKEMON = 8
   private final val POKEMON_CENTER_BUILDING = "Pokemon center"
   private final val LABORATORY_BUILDING = "Laboratory"
+
+  def apply(view: View, _trainer: Trainer, connection: Connection, connectedPlayers: ConnectedPlayers): GameController = new MapController(view, _trainer, connection, connectedPlayers)
 }
 
-class MapController(private val view: View, private val _trainer: Trainer, private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
+class MapController(private val view: View,
+                    private val _trainer: Trainer,
+                    private val connection: Connection,
+                    private val connectedPlayers: ConnectedPlayers) extends GameControllerImpl(view, _trainer){
   import MapController._
 
   private val gameMap = MapCreator.create(Settings.Constants.MAP_HEIGHT, Settings.Constants.MAP_WIDTH, InitialTownElements())
   private var lastCoordinates: Coordinate = _
   private val distributedMapController: DistributedMapController = DistributedMapController(this, connection, connectedPlayers)
-  connectedPlayers.addObserver(distributedMapController.asInstanceOf[ConnectedPlayersObserver])
+  connectedPlayers addObserver distributedMapController.asInstanceOf[ConnectedPlayersObserver]
   audio = Audio(Settings.Audio.MAP_SONG)
 
 
@@ -79,10 +82,10 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
   }
 
   override protected def doResume(): Unit = {
-    distributedMapController.sendTrainerInBuilding(true)
+    distributedMapController sendTrainerInBuilding true
     sendTrainerIsBusy(false)
     if(trainer.getFirstAvailableFavouritePokemon <= 0) {
-      DBConnect.rechangeAllTrainerPokemon(trainer.id)
+      DBConnect rechangeAllTrainerPokemon trainer.id
       setTrainerSpriteFront()
       updateLastCoordinateToBuilding(POKEMON_CENTER_BUILDING)
     }
@@ -102,39 +105,36 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
       val tile = gameMap.map(nextPosition.x)(nextPosition.y)
       tile match {
         case tile:Building
-          if nextPosition.equals(CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y)) =>
+          if nextPosition equals CoordinateImpl(tile.topLeftCoordinate.x + tile.doorCoordinates.x, tile.topLeftCoordinate.y + tile.doorCoordinates.y) =>
           enterInBuilding(tile)
         case _ if tile.walkable =>
           walk(direction, nextPosition)
-          distributedMapController.sendTrainerPosition(nextPosition)
+          distributedMapController sendTrainerPosition nextPosition
           if(tile.isInstanceOf[Tile.TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }
     }
   }
 
-  private def enterInBuilding(building: Building): Unit = {
-    distributedMapController.sendTrainerInBuilding(false)
+  private def enterInBuilding(building: Building) = {
+    distributedMapController sendTrainerInBuilding false
     pause()
-    var buildingController: BuildingController = null
-    building match{
-      case _: PokemonCenter =>
-        buildingController = new PokemonCenterController(this.view, this, trainer)
-      case _: Laboratory =>
-        buildingController = new LaboratoryController(this.view, this, trainer)
+    val buildingController: BuildingController = building match{
+      case _: PokemonCenter => new PokemonCenterController(this.view, this, trainer)
+      case _: Laboratory => new LaboratoryController(this.view, this, trainer)
     }
     buildingController.start()
     trainerIsMoving = false
   }
 
-  private def randomPokemonAppearance(): Unit = {
-    val random: Int = Random.nextInt(RANDOM_MAX_VALUE)
+  private def randomPokemonAppearance() = {
+    val random: Int = Random nextInt RANDOM_MAX_VALUE
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       sendTrainerIsBusy(true)
       waitEndOfMovement.acquire()
       pause()
       waitEndOfMovement.release()
-      new BattleControllerImpl(this: GameController, view: View)
+      new BattleControllerImpl(this, view)
     }
   }
 
@@ -158,13 +158,13 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
 
   override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
     pause()
-    val otherPlayerUsername = connectedPlayers.get(otherPlayerId).username
-    val distributedBattle: DistributedBattleController = new DistributedBattleControllerImpl(this, view, otherPlayerUsername,yourPlayerIsFirst)
-    val battleManager: BattleClientManager = new BattleClientManagerImpl(connection,trainer.id,otherPlayerId,distributedBattle)
-    distributedBattle.passManager(battleManager)
+    val otherPlayerUsername = (connectedPlayers get otherPlayerId).username
+    val distributedBattle: DistributedBattleController = new DistributedBattleControllerImpl(this, view, otherPlayerUsername, yourPlayerIsFirst)
+    val battleManager: BattleClientManager = new BattleClientManagerImpl(connection, trainer.id, otherPlayerId, distributedBattle)
+    distributedBattle passManager battleManager
   }
 
   override def sendTrainerIsBusy(isBusy: Boolean): Unit = {
-    distributedMapController.sendTrainerIsFighting(isBusy)
+    distributedMapController sendTrainerIsBusy isBusy
   }
 }

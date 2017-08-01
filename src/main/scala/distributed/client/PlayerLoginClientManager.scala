@@ -28,7 +28,6 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
   override def sendPlayer(player: Player): Unit = {
     val playerMessage = PlayerMessage(player)
     channel.basicPublish("", Constants.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
-    println(" [x] Sent message")
   }
 
   override def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
@@ -41,11 +40,10 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received message")
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
         val serverPlayersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
-        connectedPlayers.addAll(serverPlayersMessage.connectedPlayers)
+        connectedPlayers addAll serverPlayersMessage.connectedPlayers
 
         channel.close()
       }

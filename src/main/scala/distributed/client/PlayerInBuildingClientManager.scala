@@ -32,7 +32,6 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
   override def sendPlayerIsInBuilding(userId: Int, isInBuilding: Boolean): Unit = {
     val playerInBuildingMessage = PlayerInBuildingMessage(userId, isInBuilding)
     channel.basicPublish("", Constants.PLAYER_IN_BUILDING_CHANNEL_QUEUE, null, gson.toJson(playerInBuildingMessage).getBytes("UTF-8"))
-    println(" [x] Sent player is in building message")
   }
 
   override def receiveOtherPlayerIsInBuilding(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
@@ -42,11 +41,10 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player in building")
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
-        if (playerInBuildingMessage.userId != userId && connectedPlayers.containsPlayer(playerInBuildingMessage.userId))
-          connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
+        if (playerInBuildingMessage.userId != userId && (connectedPlayers containsPlayer playerInBuildingMessage.userId))
+          (connectedPlayers get playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
       }
 
     }

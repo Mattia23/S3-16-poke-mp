@@ -151,11 +151,11 @@ class BattleControllerImpl(private val controller: GameController, private val v
   override def trainerThrowPokeball(): Boolean = {
     battle.pokeball_=(battle.pokeball-1)
     if(!battle.pokemonIsCaptured()) {
-      new AudioImpl(Settings.Audio.CAPTURE_FAILED_SONG)
+      Audio(Settings.Audio.CAPTURE_FAILED_SONG)
       pokemonWildAttacksAfterTrainerChoice()
       false
     } else {
-      new AudioImpl(Settings.Audio.CAPTURE_SONG)
+      Audio(Settings.Audio.CAPTURE_SONG)
       timer = new Thread() {
         override def run() {
           battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CAPTURE_POKEMON)

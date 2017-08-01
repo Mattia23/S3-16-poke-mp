@@ -54,7 +54,6 @@ class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends 
   override def sendPlayerIsBusy(userId: Int, isBusy: Boolean): Unit = {
     val playerIsBusyMessage = PlayerIsBusyMessage(userId, isBusy)
     channel.basicPublish("", Constants.PLAYER_IS_BUSY_CHANNEL_QUEUE, null, gson.toJson(playerIsBusyMessage).getBytes("UTF-8"))
-    println(" [x] Sent player is busy message")
   }
 
   /**
@@ -67,7 +66,6 @@ class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends 
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player is busy")
         val playerIsBusyMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerIsBusyMessageImpl])
 
         if (playerIsBusyMessage.userId != userId && connectedPlayers.containsPlayer(playerIsBusyMessage.userId))

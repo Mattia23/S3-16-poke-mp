@@ -13,6 +13,10 @@ trait SignInController{
   def back(): Unit
 }
 
+object SignInController{
+  def apply(initialMenuController: InitialMenuController, view: View): SignInControllerImpl = new SignInControllerImpl(initialMenuController, view)
+}
+
 object SignInControllerImpl{
   private final val NAME_MIN_LENGTH = 3
   private final val SURNAME_MIN_LENGTH = 3
@@ -23,7 +27,8 @@ object SignInControllerImpl{
   private final val SIGN_IN_FAILED = "SIGN IN FAILED"
 }
 
-class SignInControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends SignInController{
+class SignInControllerImpl(private val initialMenuController: InitialMenuController,
+                           private val view: View) extends SignInController{
 
   import SignInControllerImpl._
   view showSignIn this
@@ -40,7 +45,7 @@ class SignInControllerImpl(private val initialMenuController: InitialMenuControl
       (name, surname, email, username, password) match {
         case _ if name.length < NAME_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_NAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
         case _ if surname.length < SURNAME_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_SURNAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
-        case _ if !email.contains(String.valueOf('@')) | !email.contains(String.valueOf('.')) => view.showMessage(Strings.SIGN_IN_EMAIL_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
+        case _ if !(email contains String.valueOf('@')) | !(email contains String.valueOf('.')) => view.showMessage(Strings.SIGN_IN_EMAIL_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
         case _ if username.length < USERNAME_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_USERNAME_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
         case _ if password.length < PASSWORD_MIN_LENGTH => view.showMessage(Strings.SIGN_IN_PASSWORD_ERROR, WRONG_SING_IN, JOptionPane.ERROR_MESSAGE)
         case _ =>

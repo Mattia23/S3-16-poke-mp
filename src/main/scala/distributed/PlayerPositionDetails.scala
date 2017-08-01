@@ -25,5 +25,7 @@ object PlayerPositionDetails {
     new PlayerPositionDetailsImpl(id, coordinateX, coordinateY, currentSprite)
 }
 
-class PlayerPositionDetailsImpl(override val id: Int, override var coordinateX: Double,
-                                override var coordinateY: Double, override var currentSprite: Sprite) extends PlayerPositionDetails
+class PlayerPositionDetailsImpl(override val id: Int,
+                                override var coordinateX: Double,
+                                override var coordinateY: Double,
+                                override var currentSprite: Sprite) extends PlayerPositionDetails

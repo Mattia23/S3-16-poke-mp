@@ -29,7 +29,6 @@ class PlayerPositionClientManagerImpl(private val connection: Connection) extend
   override def sendPlayerPosition(userId: Int, position: Coordinate): Unit = {
     val playerPositionMessage = PlayerPositionMessage(userId, position)
     channel.basicPublish("", Constants.PLAYER_POSITION_CHANNEL_QUEUE, null, gson.toJson(playerPositionMessage).getBytes("UTF-8"))
-    println(" [x] Sent position")
   }
 
   override def receiveOtherPlayerPosition(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
@@ -44,12 +43,11 @@ class PlayerPositionClientManagerImpl(private val connection: Connection) extend
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player position")
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerPositionMessageImpl], PlayerPositionMessageDeserializer).create()
         val otherPlayerPosition = gson.fromJson(message, classOf[PlayerPositionMessageImpl])
 
-        if (otherPlayerPosition.userId != userId && connectedPlayers.containsPlayer(otherPlayerPosition.userId))
+        if (otherPlayerPosition.userId != userId && (connectedPlayers containsPlayer otherPlayerPosition.userId))
           connectedPlayers.updateTrainerPosition(otherPlayerPosition.userId, otherPlayerPosition.position)
       }
     }
