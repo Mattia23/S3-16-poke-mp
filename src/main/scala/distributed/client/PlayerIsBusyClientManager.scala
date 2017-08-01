@@ -7,7 +7,7 @@ import distributed.messages.{PlayerIsBusyMessage, PlayerIsBusyMessageImpl}
 import utilities.Settings
 
 trait PlayerIsBusyClientManager {
-  def sendPlayerIsBusy(userId: Int, isInBuilding: Boolean): Unit
+  def sendPlayerIsBusy(userId: Int, isBusy: Boolean): Unit
 
   def receiveOtherPlayerIsBusy(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
@@ -28,8 +28,8 @@ class PlayerIsBusyClientManagerImpl(private val connection: Connection) extends 
   channel.exchangeDeclare(Settings.PLAYER_IS_BUSY_EXCHANGE, "fanout")
   channel.queueBind(playerQueue, Settings.PLAYER_IS_BUSY_EXCHANGE, "")
 
-  override def sendPlayerIsBusy(userId: Int, isInBuilding: Boolean): Unit = {
-    val playerIsBusyMessage = PlayerIsBusyMessage(userId, isInBuilding)
+  override def sendPlayerIsBusy(userId: Int, isBusy: Boolean): Unit = {
+    val playerIsBusyMessage = PlayerIsBusyMessage(userId, isBusy)
     channel.basicPublish("", Settings.PLAYER_IS_BUSY_CHANNEL_QUEUE, null, gson.toJson(playerIsBusyMessage).getBytes("UTF-8"))
     println(" [x] Sent player is busy message")
   }

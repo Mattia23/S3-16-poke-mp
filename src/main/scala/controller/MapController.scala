@@ -108,7 +108,7 @@ class MapController(private val view: View, private val _trainer: Trainer, priva
         case _ if tile.walkable =>
           walk(direction, nextPosition)
           distributedMapController.sendTrainerPosition(nextPosition)
-          if(tile.isInstanceOf[TallGrass]) randomPokemonAppearance()
+          if(tile.isInstanceOf[Tile.TallGrass]) randomPokemonAppearance()
         case _ => trainerIsMoving = false
       }
     }

@@ -6,8 +6,9 @@ import model.entities._
 import model.environment.{Coordinate, CoordinateImpl, MatrixCoordinate}
 import utilities.Settings
 import view.LoadImage
+import Tile._
 
-trait BuildingMap extends BasicMap{
+trait BuildingMap extends BasicMap{  
   def image: Image
   def matriciesNotWalkable: List[MatrixCoordinate]
   def npc: StaticCharacter

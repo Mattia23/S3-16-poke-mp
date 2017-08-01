@@ -42,7 +42,7 @@ abstract class MovementImpl extends Movement{
     updateTrainerPosition(nextPosition)
   }
 
-  private def updateTrainerSprite(direction: Direction): Unit = {
+  private def updateTrainerSprite(direction: Direction) = {
     import Sprite._
 
     direction match {

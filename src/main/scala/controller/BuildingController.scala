@@ -104,7 +104,7 @@ class PokemonCenterController(private val view: View, private val mapController:
           //this.pause()
           showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
-        if(tile.isInstanceOf[Box]){
+        if(tile.isInstanceOf[Tile.Box]){
           this.pause()
           view showBoxPanel this
         }
