@@ -26,9 +26,7 @@ class MapElementsImpl extends MapElements {
 
   override def addTile(tile: Tile, coordinate: Coordinate): Unit = map = map + ((coordinate.x, coordinate.y) -> tile)
 
-  override def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]): Unit = {
-    coordinates foreach(coordinate => addTile(tile, coordinate))
-  }
+  override def addTileInMultipleCoordinates(tile: Tile, coordinates: Seq[Coordinate]): Unit = coordinates foreach(coordinate => addTile(tile, coordinate))
 
   override def addMultipleElements(tile: Tile, topLeftCoordinate: Coordinate, bottomRightCoordinate: Coordinate): Unit = {
     for (x <- topLeftCoordinate.x to bottomRightCoordinate.x)

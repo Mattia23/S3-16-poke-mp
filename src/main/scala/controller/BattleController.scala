@@ -1,51 +1,94 @@
 package controller
 
-import database.remote.DBConnect
-import distributed.client.BattleClientManager
-import model.entities.{Owner, Trainer}
-import model.environment.{Audio, AudioImpl}
 import model.battle.{Battle, BattleImpl}
+import model.entities.Owner
+import model.environment.{Audio, AudioImpl}
 import utilities.Settings
 import view.View
 
 import scala.util.Random
 
+/**
+  * BattleController permits to manage every event during a battle against a wild Pokemon (attacks during the fight,
+  * launching Pokeball and capturing wild Pokemon, allow trainer to change his Pokemons...)
+  */
 trait BattleController {
+  /**
+    * Manage the attack of the trainer's Pokemon
+    * @param attackId the id of the attack that the trainer chose
+    */
   def myPokemonAttacks(attackId: Int): Unit
 
-  def otherPokemonAttacks(id: Int): Unit
-
-  def otherPokemonChanges(newPokemonId: Int): Unit
-
+  /**
+    * Return how many Pokeballs are still available
+    * @return available Pokeball number
+    */
   def getPokeballAvailableNumber: Int
 
+  /**
+    * Manage whats happens when the trainer launch a Pokeball and return false if the trainers fails, true if the
+    * trainer captures the Pokemon
+    * @return true if the wild pokemon was captured, false in the opposite case
+    */
   def trainerThrowPokeball(): Boolean
 
+  /**
+    * Show the panel that allow to change trainer's Pokemon in the battle
+    */
   def changePokemon(): Unit
 
+  /**
+    * Update trainer's pokemon in the remote DB and create a new BattleRound with the new trainer's Pokemon selected.
+    * In the end make wild Pokemon attack
+    * @param id id of the new trainer's Pokemon
+    */
   def pokemonToChangeIsSelected(id: Int): Unit
 
+  /**
+    * Return randomly if the trainer can escape from the battle or not; if not, make wild pokemon attack
+    * @return true if the trainer can escape, false in the opposite case
+    */
   def trainerCanQuit(): Boolean
 
+  /**
+    * Stop the battle audio and resume the game
+    */
   def resumeGame(): Unit
 
-  def passManager(battleClientManager: BattleClientManager): Unit
-
+  /**
+    * Return if the current battle is with a wild Pokemon or with an other trainer
+    * @return a boolean representing if the battle is distributed or not
+    */
   def isDistributedBattle: Boolean = false
 
+  /**
+    * In a battle against a wild Pokemon return always false; in a distributed battle return if the playing trainer is
+    * the first to attack or not
+    * @return a boolean representing if the playing trainer is the first to attack
+    */
   def yourPlayerIsFirst: Boolean = false
 }
 
-class BattleControllerImpl(val controller: GameController, val view: View) extends BattleController {
+/**
+  * @inheritdoc
+  * @param controller Instance of game controller
+  * @param view Instance of the view to update battle panel during the fight
+  */
+class BattleControllerImpl(private val controller: GameController, private val view: View) extends BattleController {
   private val WILD_POKEMON: Int = 0
   private val MY_POKEMON: Int = 1
   val battle: Battle = new BattleImpl(controller.trainer,this)
   private var timer: Thread = _
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon)
   showNewView()
-  private val audio: Audio = new AudioImpl(Settings.POKEMON_WILD_SONG)
+  private val audio: Audio = new AudioImpl(Settings.Audio.POKEMON_WILD_SONG)
   audio.loop()
 
+  /**
+    * Manage the attack of trainer's Pokemon and, if the wild Pokemon is still alive, make the wild Pokemon attacks.
+    * Update battle view as well
+    * @param attackId the id of the attack that the trainer chose
+    */
   override def myPokemonAttacks(attackId: Int): Unit = {
     battle.round.myPokemonAttack(attackId)
     view.getBattlePanel.setPokemonLifeProgressBar(battle.otherPokemon.pokemonLife,Owner.WILD.id)
@@ -62,6 +105,10 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
     }
   }
 
+  /**
+    * Chose randomly one of the possible wild Pokemon's attacks and attack trainer's Pokemon updating battle view and
+    * checking if trainer's Pokemon died
+    */
   private def otherPokemonAttacks(): Unit = {
     battle.round.otherPokemonAttack(view.getBattlePanel.getOtherPokemonAttacks()(Random.nextInt(3)))
     view.getBattlePanel.setPokemonLife()
@@ -71,32 +118,47 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
     }
   }
 
+  /**
+    * @inheritdoc
+    */
   override def changePokemon(): Unit = {
     view.showPokemonChoice(this, controller.trainer)
   }
 
+  /**
+    * @inheritdoc
+    * @param id id of the new trainer's Pokemon
+    */
   override def pokemonToChangeIsSelected(id: Int): Unit =  {
-    battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CHANGE_POKEMON)
+    battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CHANGE_POKEMON)
     battle.startBattleRound(id)
     showNewView()
     pokemonWildAttacksAfterTrainerChoice()
   }
 
+  /**
+    * @inheritdoc
+    * @return available Pokeball number
+    */
   override def getPokeballAvailableNumber: Int = {
     battle.pokeball
   }
 
+  /**
+    * @inheritdoc
+    * @return true if the wild pokemon was captured, false in the opposite case
+    */
   override def trainerThrowPokeball(): Boolean = {
     battle.pokeball_=(battle.pokeball-1)
-    if(!battle.pokeballLaunched()) {
-      new AudioImpl(Settings.CAPTURE_FAILED_SONG)
+    if(!battle.pokemonIsCaptured()) {
+      Audio(Settings.Audio.CAPTURE_FAILED_SONG)
       pokemonWildAttacksAfterTrainerChoice()
       false
     } else {
-      new AudioImpl(Settings.CAPTURE_SONG)
+      Audio(Settings.Audio.CAPTURE_SONG)
       timer = new Thread() {
         override def run() {
-          battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_CAPTURE_POKEMON)
+          battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_CAPTURE_POKEMON)
           Thread.sleep(3000)
           resumeGame()
         }
@@ -106,9 +168,13 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
     }
   }
 
+  /**
+    * @inheritdoc
+    * @return true if the trainer can escape, false in the opposite case
+    */
   override def trainerCanQuit(): Boolean = {
     if (Random.nextDouble()<0.5) {
-      battle.updatePokemonAndTrainer(Settings.BATTLE_EVENT_ESCAPE)
+      battle.updatePokemonAndTrainer(Settings.Constants.BATTLE_EVENT_ESCAPE)
       resumeGame()
       true
     } else {
@@ -117,6 +183,9 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
     }
   }
 
+  /**
+    * @inheritdoc
+    */
   override def resumeGame(): Unit = {
     audio.stop()
     controller.resume()
@@ -152,8 +221,4 @@ class BattleControllerImpl(val controller: GameController, val view: View) exten
     }
     timer.start()
   }
-
-  override def otherPokemonAttacks(id: Int): Unit = {}
-  override def passManager(battleClientManager: BattleClientManager): Unit = {}
-  override def otherPokemonChanges(newPokemonId: Int): Unit = {}
 }

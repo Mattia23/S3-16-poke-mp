@@ -1,7 +1,5 @@
 package view;
 
-import java.util.List;
-
 public interface BattleView {
     void setPokemonLife();
 

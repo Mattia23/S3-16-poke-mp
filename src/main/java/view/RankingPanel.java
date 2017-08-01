@@ -10,13 +10,20 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class RankingPanel extends BasePanel {
+/**
+ * RankingPanel print the ranking with every user in the database and put in bold the current playin trainer. In this
+ * panel you can read the ranking position, the player username, his level, his experience points and his avatar.
+ */
+class RankingPanel extends BasePanel {
 
-    public RankingPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pikachu.jpg");
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
+    RankingPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pikachu.jpg");
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         mainPanel.setOpaque(false);
         final JScrollPane scrollFrame = new JScrollPane(mainPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -34,7 +41,7 @@ public class RankingPanel extends BasePanel {
             ImageIcon myImageIcon = null;
             int imgId = Integer.parseInt(object._3()) + 1;
             try {
-                myImage = ImageIO.read(getClass().getResource(Settings.TRAINER_IMAGES_FOLDER() + imgId +"FS.png"));
+                myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.TRAINER_IMAGES_FOLDER() + imgId +"FS.png"));
                 myImageIcon = new ImageIcon(myImage.getScaledInstance(32,32,java.awt.Image.SCALE_SMOOTH));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -42,7 +49,7 @@ public class RankingPanel extends BasePanel {
             trainerPanel.setOpaque(false);
             trainerPanel.add(info);
             trainerPanel.add(new JLabel(myImageIcon));
-            if(object._1().equals(gameController.trainer().name())){
+            if(object._1().equals(gameController.trainer().username())){
                 setFontBold(info);
             }else{
                 setFont(info);
@@ -67,10 +74,10 @@ public class RankingPanel extends BasePanel {
     }
 
     private int calculateLevel(int experiencePoints) {
-        double level = Settings.INITIAL_TRAINER_LEVEL();
-        double step = Settings.LEVEL_STEP();
+        double level = Settings.Constants$.MODULE$.INITIAL_TRAINER_LEVEL();
+        double step = Settings.Constants$.MODULE$.LEVEL_STEP();
         while(experiencePoints > step ){
-            step = step + Settings.LEVEL_STEP() * Math.pow(2, level);
+            step = step + Settings.Constants$.MODULE$.LEVEL_STEP() * Math.pow(2, level);
             level ++;
         }
         return (int) level;

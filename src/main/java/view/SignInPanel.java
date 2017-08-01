@@ -1,8 +1,8 @@
 package view;
 
 import controller.SignInController;
+import model.entities.TrainerSprites;
 import model.entities.TrainerSprites$;
-import model.entities.Trainers;
 import utilities.Settings;
 import scala.Enumeration.Value;
 
@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.*;
 
 public class SignInPanel extends BasePanel {
@@ -25,10 +23,10 @@ public class SignInPanel extends BasePanel {
 
     public SignInPanel(SignInController controller) {
         this.controller = controller;
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "sign-in.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "sign-in.png");
 
-        this.trainerImage = TrainerSprites$.MODULE$.selectTrainerSprite(BASIC_TRAINER_ID).frontS().image();
-        this.trainer = Trainers.Boy1();
+        this.trainerImage = TrainerSprites$.MODULE$.apply(BASIC_TRAINER_ID).frontS().image();
+        this.trainer = TrainerSprites.Trainers$.MODULE$.Boy1();
 
         JLabel label = new JLabel("", new ImageIcon(LoadImage.load(this.trainerImage)), JLabel.CENTER);
         JPanel trainerImagePanel = new JPanel(new BorderLayout());
@@ -37,7 +35,7 @@ public class SignInPanel extends BasePanel {
 
         JComboBox<Value> trainersBox = new JComboBox<>();
         trainersBox.setMaximumRowCount(5);
-        for(Value trainer : Trainers.valueSetAsJavaList()) {
+        for(Value trainer : TrainerSprites.Trainers$.MODULE$.valueSetAsJavaList()) {
             trainersBox.addItem(trainer);
         }
         trainersBox.setSelectedIndex(0);
@@ -49,7 +47,7 @@ public class SignInPanel extends BasePanel {
         });
         JUtil.setEscClick(trainersBox, this.backButton);
 
-        JButton submit  = new JButton(Settings.SUBMIT_BUTTON());
+        JButton submit  = new JButton(Settings.Strings$.MODULE$.SUBMIT_BUTTON());
         Map<String,JTextField> accountData = new HashMap<>();
 
         for(AccountData data : AccountData.values()) {
@@ -76,7 +74,7 @@ public class SignInPanel extends BasePanel {
 
             this.trainer = (Value)((JComboBox)e.getSource()).getSelectedItem();
 
-            this.trainerImage = TrainerSprites$.MODULE$.selectTrainerSprite(this.trainer.id()).frontS().image();
+            this.trainerImage = TrainerSprites$.MODULE$.apply(this.trainer.id()).frontS().image();
 
             label.setIcon(new ImageIcon(LoadImage.load(this.trainerImage)));
         });

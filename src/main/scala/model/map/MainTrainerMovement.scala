@@ -1,7 +1,6 @@
 package model.map
 
 import model.entities.{Sprite, Trainer, TrainerSprites}
-import model.environment.Direction.Direction
 import model.environment.{Coordinate, CoordinateImpl}
 import view.GamePanel
 

@@ -18,16 +18,16 @@ public class ViewImpl extends JFrame implements View {
     private Dimension frameDiminsion;
     private BattleView battlePanel;
     private GamePanel gamePanel;
+    private DialoguePanel currentDialogue;
 
     public ViewImpl() {
         this.setTitle(WINDOW_TITLE);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.frameDiminsion = new Dimension(Settings.FRAME_SIDE(), Settings.FRAME_SIDE());
+        this.frameDiminsion = new Dimension(Settings.Constants$.MODULE$.FRAME_SIDE(), Settings.Constants$.MODULE$.FRAME_SIDE());
         this.setSize(frameDiminsion);
         this.setMinimumSize(frameDiminsion);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        //this.setAlwaysOnTop(true);
         this.validate();
         this.setVisible(true);
     }
@@ -41,9 +41,12 @@ public class ViewImpl extends JFrame implements View {
     }
 
     private void setDialogue(final JPanel panel){
-        final DialoguePanel dialoguePanel = (DialoguePanel) panel;
-        this.getContentPane().add(dialoguePanel, BorderLayout.SOUTH);
-        dialoguePanel.setPreferredSize(new Dimension(0, Settings.SCREEN_WIDTH()/12));
+        if(currentDialogue != null && currentDialogue.isVisible()){
+            currentDialogue.setVisible(false);
+        }
+        currentDialogue = (DialoguePanel) panel;
+        this.getContentPane().add(currentDialogue, BorderLayout.SOUTH);
+        currentDialogue.setPreferredSize(new Dimension(0, Settings.Constants$.MODULE$.SCREEN_WIDTH()/12));
         this.revalidate();
         this.repaint();
     }
@@ -127,7 +130,7 @@ public class ViewImpl extends JFrame implements View {
 
     @Override
     public void showTeamPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.setPanel(new TeamPanel(gameMenuController, gameController));
+        this.setPanel(new TeamPanel(gameMenuController, gameController, gameController.trainer()));
     }
 
     @Override

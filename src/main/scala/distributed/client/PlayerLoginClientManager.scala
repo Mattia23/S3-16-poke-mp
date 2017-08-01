@@ -22,16 +22,16 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
   private var gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
 
-  channel.queueDeclare(Settings.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
+  import Settings._
+  channel.queueDeclare(Constants.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
 
   override def sendPlayer(player: Player): Unit = {
     val playerMessage = PlayerMessage(player)
-    channel.basicPublish("", Settings.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
-    println(" [x] Sent message")
+    channel.basicPublish("", Constants.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
   }
 
   override def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
-    val playerQueue = Settings.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
+    val playerQueue = Constants.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
     channel.queueDeclare(playerQueue, false, false, false, null)
 
     val consumer = new DefaultConsumer(channel) {
@@ -40,11 +40,10 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received message")
         val message = new String(body, "UTF-8")
         gson = new GsonBuilder().registerTypeAdapter(classOf[ConnectedPlayersMessageImpl], ConnectedPlayersMessageDeserializer).create()
         val serverPlayersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
-        connectedPlayers.addAll(serverPlayersMessage.connectedPlayers)
+        connectedPlayers addAll serverPlayersMessage.connectedPlayers
 
         channel.close()
       }

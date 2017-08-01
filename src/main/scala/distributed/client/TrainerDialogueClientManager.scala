@@ -1,57 +1,92 @@
 package distributed.client
 
 import java.util
-
-import com.google.gson.{Gson, GsonBuilder}
+import com.google.gson.Gson
 import com.rabbitmq.client._
-import controller.{BattleController, DistributedBattleController, GameController}
-import distributed.Player
-import view.View
-//import distributed.deserializers.TrainerDialogueMessageDeserializers
+import controller.GameController
 import distributed.messages.{TrainerDialogueMessage, TrainerDialogueMessageImpl}
 import utilities.Settings
 import view.{ClassicDialoguePanel, TrainerDialoguePanel}
 
+/**
+  * TrainerDialogueClientManager manages the delivering and the receiving of messages realated to the request of a new
+  * battle and the respective answer.
+  */
 trait TrainerDialogueClientManager {
-  def playerId: Int
-
-  def playerId_=(playerId: Int): Unit
-
+  /**
+    * Return the id of the trainer that sent you a fighting request or to whom you sent a fightin request.
+    * @return id of the opposite trainer
+    */
   def otherPlayerId: Int
 
+  /**
+    * Set the id of the other trainer
+    * @param otherPlayerId the id of the other trainer
+    */
   def otherPlayerId_=(otherPlayerId: Int): Unit
 
+  /**
+    * Send a new TrainerDialogueMessage to the otherPlayerId with the fight request or the answer to a fight request
+    * @param otherPlayerId the recipient trainer id
+    * @param wantToFight a Boolean signaling if the player sending the message wants to fight or not
+    * @param isFirst a Boolean signaling if the player sending the message is requesting to fight or answering to a
+    *                fight request
+    */
   def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit
 
+  /**
+    * Receive and manage every message received from other trainers. If it receives a message of request to fight, it
+    * shows a panel to let the trainer answer to the fight request. If it receives a message of an answer to a fight
+    * request it starts a battle against the other trainer (if the answer was positive) or show a panel that inform the
+    * trainer that the battle request was rejected.
+    */
   def receiveResponse(): Unit
 
+  /**
+    * Create a new DistributedBattle through the GameController
+    */
   def createBattle(): Unit
 }
 
 object TrainerDialogueClientManager {
-  def apply(connection: Connection, mapController: GameController): TrainerDialogueClientManager = new TrainerDialogueClientManagerImpl(connection, mapController)
+  def apply(connection: Connection, mapController: GameController): TrainerDialogueClientManager =
+    new TrainerDialogueClientManagerImpl(connection, mapController)
 }
 
-class TrainerDialogueClientManagerImpl(private val connection: Connection, private val mapController: GameController) extends TrainerDialogueClientManager {
+/**
+  * @inheritdoc
+  * @param connection instance of Connection to RabbiMQ
+  * @param mapController instance of MapController
+  */
+class TrainerDialogueClientManagerImpl(private val connection: Connection,
+                                       private val mapController: GameController) extends TrainerDialogueClientManager {
 
   private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
-  override var playerId: Int = mapController.trainer.id
+  val playerId: Int = mapController.trainer.id
   override var otherPlayerId: Int = _
   var otherPlayerName: String = _
-  private val playerQueue = Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
   private var yourPlayerIsFirst = true
+
+  import Settings._
+  private val playerQueue = Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + playerId
 
   channel.queueDeclare(playerQueue, false, false, false, null)
 
+  /**
+    * @inheritdoc
+    */
   override def sendDialogueRequest(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit = {
-    mapController.sendPlayerIsFighting(wantToFight)
+    mapController.sendTrainerIsBusy(wantToFight)
     yourPlayerIsFirst = isFirst
-    val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.name, otherPlayerId, wantToFight, isFirst)
-    channel.queueDeclare(Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
-    channel.basicPublish("", Settings.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
+    val trainerDialogueMessage = TrainerDialogueMessage(playerId, mapController.trainer.username, otherPlayerId, wantToFight, isFirst)
+    channel.queueDeclare(Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, false, false, false, null)
+    channel.basicPublish("", Constants.TRAINER_DIALOGUE_CHANNEL_QUEUE + otherPlayerId, null, gson.toJson(trainerDialogueMessage).getBytes("UTF-8"))
   }
 
+  /**
+    * @inheritdoc
+    */
   override def receiveResponse(): Unit = {
 
     val consumer = new DefaultConsumer(channel) {
@@ -65,7 +100,7 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
         otherPlayerId = trainerDialogueMessage.firstPlayerId
         otherPlayerName = trainerDialogueMessage.firstPlayerName
         if(trainerDialogueMessage.wantToFight && trainerDialogueMessage.isFirst) {
-          mapController.sendPlayerIsFighting(true)
+          mapController.sendTrainerIsBusy(true)
           yourPlayerIsFirst = false
           mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this,
             util.Arrays.asList(otherPlayerName + " ti ha sfidato")))
@@ -74,17 +109,18 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection, priva
           createBattle()
         }
         else if(!trainerDialogueMessage.wantToFight){
-          mapController.sendPlayerIsFighting(false)
-          mapController.hideCurrentDialogue()
+          mapController.sendTrainerIsBusy(false)
           mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
         }
-        //channel.close()
       }
     }
     channel.basicConsume(playerQueue, true, consumer)
   }
 
+  /**
+    * @inheritdoc
+    */
   override def createBattle(): Unit = {
-    mapController.createDistributedBattle(otherPlayerId, yourPlayerIsFirst)
+    mapController.createTrainersBattle(otherPlayerId, yourPlayerIsFirst)
   }
 }

@@ -18,8 +18,8 @@ public class BuildingPanel extends GamePanel {
         this.buildingMap = buildingMap;
         this.gameController = gameController;
 
-        centerX = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
-        centerY = (Settings.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
+        centerX = (Settings.Constants$.MODULE$.SCREEN_WIDTH()/3 - buildingMap.image().getWidth(null))/2;
+        centerY = (Settings.Constants$.MODULE$.SCREEN_WIDTH()/3 - buildingMap.image().getHeight(null))/2;
 
     }
 
@@ -30,9 +30,9 @@ public class BuildingPanel extends GamePanel {
         g.drawImage(LoadImage.load(this.gameController.trainer().currentSprite().image()),
                 centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
 
-        g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.TILE_PIXEL(),
-                centerY+(buildingMap.npc().coordinate().y())*Settings.TILE_PIXEL() -
-                        (buildingMap.npc().HEIGHT()-Settings.TILE_PIXEL()), this);
+        g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.Constants$.MODULE$.TILE_PIXEL(),
+                centerY+(buildingMap.npc().coordinate().y())*Settings.Constants$.MODULE$.TILE_PIXEL() -
+                        (buildingMap.npc().HEIGHT()-Settings.Constants$.MODULE$.TILE_PIXEL()), this);
     }
 
 }
