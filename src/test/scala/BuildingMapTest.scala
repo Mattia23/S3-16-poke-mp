@@ -1,6 +1,7 @@
 
 import model.map._
 import org.scalatest.FunSuite
+import model.map.Tile._
 
 class BuildingMapTest extends FunSuite{
 

@@ -10,6 +10,11 @@ object PlayerIsBusyServerService {
   def apply(connection: Connection, connectedPlayers: ConnectedPlayers): PlayerIsBusyServerService = new PlayerIsBusyServerService(connection, connectedPlayers)
 }
 
+/**
+  *
+  * @param connection Instance of the connection with RabbitMQ
+  * @param connectedPlayers local connected players in the map
+  */
 class PlayerIsBusyServerService(private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
     val channel: Channel = connection.createChannel
@@ -30,7 +35,7 @@ class PlayerIsBusyServerService(private val connection: Connection, private val 
         channel.exchangeDeclare(Settings.PLAYER_IS_BUSY_EXCHANGE, "fanout")
         val response = gson.toJson(playerIsBusyMessage)
         channel.basicPublish(Settings.PLAYER_IS_BUSY_EXCHANGE, "", null, response.getBytes("UTF-8"))
-        println("server: send player is fighting")
+        println("server: send player is busy")
       }
     }
 

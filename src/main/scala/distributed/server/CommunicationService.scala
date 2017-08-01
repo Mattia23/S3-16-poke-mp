@@ -11,7 +11,7 @@ object CommunicationService {
 
   object Service extends Enumeration {
     type Service = Value
-    val PlayerInBuilding, PlayerLogin, PlayerLogout, PlayerPosition, PlayerIsFighting = Value
+    val PlayerInBuilding, PlayerLogin, PlayerLogout, PlayerPosition, PlayerIsBusy = Value
   }
 
   def apply(service: Service.Value, connection: Connection, connectedPlayers: ConnectedPlayers): CommunicationService = service match {
@@ -19,6 +19,6 @@ object CommunicationService {
     case Service.PlayerLogin => PlayerLoginServerService(connection, connectedPlayers)
     case Service.PlayerLogout => PlayerLogoutServerService(connection, connectedPlayers)
     case Service.PlayerPosition => PlayerPositionServerService(connection, connectedPlayers)
-    case Service.PlayerIsFighting => PlayerIsBusyServerService(connection, connectedPlayers)
+    case Service.PlayerIsBusy => PlayerIsBusyServerService(connection, connectedPlayers)
   }
 }

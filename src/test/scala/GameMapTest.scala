@@ -1,12 +1,13 @@
 import model.environment.CoordinateImpl
-import model.map.{GameMapImpl, Grass, PokemonCenter, TallGrass}
+import model.map.Tile._
+import model.map.{GameMap, PokemonCenter}
 import org.scalatest.FunSuite
 
 class GameMapTest extends FunSuite{
 
   def fixture =
     new {
-      val gameMap = GameMapImpl(10,10)
+      val gameMap = GameMap(10,10)
       val coordinate = CoordinateImpl(0,0)
       val tallGrass = TallGrass()
       val pokemonCenter = PokemonCenter(coordinate)

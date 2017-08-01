@@ -12,6 +12,10 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * PokemonPanel draws every info that a Pokemon captured by the trainer has: name, image, level, experience points,
+ * life and attacks.
+ */
 public class PokemonPanel extends BasePanel {
     private final JLabel pokemonImage = new JLabel();
     private final JLabel pokemonName = new JLabel();
@@ -40,6 +44,10 @@ public class PokemonPanel extends BasePanel {
         }
     }
 
+    /**
+     * Set the pokemon passed as parameter and print all his info
+     * @param pokemonWithLife the pokemon that the trainer wants info about
+     */
     public void setPokemon(final PokemonWithLife pokemonWithLife){
         Image myImage;
         ImageIcon myImageIcon = null;
@@ -58,22 +66,18 @@ public class PokemonPanel extends BasePanel {
         columnTable.setText("ATTACKS    (Power):");
         columnTable.setFont(new Font("Verdana",Font.BOLD,Settings.FRAME_SIDE()/45));
         Tuple4 moves = pokemonWithLife.pokemon().attacks();
-        Tuple2 attack1 = PokedexConnect.getPokemonAttack((int)moves._1()).get();
-        Tuple2 attack2 = PokedexConnect.getPokemonAttack((int)moves._2()).get();
-        Tuple2 attack3 = PokedexConnect.getPokemonAttack((int)moves._3()).get();
-        Tuple2 attack4 = PokedexConnect.getPokemonAttack((int)moves._4()).get();
-        pokemonAttacks[0].setText("    " + attack1._1().toString().toUpperCase()+" ("+attack1._2()+")    ");
-        pokemonAttacks[0].setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
-        pokemonAttacks[0].setBorder(new LineBorder(Color.black,1,true));
-        pokemonAttacks[1].setText("    " + attack2._1().toString().toUpperCase()+" ("+attack2._2()+")    ");
-        pokemonAttacks[1].setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
-        pokemonAttacks[1].setBorder(new LineBorder(Color.black,1,true));
-        pokemonAttacks[2].setText("    " + attack3._1().toString().toUpperCase()+" ("+attack3._2()+")    ");
-        pokemonAttacks[2].setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
-        pokemonAttacks[2].setBorder(new LineBorder(Color.black,1,true));
-        pokemonAttacks[3].setText("    " + attack4._1().toString().toUpperCase()+" ("+attack4._2()+")    ");
-        pokemonAttacks[3].setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
-        pokemonAttacks[3].setBorder(new LineBorder(Color.black,1,true));
+        Tuple2[] attacks = new Tuple2[4];
+        attacks[0] = PokedexConnect.getPokemonAttack((int)moves._1()).get();
+        attacks[1] = PokedexConnect.getPokemonAttack((int)moves._2()).get();
+        attacks[2] = PokedexConnect.getPokemonAttack((int)moves._3()).get();
+        attacks[3] = PokedexConnect.getPokemonAttack((int)moves._4()).get();
+        int i = 0;
+        for(JLabel pokemonAttack: pokemonAttacks) {
+            pokemonAttack.setText("    " + attacks[i]._1().toString().toUpperCase()+" ("+attacks[i]._2()+")    ");
+            pokemonAttack.setFont(new Font("Verdana",Font.PLAIN,Settings.FRAME_SIDE()/45));
+            pokemonAttack.setBorder(new LineBorder(Color.black,1,true));
+            i++;
+        }
         revalidate();
         repaint();
     }

@@ -10,16 +10,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class PokedexPanel extends  BasePanel{
-    private JPanel northPanel;
+/**
+ * This Panel paints a Pokedex with every Pokemon a trainer met with his id, name and image and a Pokeball if the
+ * trainer has alreay captured it.
+ */
+class PokedexPanel extends  BasePanel{
     private static final int INFO_FONT_SIZE = Settings.FRAME_SIDE()/32;
     private static final int FONT_SIZE = Settings.FRAME_SIDE()/25;
     private static final int POKEMON_SIDE = (int) (Settings.FRAME_SIDE()/5.8);
     private static final int POKEBALL_SIDE = Settings.FRAME_SIDE()/22;
 
-    public PokedexPanel(GameMenuController gameMenuController, GameController gameController){
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
+    PokedexPanel(GameMenuController gameMenuController, GameController gameController){
         this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
-        northPanel = new JPanel(new BorderLayout());
+        JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
         northPanel.setPreferredSize(new Dimension(Settings.FRAME_SIDE(),Settings.FRAME_SIDE()/6));
         this.add(northPanel, BorderLayout.NORTH);
