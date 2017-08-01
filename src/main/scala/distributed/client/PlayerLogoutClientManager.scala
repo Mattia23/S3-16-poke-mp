@@ -31,7 +31,6 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
   override def sendPlayerLogout(userId: Int): Unit = {
     val logoutMessage = PlayerLogoutMessage(userId)
     channel.basicPublish("", Constants.PLAYER_LOGOUT_CHANNEL_QUEUE, null, gson.toJson(logoutMessage).getBytes("UTF-8"))
-    println(" [x] Sent logout message")
   }
 
   override def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
@@ -41,11 +40,10 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player logout")
         val logoutMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerLogoutMessageImpl])
 
-        if (logoutMessage.userId != userId && connectedPlayers.containsPlayer(logoutMessage.userId))
-          connectedPlayers.remove(logoutMessage.userId)
+        if (logoutMessage.userId != userId && (connectedPlayers containsPlayer logoutMessage.userId))
+          connectedPlayers remove logoutMessage.userId
       }
 
     }

@@ -19,7 +19,7 @@ trait DistributedMapController{
 
   def sendTrainerInBuilding(isInBuilding: Boolean): Unit
 
-  def sendTrainerIsFighting(isInBuilding: Boolean): Unit
+  def sendTrainerIsBusy(isBusy: Boolean): Unit
 
   def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit
 
@@ -41,7 +41,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   private val playerInBuildingManager: PlayerInBuildingClientManager = PlayerInBuildingClientManager(connection)
   private val playerLogoutManager: PlayerLogoutClientManager = PlayerLogoutClientManager(connection)
   private val trainerDialogueClientManager: TrainerDialogueClientManager = TrainerDialogueClientManager(connection, mapController)
-  private val playerIsFightingManager: PlayerIsBusyClientManager = PlayerIsBusyClientManager(connection)
+  private val playerIsBusyManager: PlayerIsBusyClientManager = PlayerIsBusyClientManager(connection)
 
   private val poolSize: Int = Runtime.getRuntime.availableProcessors + 1
   private val executor: ExecutorService = Executors.newFixedThreadPool(poolSize)
@@ -52,7 +52,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   playerInBuildingManager.receiveOtherPlayerIsInBuilding(trainerId, connectedPlayers)
   playerLogoutManager.receiveOtherPlayerLogout(trainerId, connectedPlayers)
   trainerDialogueClientManager.receiveResponse()
-  playerIsFightingManager.receiveOtherPlayerIsBusy(trainerId, connectedPlayers)
+  playerIsBusyManager.receiveOtherPlayerIsBusy(trainerId, connectedPlayers)
 
   override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
 
@@ -60,13 +60,13 @@ class DistributedMapControllerImpl(private val mapController: GameController,
 
   override def sendTrainerInBuilding(isInBuilding: Boolean): Unit = playerInBuildingManager.sendPlayerIsInBuilding(trainerId, isInBuilding)
 
+  override def sendTrainerIsBusy(isBusy: Boolean): Unit = playerIsBusyManager.sendPlayerIsBusy(trainerId, isBusy)
+
   override def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit =
     trainerDialogueClientManager.sendDialogueRequest(otherPlayerId, wantToFight, isFirst)
 
-  override def sendTrainerIsFighting(isFighting: Boolean): Unit = playerIsFightingManager.sendPlayerIsBusy(trainerId, isFighting)
-
   override def playerLogout(): Unit = {
-    playerLogoutManager.sendPlayerLogout(trainerId)
+    playerLogoutManager sendPlayerLogout trainerId
     connection.close()
   }
 
@@ -76,8 +76,8 @@ class DistributedMapControllerImpl(private val mapController: GameController,
   }
 
   override def playerPositionUpdated(userId: Int): Unit = {
-    val positionDetails: PlayerPositionDetails = playersPositionDetails.get(userId)
-    val player: Player = connectedPlayers.get(userId)
+    val positionDetails: PlayerPositionDetails = playersPositionDetails get userId
+    val player: Player = connectedPlayers get userId
 
     val initialPosition = CoordinateImpl(positionDetails.coordinateX.asInstanceOf[Int], positionDetails.coordinateY.asInstanceOf[Int])
     val nextPosition = player.position
@@ -100,5 +100,5 @@ class DistributedMapControllerImpl(private val mapController: GameController,
     }
   }
 
-  override def playerRemoved(userId: Int): Unit = playersPositionDetails.remove(userId)
+  override def playerRemoved(userId: Int): Unit = playersPositionDetails remove userId
 }

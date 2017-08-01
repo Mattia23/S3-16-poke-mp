@@ -6,16 +6,17 @@ import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 public abstract class GamePanel extends JPanel{
 
     private int currentX;
     private int currentY;
 
-    protected GamePanel(final GameController gameController) {
+    protected GamePanel(GameController gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
-        GameKeyListener keyListener = new GameKeyListener(gameController);
+        KeyListener keyListener = GameKeyListener.apply(gameController);
         this.addKeyListener(keyListener);
         this.currentX = gameController.trainer().coordinate().x() * Settings.Constants$.MODULE$.TILE_PIXEL();
         this.currentY = gameController.trainer().coordinate().y() * Settings.Constants$.MODULE$.TILE_PIXEL();

@@ -17,7 +17,11 @@ trait LoginController{
   def back(): Unit
 }
 
-object LoginControllerImpl{
+object LoginController{
+    def apply(initialMenuController: InitialMenuController, view: View): LoginController = new LoginControllerImpl(initialMenuController, view)
+}
+
+object LoginControllerImpl {
   private final val LOGIN_FAILED: String = "LOGIN FAILED"
 }
 
@@ -40,8 +44,8 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     }).start()
   }
 
-  private def newGame(username: String): Unit = {
-    val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
+  private def newGame(username: String) = {
+    val optionalTrainer: Optional[Trainer] = DBConnect getTrainerFromDB username
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
       val connection = DistributedConnectionImpl().connection
@@ -63,7 +67,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val player = PlayerImpl(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites))
     if (trainer.capturedPokemonId.isEmpty) player.isVisible = false
 
-    playerConnectionClientManager.sendPlayer(player)
+    playerConnectionClientManager sendPlayer player
     playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedPlayers)
   }
 

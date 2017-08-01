@@ -33,7 +33,6 @@ class NewPlayerInGameClientManagerImpl(private val connection: Connection) exten
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]) {
-        println(" [x] Received other player in game")
         val message = new String(body, "UTF-8")
         val gson = new GsonBuilder().registerTypeAdapter(classOf[PlayerMessageImpl], PlayerMessageDeserializer).create()
         val otherPlayer = gson.fromJson(message, classOf[PlayerMessageImpl])

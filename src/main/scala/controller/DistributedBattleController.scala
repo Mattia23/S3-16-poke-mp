@@ -2,9 +2,9 @@ package controller
 
 import database.remote.DBConnect
 import distributed.client.BattleClientManager
-import model.entities.{Owner, Trainer}
-import model.environment.{Audio, AudioImpl}
 import model.battle.{TrainersBattle, TrainersBattleImpl}
+import model.entities.{Owner, Trainer}
+import model.environment.Audio
 import utilities.Settings
 import view.View
 
@@ -51,7 +51,7 @@ class DistributedBattleControllerImpl(private val controller: GameController,
   private val battle: TrainersBattle = new TrainersBattleImpl(controller.trainer,this,otherTrainer)
   battle.startBattleRound(controller.trainer.getFirstAvailableFavouritePokemon,otherTrainer.getFirstAvailableFavouritePokemon)
   showNewView()
-  private val audio: Audio = new AudioImpl(Settings.Audio.POKEMON_WILD_SONG)
+  private val audio: Audio = Audio(Settings.Audio.POKEMON_WILD_SONG)
   audio.loop()
 
   /**
