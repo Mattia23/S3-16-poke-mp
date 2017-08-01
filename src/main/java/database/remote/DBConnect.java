@@ -37,6 +37,10 @@ public final class DBConnect {
 
 	private DBConnect() {}
 
+	/**
+	 * Initializes the connection to the database the first time and return the instance of the connection.
+	 * If the connection is already open, return only the instance.
+	 */
 	private static void initConnection() {
 		try {
 			if(con == null || con.isClosed()) {
@@ -57,6 +61,9 @@ public final class DBConnect {
 		}
 	}
 
+	/**
+	 * Close the connection to the database
+	 */
 	public static void closeConnection(){
 		try {
 			con.close();
@@ -94,6 +101,10 @@ public final class DBConnect {
 		return true;
 	}
 
+	/**
+	 * When an account is create, create a new trainer in the database
+	 * @param username
+	 */
 	private static void createTrainer(String username) {
 		try {
 			String query = "select id from users where username = '"+username+"'";
@@ -139,6 +150,11 @@ public final class DBConnect {
 		return false;
 	}
 
+	/**
+	 * Check if username is already present in the database
+	 * @param username
+	 * @return true if the username is usable
+	 */
 	private static boolean checkUsername(String username) {
 		try {
 			String query = "select * from users";

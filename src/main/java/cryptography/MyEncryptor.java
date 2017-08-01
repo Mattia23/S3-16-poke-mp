@@ -8,6 +8,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * MyEncryptor allows to encrypt and decrypt the password stored in the database
+ */
 public class MyEncryptor {
 
 	public static final String ALGORITHM = "AES";

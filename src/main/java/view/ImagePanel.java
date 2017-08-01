@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;
 
+/**
+ * This class permits to use an image as background of a panel.
+ */
 public class ImagePanel extends JPanel {
     protected Image imagePanel;
 
