@@ -7,12 +7,14 @@ import distributed.messages.PlayerInBuildingMessageImpl
 import utilities.Settings
 
 object PlayerInBuildingServerService {
-  def apply(connection: Connection, connectedPlayers: ConnectedPlayers): PlayerInBuildingServerService = new PlayerInBuildingServerService(connection, connectedPlayers)
+  def apply(connection: Connection, connectedPlayers: ConnectedPlayers): PlayerInBuildingServerService =
+    new PlayerInBuildingServerService(connection, connectedPlayers)
 }
 
-class PlayerInBuildingServerService (private val connection: Connection, private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
+class PlayerInBuildingServerService (private val connection: Connection,
+                                     private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
   override def start(): Unit = {
-    val channel: Channel = connection.createChannel
+    val channel = connection.createChannel
 
     import Settings._
     channel.queueDeclare(Constants.PLAYER_IN_BUILDING_CHANNEL_QUEUE, false, false, false, null)
@@ -23,17 +25,15 @@ class PlayerInBuildingServerService (private val connection: Connection, private
                                   envelope: Envelope,
                                   properties: AMQP.BasicProperties,
                                   body: Array[Byte]): Unit = {
-        println("server: received player in building")
         val gson = new Gson()
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
-        if (connectedPlayers.containsPlayer(playerInBuildingMessage.userId)) {
+        if (connectedPlayers containsPlayer playerInBuildingMessage.userId) {
           connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
 
           channel.exchangeDeclare(Constants.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
-          val response = gson.toJson(playerInBuildingMessage)
+          val response = gson toJson playerInBuildingMessage
           channel.basicPublish(Constants.PLAYER_IN_BUILDING_EXCHANGE, "", null, response.getBytes("UTF-8"))
-          println("server: send player in building")
         }
       }
     }
