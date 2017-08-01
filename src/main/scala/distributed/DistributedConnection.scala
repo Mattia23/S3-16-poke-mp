@@ -24,7 +24,7 @@ class DistributedConnectionImpl extends DistributedConnection{
     factory.setPort(5672)
     factory.setUsername("guest")
     factory.setPassword("guest")
-    //factory.setHost(Settings.LOCAL_HOST_ADDRESS)
+   // factory.setHost(Settings.LOCAL_HOST_ADDRESS)
     _connection = factory.newConnection
   }
 

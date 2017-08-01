@@ -287,8 +287,8 @@ public final class DBConnect {
 			String query =
 					"Insert into pokemon (id_db,id_pokemon,id_trainer,level,points,level_exp,life,moves1,moves2,moves3,moves4)" +
 							"value (NULL,'"+pokemon.pokemon().id()+"','"+trainerId+"','"+pokemon.pokemon().level()+"','"+
-							pokemon.pokemon().experiencePoints()+"','"+pokemon.pokemonLife()+"','"+
-							pokemon.pokemon().levelExperience()+"','"+moves._1()+"','"+moves._2()+"','"+
+							pokemon.pokemon().experiencePoints()+"','"+pokemon.pokemon().levelExperience()+"','"+
+							pokemon.pokemonLife()+"','"+moves._1()+"','"+moves._2()+"','"+
 							moves._3()+"','"+moves._4()+"')";
 			st.executeUpdate(query);
 		} catch(Exception ex) {

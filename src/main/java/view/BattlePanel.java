@@ -126,6 +126,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
         }
         if(controller.isDistributedBattle()) {
             trainerChoices.get("Pokeball").setEnabled(false);
+            trainerChoices.get("Escape").setEnabled(false);
             if(!controller.yourPlayerIsFirst()) {
                 blockButtons(true);
             }
@@ -320,6 +321,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
             trainerChoices.get(c).setEnabled(!flag);
         }
         trainerChoices.get("Pokeball").setEnabled(false);
+        trainerChoices.get("Escape").setEnabled(false);
         for(String att : attacks.keySet()) {
             attacks.get(att).setEnabled(!flag);
         }
