@@ -3,7 +3,7 @@ package distributed.messages
 import distributed.Player
 
 /**
-  * A PlayerMessage is used in order to communicate from a client to the server that a new player has connected
+  * A PlayerMessage is used to communicate from a client to the server that a new player has connected
   */
 trait PlayerMessage {
   /**

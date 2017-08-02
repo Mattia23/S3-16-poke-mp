@@ -1,7 +1,7 @@
 package distributed.messages
 
 /**
-  * A PlayerLogoutMessage is used in order to communicate from a client to the server when a trainer logs out from the game,
+  * A PlayerLogoutMessage is used to communicate from a client to the server when a trainer logs out from the game,
   * and to communicate from the server to all clients when someone logs out from the game
   */
 trait PlayerLogoutMessage {

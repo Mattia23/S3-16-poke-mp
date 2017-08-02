@@ -3,8 +3,8 @@ package distributed.messages
 import model.environment.Coordinate
 
 /**
-  * A PlayerPositionMessage is used in order to communicate from a client to the server that the client's player has moved,
-  * and to communicate from the server to all clients that a player has moved
+  * A PlayerPositionMessage is used to communicate from a client to the server that the client's player moved,
+  * and to communicate from the server to all clients that a player moved
   */
 trait PlayerPositionMessage {
   /**

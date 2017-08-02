@@ -12,8 +12,16 @@ object PlayerPositionServerService {
     new PlayerPositionServerService(connection, connectedUsers)
 }
 
+/**
+  * PlayerPositionServerService receives when a player moved, and sends to all clients that a player moved
+  * @param connection instance of connection to the RabbitMQ Broker
+  * @param connectedPlayers all the players currently connected as ConnectedPlayers
+  */
 class PlayerPositionServerService(private val connection: Connection,
                                   private val connectedPlayers: ConnectedPlayers) extends CommunicationService {
+  /**
+    * @inheritdoc
+    */
   override def start(): Unit = {
     val channel = connection.createChannel
 

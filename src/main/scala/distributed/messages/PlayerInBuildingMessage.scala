@@ -1,7 +1,7 @@
 package distributed.messages
 
 /**
-  * A PlayerInBuildingMessage is used in order to communicate from a client to the server when a trainer enters/leaves a building,
+  * A PlayerInBuildingMessage is used to communicate from a client to the server when a trainer enters/leaves a building,
   * and to communicate from the server to all clients when someone enters/leaves a building
   */
 trait PlayerInBuildingMessage{

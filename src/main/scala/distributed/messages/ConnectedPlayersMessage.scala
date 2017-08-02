@@ -4,7 +4,7 @@ import java.util
 import distributed.Player
 
 /**
-  * A ConnectedPlayersMessage is used in order to send a map of all connected players to clients from the server
+  * A ConnectedPlayersMessage is used to send a map of all connected players to clients from the server
   */
 trait ConnectedPlayersMessage {
   /**
