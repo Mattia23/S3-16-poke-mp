@@ -5,20 +5,18 @@ import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class LoginPanel extends BasePanel {
     private LoginController controller;
 
     public LoginPanel(LoginController controller) {
         this.controller = controller;
-        JLabel usernameLabel = new JLabel(Settings.USERNAME());
-        JLabel passwordLabel = new JLabel(Settings.PASSWORD());
+        JLabel usernameLabel = new JLabel(Settings.Strings$.MODULE$.USERNAME());
+        JLabel passwordLabel = new JLabel(Settings.Strings$.MODULE$.PASSWORD());
         JTextField usernameField = new JTextField(20);
         JTextField passwordField = new JPasswordField(20);
-        JButton submit = new JButton(Settings.SUBMIT_BUTTON());
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "log-in.png");
+        JButton submit = new JButton(Settings.Strings$.MODULE$.SUBMIT_BUTTON());
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "log-in.png");
         this.backButton.addActionListener(e -> this.controller.back());
         usernameLabel.setForeground(Color.WHITE);
         passwordLabel.setForeground(Color.WHITE);

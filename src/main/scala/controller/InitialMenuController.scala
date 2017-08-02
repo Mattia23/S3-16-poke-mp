@@ -1,8 +1,8 @@
 package controller
 
-import model.environment.{Audio, AudioImpl}
+import model.environment.Audio
 import utilities.Settings
-import view.{InitialMenuPanel, LoginPanel, View}
+import view.View
 
 trait InitialMenuController {
   def view: View
@@ -14,9 +14,13 @@ trait InitialMenuController {
   def stopMainMusic(): Unit
 }
 
+object InitialMenuController {
+  def apply(view: View): InitialMenuController = new InitialMenuControllerImpl(view)
+}
+
 class InitialMenuControllerImpl(override val view: View) extends InitialMenuController{
 
-  private val audio: Audio = new AudioImpl(Settings.MAIN_SONG)
+  private val audio: Audio = Audio(Settings.Audio.MAIN_SONG)
   audio.loop()
 
   show()
@@ -26,12 +30,11 @@ class InitialMenuControllerImpl(override val view: View) extends InitialMenuCont
   override def processEvent(event: String): Unit = {
     new Thread(() => {
       event match {
-        case Settings.LOGIN_BUTTON => new LoginControllerImpl(this, view)
-        case Settings.SIGN_IN_BUTTON => new SignInControllerImpl(this, view)
-        case Settings.QUIT_BUTTON => {
+        case Settings.Strings.LOGIN_BUTTON => LoginController(this, view)
+        case Settings.Strings.SIGN_IN_BUTTON => SignInController(this, view)
+        case Settings.Strings.QUIT_BUTTON =>
           stopMainMusic()
           System exit 0
-        }
         case _ =>
       }
     }).start()

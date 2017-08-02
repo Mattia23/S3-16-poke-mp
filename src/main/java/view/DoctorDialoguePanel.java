@@ -22,7 +22,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
     protected void setFinalButtons() {
         buttonPanel.removeAll();
         buttons.clear();
-        for(String text: Settings.DOCTOR_DIALOGUE_BUTTON()){
+        for(String text: Settings.Strings$.MODULE$.DOCTOR_DIALOGUE_BUTTON()){
             final JButton button = new JButton(text);
             button.addKeyListener(this);
             buttonPanel.add(button);
@@ -30,7 +30,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
         }
         buttons.get(currentButton).requestFocus();
         buttons.get(0).addActionListener(e -> {
-            new AudioImpl(Settings.HEALING_SOUND()).play();
+            new AudioImpl(Settings.Audio$.MODULE$.HEALING_SOUND()).play();
             DBConnect.rechangeAllTrainerPokemon(gameController.trainer().id());
             dialogueLabel.setText(Doctor$.MODULE$.DIALOGUE_AFTER_HEAL());
             buttonPanel.removeAll();

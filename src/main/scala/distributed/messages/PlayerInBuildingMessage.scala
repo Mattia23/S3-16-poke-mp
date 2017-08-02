@@ -7,7 +7,9 @@ trait PlayerInBuildingMessage{
 }
 
 object PlayerInBuildingMessage {
-  def apply(userId: Int, isInBuilding: Boolean): PlayerInBuildingMessage = new PlayerInBuildingMessageImpl(userId, isInBuilding)
+  def apply(userId: Int, isInBuilding: Boolean): PlayerInBuildingMessage =
+    new PlayerInBuildingMessageImpl(userId, isInBuilding)
 }
 
-class PlayerInBuildingMessageImpl(override val userId: Int, override val isInBuilding: Boolean) extends PlayerInBuildingMessage
+class PlayerInBuildingMessageImpl(override val userId: Int,
+                                  override val isInBuilding: Boolean) extends PlayerInBuildingMessage

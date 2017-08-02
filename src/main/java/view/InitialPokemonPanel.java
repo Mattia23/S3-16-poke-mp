@@ -7,11 +7,7 @@ import model.entities.PokemonBehaviourImpl;
 import model.entities.PokemonWithLife;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class InitialPokemonPanel extends JPanel {
 

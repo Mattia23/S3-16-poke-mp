@@ -5,5 +5,5 @@ import view.{View, ViewImpl}
 
 object Main extends App {
   val view: View = new ViewImpl()
-  val controller: InitialMenuController = new InitialMenuControllerImpl(view)
+  val controller: InitialMenuController = InitialMenuController(view)
 }

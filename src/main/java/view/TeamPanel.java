@@ -26,8 +26,8 @@ import java.util.Optional;
  * about it.
  */
 class TeamPanel extends BasePanel{
-    private static final int FONT_SIZE = (int) (Settings.FRAME_SIDE() * 0.034);
-    private static final int iconSide = (int) (Settings.FRAME_SIDE() * 0.1177);
+    private static final int FONT_SIZE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.034);
+    private static final int iconSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.1177);
     List<Tuple3<JRadioButton,PokemonWithLife,Integer>> buttonList = new ArrayList<>();
     private ButtonGroup pokemonButtonGroup = new ButtonGroup();
 
@@ -37,7 +37,7 @@ class TeamPanel extends BasePanel{
      * @param trainer instance of trainer
      */
     TeamPanel(GameMenuController gameMenuController, GameController gameController, Trainer trainer) {
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokemon-choice.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pokemon-choice.png");
         JLabel infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
         this.downPanel.add(infoText, BorderLayout.CENTER);
         List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
@@ -53,7 +53,7 @@ class TeamPanel extends BasePanel{
                 String s = pokemonWithLife.pokemon().name().toUpperCase() + "   Life: " + pokemonWithLife.pokemonLife() + "/" +
                         pokemonWithLife.pokemon().experiencePoints() + "   Lv:  " + pokemonWithLife.pokemon().level();
                 try {
-                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
+                    myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.POKEMON_IMAGES_ICON_FOLDER() + pokemonWithLife.pokemon().id() + ".png"));
                     myImageIcon = new ImageIcon(myImage.getScaledInstance(iconSide,iconSide,java.awt.Image.SCALE_SMOOTH));
                 } catch (IOException e) {
                     e.printStackTrace();

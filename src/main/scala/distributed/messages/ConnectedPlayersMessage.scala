@@ -8,7 +8,8 @@ trait ConnectedPlayersMessage {
 }
 
 object ConnectedPlayersMessage {
-  def apply(connectedPlayers: util.Map[Int, Player]): ConnectedPlayersMessage = new ConnectedPlayersMessageImpl(connectedPlayers)
+  def apply(connectedPlayers: util.Map[Int, Player]): ConnectedPlayersMessage =
+    new ConnectedPlayersMessageImpl(connectedPlayers)
 }
 
 class ConnectedPlayersMessageImpl(override val connectedPlayers: util.Map[Int, Player]) extends ConnectedPlayersMessage

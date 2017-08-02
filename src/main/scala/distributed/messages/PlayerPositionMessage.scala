@@ -12,5 +12,6 @@ object PlayerPositionMessage {
   def apply(userId: Int, position: Coordinate): PlayerPositionMessage = new PlayerPositionMessageImpl(userId, position)
 }
 
-class PlayerPositionMessageImpl(override val userId: Int, override val position: Coordinate) extends PlayerPositionMessage
+class PlayerPositionMessageImpl(override val userId: Int,
+                                override val position: Coordinate) extends PlayerPositionMessage
 
