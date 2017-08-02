@@ -11,9 +11,20 @@ import model.entities.{Trainer, TrainerSprites}
 import utilities.Settings
 import view.View
 
+/**
+  * LoginController manages possible actions that the user can do in the LoginPanel
+  */
 trait LoginController{
+  /**
+    * Allows the user to access the game
+    * @param username user username
+    * @param password user password
+    */
   def login(username: String, password: String): Unit
 
+  /**
+    * Returns to the initial game menu
+    */
   def back(): Unit
 }
 
@@ -25,12 +36,22 @@ object LoginControllerImpl {
   private final val LOGIN_FAILED: String = "LOGIN FAILED"
 }
 
+/**
+  * @inheritdoc
+  * @param initialMenuController instance of the initial menu controller
+  * @param view instance of the view
+  */
 class LoginControllerImpl(private val initialMenuController: InitialMenuController,
                           private val view: View) extends LoginController{
 
   import LoginControllerImpl._
   view showLogin this
 
+  /**
+    * @inheritdoc
+    * @param username user username
+    * @param password user password
+    */
   override def login(username: String, password: String): Unit = {
     new Thread(() => {
       if(username == "" || password == "") {
@@ -45,6 +66,10 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     }).start()
   }
 
+  /**
+    * Starts a new game
+    * @param username user username
+    */
   private def newGame(username: String) = {
     val optionalTrainer: Optional[Trainer] = DBConnect getTrainerFromDB username
     if(optionalTrainer.isPresent) {
@@ -62,6 +87,13 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     }
   }
 
+  /**
+    * Interacts with the server to register the user and receive the players present within the game
+    * @param connection instance of connection with RabbitMQ
+    * @param username user username
+    * @param trainer user trainer
+    * @param connectedPlayers players currently connected to the game
+    */
   private def serverInteraction(connection: Connection, username: String, trainer: Trainer, connectedPlayers: ConnectedPlayers) = {
     val playerConnectionClientManager = PlayerLoginClientManager(connection)
 
@@ -72,5 +104,8 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedPlayers)
   }
 
+  /**
+    * @inheritdoc
+    */
   override def back(): Unit = initialMenuController.show()
 }

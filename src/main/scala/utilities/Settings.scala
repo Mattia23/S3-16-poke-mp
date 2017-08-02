@@ -281,6 +281,10 @@ object Settings {
     lazy val TRAINER_4_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4R2.png"
 
     lazy val TRAINER_4_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4RS.png"
+
+    lazy val LOGIN_IMAGE = "log-in.png"
+
+    lazy val SIGN_IN_IMAGE = "sign-in.png"
   }
 
   object Strings {

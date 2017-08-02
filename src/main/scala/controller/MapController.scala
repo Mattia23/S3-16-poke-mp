@@ -107,7 +107,7 @@ class MapController(private val view: View,
     * @inheritdoc
     */
   override protected def doResume(): Unit = {
-    distributedMapController sendTrainerInBuilding true
+    distributedMapController sendTrainerInBuilding false
     sendTrainerIsBusy(false)
     checkIfPlayerHasBeenDefeated()
     trainer.coordinate = lastCoordinates
@@ -160,7 +160,7 @@ class MapController(private val view: View,
     * @param building the building towards the trainer is moving into
     */
   private def enterInBuilding(building: Building) = {
-    distributedMapController sendTrainerInBuilding false
+    distributedMapController sendTrainerInBuilding true
     pause()
     val buildingController: BuildingController = building match{
       case _: PokemonCenter => new PokemonCenterController(this.view, this, trainer)
@@ -193,7 +193,7 @@ class MapController(private val view: View,
       val nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isBusy){
-          distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
+          distributedMapController.sendChallengeToTrainer(otherPlayer.userId)
           showDialogue(new WaitingTrainerDialoguePanel(otherPlayer.username))
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isBusy){
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))

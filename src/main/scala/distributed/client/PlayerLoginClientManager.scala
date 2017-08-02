@@ -7,9 +7,22 @@ import distributed.deserializers.ConnectedPlayersMessageDeserializer
 import distributed.messages.{ConnectedPlayersMessageImpl, PlayerMessage}
 import utilities.Settings
 
+/**
+  * PlayerLoginClientManager sends a message when a player logs in to the game and receives a message
+  * with all the player present in the game update the current connected players
+  */
 trait PlayerLoginClientManager{
+  /**
+    * Sends a PlayerMessage to the server when the player logs in to the game
+    * @param player player to add to the server connected players
+    */
   def sendPlayer(player: Player): Unit
 
+  /**
+    * Receives all the other player in game in a ConnectedPlayersMessage updating the local current connected players
+    * @param userId user id
+    * @param connectedPlayers players currently connected to the game (initially empty)
+    */
   def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
@@ -17,6 +30,10 @@ object PlayerLoginClientManager {
   def apply(connection: Connection): PlayerLoginClientManager = new PlayerLoginClientManagerImpl(connection)
 }
 
+/**
+  * @inheritdoc
+  * @param connection instance of Connection with RabbitMQ
+  */
 class PlayerLoginClientManagerImpl(private val connection: Connection) extends PlayerLoginClientManager {
 
   private var gson: Gson = new Gson()
@@ -25,11 +42,20 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
   import Settings._
   channel.queueDeclare(Constants.PLAYER_LOGIN_CHANNEL_QUEUE, false, false, false, null)
 
+  /**
+    * @inheritdoc
+    * @param player player to add to the server connected players
+    */
   override def sendPlayer(player: Player): Unit = {
     val playerMessage = PlayerMessage(player)
     channel.basicPublish("", Constants.PLAYER_LOGIN_CHANNEL_QUEUE, null, gson.toJson(playerMessage).getBytes("UTF-8"))
   }
 
+  /**
+    * @inheritdoc
+    * @param userId user id
+    * @param connectedPlayers players currently connected to the game (initially empty)
+    */
   override def receivePlayersConnected(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val playerQueue = Constants.PLAYERS_CONNECTED_CHANNEL_QUEUE + userId
     channel.queueDeclare(playerQueue, false, false, false, null)

@@ -6,17 +6,23 @@ import utilities.Settings;
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginPanel extends BasePanel {
+/**
+ * LoginPanel allows access the game
+ */
+class LoginPanel extends BasePanel {
     private LoginController controller;
 
-    public LoginPanel(LoginController controller) {
+    /**
+     * @param controller instance of LoginController
+     */
+    LoginPanel(LoginController controller) {
         this.controller = controller;
         JLabel usernameLabel = new JLabel(Settings.Strings$.MODULE$.USERNAME());
         JLabel passwordLabel = new JLabel(Settings.Strings$.MODULE$.PASSWORD());
         JTextField usernameField = new JTextField(20);
         JTextField passwordField = new JPasswordField(20);
         JButton submit = new JButton(Settings.Strings$.MODULE$.SUBMIT_BUTTON());
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "log-in.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + Settings.Images$.MODULE$.LOGIN_IMAGE());
         this.backButton.addActionListener(e -> this.controller.back());
         usernameLabel.setForeground(Color.WHITE);
         passwordLabel.setForeground(Color.WHITE);
