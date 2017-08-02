@@ -47,15 +47,16 @@ trait GameController {
 
   def setFocusableOff(): Unit
 
-  def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
+  def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit
 
-  def sendPlayerIsFighting(isFighting: Boolean): Unit
+  def sendTrainerIsBusy(isBusy: Boolean): Unit
 }
 
-abstract class GameControllerImpl(private var view: View, override val trainer: Trainer) extends GameController {
+abstract class GameControllerImpl(private var view: View,
+                                  override val trainer: Trainer) extends GameController {
   private var agent: GameControllerAgent = _
   private val executor: ExecutorService = Executors.newSingleThreadExecutor()
-  private implicit val executionContext = ExecutionContext.fromExecutor(executor)
+  private implicit val executionContext = ExecutionContext fromExecutor executor
 
   protected var inGame = false
   protected var inPause = false
@@ -126,12 +127,12 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
 
   override def showDialogue(dialoguePanel: DialoguePanel): Unit = {
     setFocusableOff()
-    this.view.showDialogue(dialoguePanel)
+    view showDialogue dialoguePanel
   }
 
-  override def setFocusableOn(): Unit = this.gamePanel.setFocusable(true)
+  override def setFocusableOn(): Unit = gamePanel setFocusable true
 
-  override def setFocusableOff(): Unit = this.gamePanel.setFocusable(false)
+  override def setFocusableOff(): Unit = gamePanel setFocusable false
 
   protected def nextTrainerPosition(direction: Direction): Coordinate = direction match {
     case Direction.UP =>
@@ -182,7 +183,7 @@ abstract class GameControllerImpl(private var view: View, override val trainer: 
         }
 
         try
-          Thread.sleep(Settings.GAME_REFRESH_TIME)
+          Thread sleep Settings.Constants.GAME_REFRESH_TIME
         catch {
           case e: InterruptedException => println(e)
         }

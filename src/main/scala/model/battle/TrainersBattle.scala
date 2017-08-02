@@ -76,7 +76,7 @@ class TrainersBattleImpl(override val trainer: Trainer,
     * @inheritdoc
     */
   override def updatePokemonAndTrainer(event: Int): Unit = event match {
-    case Settings.BATTLE_EVENT_ESCAPE =>
+    case Settings.Constants.BATTLE_EVENT_ESCAPE =>
       trainer.updateTrainer(0)
       round.updatePokemon()
   }

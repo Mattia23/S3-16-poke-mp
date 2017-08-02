@@ -17,11 +17,16 @@ trait LoginController{
   def back(): Unit
 }
 
-object LoginControllerImpl{
+object LoginController{
+    def apply(initialMenuController: InitialMenuController, view: View): LoginController = new LoginControllerImpl(initialMenuController, view)
+}
+
+object LoginControllerImpl {
   private final val LOGIN_FAILED: String = "LOGIN FAILED"
 }
 
-class LoginControllerImpl(private val initialMenuController: InitialMenuController, private val view: View) extends LoginController{
+class LoginControllerImpl(private val initialMenuController: InitialMenuController,
+                          private val view: View) extends LoginController{
 
   import LoginControllerImpl._
   view showLogin this
@@ -29,10 +34,10 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
   override def login(username: String, password: String): Unit = {
     new Thread(() => {
       if(username == "" || password == "") {
-        view.showMessage(Settings.LOGIN_ERROR_USERNAME_PASSWORD_EMPTY, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+        view.showMessage(Settings.Strings.LOGIN_ERROR_USERNAME_PASSWORD_EMPTY, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
       }else{
         if (!DBConnect.checkCredentials(username, password)) {
-           view.showMessage(Settings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+           view.showMessage(Settings.Strings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
         } else {
           newGame(username)
         }
@@ -40,8 +45,8 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     }).start()
   }
 
-  private def newGame(username: String): Unit = {
-    val optionalTrainer: Optional[Trainer] = DBConnect.getTrainerFromDB(username)
+  private def newGame(username: String) = {
+    val optionalTrainer: Optional[Trainer] = DBConnect getTrainerFromDB username
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
       val connection = DistributedConnectionImpl().connection
@@ -53,7 +58,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
       initialMenuController.stopMainMusic()
 
     } else {
-      view.showMessage(Settings.LOGIN_NO_TRAINER_ERROR, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+      view.showMessage(Settings.Strings.LOGIN_NO_TRAINER_ERROR, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
     }
   }
 
@@ -63,7 +68,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val player = PlayerImpl(trainer.id, username, TrainerSprites.getIdImageFromTrainerSprite(trainer.sprites))
     if (trainer.capturedPokemonId.isEmpty) player.isVisible = false
 
-    playerConnectionClientManager.sendPlayer(player)
+    playerConnectionClientManager sendPlayer player
     playerConnectionClientManager.receivePlayersConnected(trainer.id, connectedPlayers)
   }
 

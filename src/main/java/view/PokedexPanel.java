@@ -15,20 +15,20 @@ import java.io.IOException;
  * trainer has alreay captured it.
  */
 class PokedexPanel extends  BasePanel{
-    private static final int INFO_FONT_SIZE = Settings.FRAME_SIDE()/32;
-    private static final int FONT_SIZE = Settings.FRAME_SIDE()/25;
-    private static final int POKEMON_SIDE = (int) (Settings.FRAME_SIDE()/5.8);
-    private static final int POKEBALL_SIDE = Settings.FRAME_SIDE()/22;
+    private static final int INFO_FONT_SIZE = Settings.Constants$.MODULE$.FRAME_SIDE()/32;
+    private static final int FONT_SIZE = Settings.Constants$.MODULE$.FRAME_SIDE()/25;
+    private static final int POKEMON_SIDE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE()/5.8);
+    private static final int POKEBALL_SIDE = Settings.Constants$.MODULE$.FRAME_SIDE()/22;
 
     /**
      * @param gameMenuController instance of GameMenuController
      * @param gameController instance of GameController
      */
     PokedexPanel(GameMenuController gameMenuController, GameController gameController){
-        this.imagePanel = LoadImage.load(Settings.PANELS_FOLDER() + "pokedex.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pokedex.png");
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
-        northPanel.setPreferredSize(new Dimension(Settings.FRAME_SIDE(),Settings.FRAME_SIDE()/6));
+        northPanel.setPreferredSize(new Dimension(Settings.Constants$.MODULE$.FRAME_SIDE(),Settings.Constants$.MODULE$.FRAME_SIDE()/6));
         this.add(northPanel, BorderLayout.NORTH);
         k.insets = new Insets(0,0,0,10);
         JLabel id, name, icon, captured, infoNumber;
@@ -44,7 +44,7 @@ class PokedexPanel extends  BasePanel{
             if(gameController.trainer().pokedex().pokedex().contains(i)){
                 name = new JLabel(PokedexConnect.getPokemonName(i).get().toUpperCase());
                 try {
-                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_FRONT_FOLDER() + i + ".png"));
+                    myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.POKEMON_IMAGES_FRONT_FOLDER() + i + ".png"));
                     myImageIcon = new ImageIcon(myImage.getScaledInstance(POKEMON_SIDE,POKEMON_SIDE,java.awt.Image.SCALE_SMOOTH));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -52,7 +52,7 @@ class PokedexPanel extends  BasePanel{
                 icon = new JLabel(myImageIcon);
                 if(gameController.trainer().capturedPokemonId().contains(i)){
                     try {
-                        myImage = ImageIO.read(getClass().getResource(Settings.POKEBALL_IMAGES() + "pokeballIcon.png"));
+                        myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballIcon.png"));
                         myImageIcon = new ImageIcon(myImage.getScaledInstance(POKEBALL_SIDE,POKEBALL_SIDE,java.awt.Image.SCALE_SMOOTH));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -64,7 +64,7 @@ class PokedexPanel extends  BasePanel{
             } else {
                 name = new JLabel("???");
                 try {
-                    myImage = ImageIO.read(getClass().getResource(Settings.POKEMON_IMAGES_ICON_FOLDER() + "0.png"));
+                    myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.POKEMON_IMAGES_ICON_FOLDER() + "0.png"));
                     myImageIcon = new ImageIcon(myImage.getScaledInstance(POKEMON_SIDE,POKEMON_SIDE,java.awt.Image.SCALE_SMOOTH));
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -1,7 +1,7 @@
 package controller
 
 import model.entities.PokemonWithLife
-import model.environment.{Audio, AudioImpl}
+import model.environment.Audio
 import utilities.Settings
 import view.View
 
@@ -63,7 +63,7 @@ trait GameMenuController{
   */
 class GameMenuControllerImpl(private var view: View, private val gameController: GameController) extends GameMenuController{
 
-  private val audio: Audio = new AudioImpl(Settings.MENU_SONG)
+  private val audio: Audio = Audio(Settings.Audio.MENU_SONG)
   audio.loop()
   showGameMenu()
 
@@ -98,7 +98,7 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
   override def doLogout(): Unit = {
     audio.stop()
     gameController.logout()
-    view.showInitialMenu(new InitialMenuControllerImpl(view))
+    view.showInitialMenu(InitialMenuController(view))
   }
 
   /**
@@ -113,7 +113,7 @@ class GameMenuControllerImpl(private var view: View, private val gameController:
     * @inheritdoc
     */
   override def showGameMenu(): Unit = {
-    gameController.sendPlayerIsFighting(true)
+    gameController.sendTrainerIsBusy(true)
     view.showGameMenuPanel(this)
   }
 

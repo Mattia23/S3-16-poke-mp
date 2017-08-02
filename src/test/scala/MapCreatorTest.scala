@@ -1,6 +1,7 @@
 import model.environment.CoordinateImpl
-import model.map.{MapCreator, MapElements, TallGrass, Water}
+import model.map.{MapCreator, MapElements}
 import org.scalatest.FunSuite
+import model.map.Tile._
 
 class MapCreatorTest extends FunSuite{
 

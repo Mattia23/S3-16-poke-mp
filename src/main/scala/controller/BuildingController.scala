@@ -1,6 +1,5 @@
 package controller
 
-import com.rabbitmq.client.Connection
 import model.entities.{OakAfterChoise, Trainer}
 import model.environment.Direction.Direction
 import model.environment._
@@ -65,9 +64,9 @@ abstract class BuildingController(private val view: View, private val mapControl
     mapController.terminate()
   }
 
-  override def createDistributedBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
+  override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
 
-  override def sendPlayerIsFighting(isFighting: Boolean): Unit = {}
+  override def sendTrainerIsBusy(isBusy: Boolean): Unit = {}
 
 }
 
@@ -76,7 +75,7 @@ class PokemonCenterController(private val view: View, private val mapController:
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
-  audio = Audio(Settings.POKEMONCENTER_SONG)
+  audio = Audio(Settings.Audio.POKEMONCENTER_SONG)
 
   override protected def doStart(): Unit = {
     super.doStart()
@@ -101,7 +100,7 @@ class PokemonCenterController(private val view: View, private val mapController:
         if(nextPosition equals buildingMap.npc.coordinate){
           showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
         }
-        if(tile.isInstanceOf[Box]){
+        if(tile.isInstanceOf[Tile.Box]){
           this.pause()
           view showBoxPanel this
         }
@@ -118,7 +117,7 @@ class LaboratoryController(private val view: View, private val mapController: Ga
   if(!capturedPokemonEmpty) buildingMap.npc = new OakAfterChoise
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
-  audio = Audio(Settings.LABORATORY_SONG)
+  audio = Audio(Settings.Audio.LABORATORY_SONG)
 
   override protected def doStart(): Unit = {
     super.doStart()

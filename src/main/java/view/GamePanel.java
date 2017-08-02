@@ -1,23 +1,25 @@
 package view;
+
 import controller.GameKeyListener;
 import controller.GameController;
 import utilities.Settings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 public abstract class GamePanel extends JPanel{
 
     private int currentX;
     private int currentY;
 
-    protected GamePanel(final GameController gameController) {
+    protected GamePanel(GameController gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
-        GameKeyListener keyListener = new GameKeyListener(gameController);
+        KeyListener keyListener = GameKeyListener.apply(gameController);
         this.addKeyListener(keyListener);
-        this.currentX = gameController.trainer().coordinate().x() * Settings.TILE_PIXEL();
-        this.currentY = gameController.trainer().coordinate().y() * Settings.TILE_PIXEL();
+        this.currentX = gameController.trainer().coordinate().x() * Settings.Constants$.MODULE$.TILE_PIXEL();
+        this.currentY = gameController.trainer().coordinate().y() * Settings.Constants$.MODULE$.TILE_PIXEL();
     }
 
     @Override
@@ -30,11 +32,11 @@ public abstract class GamePanel extends JPanel{
     protected abstract void doPaint(final Graphics g);
 
     public synchronized void updateCurrentX(double x) {
-        this.currentX = (int)(x * Settings.TILE_PIXEL());
+        this.currentX = (int)(x * Settings.Constants$.MODULE$.TILE_PIXEL());
     }
 
     public synchronized void updateCurrentY(double y) {
-        this.currentY = (int)(y * Settings.TILE_PIXEL());
+        this.currentY = (int)(y * Settings.Constants$.MODULE$.TILE_PIXEL());
     }
 
     protected int getCurrentX() {

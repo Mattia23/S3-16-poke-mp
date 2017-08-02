@@ -1,6 +1,5 @@
 import java.util.Optional
 
-import database.local.PokedexConnect
 import model.entities._
 import org.scalatest.FunSuite
 

@@ -12,42 +12,46 @@ trait CompositeElement {
   def bottomRightTile: Tile
 }
 
-case class Lake() extends  CompositeElement{
-  override val tile = Water()
+object CompositeElement {
+  import Tile._
 
-  override val topTile = WaterMarginTop()
+  case class Lake() extends  CompositeElement{
+    override val tile = Water()
 
-  override val topLeftTile = WaterMarginTopLeft()
+    override val topTile = WaterMarginTop()
 
-  override val topRightTile = WaterMarginTopRight()
+    override val topLeftTile = WaterMarginTopLeft()
 
-  override val leftTile = WaterMarginLeft()
+    override val topRightTile = WaterMarginTopRight()
 
-  override val rightTile = WaterMarginRight()
+    override val leftTile = WaterMarginLeft()
 
-  override val bottomTile = WaterMarginBottom()
+    override val rightTile = WaterMarginRight()
 
-  override val bottomLeftTile = WaterMarginBottomLeft()
+    override val bottomTile = WaterMarginBottom()
 
-  override val bottomRightTile = WaterMarginBottomRight()
-}
+    override val bottomLeftTile = WaterMarginBottomLeft()
 
-case class Square() extends  CompositeElement{
-  override val tile = Road()
+    override val bottomRightTile = WaterMarginBottomRight()
+  }
 
-  override val topTile = RoadMarginTop()
+  case class Square() extends  CompositeElement{
+    override val tile = Road()
 
-  override val topLeftTile = RoadMarginTopLeft()
+    override val topTile = RoadMarginTop()
 
-  override val topRightTile = RoadMarginTopRight()
+    override val topLeftTile = RoadMarginTopLeft()
 
-  override val leftTile = RoadMarginLeft()
+    override val topRightTile = RoadMarginTopRight()
 
-  override val rightTile = RoadMarginRight()
+    override val leftTile = RoadMarginLeft()
 
-  override val bottomTile = RoadMarginBottom()
+    override val rightTile = RoadMarginRight()
 
-  override val bottomLeftTile = RoadMarginBottomLeft()
+    override val bottomTile = RoadMarginBottom()
 
-  override val bottomRightTile = RoadMarginBottomRight()
+    override val bottomLeftTile = RoadMarginBottomLeft()
+
+    override val bottomRightTile = RoadMarginBottomRight()
+  }
 }

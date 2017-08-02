@@ -28,7 +28,7 @@ public class BasePanel extends ImagePanel {
         this.centralPanel = new JPanel(new GridBagLayout());
         this.downPanel = new JPanel(new BorderLayout());
 
-        final ImageIcon icon = new ImageIcon(BasePanel.class.getResource(Settings.IMAGES_FOLDER()
+        final ImageIcon icon = new ImageIcon(BasePanel.class.getResource(Settings.Images$.MODULE$.IMAGES_FOLDER()
                 + "arrow-back.png"));
         this.backButton = new JButton(icon);
         this.backButton.setContentAreaFilled(false);
