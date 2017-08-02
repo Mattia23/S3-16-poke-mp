@@ -4,18 +4,68 @@ import utilities.Settings
 
 import scala.collection.JavaConverters._
 
+/**
+  * TrainerSprites represents all the sprites of a trainer
+  */
 sealed trait TrainerSprites {
+  /**
+    * @return the back1 sprite as a Sprite
+    */
   def back1: Sprite
+
+  /**
+    * @return the back2 sprite as a Sprite
+    */
   def back2: Sprite
+
+  /**
+    * @return the backS sprite as a Sprite
+    */
   def backS: Sprite
+
+  /**
+    * @return the front1 sprite as a Sprite
+    */
   def front1: Sprite
+
+  /**
+    * @return the front2 sprite as a Sprite
+    */
   def front2: Sprite
+
+  /**
+    * @return the frontS sprite as a Sprite
+    */
   def frontS: Sprite
+
+  /**
+    * @return the left1 sprite as a Sprite
+    */
   def left1: Sprite
+
+  /**
+    * @return the left2 sprite as a Sprite
+    */
   def left2: Sprite
+
+  /**
+    * @return the leftS sprite as a Sprite
+    */
   def leftS: Sprite
+
+  /**
+    * @return the right1 sprite as a Sprite
+    */
   def right1: Sprite
+
+  /**
+    * @return the right2 sprite as a Sprite
+    */
   def right2: Sprite
+
+  /**
+    * @return the rightS sprite as a Sprite
+    */
   def rightS: Sprite
 }
 
@@ -24,6 +74,9 @@ object TrainerSprites {
     type Trainers = Value
     val Boy1, Boy2, Girl1, Girl2 = Value
 
+    /**
+      * @return the list of Trainers values as a java.util.List
+      */
     def valueSetAsJavaList(): java.util.List[Trainers] = values.toList.asJava
   }
 
@@ -37,6 +90,10 @@ object TrainerSprites {
   }
 
   import Settings.Images._
+
+  /**
+    * @inheritdoc
+    */
   case class Trainer1() extends TrainerSprites {
     override val back1 = Back1(TRAINER_1_BACK_1_IMAGE_STRING)
 
@@ -63,6 +120,9 @@ object TrainerSprites {
     override val rightS = RightS(TRAINER_1_RIGHT_S_IMAGE_STRING)
   }
 
+  /**
+    * @inheritdoc
+    */
   case class Trainer2() extends TrainerSprites {
     override val back1 = Back1(TRAINER_2_BACK_1_IMAGE_STRING)
 
@@ -89,6 +149,9 @@ object TrainerSprites {
     override val rightS = RightS(TRAINER_2_RIGHT_S_IMAGE_STRING)
   }
 
+  /**
+    * @inheritdoc
+    */
   case class Trainer3() extends TrainerSprites {
     override val back1 = Back1(TRAINER_3_BACK_1_IMAGE_STRING)
 
@@ -115,32 +178,40 @@ object TrainerSprites {
     override val rightS = RightS(TRAINER_3_RIGHT_S_IMAGE_STRING)
   }
 
+  /**
+    * @inheritdoc
+    */
   case class Trainer4() extends TrainerSprites {
-    override def back1 = Back1(TRAINER_4_BACK_1_IMAGE_STRING)
+    override val back1 = Back1(TRAINER_4_BACK_1_IMAGE_STRING)
 
-    override def back2 = Back2(TRAINER_4_BACK_2_IMAGE_STRING)
+    override val back2 = Back2(TRAINER_4_BACK_2_IMAGE_STRING)
 
-    override def backS = BackS(TRAINER_4_BACK_S_IMAGE_STRING)
+    override val backS = BackS(TRAINER_4_BACK_S_IMAGE_STRING)
 
-    override def front1 = Front1(TRAINER_4_FRONT_1_IMAGE_STRING)
+    override val front1 = Front1(TRAINER_4_FRONT_1_IMAGE_STRING)
 
-    override def front2 = Front2(TRAINER_4_FRONT_2_IMAGE_STRING)
+    override val front2 = Front2(TRAINER_4_FRONT_2_IMAGE_STRING)
 
-    override def frontS = FrontS(TRAINER_4_FRONT_S_IMAGE_STRING)
+    override val frontS = FrontS(TRAINER_4_FRONT_S_IMAGE_STRING)
 
-    override def left1 = Left1(TRAINER_4_LEFT_1_IMAGE_STRING)
+    override val left1 = Left1(TRAINER_4_LEFT_1_IMAGE_STRING)
 
-    override def left2 = Left2(TRAINER_4_LEFT_2_IMAGE_STRING)
+    override val left2 = Left2(TRAINER_4_LEFT_2_IMAGE_STRING)
 
-    override def leftS = LeftS(TRAINER_4_LEFT_S_IMAGE_STRING)
+    override val leftS = LeftS(TRAINER_4_LEFT_S_IMAGE_STRING)
 
-    override def right1 = Right1(TRAINER_4_RIGHT_1_IMAGE_STRING)
+    override val right1 = Right1(TRAINER_4_RIGHT_1_IMAGE_STRING)
 
-    override def right2 = Right2(TRAINER_4_RIGHT_2_IMAGE_STRING)
+    override val right2 = Right2(TRAINER_4_RIGHT_2_IMAGE_STRING)
 
-    override def rightS = RightS(TRAINER_4_RIGHT_S_IMAGE_STRING)
+    override val rightS = RightS(TRAINER_4_RIGHT_S_IMAGE_STRING)
   }
 
+  /**
+    * Given a TrainerSprites return it's id as Int
+    * @param trainerSprites the trainer's sprites of which I want the id
+    * @return the id of the trainer's sprite as Int
+    */
   def getIdImageFromTrainerSprite(trainerSprites: TrainerSprites): Int = trainerSprites match {
     case Trainer1() => Trainers.Boy1.id
     case Trainer2() => Trainers.Boy2.id

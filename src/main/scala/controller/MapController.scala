@@ -24,6 +24,13 @@ object MapController {
   def apply(view: View, _trainer: Trainer, connection: Connection, connectedPlayers: ConnectedPlayers): GameController = new MapController(view, _trainer, connection, connectedPlayers)
 }
 
+/**
+  * Manages all the events in the map outside buildings (move the trainer on the map, interact with other players,...)
+  * @param view instance of the View
+  * @param _trainer the main trainer
+  * @param connection instance of the connection with RabbitMQ Broker
+  * @param connectedPlayers all the players connected to the game
+  */
 class MapController(private val view: View,
                     private val _trainer: Trainer,
                     private val connection: Connection,
@@ -36,7 +43,9 @@ class MapController(private val view: View,
   connectedPlayers addObserver distributedMapController.asInstanceOf[ConnectedPlayersObserver]
   audio = Audio(Settings.Audio.MAP_SONG)
 
-
+  /**
+    * @inheritdoc
+    */
   override protected def doStart(): Unit = {
     initView()
     if(trainer.capturedPokemons.isEmpty){
@@ -46,17 +55,27 @@ class MapController(private val view: View,
     }
   }
 
+  /**
+    * Initializes the panel of the map
+    */
   private def initView(): Unit = {
     view.showMap(this, distributedMapController, gameMap)
     gamePanel = view.getGamePanel
   }
 
+  /**
+    * Manages the player's first login. In the first login the player must start from the Laboratory
+    */
   private def doFirstLogin(): Unit = {
     pause()
     updateLastCoordinateToBuilding(LABORATORY_BUILDING)
     new LaboratoryController(this.view, this, trainer).start()
   }
 
+  /**
+    * Sets the trainer's coordinates in front of the door of the given building
+    * @param building the building in front of which the coordinates must be set
+    */
   private def updateLastCoordinateToBuilding(building: String): Unit = {
     for( x <- 0 until gameMap.width){
       for( y <- 0 until gameMap.height){
@@ -75,30 +94,50 @@ class MapController(private val view: View,
     }
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doPause(): Unit = {
     lastCoordinates = trainer.coordinate
     audio.stop()
     setFocusableOff()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doResume(): Unit = {
-    distributedMapController sendTrainerInBuilding true
+    distributedMapController sendTrainerInBuilding false
     sendTrainerIsBusy(false)
-    if(trainer.getFirstAvailableFavouritePokemon <= 0) {
-      DBConnect rechangeAllTrainerPokemon trainer.id
-      setTrainerSpriteFront()
-      updateLastCoordinateToBuilding(POKEMON_CENTER_BUILDING)
-    }
+    checkIfPlayerHasBeenDefeated()
     trainer.coordinate = lastCoordinates
     initView()
     audio.loop()
     setFocusableOn()
   }
 
+  /**
+    * Sets the last trainer's coordinates in front of the Pokemon Center door if the trainers has not available Pokemons
+    */
+  private def checkIfPlayerHasBeenDefeated() = {
+    if(trainer.getFirstAvailableFavouritePokemon <= 0) {
+      DBConnect rechangeAllTrainerPokemon trainer.id
+      setTrainerSpriteFront()
+      updateLastCoordinateToBuilding(POKEMON_CENTER_BUILDING)
+    }
+  }
+
+  /**
+    * @inheritdoc
+    */
   override protected def doTerminate(): Unit = {
     audio.stop()
   }
 
+  /**
+    * @inheritdoc
+    * @param direction the direction towards which the trainer is moving
+    */
   override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
       if(direction != null) nextPosition = nextTrainerPosition(direction)
@@ -116,8 +155,12 @@ class MapController(private val view: View,
     }
   }
 
+  /**
+    * Moves the trainer into a building
+    * @param building the building towards the trainer is moving into
+    */
   private def enterInBuilding(building: Building) = {
-    distributedMapController sendTrainerInBuilding false
+    distributedMapController sendTrainerInBuilding true
     pause()
     val buildingController: BuildingController = building match{
       case _: PokemonCenter => new PokemonCenterController(this.view, this, trainer)
@@ -127,6 +170,9 @@ class MapController(private val view: View,
     trainerIsMoving = false
   }
 
+  /**
+    * Checks if a wild Pokemon has been met. If so a battle is started
+    */
   private def randomPokemonAppearance() = {
     val random: Int = Random nextInt RANDOM_MAX_VALUE
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
@@ -138,12 +184,16 @@ class MapController(private val view: View,
     }
   }
 
+  /**
+    * @inheritdoc
+    * @param direction the direction towards which the trainer is watching
+    */
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause){
       val nextPosition: Coordinate = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isBusy){
-          distributedMapController.challengeTrainer(otherPlayer.userId, wantToFight = true, isFirst = true)
+          distributedMapController.sendChallengeToTrainer(otherPlayer.userId)
           showDialogue(new WaitingTrainerDialoguePanel(otherPlayer.username))
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isBusy){
           showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
@@ -151,11 +201,19 @@ class MapController(private val view: View,
     }
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doLogout(): Unit = {
     distributedMapController.playerLogout()
     terminate()
   }
 
+  /**
+    * @inheritdoc
+    * @param otherPlayerId the user id of the other player
+    * @param yourPlayerIsFirst boolean that represents if you are the first player to start the battle
+    */
   override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {
     pause()
     val otherPlayerUsername = (connectedPlayers get otherPlayerId).username
@@ -164,6 +222,10 @@ class MapController(private val view: View,
     distributedBattle passManager battleManager
   }
 
+  /**
+    * @inheritdoc
+    * @param isBusy value that represents if you are or not busy
+    */
   override def sendTrainerIsBusy(isBusy: Boolean): Unit = {
     distributedMapController sendTrainerIsBusy isBusy
   }

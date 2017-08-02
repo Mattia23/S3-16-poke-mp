@@ -6,9 +6,21 @@ import distributed.ConnectedPlayers
 import distributed.messages.{PlayerLogoutMessage, PlayerLogoutMessageImpl}
 import utilities.Settings
 
+/**
+  * PlayerLogoutClientManager sends and receives PlayerLogoutMessages updating the current connected players
+  */
 trait PlayerLogoutClientManager {
+  /**
+    * Sends a PlayerLogoutMessage to the server when the player logs out
+    * @param userId user id
+    */
   def sendPlayerLogout(userId: Int): Unit
 
+  /**
+    * Receives a PlayerLogoutMessage when another player logs out updating the local current connected players
+    * @param userId user id
+    * @param connectedPlayers players currently connected to the game
+    */
   def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
@@ -16,6 +28,10 @@ object PlayerLogoutClientManager {
   def apply(connection: Connection): PlayerLogoutClientManager = new PlayerLogoutClientManagerImpl(connection)
 }
 
+/**
+  * @inheritdoc
+  * @param connection instance of Connection with RabbitMQ
+  */
 class PlayerLogoutClientManagerImpl(private val connection: Connection) extends PlayerLogoutClientManager {
 
   private val gson: Gson = new Gson()
@@ -28,11 +44,20 @@ class PlayerLogoutClientManagerImpl(private val connection: Connection) extends 
   channel.exchangeDeclare(Constants.PLAYER_LOGOUT_EXCHANGE, "fanout")
   channel.queueBind(playerQueue, Constants.PLAYER_LOGOUT_EXCHANGE, "")
 
+  /**
+    * @inheritdoc
+    * @param userId user id
+    */
   override def sendPlayerLogout(userId: Int): Unit = {
     val logoutMessage = PlayerLogoutMessage(userId)
     channel.basicPublish("", Constants.PLAYER_LOGOUT_CHANNEL_QUEUE, null, gson.toJson(logoutMessage).getBytes("UTF-8"))
   }
 
+  /**
+    * @inheritdoc
+    * @param userId user id
+    * @param connectedPlayers players currently connected to the game
+    */
   override def receiveOtherPlayerLogout(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
     val consumer = new DefaultConsumer(channel) {
 
