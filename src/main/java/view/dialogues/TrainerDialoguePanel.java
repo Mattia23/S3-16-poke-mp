@@ -17,7 +17,6 @@ public class TrainerDialoguePanel extends DialoguePanel {
         super(dialogues);
         this.gameController = gameController;
         this.trainerDialogueClientManager = trainerDialogueClientManager;
-        if(dialogues.size() == 1) setFinalButtons();
         final Thread countDown = new Thread(() -> {
             int i = Settings.Constants$.MODULE$.SECONDS_WAITING_TIME_FIGHT_REQUEST();
             while (running) {

@@ -13,7 +13,6 @@ public class ClassicDialoguePanel extends DialoguePanel {
     public ClassicDialoguePanel(final GameController gameController, final List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
-        if(dialogues.size() == 1) setFinalButtons();
     }
 
     @Override

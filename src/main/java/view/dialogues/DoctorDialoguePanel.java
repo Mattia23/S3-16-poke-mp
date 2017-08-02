@@ -15,7 +15,6 @@ public class DoctorDialoguePanel extends DialoguePanel {
     public DoctorDialoguePanel(GameController gameController, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
-        if(dialogues.size() == 1) setFinalButtons();
     }
 
     @Override

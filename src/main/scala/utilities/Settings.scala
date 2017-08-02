@@ -294,6 +294,8 @@ object Settings {
 
     lazy val TRAINER_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("fight", FINAL_DIALOGUE_BUTTON)
 
+    lazy val WAITING_TRAINER_LABEL: String = "Waiting for an answer from "
+
     lazy val LOGIN_BUTTON =  "Login"
 
     lazy val SIGN_IN_BUTTON =  "Sign in"
