@@ -6,6 +6,9 @@ import com.google.gson._
 import distributed.PlayerImpl
 import distributed.messages.PlayerMessage
 
+/**
+  * Deserializer from Json to PlayerMessage
+  */
 object PlayerMessageDeserializer extends JsonDeserializer[PlayerMessage]{
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): PlayerMessage = {
     val jsonPlayerMessage = json.getAsJsonObject
