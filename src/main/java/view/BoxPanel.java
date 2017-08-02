@@ -32,7 +32,7 @@ public class BoxPanel extends ImagePanel {
     private Audio audio;
 
     public BoxPanel(BuildingController buildingController){
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "box-pokemon.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.BOX_PANEL_BACKGROUND());
         audio = new AudioImpl(Settings.Audio$.MODULE$.MENU_SONG());
         audio.play();
         this.favoritePokemon = new ArrayList<>();
@@ -114,7 +114,7 @@ public class BoxPanel extends ImagePanel {
                         .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
                 final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
                 final JLabel pokemonLabel = new JLabel("Lv." + pokemonWithLife.pokemon().level());
-                pokemonLabel.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
+                pokemonLabel.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
                 pokemonImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonImage.addMouseListener(new MouseAdapter() {
                     @Override
@@ -145,7 +145,7 @@ public class BoxPanel extends ImagePanel {
                 final JButton button = new JButton("<<");
                 final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
                 final JLabel pokemonLabel = new JLabel("Lv."+pokemonWithLife.pokemon().level());
-                pokemonLabel.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
+                pokemonLabel.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
                 pokemonImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonImage.addMouseListener(new MouseAdapter() {
                     @Override

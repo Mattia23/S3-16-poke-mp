@@ -1,7 +1,5 @@
 package view;
 
-import java.util.List;
-
 /**
  * BattleView receive information about the battle from the controller: after receiving this information, the view is updated
  */

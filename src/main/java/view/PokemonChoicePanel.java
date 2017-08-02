@@ -32,7 +32,7 @@ class PokemonChoicePanel extends TeamPanel{
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
-            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.IMAGES_FOLDER() + "info.png"));
+            myImage = ImageIO.read(getClass().getResource(Settings.Images$.MODULE$.INFO_BUTTON()));
             myImageIcon = new ImageIcon(myImage.getScaledInstance(infoSide,infoSide, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,7 +41,6 @@ class PokemonChoicePanel extends TeamPanel{
         info.setBorderPainted(false);
         info.setContentAreaFilled(false);
         info.setOpaque(false);
-        info.setToolTipText("Use arrow keys to select your Pokemon, then Enter to choose it.");
         this.downPanel.add(info,BorderLayout.WEST);
         Boolean first = true;
         for(Tuple3<JRadioButton,PokemonWithLife,Integer> pokemonRadioButton: buttonList){
@@ -64,7 +63,7 @@ class PokemonChoicePanel extends TeamPanel{
             if(first && pokemonRadioButton._2().pokemonLife() != 0){
                 pokemonRadioButton._1().requestFocus();
                 pokemonRadioButton._1().setSelected(true);
-                pokemonRadioButton._1().setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
+                pokemonRadioButton._1().setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.BOLD, FONT_SIZE));
                 JUtil.setFocus(pokemonRadioButton._1());
                 first = false;
             }

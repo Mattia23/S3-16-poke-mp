@@ -23,7 +23,7 @@ public class SignInPanel extends BasePanel {
 
     public SignInPanel(SignInController controller) {
         this.controller = controller;
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "sign-in.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.SIGNIN_PANEL_BACKGROUND());
 
         this.trainerImage = TrainerSprites$.MODULE$.apply(BASIC_TRAINER_ID).frontS().image();
         this.trainer = TrainerSprites.Trainers$.MODULE$.Boy1();

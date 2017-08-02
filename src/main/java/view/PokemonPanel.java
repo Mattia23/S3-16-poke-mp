@@ -27,7 +27,7 @@ public class PokemonPanel extends BasePanel {
 
     PokemonPanel(){
         setBackground(Color.WHITE);
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pikachu.jpg");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.POKEMON_PANEL_BACKGROUND());
         this.backButton.setVisible(false);
         this.centralPanel.add(pokemonImage);
         k.gridy++;
@@ -60,11 +60,11 @@ public class PokemonPanel extends BasePanel {
         pokemonImage.setIcon(myImageIcon);
         pokemonName.setText(pokemonWithLife.pokemon().name().toUpperCase() + " Lv."+pokemonWithLife.pokemon().level() +
                 "  " + pokemonWithLife.pokemonLife()+"/"+pokemonWithLife.pokemon().experiencePoints()+" PS");
-        pokemonName.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/35));
+        pokemonName.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/35));
         pokemonLevelExperience.setText("Level experience: "+pokemonWithLife.pokemon().levelExperience());
-        pokemonLevelExperience.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/35));
+        pokemonLevelExperience.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/35));
         columnTable.setText("ATTACKS    (Power):");
-        columnTable.setFont(new Font("Verdana",Font.BOLD,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
+        columnTable.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.BOLD,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
         Tuple4 moves = pokemonWithLife.pokemon().attacks();
         Tuple2[] attacks = new Tuple2[4];
         attacks[0] = PokedexConnect.getPokemonAttack((int)moves._1()).get();
@@ -74,7 +74,7 @@ public class PokemonPanel extends BasePanel {
         int i = 0;
         for(JLabel pokemonAttack: pokemonAttacks) {
             pokemonAttack.setText("    " + attacks[i]._1().toString().toUpperCase()+" ("+attacks[i]._2()+")    ");
-            pokemonAttack.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
+            pokemonAttack.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
             pokemonAttack.setBorder(new LineBorder(Color.black,1,true));
             i++;
         }
