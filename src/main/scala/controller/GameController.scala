@@ -169,6 +169,9 @@ abstract class GameControllerImpl(private var view: View,
     agent.start()
   }
 
+  /**
+    * Accomplish the start of the subclass of GameController
+    */
   protected def doStart(): Unit
 
   /**
@@ -180,6 +183,9 @@ abstract class GameControllerImpl(private var view: View,
     if (agent != null) agent.terminate()
   }
 
+  /**
+    * Accomplish the terminate of the subclass of GameController
+    */
   protected def doTerminate(): Unit
 
   /**
@@ -191,6 +197,9 @@ abstract class GameControllerImpl(private var view: View,
     if (agent != null) agent.terminate()
   }
 
+  /**
+    * Accomplish the pause of the subclass of GameController
+    */
   protected def doPause(): Unit
 
   /**
@@ -203,6 +212,9 @@ abstract class GameControllerImpl(private var view: View,
     agent.start()
   }
 
+  /**
+    * Accomplish the resume of the subclass of GameController
+    */
   protected def doResume(): Unit
 
   /**
@@ -211,6 +223,9 @@ abstract class GameControllerImpl(private var view: View,
     */
   override final def moveTrainer(direction: Direction): Unit = doMove(direction)
 
+  /**
+    * Accomplish the move of the subclass of GameController
+    */
   protected def doMove(direction: Direction): Unit
 
   /**
@@ -236,6 +251,9 @@ abstract class GameControllerImpl(private var view: View,
     doLogout()
   }
 
+  /**
+    * Accomplish the logout of the subclass of GameController
+    */
   protected def doLogout(): Unit
 
   /**
