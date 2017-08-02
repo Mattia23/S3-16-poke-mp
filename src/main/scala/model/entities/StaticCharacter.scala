@@ -7,15 +7,29 @@ import model.environment.{Coordinate, CoordinateImpl}
 import utilities.Settings
 import view.LoadImage
 
-
+/**
+  * StaticCharacter defines a static character in a map.
+  */
 trait StaticCharacter {
 
+  /**
+    * Character's height (in px)
+    */
   def HEIGHT: Int
 
+  /**
+    * Character's image
+    */
   def image: Image
 
+  /**
+    * Character's coordinate in a map
+    */
   def coordinate: Coordinate
 
+  /**
+    * Character's dialogue when interacts 
+    */
   def dialogue: List[String]
 
 }
