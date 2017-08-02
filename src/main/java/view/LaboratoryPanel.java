@@ -21,10 +21,10 @@ public class LaboratoryPanel extends BuildingPanel {
     protected synchronized void doPaint(final Graphics g){
         super.doPaint(g);
         if(emptyCaptures){
-            for(int i = 0; i < laboratoryMap.pokemonNpc().length(); i++){
-                g.drawImage(laboratoryMap.pokemonNpc().apply(i).image(),
-                        super.centerX + laboratoryMap.pokemonNpc().apply(i).coordinate().x()* Settings.Constants$.MODULE$.TILE_PIXEL(),
-                        super.centerY + laboratoryMap.pokemonNpc().apply(i).coordinate().y()*Settings.Constants$.MODULE$.TILE_PIXEL(), this);
+            for(int i = 0; i < laboratoryMap.pokemonCharacter().length(); i++){
+                g.drawImage(laboratoryMap.pokemonCharacter().apply(i).image(),
+                        super.centerX + laboratoryMap.pokemonCharacter().apply(i).coordinate().x()* Settings.Constants$.MODULE$.TILE_PIXEL(),
+                        super.centerY + laboratoryMap.pokemonCharacter().apply(i).coordinate().y()*Settings.Constants$.MODULE$.TILE_PIXEL(), this);
             }
         }
     }

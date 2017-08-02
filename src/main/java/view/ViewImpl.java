@@ -8,6 +8,7 @@ import model.map.BuildingMap;
 import model.map.GameMap;
 import model.entities.Trainer;
 import utilities.Settings;
+import view.dialogues.DialoguePanel;
 
 import javax.swing.*;
 import java.awt.*;

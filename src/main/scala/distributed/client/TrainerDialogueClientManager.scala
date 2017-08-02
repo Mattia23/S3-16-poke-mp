@@ -1,12 +1,14 @@
 package distributed.client
 
 import java.util
+
 import com.google.gson.Gson
 import com.rabbitmq.client._
 import controller.GameController
 import distributed.messages.{TrainerDialogueMessage, TrainerDialogueMessageImpl}
 import utilities.Settings
-import view.{ClassicDialoguePanel, TrainerDialoguePanel}
+import view.TrainerDialoguePanel
+import view.dialogues.{ClassicDialoguePanel, TrainerDialoguePanel}
 
 /**
   * TrainerDialogueClientManager manages the delivering and the receiving of messages realated to the request of a new

@@ -1,8 +1,9 @@
-package view;
+package view.dialogues;
 
 import controller.GameController;
 import distributed.client.TrainerDialogueClientManager;
 import utilities.Settings;
+import view.JUtil;
 
 import javax.swing.*;
 import java.util.List;

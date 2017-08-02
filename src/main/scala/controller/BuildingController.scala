@@ -6,6 +6,7 @@ import model.environment._
 import model.map._
 import utilities.Settings
 import view._
+import view.dialogues.{ClassicDialoguePanel, DoctorDialoguePanel}
 
 import scala.collection.JavaConverters._
 
@@ -30,7 +31,7 @@ abstract class BuildingController(private val view: View, private val mapControl
           trainerIsMoving = false
           if (trainer.coordinate equals buildingMap.entryCoordinate) {
             if(buildingMap.isInstanceOf[LaboratoryMap] && trainer.capturedPokemons.isEmpty){
-              showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
+              showDialogue(new ClassicDialoguePanel(this, buildingMap.staticCharacter.dialogue.asJava))
             }else {
               this.terminate()
               mapController.resume()
@@ -70,7 +71,6 @@ abstract class BuildingController(private val view: View, private val mapControl
 
 }
 
-
 class PokemonCenterController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
@@ -97,8 +97,8 @@ class PokemonCenterController(private val view: View, private val mapController:
       if(direction != null) nextPosition = nextTrainerPosition(direction)
       try{
         val tile = buildingMap.map(nextPosition.x)(nextPosition.y)
-        if(nextPosition equals buildingMap.npc.coordinate){
-          showDialogue(new DoctorDialoguePanel(this, buildingMap.npc.dialogue.asJava))
+        if(nextPosition equals buildingMap.staticCharacter.coordinate){
+          showDialogue(new DoctorDialoguePanel(this, buildingMap.staticCharacter.dialogue.asJava))
         }
         if(tile.isInstanceOf[Tile.Box]){
           this.pause()
@@ -114,7 +114,7 @@ class PokemonCenterController(private val view: View, private val mapController:
 class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   private var capturedPokemonEmpty: Boolean = this.trainer.capturedPokemons.isEmpty
-  if(!capturedPokemonEmpty) buildingMap.npc = new OakAfterChoise
+  if(!capturedPokemonEmpty) buildingMap.staticCharacter = new OakAfterChoise
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
   audio = Audio(Settings.Audio.LABORATORY_SONG)
@@ -139,12 +139,11 @@ class LaboratoryController(private val view: View, private val mapController: Ga
     if (!isInPause) {
       if(direction != null) nextPosition = nextTrainerPosition(direction)
       try{
-        if(nextPosition equals buildingMap.npc.coordinate){
-          //this.pause()
-          showDialogue(new ClassicDialoguePanel(this, buildingMap.npc.dialogue.asJava))
+        if(nextPosition equals buildingMap.staticCharacter.coordinate){
+          showDialogue(new ClassicDialoguePanel(this, buildingMap.staticCharacter.dialogue.asJava))
         }
         if(capturedPokemonEmpty) {
-          for (pokemon <- buildingMap.pokemonNpc) if (nextPosition equals pokemon.coordinate) {
+          for (pokemon <- buildingMap.pokemonCharacter) if (nextPosition equals pokemon.coordinate) {
             this.pause()
             this.view.showInitialPokemonPanel(this, pokemon.pokemonWithLife)
           }

@@ -1,4 +1,6 @@
-package view;
+package view.dialogues;
+
+import view.JUtil;
 
 import javax.swing.*;
 import java.awt.*;

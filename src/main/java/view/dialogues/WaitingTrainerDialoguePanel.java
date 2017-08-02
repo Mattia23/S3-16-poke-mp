@@ -1,13 +1,12 @@
-package view;
+package view.dialogues;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class WaitingTrainerDialoguePanel extends DialoguePanel {
 
     public WaitingTrainerDialoguePanel(String trainerName) {
-        super(new ArrayList<String>(Arrays.asList("Waiting for an answer from " + trainerName)));
+        super(new ArrayList<>(Arrays.asList("Waiting for an answer from " + trainerName)));
         setFinalButtons();
     }
 

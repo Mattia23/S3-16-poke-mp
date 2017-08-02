@@ -8,15 +8,60 @@ import utilities.Settings
 import view.LoadImage
 import Tile._
 
-trait BuildingMap extends BasicMap{  
+/**
+  * This trait represents the content of a building map
+  */
+trait BuildingMap extends BasicMap{
+  /**
+    * The background image of a building map
+    * @return image
+    */
   def image: Image
+
+  /**
+    * Some tile in a building map must be not walkable for the trainer
+    * @return
+    */
   def matricesNotWalkable: List[Tuple2[Coordinate, Coordinate]]
-  def npc: StaticCharacter
-  def npc_=(staticCharacter: StaticCharacter): Unit
+
+  /**
+    * A static character in the building map
+    * @return
+    */
+  def staticCharacter: StaticCharacter
+
+  /**
+    * Setter for staticCharacter
+    * @param staticCharacter
+    */
+  def staticCharacter_=(staticCharacter: StaticCharacter): Unit
+
+  /**
+    * Coordinate of the entry of the building map
+    * @return
+    */
   def entryCoordinate: Coordinate
 
-  def pokemonNpc: List[PokemonCharacter]
+  /**
+    * List of pokemon character
+    * @return
+    */
+  def pokemonCharacter: List[PokemonCharacter]
 
+  /**
+    * It sets BasicTile() for every tile in the building map
+    */
+  protected def setBasicTilesInMap(): Unit = {
+    for(i <- map.indices){
+      for(j <- map(0).indices){
+        map(i)(j) = BasicTile()
+      }
+    }
+  }
+
+  /**
+    * It allows to set some tile not walkable (Barrier()) of the building map
+    */
   protected def setNotWalkableArea(): Unit = {
     for(matrixNotWalkable <- matricesNotWalkable){
       for( i <- matrixNotWalkable._1.x to matrixNotWalkable._2.x){
@@ -25,15 +70,7 @@ trait BuildingMap extends BasicMap{
         }
       }
     }
-    map(npc.coordinate.x)(npc.coordinate.y) = Barrier()
-  }
-
-  protected def setBasicTilesInMap(): Unit = {
-    for(i <- map.indices){
-      for(j <- map(0).indices){
-        map(i)(j) = BasicTile()
-      }
-    }
+    map(staticCharacter.coordinate.x)(staticCharacter.coordinate.y) = Barrier()
   }
 }
 
@@ -42,7 +79,7 @@ class PokemonCenterMap extends BuildingMap{
   override def width: Int = 15
   override val map: Array[Array[Tile]]= Array.ofDim[Tile](width, height)
 
-  override var npc: StaticCharacter = new Doctor
+  override var staticCharacter: StaticCharacter = new Doctor
 
   override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "pokemon-center.png")
 
@@ -62,7 +99,7 @@ class PokemonCenterMap extends BuildingMap{
   val boxCoordinate: Coordinate = CoordinateImpl(11, 1)
   map(boxCoordinate.x)(boxCoordinate.y) = Box()
 
-  override def pokemonNpc: List[PokemonCharacter] = null
+  override def pokemonCharacter: List[PokemonCharacter] = null
 }
 
 class LaboratoryMap extends BuildingMap{
@@ -70,7 +107,7 @@ class LaboratoryMap extends BuildingMap{
   override val width: Int = 13
   override val map: Array[Array[Tile]] = Array.ofDim[Tile](width, height)
 
-  override var npc: StaticCharacter = new Oak
+  override var staticCharacter: StaticCharacter = new Oak
 
   override val image: Image = LoadImage.load(Settings.Images.MAP_IMAGES_FOLDER + "laboratory.png")
 
@@ -92,5 +129,5 @@ class LaboratoryMap extends BuildingMap{
   private val bulbasaur: PokemonCharacter = PokemonCharacter(PokemonCharacter.InitialPokemon.Bulbasaur)
   private val charmander: PokemonCharacter = PokemonCharacter(PokemonCharacter.InitialPokemon.Charmander)
   private val squirtle: PokemonCharacter = PokemonCharacter(PokemonCharacter.InitialPokemon.Squirtle)
-  override val pokemonNpc: List[PokemonCharacter] = List(bulbasaur, charmander, squirtle)
+  override val pokemonCharacter: List[PokemonCharacter] = List(bulbasaur, charmander, squirtle)
 }

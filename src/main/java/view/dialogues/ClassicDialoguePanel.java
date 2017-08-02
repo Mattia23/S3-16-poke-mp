@@ -1,6 +1,7 @@
-package view;
+package view.dialogues;
 
 import controller.GameController;
+import view.JUtil;
 
 import javax.swing.*;
 import java.util.List;

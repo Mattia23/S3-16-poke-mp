@@ -1,4 +1,4 @@
-package view;
+package view.dialogues;
 
 import controller.GameController;
 import database.remote.DBConnect;

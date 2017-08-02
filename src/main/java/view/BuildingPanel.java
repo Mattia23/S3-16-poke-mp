@@ -30,9 +30,9 @@ public class BuildingPanel extends GamePanel {
         g.drawImage(LoadImage.load(this.gameController.trainer().currentSprite().image()),
                 centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
 
-        g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.Constants$.MODULE$.TILE_PIXEL(),
-                centerY+(buildingMap.npc().coordinate().y())*Settings.Constants$.MODULE$.TILE_PIXEL() -
-                        (buildingMap.npc().HEIGHT()-Settings.Constants$.MODULE$.TILE_PIXEL()), this);
+        g.drawImage(buildingMap.staticCharacter().image(), centerX+(buildingMap.staticCharacter().coordinate().x())* Settings.Constants$.MODULE$.TILE_PIXEL(),
+                centerY+(buildingMap.staticCharacter().coordinate().y())*Settings.Constants$.MODULE$.TILE_PIXEL() -
+                        (buildingMap.staticCharacter().HEIGHT()-Settings.Constants$.MODULE$.TILE_PIXEL()), this);
     }
 
 }
