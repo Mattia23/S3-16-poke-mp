@@ -12,7 +12,10 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
 
-public class SignInPanel extends BasePanel {
+/**
+ * SignInPanel allows registration to the game
+ */
+class SignInPanel extends BasePanel {
 
     private final static int BASIC_TRAINER_ID = 0;
     private final static String TRAINER_TEXT = "Trainer";
@@ -21,7 +24,10 @@ public class SignInPanel extends BasePanel {
     private String trainerImage;
     private Value trainer;
 
-    public SignInPanel(SignInController controller) {
+    /**
+     * @param controller instance of SignInController
+     */
+    SignInPanel(SignInController controller) {
         this.controller = controller;
         this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.SIGNIN_PANEL_BACKGROUND());
 

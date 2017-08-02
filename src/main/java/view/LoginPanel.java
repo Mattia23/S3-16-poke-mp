@@ -6,10 +6,16 @@ import utilities.Settings;
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginPanel extends BasePanel {
+/**
+ * LoginPanel allows access the game
+ */
+class LoginPanel extends BasePanel {
     private LoginController controller;
 
-    public LoginPanel(LoginController controller) {
+    /**
+     * @param controller instance of LoginController
+     */
+    LoginPanel(LoginController controller) {
         this.controller = controller;
         JLabel usernameLabel = new JLabel(Settings.Strings$.MODULE$.USERNAME());
         JLabel passwordLabel = new JLabel(Settings.Strings$.MODULE$.PASSWORD());

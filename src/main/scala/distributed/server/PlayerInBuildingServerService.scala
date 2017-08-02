@@ -11,8 +11,17 @@ object PlayerInBuildingServerService {
     new PlayerInBuildingServerService(connection, connectedPlayers)
 }
 
+/**
+  * PlayerInBuildingServerService receives when a player entered/left a building, and sends to all clients that a
+  * player entered/left a building
+  * @param connection instance of the connection to the RabbitMQ Broker
+  * @param connectedPlayers all the players currently connected as ConnectedPlayers
+  */
 class PlayerInBuildingServerService (private val connection: Connection,
                                      private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
+  /**
+    * @inheritdoc
+    */
   override def start(): Unit = {
     val channel = connection.createChannel
 
