@@ -38,7 +38,8 @@ public class KeyboardPanel extends BasePanel {
             gameController.pause();
             gameMenuController.showGameMenu();
         });
-
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
     }
 
     private JLabel createLabel(String text) {

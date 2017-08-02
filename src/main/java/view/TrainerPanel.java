@@ -45,5 +45,7 @@ class TrainerPanel extends BasePanel {
             gameController.pause();
             gameMenuController.showGameMenu();
         });
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
     }
 }

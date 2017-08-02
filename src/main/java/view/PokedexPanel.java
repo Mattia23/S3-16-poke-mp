@@ -91,6 +91,8 @@ class PokedexPanel extends  BasePanel{
         scroll.getViewport().setOpaque(false);
         scroll.setBorder(null);
         this.add(scroll);
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
     }
 
 }

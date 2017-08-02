@@ -86,6 +86,7 @@ class TeamPanel extends BasePanel{
                     JUtil.setFocus(radioButton);
                     first = false;
                 }
+                JUtil.setEscClick(radioButton, this.backButton);
                 buttonList.add(new Tuple3<>(radioButton,pokemonWithLife, pokemonId));
                 pokemonButtonGroup.add(radioButton);
                 this.centralPanel.add(radioButton, k);
