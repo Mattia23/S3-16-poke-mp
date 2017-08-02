@@ -1,5 +1,6 @@
 package view.dialogues;
 
+import utilities.Settings;
 import view.JUtil;
 
 import javax.swing.*;
@@ -11,7 +12,6 @@ import java.util.List;
 
 public abstract class DialoguePanel extends JPanel implements KeyListener{
     protected final JLabel dialogueLabel;
-    protected String response;
     protected int currentButton = 0;
     private int currentDialogue = 0;
     protected final List<JButton> buttons = new ArrayList<>();
@@ -23,12 +23,12 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
         dialogueLabel = new JLabel("", SwingConstants.CENTER);
-        if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(0));
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
+        if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(currentDialogue));
         add(dialogueLabel, BorderLayout.CENTER);
 
         buttonPanel.setBackground(Color.WHITE);
-        final JButton buttonNext = new JButton("next");
+        final JButton buttonNext = new JButton(Settings.Strings$.MODULE$.NEXT_DIALOGUE_BUTTON());
         buttonNext.addActionListener(e -> {
             if (dialogues.size() > currentDialogue) {
                 currentDialogue++;

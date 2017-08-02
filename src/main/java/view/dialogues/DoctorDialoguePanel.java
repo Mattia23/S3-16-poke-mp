@@ -35,7 +35,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
             dialogueLabel.setText(Doctor$.MODULE$.DIALOGUE_AFTER_HEAL());
             buttonPanel.removeAll();
             buttons.clear();
-            final JButton button = new JButton("bye");
+            final JButton button = new JButton(Settings.Strings$.MODULE$.FINAL_DIALOGUE_BUTTON());
             button.addActionListener(e2 -> gameController.resume());
             button.addKeyListener(this);
             buttonPanel.add(button);

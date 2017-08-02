@@ -7,7 +7,6 @@ import com.rabbitmq.client._
 import controller.GameController
 import distributed.messages.{TrainerDialogueMessage, TrainerDialogueMessageImpl}
 import utilities.Settings
-import view.TrainerDialoguePanel
 import view.dialogues.{ClassicDialoguePanel, TrainerDialoguePanel}
 
 /**

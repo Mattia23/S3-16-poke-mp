@@ -1,6 +1,7 @@
 package view.dialogues;
 
 import controller.GameController;
+import utilities.Settings;
 import view.JUtil;
 
 import javax.swing.*;
@@ -19,15 +20,14 @@ public class ClassicDialoguePanel extends DialoguePanel {
     protected void setFinalButtons() {
         buttonPanel.removeAll();
         buttons.clear();
-        buttons.add(new JButton("bye"));
-        buttons.get(0).addActionListener(e -> {
-            response = buttons.get(0).getText();
+        final JButton finalButton = new JButton(Settings.Strings$.MODULE$.FINAL_DIALOGUE_BUTTON());
+        finalButton.addActionListener(e -> {
             gameController.setFocusableOn();
             this.setVisible(false);
         });
-        buttonPanel.add(buttons.get(0));
-        buttons.get(0).requestFocus();
-        JUtil.setFocus(buttons.get(0));
+        buttonPanel.add(finalButton);
+        finalButton.requestFocus();
+        JUtil.setFocus(finalButton);
         repaint();
     }
 }

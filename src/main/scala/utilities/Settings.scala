@@ -44,6 +44,8 @@ object Settings {
 
     lazy val LABORATORY_DOOR_Y = 3
 
+    lazy val SECONDS_WAITING_TIME_FIGHT_REQUEST = 15
+
     lazy val DATABASE_FOLDER =  "/database/"
 
     lazy val INITIAL_TRAINER_LEVEL = 1
@@ -284,11 +286,13 @@ object Settings {
   }
 
   object Strings {
-    lazy val CLASSIC_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("next")
+    lazy val NEXT_DIALOGUE_BUTTON: String = "next"
+
+    lazy val FINAL_DIALOGUE_BUTTON: String = "bye"
 
     lazy val DOCTOR_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("yes", "no")
 
-    lazy val TRAINER_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("fight", "bye")
+    lazy val TRAINER_DIALOGUE_BUTTON: util.List[String] = util.Arrays.asList("fight", FINAL_DIALOGUE_BUTTON)
 
     lazy val LOGIN_BUTTON =  "Login"
 
