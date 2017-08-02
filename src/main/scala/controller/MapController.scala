@@ -196,7 +196,7 @@ class MapController(private val view: View,
           distributedMapController.sendChallengeToTrainer(otherPlayer.userId)
           showDialogue(new WaitingTrainerDialoguePanel(otherPlayer.username))
         }else if((nextPosition equals otherPlayer.position) &&  otherPlayer.isBusy){
-          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + " is busy, try again later!")))
+          showDialogue(new ClassicDialoguePanel(this, util.Arrays.asList(otherPlayer.username + Settings.Strings.BUSY_MESSAGE)))
         })
     }
   }
