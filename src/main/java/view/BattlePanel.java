@@ -48,14 +48,14 @@ public class BattlePanel extends ImagePanel implements BattleView {
     private Timer t;
     private int pokeballX = 0;
     private int pokeballY = 0;
-    private Image pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeball.png");
+    private Image pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGE());
     private JPanel displayPanel = new JPanel(new BorderLayout());
     private JLabel attackExplanation = new JLabel();
     private BattleController controller;
 
     public BattlePanel(PokemonWithLife myPokemon, PokemonWithLife otherPokemon, JFrame frame, BattleController controller) {
         this.controller = controller;
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "battle.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.BATTLE_PANEL_BACKGROUND());
         this.pokemonEntities = new PokemonWithLife[]{otherPokemon, myPokemon};
         this.setLayout(null);
         this.setFocusable(true);
@@ -69,10 +69,10 @@ public class BattlePanel extends ImagePanel implements BattleView {
         for(int i=0;i<pokemonEntities.length;i++) {
             createJTextField(pokemonNames[i],pokemonEntities[i].pokemon().name().toUpperCase());
             pokemonNames[i].setBounds(POKEMON_NAME_POSE[i].width,POKEMON_NAME_POSE[i].height,200,30);
-            pokemonNames[i].setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
+            pokemonNames[i].setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.BOLD, FONT_SIZE));
             createJTextField(pokemonLevels[i],"L."+pokemonEntities[i].pokemon().level());
             pokemonLevels[i].setBounds(POKEMON_LEVEL_POSE[i].width,POKEMON_LEVEL_POSE[i].height,70,30);
-            pokemonLevels[i].setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
+            pokemonLevels[i].setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.PLAIN, FONT_SIZE));
             Image myImage;
             ImageIcon myImageIcon = null;
             try {
@@ -93,7 +93,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
         }
         createJTextField(myPokemonLife,pokemonEntities[1].pokemonLife()+"/"+pokemonEntities[1].pokemon().experiencePoints());
         myPokemonLife.setBounds(POKEMON_LIFE_POSE.width,POKEMON_LIFE_POSE.height,100,30);
-        myPokemonLife.setFont(new Font("Verdana", Font.PLAIN, FONT_LIFE_SIZE));
+        myPokemonLife.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.PLAIN, FONT_LIFE_SIZE));
         this.add(myPokemonLife);
         pokemonLevExpBar.setValue(pokemonEntities[1].pokemon().levelExperience());
         pokemonLevExpBar.setBounds(POKEMON_LEV_EXP_POSE.width,POKEMON_LEV_EXP_POSE.height,170,8);
@@ -166,7 +166,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
             trainerChoices.get("Pokeball").setEnabled(false);
             pokeballAnimation = true;
             pokemonIsInThePokeball = false;
-            pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeball.png");
+            pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGE());
             pokeballX = (int)(POKEMON_IMG_POSE[1].width+Settings.Constants$.MODULE$.FRAME_SIDE()*0.1);
             pokeballY = POKEMON_IMG_POSE[1].height;
             t = new Timer(10,(ActionEvent ex) -> {
@@ -174,7 +174,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
                     pokeballX += 5;
                     pokeballY -= 5;
                 } else if (pokeballY <= POKEMON_IMG_POSE[0].height && !pokemonIsInThePokeball) {
-                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballOpen.png");
+                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_OPEN_IMAGE());
                     pokemonIsInThePokeball = true;
                     Thread animation = new Thread(){
                         @Override
@@ -182,14 +182,14 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             super.run();
                             try {
                                 Thread.sleep(1000);
-                                pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeball.png");
+                                pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGE());
                                 pokemonImages[0].setVisible(false);
                                 Thread.sleep(1500);
                                 if(controller.trainerThrowPokeball()) {
-                                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballRed.png");
+                                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_RED_IMAGE());
                                     Thread.sleep(1000);
                                 } else {
-                                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_IMAGES() + "pokeballOpen.png");
+                                    pokeballImage = LoadImage.load(Settings.Images$.MODULE$.POKEBALL_OPEN_IMAGE());
                                     pokemonImages[0].setVisible(true);
                                     Thread.sleep(1000);
                                     pokeballAnimation = false;

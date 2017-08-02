@@ -16,7 +16,7 @@ public class LoginPanel extends BasePanel {
         JTextField usernameField = new JTextField(20);
         JTextField passwordField = new JPasswordField(20);
         JButton submit = new JButton(Settings.Strings$.MODULE$.SUBMIT_BUTTON());
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "log-in.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.LOGIN_PANEL_BACKGROUND());
         this.backButton.addActionListener(e -> this.controller.back());
         usernameLabel.setForeground(Color.WHITE);
         passwordLabel.setForeground(Color.WHITE);

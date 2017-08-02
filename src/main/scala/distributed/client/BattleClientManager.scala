@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.rabbitmq.client._
 import controller.DistributedBattleController
 import distributed.messages.{BattleMessage, BattleMessageImpl}
+import utilities.Settings
 
 /**
   * BattleClientManager sends and receives all the messages related to a battle against an other trainer.
@@ -46,8 +47,8 @@ class BattleClientManagerImpl(private val connection: Connection,
 
   private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
-  private val myChannelName: String = "battle" + myPlayerId
-  private val otherChannelName: String = "battle" + otherPlayerId
+  private val myChannelName: String = Settings.Constants.BATTLE_CHANNEL_QUEUE + myPlayerId
+  private val otherChannelName: String = Settings.Constants.BATTLE_CHANNEL_QUEUE + otherPlayerId
 
   channel.queueDeclare(myChannelName, false, false, false, null)
   channel.queueDeclare(otherChannelName, false, false, false, null)
