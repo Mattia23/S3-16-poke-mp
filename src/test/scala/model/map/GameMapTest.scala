@@ -1,6 +1,7 @@
+package model.map
+
 import model.environment.CoordinateImpl
 import model.map.Tile._
-import model.map.{GameMap, PokemonCenter}
 import org.scalatest.FunSuite
 
 class GameMapTest extends FunSuite{

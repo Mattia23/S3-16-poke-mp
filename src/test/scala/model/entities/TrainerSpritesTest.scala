@@ -1,4 +1,5 @@
-import model.entities.TrainerSprites
+package model.entities
+
 import org.scalatest.FunSuite
 import utilities.Settings
 

@@ -1,6 +1,7 @@
+package model.entities
+
 import java.util.Optional
 
-import model.entities._
 import org.scalatest.FunSuite
 
 class PokemonBehaviourTest extends FunSuite {
