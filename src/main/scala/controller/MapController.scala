@@ -190,7 +190,7 @@ class MapController(private val view: View,
     */
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause){
-      val nextPosition: Coordinate = nextTrainerPosition(direction)
+      if(direction != null) nextPosition = nextTrainerPosition(direction)
       distributedMapController.connectedPlayers.getAll.values() forEach (otherPlayer =>
         if((nextPosition equals otherPlayer.position) &&  !otherPlayer.isBusy){
           distributedMapController.sendChallengeToTrainer(otherPlayer.userId)

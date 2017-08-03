@@ -12,8 +12,8 @@ import scala.util.Random
   *  - if the pokemon is owned by a trainer, the class get the values in input from the database online.
   */
 object PokemonFactory {
-  private final val LEVEL_STEP_ONE: Int = 10
-  private final val LEVEL_STEP_TWO: Int = 20
+  private final val LEVEL_STEP_ONE: Int = 8
+  private final val LEVEL_STEP_TWO: Int = 12
 
   def createPokemon(owner: Owner.Value, databaseId: Optional[Int], trainerLevel: Optional[Int]): Optional[PokemonWithLife] = owner match {
     case Owner.TRAINER => {

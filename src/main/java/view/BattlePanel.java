@@ -239,17 +239,17 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             attacksAreVisible = false;
                             changeButtons();
                             displayPanel.setVisible(true);
-                            attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" UTILIZZA " + att +"!");
+                            attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" USES " + att +"!");
                             if(controller.isDistributedBattle()) {
                                 blockButtons(true);
                                 for(String c : trainerChoices.keySet()) {
                                     trainerChoices.get(c).setVisible(false);
                                 }
                                 Thread.sleep(3000);
-                                attackExplanation.setText("E' IL TURNO DEL TUO AVVERSARIO");
+                                attackExplanation.setText("WAITING YOUR OPPONENT'S MOVE");
                             } else {
                                 Thread.sleep(3000);
-                                attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" UTILIZZA " +
+                                attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" USES " +
                                         wildPokemonAttacks[new Random().nextInt(wildPokemonAttacks.length)].toUpperCase()+"!");
                                 Thread.sleep(3000);
                                 displayPanel.setVisible(false);
@@ -373,7 +373,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
                 try {
                     displayPanel.setVisible(true);
                     int i = new Random().nextInt(wildPokemonAttacks.length);
-                    attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase() + " UTILIZZA " +
+                    attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase() + " USES " +
                         wildPokemonAttacks[i].toUpperCase() + "!");
                     Thread.sleep(3000);
                     displayPanel.setVisible(false);
