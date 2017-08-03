@@ -1,8 +1,9 @@
+package model.entities
+
 import java.util.Optional
 import javax.swing.JTextField
 
 import database.remote.DBConnect
-import model.entities._
 import org.scalatest.FunSuite
 
 import scala.collection.mutable
