@@ -67,7 +67,7 @@ class TrainersBattleImpl(override val trainer: Trainer,
   override def myPokemonKillsOtherPokemon(won: Boolean): Unit = {
     var pointsEarned: Int = 0
     if(won){
-      pointsEarned = (otherTrainer.level * math.pow(1.05, trainer.level)).toInt
+      pointsEarned = (otherTrainer.level * math.pow(1.75, trainer.level)).toInt
       trainer.updateTrainer(pointsEarned)
     }
   }
