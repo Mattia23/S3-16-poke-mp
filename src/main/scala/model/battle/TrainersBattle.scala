@@ -56,7 +56,7 @@ class TrainersBattleImpl(override val trainer: Trainer,
     otherPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(otherPokemonId),Optional.empty()).get()
     this.myPokemonId = myPokemonId
     this.otherPokemonId = otherPokemonId
-    trainer.addMetPokemon(otherPokemonId)
+    trainer.addMetPokemon(otherPokemon.pokemon.id)
     round = new BattleRoundImpl(myPokemon, myPokemonId, otherPokemon, this)
   }
 
