@@ -71,6 +71,7 @@ class PlayerLoginClientManagerImpl(private val connection: Connection) extends P
         val serverPlayersMessage = gson.fromJson(message, classOf[ConnectedPlayersMessageImpl])
         connectedPlayers addAll serverPlayersMessage.connectedPlayers
 
+        channel queueDelete playerQueue
         channel.close()
       }
     }

@@ -121,6 +121,7 @@ class DistributedMapControllerImpl(private val mapController: GameController,
     */
   override def playerLogout(): Unit = {
     playerLogoutManager sendPlayerLogout trainerId
+    trainerDialogueClientManager.close()
     connection.close()
   }
 
