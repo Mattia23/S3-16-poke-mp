@@ -36,7 +36,10 @@ class LoginPanel extends BasePanel {
         this.centralPanel.add(passwordField, k);
         k.gridy++;
         this.centralPanel.add(submit,k);
-        submit.addActionListener(e -> this.controller.login(usernameField.getText(), passwordField.getText()));
+        submit.addActionListener(e -> {
+            this.controller.login(usernameField.getText(), passwordField.getText());
+            submit.setText(("Connecting..."));
+        });
 
         JUtil.setFocus(usernameField);
         JUtil.setSubmitEnterClick(usernameField, submit);
