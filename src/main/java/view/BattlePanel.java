@@ -317,13 +317,15 @@ public class BattlePanel extends ImagePanel implements BattleView {
         }
     }
     private void blockButtons(boolean flag) {
-        for(String c : trainerChoices.keySet()) {
-            trainerChoices.get(c).setEnabled(!flag);
-        }
-        trainerChoices.get("Pokeball").setEnabled(false);
-        trainerChoices.get("Escape").setEnabled(false);
-        for(String att : attacks.keySet()) {
-            attacks.get(att).setEnabled(!flag);
+        if(pokemonEntities[1].pokemonLife()!=0){
+            for(String c : trainerChoices.keySet()) {
+                trainerChoices.get(c).setEnabled(!flag);
+            }
+            trainerChoices.get("Pokeball").setEnabled(false);
+            trainerChoices.get("Escape").setEnabled(false);
+            for(String att : attacks.keySet()) {
+                attacks.get(att).setEnabled(!flag);
+            }
         }
     }
     private void getWildPokemonAttack() {
