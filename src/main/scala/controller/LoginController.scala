@@ -60,7 +60,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
         view.getLoginPanel.changeLoginButton("Submit")
       }else{
         if (!DBConnect.checkCredentials(username, password)) {
-           view.showMessage(Settings.Strings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+          view.showMessage(Settings.Strings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
           view.getLoginPanel.changeLoginButton("Submit")
         } else {
           newGame(username)
