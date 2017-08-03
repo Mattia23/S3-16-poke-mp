@@ -118,9 +118,15 @@ object PokemonFactory {
     * The attacks of the pokemon are created randomly, getting 4 attacks from the list of the possible attacks that the pokemon can learn
     */
   private def generateAttacksPokemon(id: Int): (Int,Int,Int,Int) = {
+    var tempIndex: Int = 0
     val attacksList: java.util.List[Integer] = PokedexConnect.getAttacksList(id)
-    (attacksList.get(Random.nextInt(attacksList.size()/4)), attacksList.get(attacksList.size()/4+Random.nextInt(attacksList.size()/4)),
-      attacksList.get((attacksList.size()/4)*2+Random.nextInt(attacksList.size()/4)), (attacksList.size()/4)*3 + Random.nextInt(attacksList.size()/4))
+    var attacks: Seq[Int] = IndexedSeq()
+    for(i <- 0 until 4) {
+      tempIndex = Random.nextInt(attacksList.size())
+      attacks = attacks :+ attacksList.get(tempIndex).toInt
+      attacksList.remove(tempIndex)
+    }
+    (attacks.head,attacks(1),attacks(2),attacks(3))
   }
 
 }

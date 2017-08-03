@@ -49,8 +49,6 @@ class PokemonDBTest extends FunSuite {
 
   test("Create new pokemon wild") {
     val p1: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(5)).get()
-    val p2: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(15)).get()
-    val p3: PokemonWithLife = PokemonFactory.createPokemon(Owner.WILD,Optional.empty(),Optional.of(25)).get()
   }
 
 }
