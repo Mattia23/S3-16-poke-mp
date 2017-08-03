@@ -12,7 +12,7 @@ import view.{ClassicDialoguePanel, TrainerDialoguePanel}
   * TrainerDialogueClientManager manages the delivering and the receiving of messages realated to the request of a new
   * battle and the respective answer.
   */
-trait TrainerDialogueClientManager {
+trait TrainerDialogueClientManager extends ClosableManager{
   /**
     * Return the id of the trainer that sent you a fighting request or to whom you sent a fightin request.
     * @return id of the opposite trainer
@@ -123,5 +123,13 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
     */
   override def createBattle(): Unit = {
     mapController.createTrainersBattle(otherPlayerId, yourPlayerIsFirst)
+  }
+
+  /**
+    * @inheritdoc
+    */
+  override def close(): Unit = {
+    channel queueDelete playerQueue
+    channel.close()
   }
 }
