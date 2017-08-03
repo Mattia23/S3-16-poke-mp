@@ -26,7 +26,7 @@ public class MapPanel extends GamePanel{
      * @param distributedMapController instance of DistributedMapController
      * @param gameMap map that that will be drawn
      */
-    MapPanel(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
+    public MapPanel(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
         super(mapController);
         this.gameMap = gameMap;
         this.mapController = mapController;
