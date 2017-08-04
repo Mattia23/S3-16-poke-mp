@@ -19,7 +19,7 @@ public abstract class GamePanel extends JPanel{
     /**
      * @param gameController instrance of GameController
      */
-    GamePanel(GameController gameController) {
+    public GamePanel(GameController gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
         KeyListener keyListener = GameKeyListener.apply(gameController);
