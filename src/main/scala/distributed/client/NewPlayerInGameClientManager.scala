@@ -7,7 +7,15 @@ import distributed.deserializers.PlayerMessageDeserializer
 import distributed.messages.PlayerMessageImpl
 import utilities.Settings
 
+/**
+  * NewPlayerInGameClientManager receives PlayerMessages and add the received player to the connected players in the game
+  */
 trait NewPlayerInGameClientManager{
+  /**
+    * Receives a new player in the game to add to connected players
+    * @param userId id of the new player
+    * @param connectedPlayers players currently connected to the game
+    */
   def receiveNewPlayerInGame(userId: Int, connectedPlayers: ConnectedPlayers): Unit
 }
 
@@ -16,6 +24,10 @@ object NewPlayerInGameClientManager {
     new NewPlayerInGameClientManagerImpl(connection)
 }
 
+/**
+  * @inheritdoc
+  * @param connection instance of Connection with RabbitMQ
+  */
 class NewPlayerInGameClientManagerImpl(private val connection: Connection) extends NewPlayerInGameClientManager{
 
   private val channel: Channel = connection.createChannel()
@@ -25,6 +37,11 @@ class NewPlayerInGameClientManagerImpl(private val connection: Connection) exten
   channel.exchangeDeclare(Constants.NEW_PLAYER_EXCHANGE, "fanout")
   channel.queueBind(playerQueue, Constants.NEW_PLAYER_EXCHANGE, "")
 
+  /**
+    * @inheritdoc
+    * @param userId id of the new player
+    * @param connectedPlayers players currently connected to the game
+    */
   override def receiveNewPlayerInGame(userId: Int, connectedPlayers: ConnectedPlayers): Unit = {
 
     val consumer = new DefaultConsumer(channel) {

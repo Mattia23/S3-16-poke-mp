@@ -56,7 +56,7 @@ class TrainersBattleImpl(override val trainer: Trainer,
     otherPokemon = PokemonFactory.createPokemon(Owner.TRAINER,Optional.of(otherPokemonId),Optional.empty()).get()
     this.myPokemonId = myPokemonId
     this.otherPokemonId = otherPokemonId
-    trainer.addMetPokemon(otherPokemonId)
+    trainer.addMetPokemon(otherPokemon.pokemon.id)
     round = new BattleRoundImpl(myPokemon, myPokemonId, otherPokemon, this)
   }
 
@@ -67,7 +67,7 @@ class TrainersBattleImpl(override val trainer: Trainer,
   override def myPokemonKillsOtherPokemon(won: Boolean): Unit = {
     var pointsEarned: Int = 0
     if(won){
-      pointsEarned = (otherTrainer.level * math.pow(1.05, trainer.level)).toInt
+      pointsEarned = (otherTrainer.level * math.pow(1.75, trainer.level)).toInt
       trainer.updateTrainer(pointsEarned)
     }
   }

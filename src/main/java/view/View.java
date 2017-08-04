@@ -152,4 +152,10 @@ public interface View {
      */
     void showMessage(final String error, final String title, final int messageType);
 
+    /**
+     * Return the LoginPanel
+     * @return loginPanel
+     */
+    LoginPanel getLoginPanel();
+
 }

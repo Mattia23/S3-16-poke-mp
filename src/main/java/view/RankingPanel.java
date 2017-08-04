@@ -23,7 +23,7 @@ class RankingPanel extends BasePanel {
      * @param gameController instance of GameController
      */
     RankingPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pikachu.jpg");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.POKEMON_PANEL_BACKGROUND());
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         mainPanel.setOpaque(false);
         final JScrollPane scrollFrame = new JScrollPane(mainPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -67,11 +67,11 @@ class RankingPanel extends BasePanel {
     }
 
     private void setFontBold(final JLabel label){
-        label.setFont(new Font("Verdana", Font.BOLD, 12));
+        label.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.BOLD, 12));
     }
 
     private void setFont(final JLabel label){
-        label.setFont(new Font("Verdana", Font.PLAIN, 12));
+        label.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.PLAIN, 12));
     }
 
     private int calculateLevel(int experiencePoints) {

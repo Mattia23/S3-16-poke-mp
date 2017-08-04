@@ -10,12 +10,12 @@ import java.awt.*;
 public class KeyboardPanel extends BasePanel {
 
     public KeyboardPanel (GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "keyboard.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.KEYBOARD_PANEL_BACKGROUND());
 
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
         JLabel expl = new JLabel("Keyboard explanation");
-        expl.setFont(new Font("Verdana",Font.BOLD,45));
+        expl.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.BOLD,45));
         expl.setHorizontalAlignment(JLabel.CENTER);
         northPanel.add(expl,BorderLayout.CENTER);
         this.add(northPanel,BorderLayout.NORTH);
@@ -44,7 +44,7 @@ public class KeyboardPanel extends BasePanel {
 
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Verdana",Font.PLAIN,18));
+        label.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,18));
         return label;
     }
 }

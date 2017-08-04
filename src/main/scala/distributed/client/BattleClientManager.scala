@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.rabbitmq.client._
 import controller.DistributedBattleController
 import distributed.messages.{BattleMessage, BattleMessageImpl}
+import utilities.Settings
 
 /**
   * BattleClientManager sends and receives all the messages related to a battle against an other trainer.
@@ -25,6 +26,8 @@ trait BattleClientManager {
     * equal to 0 it informs the battle controller that the battle id finished.
     */
   def receiveBattleMessage(): Unit
+
+  def closeChannels(): Unit
 }
 
 object BattleClientManager {
@@ -46,8 +49,8 @@ class BattleClientManagerImpl(private val connection: Connection,
 
   private val gson: Gson = new Gson()
   private val channel: Channel = connection.createChannel()
-  private val myChannelName: String = "battle" + myPlayerId
-  private val otherChannelName: String = "battle" + otherPlayerId
+  private val myChannelName: String = Settings.Constants.BATTLE_CHANNEL_QUEUE + myPlayerId
+  private val otherChannelName: String = Settings.Constants.BATTLE_CHANNEL_QUEUE + otherPlayerId
 
   channel.queueDeclare(myChannelName, false, false, false, null)
   channel.queueDeclare(otherChannelName, false, false, false, null)
@@ -74,6 +77,7 @@ class BattleClientManagerImpl(private val connection: Connection,
         val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
         if(battleMessage.attackId == 0){
           if(battleMessage.pokemonId == 0){
+            closeChannels()
             controller.resumeGame()
           } else {
             controller.otherPokemonChanges(battleMessage.pokemonId)
@@ -84,5 +88,11 @@ class BattleClientManagerImpl(private val connection: Connection,
       }
     }
     channel.basicConsume(otherChannelName,true,consumer)
+  }
+
+  override def closeChannels(): Unit = {
+    channel.queueDelete(myChannelName)
+    channel.queueDelete(otherChannelName)
+    channel.close()
   }
 }

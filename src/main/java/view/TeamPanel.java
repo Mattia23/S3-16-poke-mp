@@ -37,8 +37,8 @@ class TeamPanel extends BasePanel{
      * @param trainer instance of trainer
      */
     TeamPanel(GameMenuController gameMenuController, GameController gameController, Trainer trainer) {
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "pokemon-choice.png");
-        JLabel infoText = new JLabel("Use arrow keys to select your Pokemon, then Enter to choose it.");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.TEAM_PANEL_BACKGROUND());
+        JLabel infoText = new JLabel(Settings.Strings$.MODULE$.TEAM_PANEL_INFO());
         this.downPanel.add(infoText, BorderLayout.CENTER);
         List pokemonList = scala.collection.JavaConverters.seqAsJavaList(trainer.favouritePokemons());
         Boolean first = true;
@@ -61,14 +61,14 @@ class TeamPanel extends BasePanel{
 
                 JRadioButton radioButton = new JRadioButton(s,myImageIcon);
                 radioButton.setOpaque(false);
-                radioButton.setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
+                radioButton.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.PLAIN, FONT_SIZE));
                 radioButton.addItemListener(e -> {
                     JRadioButton button = (JRadioButton) e.getItem();
                     if (e.getStateChange() == ItemEvent.SELECTED) {
-                        button.setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
+                        button.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.BOLD, FONT_SIZE));
                     }
                     else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                        button.setFont(new Font("Verdana", Font.PLAIN, FONT_SIZE));
+                        button.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.PLAIN, FONT_SIZE));
                     }
                 });
                 radioButton.addKeyListener(new KeyAdapter() {
@@ -82,7 +82,7 @@ class TeamPanel extends BasePanel{
                 if(first){
                     radioButton.requestFocus();
                     radioButton.setSelected(true);
-                    radioButton.setFont(new Font("Verdana", Font.BOLD, FONT_SIZE));
+                    radioButton.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(), Font.BOLD, FONT_SIZE));
                     JUtil.setFocus(radioButton);
                     first = false;
                 }

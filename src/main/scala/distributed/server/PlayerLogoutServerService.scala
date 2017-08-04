@@ -11,8 +11,17 @@ object PlayerLogoutServerService {
     new PlayerLogoutServerService(connection, connectedPlayers)
 }
 
+/**
+  * PlayerLogoutServerService receives when a player is logged out from the game, and sends to all clients that someone
+  * as left the game
+  * @param connection instance of the connection to the RabbitMQ Broker
+  * @param connectedPlayers all the players currently connected as ConnectedPlayers
+  */
 class PlayerLogoutServerService(private val connection: Connection,
                                 private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
+  /**
+    * @inheritdoc
+    */
   override def start(): Unit = {
     val channel = connection.createChannel
 

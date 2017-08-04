@@ -68,6 +68,12 @@ object Settings {
 
     lazy val REMOTE_HOST_PASSWORD = "guest"
 
+    lazy val REMOTE_DB_URL = "jdbc:mysql://ec2-13-58-204-113.us-east-2.compute.amazonaws.com:3306/poke_mp"
+
+    lazy val REMOTE_DB_USER = "root"
+
+    lazy val REMOTE_DB_PASSWORD = "ViroliRicci12"
+
     lazy val PLAYER_LOGIN_CHANNEL_QUEUE = "player_connection"
 
     lazy val PLAYERS_CONNECTED_CHANNEL_QUEUE = "players_connected"
@@ -82,6 +88,8 @@ object Settings {
 
     lazy val PLAYER_IS_BUSY_CHANNEL_QUEUE = "player_is_busy"
 
+    lazy val BATTLE_CHANNEL_QUEUE = "battle"
+
     lazy val PLAYER_POSITION_EXCHANGE = "player_position_exchange"
 
     lazy val NEW_PLAYER_EXCHANGE = "new_player_exchange"
@@ -93,6 +101,8 @@ object Settings {
     lazy val PLAYER_IS_BUSY_EXCHANGE = "player_is_busy_exchange"
 
     lazy val INITIAL_PLAYER_POSITION = CoordinateImpl(25, 25)
+
+    lazy val FONT_NAME = "Verdana"
   }
 
   object Audio {
@@ -283,6 +293,37 @@ object Settings {
     lazy val TRAINER_4_RIGHT_2_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4R2.png"
 
     lazy val TRAINER_4_RIGHT_S_IMAGE_STRING: String = TRAINER_IMAGES_FOLDER + "4RS.png"
+
+    lazy val INFO_BUTTON: String = IMAGES_FOLDER + "info.png"
+
+    lazy val POKEBALL_ICON: String = POKEBALL_IMAGES + "pokeballIcon.png"
+
+    lazy val POKEBALL_IMAGE: String = POKEBALL_IMAGES + "pokeball.png"
+
+    lazy val POKEBALL_OPEN_IMAGE: String = POKEBALL_IMAGES + "pokeballOpen.png"
+
+    lazy val POKEBALL_RED_IMAGE: String = POKEBALL_IMAGES + "pokeballRed.png"
+
+    lazy val UNKWOWN_POKEMON_IMAGE: String = POKEMON_IMAGES_ICON_FOLDER + "0.png"
+
+    lazy val TRAINER_PANEL_BACKGROUND: String = PANELS_FOLDER + "trainer.jpg"
+
+    lazy val TEAM_PANEL_BACKGROUND: String = PANELS_FOLDER + "pokemon-choice.png"
+
+    lazy val SIGNIN_PANEL_BACKGROUND: String = PANELS_FOLDER + "sign-in.png"
+
+    lazy val POKEMON_PANEL_BACKGROUND: String = PANELS_FOLDER + "pikachu.jpg"
+
+    lazy val POKEDEX_PANEL_BACKGROUND: String = PANELS_FOLDER + "pokedex.png"
+
+    lazy val LOGIN_PANEL_BACKGROUND: String = PANELS_FOLDER + "log-in.png"
+
+    lazy val KEYBOARD_PANEL_BACKGROUND: String = PANELS_FOLDER + "keyboard.png"
+
+    lazy val BOX_PANEL_BACKGROUND: String = PANELS_FOLDER + "box-pokemon.png"
+
+    lazy val BATTLE_PANEL_BACKGROUND: String = PANELS_FOLDER + "battle.png"
+
   }
 
   object Strings {
@@ -327,5 +368,13 @@ object Settings {
     lazy val CORRECT_SIGN_IN = "Successful sign-in"
 
     lazy val SIGN_IN_FAILED = "Username not available"
+
+    lazy val WANT_TO_FIGHT = " wants to fight!"
+
+    lazy val DONT_WANT_TO_FIGHT = " refused to fight :("
+
+    lazy val TEAM_PANEL_INFO = "Use arrow keys to select your Pokemon, then Enter to choose it."
+
+    lazy val BUSY_MESSAGE = " is busy, try again later!"
   }
 }

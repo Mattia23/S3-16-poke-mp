@@ -62,7 +62,7 @@ abstract class BuildingController(private val view: View, private val mapControl
 
   override protected def doLogout(): Unit = {
     terminate()
-    mapController.terminate()
+    mapController.logout()
   }
 
   override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}

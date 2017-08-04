@@ -20,7 +20,7 @@ class TrainerPanel extends BasePanel {
      * @param gameController instance of GameController
      */
     TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "trainer.jpg");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.TRAINER_PANEL_BACKGROUND());
         Image myImage;
         ImageIcon myImageIcon = null;
         try {

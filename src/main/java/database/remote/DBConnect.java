@@ -17,6 +17,7 @@ import scala.collection.Iterator;
 import scala.collection.JavaConverters;
 import scala.collection.immutable.List;
 import scala.collection.immutable.HashMap;
+import utilities.Settings;
 import view.AccountData;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ public final class DBConnect {
 	private static Connection con;
 	private static Statement st;
 	private static ResultSet rs;
+	private static Trainer trainer;
 
 	private DBConnect() {}
 
@@ -46,13 +48,12 @@ public final class DBConnect {
 			if(con == null || con.isClosed()) {
                 try {
                     Class.forName("com.mysql.jdbc.Driver").newInstance();
-                    con = DriverManager.getConnection("jdbc:mysql://ec2-13-58-204-113.us-east-2.compute.amazonaws.com:3306/poke_mp", "root", "ViroliRicci12");
-                    //con = DriverManager.getConnection("jdbc:mysql://lhcp1100.webapps.net:3306/eh2df0us_pokemon_mp", "eh2df0us", "{r87_16fzl:$");
-                    //con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pokemon_mp", "root", "");
+                    con = DriverManager.getConnection(Settings.Constants$.MODULE$.REMOTE_DB_URL(),
+							Settings.Constants$.MODULE$.REMOTE_DB_USER(), Settings.Constants$.MODULE$.REMOTE_DB_PASSWORD());
                     st = con.createStatement();
                     MyEncryptor.init();
                 } catch (Exception ex) {
-                    System.out.println("Error: " + ex);
+                    System.out.println(ex.toString());
 
                 }
             }
@@ -95,15 +96,15 @@ public final class DBConnect {
 					"value (NULL,'"+name+"','"+surname+"','"+email+"','"+username+"','"+password+"','"+id_image+"')";
 			st.executeUpdate(query);
 			createTrainer(username);
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return true;
 	}
 
 	/**
 	 * When an account is create, create a new trainer in the database
-	 * @param username
+	 * @param username username
 	 */
 	private static void createTrainer(String username) {
 		try {
@@ -113,15 +114,11 @@ public final class DBConnect {
 				int id = rs.getInt("id");
 				String q = "Insert into trainers (id,exp_points,id_pokemon1,id_pokemon2,id_pokemon3,id_pokemon4,id_pokemon5,id_pokemon6) " +
 						"value ("+id+",0,0,0,0,0,0,0)";
-				try {
-					st.executeUpdate(q);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				st.executeUpdate(q);
 			}
 
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -144,20 +141,20 @@ public final class DBConnect {
 					return true;
 				}
 			}
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return false;
 	}
 
 	/**
 	 * Check if username is already present in the database
-	 * @param username
+	 * @param username username
 	 * @return true if the username is usable
 	 */
 	private static boolean checkUsername(String username) {
 		try {
-			String query = "select * from users";
+			String query = "select username from users";
 			rs = st.executeQuery(query);
 			while (rs.next()) {
 				String user = rs.getString("username");
@@ -165,8 +162,8 @@ public final class DBConnect {
 					return false;
 				}
 			}
-		} catch (Exception ex) {
-			System.out.println(ex);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -186,8 +183,8 @@ public final class DBConnect {
 			if(rs.next()){
 				return rs.getInt("AUTO_INCREMENT");
 			}
-		} catch(Exception ex){
-			System.out.println(ex);
+		} catch(SQLException e){
+			e.printStackTrace();
 		}
 		return 0;
 	}
@@ -208,8 +205,8 @@ public final class DBConnect {
 			st.executeUpdate(query);
 			query = "delete from users where id = '"+id+"';";
 			st.executeUpdate(query);
-		} catch(SQLException ex){
-			System.out.println(ex);
+		} catch(SQLException e){
+			e.printStackTrace();
 		}
 	}
 
@@ -262,8 +259,8 @@ public final class DBConnect {
 				pokemon.put("lifePoints", rs.getString("life"));
 				return Optional.of(pokemon);
 			}
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 		return Optional.empty();
 	}
@@ -286,8 +283,8 @@ public final class DBConnect {
 			String query = "UPDATE `pokemon` SET `id_pokemon`="+id+",`level`="+level+",`points`="+points+",`level_exp`="+
 					level_exp+",`life`="+life+" WHERE `id_db`="+id_db;
 			st.executeUpdate(query);
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -307,8 +304,8 @@ public final class DBConnect {
 							pokemon.pokemonLife()+"','"+moves._1()+"','"+moves._2()+"','"+
 							moves._3()+"','"+moves._4()+"')";
 			st.executeUpdate(query);
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -326,8 +323,8 @@ public final class DBConnect {
 				return Optional.of(rs.getInt("id"));
 			} else throw new UsernameNotFoundException();
 		}
-		catch(Exception ex) {
-			System.out.println(ex);
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 		return Optional.empty();
 	}
@@ -347,14 +344,14 @@ public final class DBConnect {
 			if(rs2.next()){
 				id_image = rs2.getInt("id_image");
 			}
-			String query2 = "select * from trainers where id = '"+id+"'";
+			String query2 = "select exp_points from trainers where id = '"+id+"'";
 			rs = st.executeQuery(query2);
 			if (rs.next()) {
 				Trainer trainer = new TrainerImpl(username, id_image, rs.getInt("exp_points"));
 				return Optional.of(trainer);
 			}
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 		return Optional.empty();
 	}
@@ -376,8 +373,8 @@ public final class DBConnect {
 			}
 			String query = "update trainers set exp_points = '"+experiencePoints+"'"+pokemonQuery+" where id = '"+id+"'";
 			st.executeUpdate(query);
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -398,8 +395,8 @@ public final class DBConnect {
 					return rank;
 				}
 			}
-		} catch (Exception ex) {
-			System.out.println(ex);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return -1;
 	}
@@ -413,29 +410,45 @@ public final class DBConnect {
 		try {
 			String query = "SELECT u.username ,u.id ,t.exp_points, u.id_image FROM trainers t, users u WHERE t.id = u.id ORDER BY t.exp_points DESC";
 			rs = st.executeQuery(query);
-			java.util.List<Tuple3<String, Integer, String>> list = new ArrayList();
+			java.util.List<Tuple3<String, Integer, String>> list = new ArrayList<>();
 			while (rs.next()) {
 				Tuple3<String,Integer, String> tuple = new Tuple3<>(rs.getString("username"), rs.getInt("exp_points"), rs.getString("id_image"));
 				list.add(tuple);
 			}
 			return Optional.of(list);
-		} catch (Exception ex) {
-			System.out.println(ex);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return Optional.empty();
 	}
 
     /**
-     * Add a new met Pokemon for the trainer id passed as argument.
-     * @param trainerId id of the trainer that met the Pokemon
-     * @param pokemonId id of the Pokemon met by the trainer
-     */
+	 * Add a new met Pokemon for the trainer id passed as argument.
+	 * @param trainerId id of the trainer that met the Pokemon
+	 * @param pokemonId id of the Pokemon met by the trainer
+	 */
 	public static void addMetPokemon(int trainerId, int pokemonId){
 		initConnection();
-		String q = "Insert into pokemon_met (id,id_trainer,id_pokemon) " +
-				"value (NULL,'"+trainerId+"','"+pokemonId+"')";
+		String q = "Insert into pokemon_met (id,id_trainer,id_pokemon,captured) " +
+				"value (NULL,'"+trainerId+"','"+pokemonId+"',0)";
 		try {
 			st.executeUpdate(q);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Add a captured Pokemon.
+	 * @param trainerId id of the trainer that met the Pokemon
+	 * @param pokemonId id of the Pokemon met by the trainer
+	 */
+	public static void addCapturedPokemon(int trainerId, int pokemonId){
+		initConnection();
+		String query = "update pokemon_met SET captured = 1 where id_trainer="+
+				trainerId+" and id_pokemon="+pokemonId+"";
+		try {
+			st.executeUpdate(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -506,7 +519,7 @@ public final class DBConnect {
      */
 	public static Optional<List<scala.Tuple2<Int,Int>>> getCapturedPokemonList(int trainerId){
 		initConnection();
-		String query = "select * from pokemon where id_trainer =  '" + trainerId + "'";
+		String query = "select id_db, id_pokemon from pokemon where id_trainer =  '" + trainerId + "'";
 		java.util.List<scala.Tuple2<Integer,Integer>> pokemonList = new ArrayList<>();
 		try {
 			rs = st.executeQuery(query);
@@ -530,7 +543,7 @@ public final class DBConnect {
      */
 	public static Optional<List<Int>> getCapturedPokemonIdList(int trainerId){
 		initConnection();
-		String query = "select * from pokemon where id_trainer =  '" + trainerId + "'";
+		String query = "select id_pokemon from pokemon_met where id_trainer =  '" + trainerId + "' and captured = '1'";
 		java.util.List<Integer> pokemonList = new ArrayList<>();
 		try {
 			rs = st.executeQuery(query);
@@ -570,13 +583,13 @@ public final class DBConnect {
 	private static Optional<String> getPokemonMaxLife(int databaseId) {
 		initConnection();
 		try {
-			String query = "select * from pokemon where id_db = '"+databaseId+"'";
+			String query = "select points from pokemon where id_db = '"+databaseId+"'";
 			rs = st.executeQuery(query);
 			if (rs.next()) {
 				return Optional.of(rs.getString("points"));
 			}
-		} catch(Exception ex) {
-			System.out.println(ex);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return Optional.empty();
 	}
@@ -602,6 +615,21 @@ public final class DBConnect {
 
 		}
 
+	}
+
+	/**
+	 * Set the trainer
+	 * @param t ,trainer
+	 */
+	public static void setMyTrainer(Trainer t) {
+		trainer = t;
+	}
+
+	/**
+	 * @return trainer
+	 */
+	public static Trainer getMyTrainer() {
+		return trainer;
 	}
 
 }

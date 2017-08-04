@@ -10,19 +10,48 @@ import model.environment.{Coordinate, CoordinateImpl, Direction}
 import model.map.{Movement, OtherTrainerMovement}
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+  * DistributedMapController manages the interaction with the server allowing the game to operate at a distributed level.
+  * It manages all trainers in the map and the interactions between them.
+  */
 trait DistributedMapController{
+  /**
+    * @return players currently connected to the game
+    */
   def connectedPlayers: ConnectedPlayers
 
+  /**
+    * @return the details of the position of all the players
+    */
   def playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails]
 
+  /**
+    * Sends to the server the current trainer position
+    * @param position current trainer position
+    */
   def sendTrainerPosition(position: Coordinate): Unit
 
+  /**
+    * Sends to the server if the trainer is in a building or not
+    * @param isInBuilding indicates whether a player is in a building
+    */
   def sendTrainerInBuilding(isInBuilding: Boolean): Unit
 
+  /**
+    * Sends to the server if the trainer is busy or not
+    * @param isBusy indicates whether a player is busy
+    */
   def sendTrainerIsBusy(isBusy: Boolean): Unit
 
-  def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit
+  /**
+    * Sends a fight request to the otherPlayerId
+    * @param otherPlayerId the recipient trainer id
+    */
+  def sendChallengeToTrainer(otherPlayerId: Int): Unit
 
+  /**
+    * Performs the logout of the player
+    */
   def playerLogout(): Unit
 }
 
@@ -31,6 +60,12 @@ object DistributedMapController{
     new DistributedMapControllerImpl(mapController, connection, connectedPlayers)
 }
 
+/**
+  * @inheritdoc
+  * @param mapController instance of map controller
+  * @param connection instance of connection with RabbitMQ
+  * @param connectedPlayers players currently connected to the game
+  */
 class DistributedMapControllerImpl(private val mapController: GameController,
                                    private val connection: Connection,
                                    override val connectedPlayers: ConnectedPlayers) extends DistributedMapController with ConnectedPlayersObserver{
@@ -56,25 +91,53 @@ class DistributedMapControllerImpl(private val mapController: GameController,
 
   override val playersPositionDetails: ConcurrentMap[Int, PlayerPositionDetails] = new ConcurrentHashMap[Int, PlayerPositionDetails]()
 
+  /**
+    * @inheritdoc
+    * @param position current trainer position
+    */
   override def sendTrainerPosition(position: Coordinate): Unit = playerPositionManager.sendPlayerPosition(trainerId, position)
 
+  /**
+    * @inheritdoc
+    * @param isInBuilding indicates whether a player is in a building
+    */
   override def sendTrainerInBuilding(isInBuilding: Boolean): Unit = playerInBuildingManager.sendPlayerIsInBuilding(trainerId, isInBuilding)
 
+  /**
+    * @inheritdoc
+    * @param isBusy indicates whether a player is busy
+    */
   override def sendTrainerIsBusy(isBusy: Boolean): Unit = playerIsBusyManager.sendPlayerIsBusy(trainerId, isBusy)
 
-  override def challengeTrainer(otherPlayerId: Int, wantToFight: Boolean, isFirst: Boolean): Unit =
-    trainerDialogueClientManager.sendDialogueRequest(otherPlayerId, wantToFight, isFirst)
+  /**
+    * @inheritdoc
+    * @param otherPlayerId the recipient trainer id
+    */
+  override def sendChallengeToTrainer(otherPlayerId: Int): Unit =
+    trainerDialogueClientManager.sendDialogueRequest(otherPlayerId, wantToFight = true, isFirst = true)
 
+  /**
+    * @inheritdoc
+    */
   override def playerLogout(): Unit = {
     playerLogoutManager sendPlayerLogout trainerId
+    trainerDialogueClientManager.close()
     connection.close()
   }
 
+  /**
+    * @inheritdoc
+    * @param player player added to the connected players
+    */
   override def newPlayerAdded(player: Player): Unit = {
     val playerDetails = PlayerPositionDetails(player.userId, player.position.x, player.position.y, TrainerSprites(player.idImage).frontS)
     playersPositionDetails.put(player.userId, playerDetails)
   }
 
+  /**
+    * @inheritdoc
+    * @param userId id of the player who changed position
+    */
   override def playerPositionUpdated(userId: Int): Unit = {
     val positionDetails: PlayerPositionDetails = playersPositionDetails get userId
     val player: Player = connectedPlayers get userId
@@ -100,5 +163,9 @@ class DistributedMapControllerImpl(private val mapController: GameController,
     }
   }
 
+  /**
+    * @inheritdoc
+    * @param userId id of the disconnected player
+    */
   override def playerRemoved(userId: Int): Unit = playersPositionDetails remove userId
 }

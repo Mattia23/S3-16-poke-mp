@@ -13,7 +13,7 @@ import view.dialogues.{ClassicDialoguePanel, TrainerDialoguePanel}
   * TrainerDialogueClientManager manages the delivering and the receiving of messages realated to the request of a new
   * battle and the respective answer.
   */
-trait TrainerDialogueClientManager {
+trait TrainerDialogueClientManager extends ClosableManager{
   /**
     * Return the id of the trainer that sent you a fighting request or to whom you sent a fightin request.
     * @return id of the opposite trainer
@@ -104,14 +104,15 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
           mapController.sendTrainerIsBusy(true)
           yourPlayerIsFirst = false
           mapController.showDialogue(new TrainerDialoguePanel(mapController, TrainerDialogueClientManagerImpl.this,
-            util.Arrays.asList(otherPlayerName + " ti ha sfidato")))
+            util.Arrays.asList(otherPlayerName + Settings.Strings.WANT_TO_FIGHT)))
         }
         else if(trainerDialogueMessage.wantToFight){
           createBattle()
         }
         else if(!trainerDialogueMessage.wantToFight){
           mapController.sendTrainerIsBusy(false)
-          mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName + " ha rifiutato la sfida :(")))
+          mapController.showDialogue(new ClassicDialoguePanel(mapController, util.Arrays.asList(otherPlayerName +
+            Settings.Strings.DONT_WANT_TO_FIGHT)))
         }
       }
     }
@@ -123,5 +124,13 @@ class TrainerDialogueClientManagerImpl(private val connection: Connection,
     */
   override def createBattle(): Unit = {
     mapController.createTrainersBattle(otherPlayerId, yourPlayerIsFirst)
+  }
+
+  /**
+    * @inheritdoc
+    */
+  override def close(): Unit = {
+    channel queueDelete playerQueue
+    channel.close()
   }
 }

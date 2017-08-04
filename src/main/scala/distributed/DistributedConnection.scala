@@ -3,9 +3,18 @@ package distributed
 import com.rabbitmq.client.{Connection, ConnectionFactory}
 import utilities.Settings
 
+/**
+  * A DistributedConnection manages a connection with RabbitMQ
+  */
 trait DistributedConnection {
+  /**
+    * @return the connection with RabbitMQ
+    */
   def connection: Connection
 
+  /**
+    * Closes the connection with RabbitMQ
+    */
   def close(): Unit
 }
 
@@ -13,11 +22,17 @@ object DistributedConnectionImpl {
   def apply(): DistributedConnection = new DistributedConnectionImpl()
 }
 
+/**
+  * @inheritdoc
+  */
 class DistributedConnectionImpl extends DistributedConnection{
   private var _connection: Connection = _
 
   create()
 
+  /**
+    * Creates a new connection with RabbitMQ
+    */
   private def create() = {
     import Settings._
     val factory = new ConnectionFactory
@@ -31,5 +46,8 @@ class DistributedConnectionImpl extends DistributedConnection{
 
   override val connection: Connection = _connection
 
+  /**
+    * @inheritdoc
+    */
   override def close(): Unit = _connection.close()
 }
