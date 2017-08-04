@@ -7,9 +7,16 @@ import view.JUtil;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * ClassicDialoguePanel is a dialogue which the trainer doesn't have to interact with
+ */
 public class ClassicDialoguePanel extends DialoguePanel {
     private GameController gameController;
 
+    /**
+     * @param gameController instance of GameController
+     * @param dialogues character's dialogue
+     */
     public ClassicDialoguePanel(final GameController gameController, final List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;

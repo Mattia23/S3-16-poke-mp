@@ -48,6 +48,10 @@ public class TeamPanel extends BasePanel {
         Image myImage;
         ImageIcon myImageIcon = null;
         k.insets = new Insets(1,1,1,1);
+
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
+
         for(Object pokemon: pokemonList){
             if(Integer.parseInt(pokemon.toString()) != 0){
                 final int pokemonId = Integer.parseInt(pokemon.toString());

@@ -10,8 +10,15 @@ import view.LoadImage;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * KeyboardPanel shows the keyboard explanation for the user
+ */
 public class KeyboardPanel extends BasePanel {
 
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
     public KeyboardPanel (GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.KEYBOARD_PANEL_BACKGROUND());
 

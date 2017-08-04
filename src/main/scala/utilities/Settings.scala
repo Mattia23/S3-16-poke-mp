@@ -332,6 +332,20 @@ object Settings {
 
     lazy val BATTLE_PANEL_BACKGROUND: String = PANELS_FOLDER + "battle.png"
 
+    lazy val GAME_MENU_POKEDEX_ICON: String = GAME_MENU_IMAGES + "pokedex.png"
+
+    lazy val GAME_MENU_TEAM_ICON: String = GAME_MENU_IMAGES + "team.png"
+
+    lazy val GAME_MENU_TRAINER_ICON: String = GAME_MENU_IMAGES + "trainer.png"
+
+    lazy val GAME_MENU_RANKING_ICON: String = GAME_MENU_IMAGES + "ranking.png"
+
+    lazy val GAME_MENU_KEYBOARD_ICON: String = GAME_MENU_IMAGES + "keyboard.png"
+
+    lazy val GAME_MENU_LOGOUT_ICON: String = GAME_MENU_IMAGES + "logout.png"
+
+    lazy val GAME_MENU_EXIT_ICON: String = GAME_MENU_IMAGES + "exit.png"
+
   }
 
   object Strings {
@@ -384,5 +398,9 @@ object Settings {
     lazy val TEAM_PANEL_INFO = "Use arrow keys to select your Pokemon, then Enter to choose it."
 
     lazy val BUSY_MESSAGE = " is busy, try again later!"
+
+    lazy val JOPTIONPANE_LOGOUT_TITLE = "Logout"
+
+    lazy val JOPTIONPANE_LOGOUT_MESSAGE = "Do you really want to log out?"
   }
 }

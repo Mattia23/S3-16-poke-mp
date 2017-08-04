@@ -8,13 +8,20 @@ import view.LoadImage;
 
 import java.awt.*;
 
+/**
+ * BuildingPanel shows the building inside and all the elements and static characters that populate it
+ */
 public class BuildingPanel extends GamePanel {
     protected int centerX;
     protected int centerY;
     private BuildingMap buildingMap;
     private GameController gameController;
 
-    public BuildingPanel(final GameController gameController, final BuildingMap buildingMap) {
+    /**
+     * @param gameController instance of GameController
+     * @param buildingMap instance of BuildingMap
+     */
+    BuildingPanel(final GameController gameController, final BuildingMap buildingMap) {
         super(gameController);
 
         this.buildingMap = buildingMap;

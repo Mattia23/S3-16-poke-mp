@@ -6,11 +6,19 @@ import utilities.Settings;
 
 import java.awt.*;
 
+/**
+ * LaboratoryPanel shows the laboratory inside
+ */
 public class LaboratoryPanel extends BuildingPanel {
 
     private boolean emptyCaptures;
     private BuildingMap laboratoryMap;
 
+    /**
+     * @param gameController instance of GameController
+     * @param laboratoryMap instance of BuildingMap
+     * @param emptyCaptures true if the trainer has no pokemon captured
+     */
     public LaboratoryPanel(final GameController gameController, final BuildingMap laboratoryMap, final boolean emptyCaptures) {
         super(gameController, laboratoryMap);
         this.laboratoryMap = laboratoryMap;

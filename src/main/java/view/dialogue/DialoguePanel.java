@@ -10,6 +10,9 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DialoguePanel shows the characters' dialogues in the main panel
+ */
 public abstract class DialoguePanel extends JPanel implements KeyListener{
     protected final JLabel dialogueLabel;
     protected int currentButton = 0;
@@ -17,7 +20,10 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
     protected final List<JButton> buttons = new ArrayList<>();
     protected final JPanel buttonPanel = new JPanel();
 
-    public DialoguePanel(final List<String> dialogues){
+    /**
+     * @param dialogues character's dialogue
+     */
+    DialoguePanel(final List<String> dialogues){
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
@@ -50,6 +56,9 @@ public abstract class DialoguePanel extends JPanel implements KeyListener{
         }
     }
 
+    /**
+     * Set the final button to end the dialogue
+     */
     protected abstract void setFinalButtons();
 
     @Override

@@ -8,11 +8,19 @@ import view.JUtil;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * Dialogue shown to the challenged trainer, he can accept or refuse the fight request
+ */
 public class TrainerDialoguePanel extends DialoguePanel {
     private GameController gameController;
     private TrainerDialogueClientManager trainerDialogueClientManager;
     private Boolean running = true;
 
+    /**
+     * @param gameController instance of GameController
+     * @param trainerDialogueClientManager instance of TrainerDialogueClientManager
+     * @param dialogues character's dialogue
+     */
     public TrainerDialoguePanel(GameController gameController, TrainerDialogueClientManager trainerDialogueClientManager, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;

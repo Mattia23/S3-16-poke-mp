@@ -9,9 +9,16 @@ import utilities.Settings;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * DoctorDialoguePanel is the dialogue of the Doctor, the trainer can choice if heal pokemon or not
+ */
 public class DoctorDialoguePanel extends DialoguePanel {
     private GameController gameController;
 
+    /**
+     * @param gameController instance of GameController
+     * @param dialogues character's dialogue
+     */
     public DoctorDialoguePanel(GameController gameController, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
