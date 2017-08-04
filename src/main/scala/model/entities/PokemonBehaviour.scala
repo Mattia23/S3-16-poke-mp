@@ -68,7 +68,7 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
     */
   override def launchAttack(attackId: Int): Int = {
     val attack: (String,Integer) = PokedexConnect.getPokemonAttack(attackId).get()
-    (attack._2 * pokemonWithLife.pokemon.level * ATTACK_PERCENTAGE).toInt
+    (attack._2 * math.pow(pokemonWithLife.pokemon.level,0.3)).toInt
   }
   /**
     * @inheritdoc
