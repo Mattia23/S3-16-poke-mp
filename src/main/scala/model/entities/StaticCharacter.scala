@@ -34,7 +34,7 @@ trait StaticCharacter {
 
 }
 
-object Oak{
+object Oak {
   private final val DIALOGUE_1: String = "Hi!"
 
   private final val DIALOGUE_2: String = "Welcome to Pokémon World."
@@ -47,7 +47,7 @@ object Oak{
 /**
   * Oak is a StaticCharacter in LaboratoryMap
   */
-class Oak extends StaticCharacter{
+class Oak extends StaticCharacter {
   import Oak._
 
   override val HEIGHT: Int = 40
@@ -60,7 +60,7 @@ class Oak extends StaticCharacter{
 
 }
 
-object OakAfterChoise{
+object OakAfterChoise {
   private final val DIALOGUE_1: String = "Hey, how are you doing?"
 
   private final val DIALOGUE_2: String = "I see the pokemon you chose is happy!"
@@ -73,14 +73,14 @@ object OakAfterChoise{
 /**
   * Oak with a different dialogue
   */
-class OakAfterChoise extends Oak{
+class OakAfterChoise extends Oak {
   import OakAfterChoise._
 
   override val dialogue: List[String] = List(DIALOGUE_1, DIALOGUE_2, DIALOGUE_3, DIALOGUE_4)
 
 }
 
-object Doctor{
+object Doctor {
   private final val DIALOGUE_1: String = "Hi trainer!"
 
   private final val DIALOGUE_2: String = "Do you want to heal your Pokémon?"
@@ -91,8 +91,7 @@ object Doctor{
 /**
   * Doctor is a StaticCharacter in PokemonCenterMap
   */
-class Doctor extends StaticCharacter{
-
+class Doctor extends StaticCharacter {
   import Doctor._
 
   override val HEIGHT: Int = 82
@@ -107,7 +106,7 @@ class Doctor extends StaticCharacter{
 /**
   * PokemonCharacter is a StaticCharacter in LaboratoryMap
   */
-trait PokemonCharacter extends StaticCharacter{
+trait PokemonCharacter extends StaticCharacter {
 
   override def HEIGHT: Int = 32
 
@@ -116,8 +115,8 @@ trait PokemonCharacter extends StaticCharacter{
   def pokemonWithLife: PokemonWithLife
 }
 
-object PokemonCharacter{
-  object InitialPokemon extends Enumeration{
+object PokemonCharacter {
+  object InitialPokemon extends Enumeration {
     type InitialPokemon = Value
     val Bulbasaur, Charmander, Squirtle = Value
   }
@@ -132,7 +131,7 @@ object PokemonCharacter{
 /**
   * Bulbasaur is a PokemonCharacter
   */
-case class Bulbasaur() extends PokemonCharacter{
+case class Bulbasaur() extends PokemonCharacter {
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
 
   override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "bulbasaur.png")
@@ -145,7 +144,7 @@ case class Bulbasaur() extends PokemonCharacter{
 /**
   * Charmander is a PokemonCharacter
   */
-case class Charmander() extends PokemonCharacter{
+case class Charmander() extends PokemonCharacter {
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(4), Optional.of(1)).get()
 
   override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "charmander.png")
@@ -158,7 +157,7 @@ case class Charmander() extends PokemonCharacter{
 /**
   * Squirtle is a PokemonCharacter
   */
-case class Squirtle() extends PokemonCharacter{
+case class Squirtle() extends PokemonCharacter {
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
 
   override val image: Image = LoadImage.load(Settings.Images.CHARACTER_IMAGES_FOLDER + "squirtle.png")

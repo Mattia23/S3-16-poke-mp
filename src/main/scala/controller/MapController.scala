@@ -12,7 +12,7 @@ import model.environment.{Audio, Coordinate, CoordinateImpl}
 import model.map._
 import utilities.Settings
 import view._
-import view.dialogues.{ClassicDialoguePanel, WaitingTrainerDialoguePanel}
+import view.dialogue.{ClassicDialoguePanel, WaitingTrainerDialoguePanel}
 
 import scala.util.Random
 

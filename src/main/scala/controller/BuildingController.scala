@@ -6,7 +6,7 @@ import model.environment._
 import model.map._
 import utilities.Settings
 import view._
-import view.dialogues.{ClassicDialoguePanel, DoctorDialoguePanel}
+import view.dialogue.{ClassicDialoguePanel, DoctorDialoguePanel}
 
 import scala.collection.JavaConverters._
 
@@ -217,7 +217,7 @@ class LaboratoryController(private val view: View,
     if (!isInPause) {
       if(direction != null) nextPosition = nextTrainerPosition(direction)
       try{
-        if(nextPosition equals buildingMap.staticCharacter.coordinate){
+        if(nextPosition equals buildingMap.staticCharacter.coordinate) {
           showDialogue(new ClassicDialoguePanel(this, buildingMap.staticCharacter.dialogue.asJava))
         }
         if(capturedPokemonEmpty) {

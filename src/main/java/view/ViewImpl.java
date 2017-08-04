@@ -8,7 +8,14 @@ import model.map.BuildingMap;
 import model.map.GameMap;
 import model.entities.Trainer;
 import utilities.Settings;
-import view.dialogues.DialoguePanel;
+import view.dialogue.DialoguePanel;
+import view.game_menu.*;
+import view.initial_menu.InitialMenuPanel;
+import view.initial_menu.LoginPanel;
+import view.initial_menu.SignInPanel;
+import view.map.LaboratoryPanel;
+import view.map.MapPanel;
+import view.map.PokemonCenterPanel;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,8 +1,11 @@
-package view;
+package view.game_menu;
 
 import controller.GameController;
 import controller.GameMenuController;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.swing.*;
 import java.awt.*;

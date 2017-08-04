@@ -10,7 +10,7 @@ import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
-import view.dialogues.DialoguePanel
+import view.dialogue.DialoguePanel
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

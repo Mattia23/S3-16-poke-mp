@@ -11,7 +11,7 @@ import Tile._
 /**
   * BuildingMap represents the content of a building map
   */
-trait BuildingMap extends BasicMap{
+trait BuildingMap extends BasicMap {
   /**
     * @return background image of a building map
     */
@@ -73,7 +73,7 @@ trait BuildingMap extends BasicMap{
 /**
   * PokemonCenterMap is the BuildingMap for the Pokémon Center
   */
-class PokemonCenterMap extends BuildingMap{
+class PokemonCenterMap extends BuildingMap {
   override def height: Int = Settings.Constants.POKEMON_CENTER_INSIDE_HEIGHT
   override def width: Int = Settings.Constants.POKEMON_CENTER_INSIDE_WIDTH
   override val map: Array[Array[Tile]]= Array.ofDim[Tile](width, height)
@@ -104,7 +104,7 @@ class PokemonCenterMap extends BuildingMap{
 /**
   * LaboratoryMap is the BuildingMap for the Laboratory
   */
-class LaboratoryMap extends BuildingMap{
+class LaboratoryMap extends BuildingMap {
   override val height: Int = Settings.Constants.LABORATORY_INSIDE_HEIGHT
   override val width: Int = Settings.Constants.LABORATORY_INSIDE_WIDTH
   override val map: Array[Array[Tile]] = Array.ofDim[Tile](width, height)

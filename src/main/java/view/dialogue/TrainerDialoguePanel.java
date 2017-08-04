@@ -1,4 +1,4 @@
-package view.dialogues;
+package view.dialogue;
 
 import controller.GameController;
 import distributed.client.TrainerDialogueClientManager;

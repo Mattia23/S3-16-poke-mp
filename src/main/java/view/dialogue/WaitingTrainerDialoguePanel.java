@@ -1,9 +1,8 @@
-package view.dialogues;
+package view.dialogue;
 
 import utilities.Settings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class WaitingTrainerDialoguePanel extends DialoguePanel {
