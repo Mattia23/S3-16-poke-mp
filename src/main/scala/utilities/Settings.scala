@@ -44,6 +44,14 @@ object Settings {
 
     lazy val LABORATORY_DOOR_Y = 3
 
+    lazy val POKEMON_CENTER_INSIDE_WIDTH = 15
+
+    lazy val POKEMON_CENTER_INSIDE_HEIGHT = 9
+
+    lazy val LABORATORY_INSIDE_WIDTH = 13
+
+    lazy val LABORATORY_INSIDE_HEIGHT = 13
+
     lazy val SECONDS_WAITING_TIME_FIGHT_REQUEST = 15
 
     lazy val DATABASE_FOLDER =  "/database/"

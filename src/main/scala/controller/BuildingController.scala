@@ -10,12 +10,24 @@ import view.dialogues.{ClassicDialoguePanel, DoctorDialoguePanel}
 
 import scala.collection.JavaConverters._
 
-abstract class BuildingController(private val view: View, private val mapController: GameController, private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
+/**
+  * Manages all the events inside buildings (move the trainer in the buildings, interact with elements, ...)
+  * @param view instance of the View
+  * @param mapController instance of  the map controller
+  * @param _trainer the main trainer
+  */
+abstract class BuildingController(private val view: View,
+                                  private val mapController: GameController,
+                                  private val _trainer: Trainer) extends GameControllerImpl(view, _trainer) {
 
   protected var buildingMap: BuildingMap
 
   this.setTrainerSpriteBack()
 
+  /**
+    * @inheritdoc
+    * @param direction the direction towards which the trainer is moving
+    */
   override protected def doMove(direction: Direction): Unit = {
     if (!isInPause) {
       nextPosition = nextTrainerPosition(direction)
@@ -42,56 +54,101 @@ abstract class BuildingController(private val view: View, private val mapControl
     }
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doStart(): Unit = {
     audio.loop()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doTerminate(): Unit = {
     audio.stop()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doPause(): Unit = {
     setFocusableOff()
     this.audio.stop()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doResume(): Unit = {
     setFocusableOn()
     this.audio.loop()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doLogout(): Unit = {
     terminate()
     mapController.logout()
   }
 
+  /**
+    * @inheritdoc
+    * @param otherPlayerId the user id of the other player
+    * @param yourPlayerIsFirst boolean that represents if you are the first player to start the battle
+    */
   override def createTrainersBattle(otherPlayerId: Int, yourPlayerIsFirst: Boolean): Unit = {}
 
+  /**
+    * @inheritdoc
+    * @param isBusy value that represents if you are or not busy
+    */
   override def sendTrainerIsBusy(isBusy: Boolean): Unit = {}
 
 }
 
-class PokemonCenterController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
+/**
+  * Manages all the events inside the pokémon center (building)
+  * @param view instance of the View
+  * @param mapController instance of  the map controller
+  * @param _trainer the main trainer
+  */
+class PokemonCenterController(private val view: View,
+                              private val mapController: GameController,
+                              private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new PokemonCenterMap
   this.trainer.coordinate = CoordinateImpl(buildingMap.entryCoordinate.x, buildingMap.entryCoordinate.y)
 
   audio = Audio(Settings.Audio.POKEMONCENTER_SONG)
 
+  /**
+    * @inheritdoc
+    */
   override protected def doStart(): Unit = {
     super.doStart()
     initView()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doResume(): Unit = {
     super.doResume()
     initView()
   }
 
+  /**
+    * Show the PokemonCenterPanel
+    */
   private def initView(): Unit = {
     view.showPokemonCenter(this, buildingMap)
     gamePanel = view.getGamePanel
   }
 
+  /**
+    * In the laboratory, the user can interact with the Doctor and the Box
+    * @param direction the direction towards which the trainer is watching
+    */
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause) {
       if(direction != null) nextPosition = nextTrainerPosition(direction)
@@ -111,7 +168,15 @@ class PokemonCenterController(private val view: View, private val mapController:
   }
 }
 
-class LaboratoryController(private val view: View, private val mapController: GameControllerImpl, private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
+/**
+  * Manages all the events inside the laboratory (building)
+  * @param view instance of the View
+  * @param mapController instance of  the map controller
+  * @param _trainer the main trainer
+  */
+class LaboratoryController(private val view: View,
+                           private val mapController: GameController,
+                           private val _trainer: Trainer) extends BuildingController(view, mapController, _trainer){
   override protected var buildingMap: BuildingMap = new LaboratoryMap
   private var capturedPokemonEmpty: Boolean = this.trainer.capturedPokemons.isEmpty
   if(!capturedPokemonEmpty) buildingMap.staticCharacter = new OakAfterChoise
@@ -119,22 +184,35 @@ class LaboratoryController(private val view: View, private val mapController: Ga
 
   audio = Audio(Settings.Audio.LABORATORY_SONG)
 
+  /**
+    * @inheritdoc
+    */
   override protected def doStart(): Unit = {
     super.doStart()
     initView()
   }
 
+  /**
+    * @inheritdoc
+    */
   override protected def doResume(): Unit = {
     super.doResume()
     capturedPokemonEmpty = this.trainer.capturedPokemons.isEmpty
     initView()
   }
 
+  /**
+    * Show the LaboratoryPanel
+    */
   private def initView(): Unit = {
     view.showLaboratory(this, buildingMap, this.trainer.capturedPokemons.isEmpty)
     gamePanel = view.getGamePanel
   }
 
+  /**
+    * In the laboratory, the user can interact with Oak and PokemonCharacter
+    * @param direction the direction towards which the trainer is watching
+    */
   override protected def doInteract(direction: Direction): Unit = {
     if (!isInPause) {
       if(direction != null) nextPosition = nextTrainerPosition(direction)

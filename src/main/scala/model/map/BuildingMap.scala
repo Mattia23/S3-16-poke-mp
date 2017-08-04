@@ -9,24 +9,22 @@ import view.LoadImage
 import Tile._
 
 /**
-  * This trait represents the content of a building map
+  * BuildingMap represents the content of a building map
   */
 trait BuildingMap extends BasicMap{
   /**
-    * The background image of a building map
-    * @return image
+    * @return background image of a building map
     */
   def image: Image
 
   /**
     * Some tile in a building map must be not walkable for the trainer
-    * @return
+    * @return a list of not walkable coordinate rectangles
     */
   def matricesNotWalkable: List[Tuple2[Coordinate, Coordinate]]
 
   /**
-    * A static character in the building map
-    * @return
+    * @return the static character in the building map
     */
   def staticCharacter: StaticCharacter
 
@@ -37,14 +35,12 @@ trait BuildingMap extends BasicMap{
   def staticCharacter_=(staticCharacter: StaticCharacter): Unit
 
   /**
-    * Coordinate of the entry of the building map
-    * @return
+    * @return the coordinate of the entry of the building map
     */
   def entryCoordinate: Coordinate
 
   /**
-    * List of pokemon character
-    * @return
+    * @return a list of pokemon character
     */
   def pokemonCharacter: List[PokemonCharacter]
 
@@ -74,9 +70,12 @@ trait BuildingMap extends BasicMap{
   }
 }
 
+/**
+  * PokemonCenterMap is the BuildingMap for the Pokémon Center
+  */
 class PokemonCenterMap extends BuildingMap{
-  override def height: Int = 9
-  override def width: Int = 15
+  override def height: Int = Settings.Constants.POKEMON_CENTER_INSIDE_HEIGHT
+  override def width: Int = Settings.Constants.POKEMON_CENTER_INSIDE_WIDTH
   override val map: Array[Array[Tile]]= Array.ofDim[Tile](width, height)
 
   override var staticCharacter: StaticCharacter = new Doctor
@@ -102,9 +101,12 @@ class PokemonCenterMap extends BuildingMap{
   override def pokemonCharacter: List[PokemonCharacter] = null
 }
 
+/**
+  * LaboratoryMap is the BuildingMap for the Laboratory
+  */
 class LaboratoryMap extends BuildingMap{
-  override val height: Int = 13
-  override val width: Int = 13
+  override val height: Int = Settings.Constants.LABORATORY_INSIDE_HEIGHT
+  override val width: Int = Settings.Constants.LABORATORY_INSIDE_WIDTH
   override val map: Array[Array[Tile]] = Array.ofDim[Tile](width, height)
 
   override var staticCharacter: StaticCharacter = new Oak

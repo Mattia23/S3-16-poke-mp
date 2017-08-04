@@ -8,27 +8,27 @@ import utilities.Settings
 import view.LoadImage
 
 /**
-  * StaticCharacter defines a static character in a map.
+  * StaticCharacter defines a static character in a map
   */
 trait StaticCharacter {
 
   /**
-    * Character's height (in px)
+    * @return character's height (in px)
     */
   def HEIGHT: Int
 
   /**
-    * Character's image
+    * @return character's image
     */
   def image: Image
 
   /**
-    * Character's coordinate in a map
+    * @return character's coordinate in a map
     */
   def coordinate: Coordinate
 
   /**
-    * Character's dialogue when interacts 
+    * @return character's dialogue when someone interacts with him
     */
   def dialogue: List[String]
 
@@ -44,6 +44,9 @@ object Oak{
   private final val DIALOGUE_4: String = "Good adventure!"
 }
 
+/**
+  * Oak is a StaticCharacter in LaboratoryMap
+  */
 class Oak extends StaticCharacter{
   import Oak._
 
@@ -67,6 +70,9 @@ object OakAfterChoise{
   private final val DIALOGUE_4: String = "Gotta Catch 'Em All!"
 }
 
+/**
+  * Oak with a different dialogue
+  */
 class OakAfterChoise extends Oak{
   import OakAfterChoise._
 
@@ -82,6 +88,9 @@ object Doctor{
   final val DIALOGUE_AFTER_HEAL: String = "Your Pokémon has been healed!"
 }
 
+/**
+  * Doctor is a StaticCharacter in PokemonCenterMap
+  */
 class Doctor extends StaticCharacter{
 
   import Doctor._
@@ -95,6 +104,9 @@ class Doctor extends StaticCharacter{
   override val dialogue: List[String] = List(DIALOGUE_1, DIALOGUE_2)
 }
 
+/**
+  * PokemonCharacter is a StaticCharacter in LaboratoryMap
+  */
 trait PokemonCharacter extends StaticCharacter{
 
   override def HEIGHT: Int = 32
@@ -117,6 +129,9 @@ object PokemonCharacter{
   }
 }
 
+/**
+  * Bulbasaur is a PokemonCharacter
+  */
 case class Bulbasaur() extends PokemonCharacter{
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(1), Optional.of(1)).get()
 
@@ -127,6 +142,9 @@ case class Bulbasaur() extends PokemonCharacter{
   override val dialogue: List[String] = List("Bulbasaaaaur")
 }
 
+/**
+  * Charmander is a PokemonCharacter
+  */
 case class Charmander() extends PokemonCharacter{
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(4), Optional.of(1)).get()
 
@@ -137,6 +155,9 @@ case class Charmander() extends PokemonCharacter{
   override val dialogue: List[String] = List("Chaaaarmandeeer")
 }
 
+/**
+  * Squirtle is a PokemonCharacter
+  */
 case class Squirtle() extends PokemonCharacter{
   override val pokemonWithLife: PokemonWithLife = PokemonFactory.createPokemon(Owner.INITIAL, Optional.of(7), Optional.of(1)).get()
 
