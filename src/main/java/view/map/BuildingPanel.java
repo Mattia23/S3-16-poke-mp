@@ -1,18 +1,27 @@
-package view;
+package view.map;
 
 import controller.GameController;
 import model.map.BuildingMap;
 import utilities.Settings;
+import view.GamePanel;
+import view.LoadImage;
 
 import java.awt.*;
 
+/**
+ * BuildingPanel shows the building inside and all the elements and static characters that populate it
+ */
 public class BuildingPanel extends GamePanel {
     protected int centerX;
     protected int centerY;
     private BuildingMap buildingMap;
     private GameController gameController;
 
-    public BuildingPanel(final GameController gameController, final BuildingMap buildingMap) {
+    /**
+     * @param gameController instance of GameController
+     * @param buildingMap instance of BuildingMap
+     */
+    BuildingPanel(final GameController gameController, final BuildingMap buildingMap) {
         super(gameController);
 
         this.buildingMap = buildingMap;
@@ -30,9 +39,9 @@ public class BuildingPanel extends GamePanel {
         g.drawImage(LoadImage.load(this.gameController.trainer().currentSprite().image()),
                 centerX+super.getCurrentX(), centerY+super.getCurrentY(), this);
 
-        g.drawImage(buildingMap.npc().image(), centerX+(buildingMap.npc().coordinate().x())* Settings.Constants$.MODULE$.TILE_PIXEL(),
-                centerY+(buildingMap.npc().coordinate().y())*Settings.Constants$.MODULE$.TILE_PIXEL() -
-                        (buildingMap.npc().HEIGHT()-Settings.Constants$.MODULE$.TILE_PIXEL()), this);
+        g.drawImage(buildingMap.staticCharacter().image(), centerX+(buildingMap.staticCharacter().coordinate().x())* Settings.Constants$.MODULE$.TILE_PIXEL(),
+                centerY+(buildingMap.staticCharacter().coordinate().y())*Settings.Constants$.MODULE$.TILE_PIXEL() -
+                        (buildingMap.staticCharacter().HEIGHT()-Settings.Constants$.MODULE$.TILE_PIXEL()), this);
     }
 
 }

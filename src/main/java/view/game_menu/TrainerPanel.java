@@ -1,9 +1,12 @@
-package view;
+package view.game_menu;
 
 import controller.GameController;
 import controller.GameMenuController;
 import database.remote.DBConnect;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,14 +16,14 @@ import java.io.IOException;
 /**
  * TrainerPanel shows main info about the playing trainer (avatar, name, level, experience points and ranking position).
  */
-class TrainerPanel extends BasePanel {
+public class TrainerPanel extends BasePanel {
 
     /**
      * @param gameMenuController instance of GameMenuController
      * @param gameController instance of GameController
      */
-    TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "trainer.jpg");
+    public TrainerPanel(GameMenuController gameMenuController, GameController gameController) {
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.TRAINER_PANEL_BACKGROUND());
         Image myImage;
         ImageIcon myImageIcon = null;
         try {
@@ -45,5 +48,7 @@ class TrainerPanel extends BasePanel {
             gameController.pause();
             gameMenuController.showGameMenu();
         });
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
     }
 }

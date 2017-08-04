@@ -1,4 +1,4 @@
-package view;
+package view.map;
 
 import controller.DistributedMapController;
 import controller.GameController;
@@ -7,17 +7,27 @@ import distributed.PlayerPositionDetails;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
+import view.GamePanel;
+import view.LoadImage;
 
 import java.awt.*;
 import java.util.concurrent.ConcurrentMap;
 
-public class MapPanel extends GamePanel{
+/**
+ * MapPanel shows the main map of the game and all the elements that populate it (main trainer, buildings, other trainers)
+ */
+public class MapPanel extends GamePanel {
 
     private GameMap gameMap;
     private GameController mapController;
     private DistributedMapController distributedMapController;
     private static final int OFFSET = 2;
 
+    /**
+     * @param mapController instance of GameController
+     * @param distributedMapController instance of DistributedMapController
+     * @param gameMap map that that will be drawn
+     */
     public MapPanel(GameController mapController, DistributedMapController distributedMapController, GameMap gameMap) {
         super(mapController);
         this.gameMap = gameMap;
@@ -33,6 +43,10 @@ public class MapPanel extends GamePanel{
         drawTrainer(g);
     }
 
+    /**
+     * Draws the visible area of the map
+     * @param g instance of Graphics
+     */
     private void drawMapElements(Graphics g){
         int initialX = calculateInitialCoordinate(this.getCurrentX());
         int finalX = calculateFinalCoordinate(this.getCurrentX());
@@ -56,14 +70,26 @@ public class MapPanel extends GamePanel{
         }
     }
 
+    /**
+     * @param centerCoordinate center map coordinate x or y
+     * @return the coordinate from which to start drawing
+     */
     private int calculateInitialCoordinate(int centerCoordinate){
         return ((centerCoordinate - Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) - OFFSET;
     }
 
+    /**
+     * @param centerCoordinate center map coordinate x or y
+     * @return the coordinate to which to finish drawing
+     */
     private int calculateFinalCoordinate(int centerCoordinate){
         return ((centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2) / Settings.Constants$.MODULE$.TILE_PIXEL()) + OFFSET;
     }
 
+    /**
+     * Draws buildings on the map
+     * @param g instance of Graphics
+     */
     private void drawBuildings(Graphics g) {
         for (int x = 0; x < Settings.Constants$.MODULE$.MAP_WIDTH(); x++) {
             for (int y = 0; y < Settings.Constants$.MODULE$.MAP_HEIGHT(); y++) {
@@ -79,6 +105,10 @@ public class MapPanel extends GamePanel{
         }
     }
 
+    /**
+     * Draws other players' trainers
+     * @param g instance og Graphics
+     */
     private void drawOtherTrainers(Graphics g){
         ConcurrentMap<Object, PlayerPositionDetails> map = this.distributedMapController.playersPositionDetails();
         if(!map.isEmpty()){
@@ -94,14 +124,27 @@ public class MapPanel extends GamePanel{
         }
     }
 
+    /**
+     * @param coordinate coordinate x or y
+     * @param centerCoordinate center coordinate x or y
+     * @return the right coordinate to draw in pixels
+     */
     private int calculateCoordinate(double coordinate, int centerCoordinate) {
         return this.coordinateInPixels(coordinate) - centerCoordinate + Settings.Constants$.MODULE$.FRAME_SIDE() / 2;
     }
 
+    /**
+     * @param currentCoordinate the current coordinate in tiles
+     * @return the coordinate in pixels
+     */
     private int coordinateInPixels(double currentCoordinate) {
         return (int)(currentCoordinate * Settings.Constants$.MODULE$.TILE_PIXEL());
     }
 
+    /**
+     * Draws the main trainer on the map
+     * @param g instance of Graphics
+     */
     private void drawTrainer(Graphics g){
         g.drawImage(LoadImage.load(this.mapController.trainer().currentSprite().image()),
                 Settings.Constants$.MODULE$.FRAME_SIDE() / 2,

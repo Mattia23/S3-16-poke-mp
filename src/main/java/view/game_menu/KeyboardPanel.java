@@ -1,21 +1,31 @@
-package view;
+package view.game_menu;
 
 import controller.GameController;
 import controller.GameMenuController;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * KeyboardPanel shows the keyboard explanation for the user
+ */
 public class KeyboardPanel extends BasePanel {
 
+    /**
+     * @param gameMenuController instance of GameMenuController
+     * @param gameController instance of GameController
+     */
     public KeyboardPanel (GameMenuController gameMenuController, GameController gameController) {
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "keyboard.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.KEYBOARD_PANEL_BACKGROUND());
 
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
         JLabel expl = new JLabel("Keyboard explanation");
-        expl.setFont(new Font("Verdana",Font.BOLD,45));
+        expl.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.BOLD,45));
         expl.setHorizontalAlignment(JLabel.CENTER);
         northPanel.add(expl,BorderLayout.CENTER);
         this.add(northPanel,BorderLayout.NORTH);
@@ -38,12 +48,13 @@ public class KeyboardPanel extends BasePanel {
             gameController.pause();
             gameMenuController.showGameMenu();
         });
-
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
     }
 
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Verdana",Font.PLAIN,18));
+        label.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,18));
         return label;
     }
 }

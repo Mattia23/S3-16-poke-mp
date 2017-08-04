@@ -8,6 +8,14 @@ import model.map.BuildingMap;
 import model.map.GameMap;
 import model.entities.Trainer;
 import utilities.Settings;
+import view.dialogue.DialoguePanel;
+import view.game_menu.*;
+import view.initial_menu.InitialMenuPanel;
+import view.initial_menu.LoginPanel;
+import view.initial_menu.SignInPanel;
+import view.map.LaboratoryPanel;
+import view.map.MapPanel;
+import view.map.PokemonCenterPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +30,7 @@ public class ViewImpl extends JFrame implements View {
     private Dimension frameDiminsion;
     private BattleView battlePanel;
     private GamePanel gamePanel;
+    private LoginPanel loginPanel;
     private DialoguePanel currentDialogue;
 
     public ViewImpl() {
@@ -72,7 +81,8 @@ public class ViewImpl extends JFrame implements View {
      */
     @Override
     public void showLogin(LoginController loginController) {
-        this.setPanel(new LoginPanel(loginController));
+        loginPanel = new LoginPanel(loginController);
+        this.setPanel(loginPanel);
     }
     /**
      * @inheritdoc
@@ -208,5 +218,9 @@ public class ViewImpl extends JFrame implements View {
     public void showMessage(final String message, final String title, final int messageType) {
         JOptionPane.showMessageDialog(this, message, title, messageType);
     }
-
+    /**
+     * @inheritdoc
+     */
+    @Override
+    public LoginPanel getLoginPanel() { return this.loginPanel; }
 }

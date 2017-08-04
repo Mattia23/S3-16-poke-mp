@@ -20,7 +20,7 @@ trait PlayerIsBusyClientManager {
   def sendPlayerIsBusy(userId: Int, isBusy: Boolean): Unit
 
   /**
-    * Receive a new IsBusyMessage and update the local connected players.
+    * Receive a new PlayerIsBusyMessage and update the local connected players.
     * @param userId id of the playing trainer
     * @param connectedPlayers connected players in the current map
     */

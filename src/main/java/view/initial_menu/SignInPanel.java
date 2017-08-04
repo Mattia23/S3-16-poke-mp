@@ -1,10 +1,14 @@
-package view;
+package view.initial_menu;
 
 import controller.SignInController;
 import model.entities.TrainerSprites;
 import model.entities.TrainerSprites$;
 import utilities.Settings;
 import scala.Enumeration.Value;
+import view.AccountData;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +16,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
 
+/**
+ * SignInPanel allows registration to the game
+ */
 public class SignInPanel extends BasePanel {
 
     private final static int BASIC_TRAINER_ID = 0;
@@ -21,9 +28,12 @@ public class SignInPanel extends BasePanel {
     private String trainerImage;
     private Value trainer;
 
+    /**
+     * @param controller instance of SignInController
+     */
     public SignInPanel(SignInController controller) {
         this.controller = controller;
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "sign-in.png");
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.SIGNIN_PANEL_BACKGROUND());
 
         this.trainerImage = TrainerSprites$.MODULE$.apply(BASIC_TRAINER_ID).frontS().image();
         this.trainer = TrainerSprites.Trainers$.MODULE$.Boy1();

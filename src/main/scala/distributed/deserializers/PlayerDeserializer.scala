@@ -6,6 +6,9 @@ import com.google.gson.{JsonDeserializationContext, JsonDeserializer, JsonElemen
 import distributed.{Player, PlayerImpl}
 import model.environment.CoordinateImpl
 
+/**
+  * Deserializer form Json to Player
+  */
 object PlayerDeserializer extends JsonDeserializer[Player] {
   override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Player = {
     val jsonPlayer = json.getAsJsonObject

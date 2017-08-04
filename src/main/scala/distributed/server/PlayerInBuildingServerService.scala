@@ -11,8 +11,17 @@ object PlayerInBuildingServerService {
     new PlayerInBuildingServerService(connection, connectedPlayers)
 }
 
+/**
+  * PlayerInBuildingServerService receives when a player entered/left a building, and sends to all clients that a
+  * player entered/left a building
+  * @param connection instance of the connection to the RabbitMQ Broker
+  * @param connectedPlayers all the players currently connected as ConnectedPlayers
+  */
 class PlayerInBuildingServerService (private val connection: Connection,
                                      private val connectedPlayers: ConnectedPlayers) extends CommunicationService{
+  /**
+    * @inheritdoc
+    */
   override def start(): Unit = {
     val channel = connection.createChannel
 
@@ -29,7 +38,10 @@ class PlayerInBuildingServerService (private val connection: Connection,
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
         if (connectedPlayers containsPlayer playerInBuildingMessage.userId) {
-          connectedPlayers.get(playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding
+          (connectedPlayers get playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding match {
+            case true => false
+            case _ => true
+          }
 
           channel.exchangeDeclare(Constants.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
           val response = gson toJson playerInBuildingMessage

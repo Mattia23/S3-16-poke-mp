@@ -3,7 +3,13 @@ package distributed.server
 import com.rabbitmq.client.Connection
 import distributed.ConnectedPlayers
 
+/**
+  * CommunicationService is used to start a service that handles the server side communication with clients
+  */
 trait CommunicationService {
+  /**
+    * starts the communicationService
+    */
   def start()
 }
 

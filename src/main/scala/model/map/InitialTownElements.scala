@@ -4,6 +4,9 @@ import model.environment.CoordinateImpl
 import model.map.CompositeElement.{Lake, Square}
 import utilities.Settings
 
+/**
+  * InitialTownElements represents the elements that compose the initial town map
+  */
 case class InitialTownElements() extends MapElementsImpl {
   import Tile._
 
@@ -19,12 +22,19 @@ case class InitialTownElements() extends MapElementsImpl {
   addRoadFromSquareToBottomLeftLake()
   addRoadFromSquareToTopTallGrass()
 
+  /**
+    * adds the buildings to the map
+    */
   private def addBuildings() ={
     addTile(PokemonCenter(CoordinateImpl(10,19)), CoordinateImpl(10,19))
     addTile(Laboratory(CoordinateImpl(40,20)), CoordinateImpl(40,20))
   }
 
   import Settings.Constants._
+
+  /**
+    * adds all trees to the map
+    */
   private def addTrees() = {
     for (x <- 0 until MAP_WIDTH)
       for (y <- 0 until MAP_HEIGHT)
@@ -52,12 +62,18 @@ case class InitialTownElements() extends MapElementsImpl {
     addTileInMultipleCoordinates(Tree(), trees)
   }
 
+  /**
+    * adds lakes to the map
+    */
   private def addLakes() = {
     addCompositeElement(Lake(),CoordinateImpl(4,5), CoordinateImpl(20,10))
     addCompositeElement(Lake(),CoordinateImpl(40,40), CoordinateImpl(48,48))
     addCompositeElement(Lake(),CoordinateImpl(10,28), CoordinateImpl(19,30))
   }
 
+  /**
+    * adds the tall grass to the map
+    */
   private def addTallGrass() = {
     addMultipleElements(TallGrass(), CoordinateImpl(1,1), CoordinateImpl(42,4))
     addMultipleElements(TallGrass(), CoordinateImpl(1,5), CoordinateImpl(3,10))
@@ -73,6 +89,9 @@ case class InitialTownElements() extends MapElementsImpl {
     addMultipleElements(TallGrass(), CoordinateImpl(33,31), CoordinateImpl(41,37))
   }
 
+  /**
+    * adds a road form the center square to the pokemon center
+    */
   private def addRoadFromSquareToPokemonCenter() = {
     for (x <- 9 to 21)  x match {
       case 9 =>
@@ -93,6 +112,9 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
+  /**
+    * adds a road form the central square to the laboratory
+    */
   private def addRoadFromSquareToLaboratory() = {
     for (x <- 28 to 47)  x match {
       case 28 =>
@@ -113,6 +135,9 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
+  /**
+    * adds a road from the center square to the bottom left lake
+    */
   private def addRoadFromSquareToBottomLeftLake() = {
     for (y <- 28 to 46)  y match {
       case 28 =>
@@ -151,6 +176,9 @@ case class InitialTownElements() extends MapElementsImpl {
     }
   }
 
+  /**
+    * adds a road from the central square to the top tall grass
+    */
   private def addRoadFromSquareToTopTallGrass() = {
     for (y <- 6 to 21)  y match {
       case 6 =>

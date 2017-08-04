@@ -18,10 +18,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class BoxPanel extends ImagePanel {
+/**
+ * BoxPanel allows to change favorite pokemon (team) with captured pokemon
+ */
+class BoxPanel extends ImagePanel {
     private static final int iconSide = (int) (Settings.Constants$.MODULE$.FRAME_SIDE() * 0.1);
-    private final static int POKEMON_NAME = 0;
-    private final static int POKEMON_LEVEL = 1;
     private final JPanel teamPanel;
     private final JPanel boxPanel;
     private final JLabel teamLabel = new JLabel();
@@ -31,8 +32,11 @@ public class BoxPanel extends ImagePanel {
     private List<Tuple2<Object, Object>> capturedPokemon;
     private Audio audio;
 
-    public BoxPanel(BuildingController buildingController){
-        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.PANELS_FOLDER() + "box-pokemon.png");
+    /**
+     * @param buildingController instance of BuildingController
+     */
+    BoxPanel(BuildingController buildingController){
+        this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.BOX_PANEL_BACKGROUND());
         audio = new AudioImpl(Settings.Audio$.MODULE$.MENU_SONG());
         audio.play();
         this.favoritePokemon = new ArrayList<>();
@@ -47,7 +51,7 @@ public class BoxPanel extends ImagePanel {
         title.setHorizontalAlignment(JLabel.CENTER);
         add(title, BorderLayout.NORTH);
         GridLayout gridLayout;
-        if(Settings.Constants$.MODULE$.FRAME_SIDE() > 530){
+        if(Settings.Constants$.MODULE$.FRAME_SIDE() > 530) {
             gridLayout = new GridLayout(0,3);
         } else {
             gridLayout = new GridLayout(0,2);
@@ -67,25 +71,8 @@ public class BoxPanel extends ImagePanel {
         leftPanel.setPreferredSize(new Dimension(Settings.Constants$.MODULE$.FRAME_SIDE()/4, 0));
         add(leftPanel, BorderLayout.WEST);
 
-
         final JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(boxLabel, BorderLayout.NORTH);
-
-        /*final JPanel orderPanel = new JPanel();
-        String[] orderStrings = {"Name", "Level"};
-        JComboBox<String> comboBox = new JComboBox<>(orderStrings);
-        comboBox.addActionListener( e -> {
-            if(comboBox.getSelectedIndex() == POKEMON_NAME){
-                box.sort(Comparator.comparing(Pokemon::name));
-            }else if(comboBox.getSelectedIndex() == POKEMON_LEVEL){
-                box.sort(Comparator.comparing(Pokemon::level));
-            }
-        });
-        orderPanel.add(new JLabel("Order by"));
-        orderPanel.add(comboBox);
-
-        rightPanel.add(orderPanel, BorderLayout.SOUTH);*/
-
         rightPanel.add(scrollFrame, BorderLayout.CENTER);
         rightPanel.setPreferredSize(new Dimension((int)(Settings.Constants$.MODULE$.FRAME_SIDE()/3.5), 0));
         add(rightPanel, BorderLayout.EAST);
@@ -103,18 +90,21 @@ public class BoxPanel extends ImagePanel {
         paintBox();
     }
 
-    private void paintBox(){
+    /**
+     * Refresh the box when the user change pokemon
+     */
+    private void paintBox() {
         teamPanel.removeAll();
         boxPanel.removeAll();
 
-        for(Object pokemonObject: this.favoritePokemon){
+        for(Object pokemonObject: this.favoritePokemon) {
             int pokemonId = Integer.parseInt(pokemonObject.toString());
             if(pokemonId != 0) {
                 final PokemonWithLife pokemonWithLife = PokemonFactory
                         .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
                 final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
                 final JLabel pokemonLabel = new JLabel("Lv." + pokemonWithLife.pokemon().level());
-                pokemonLabel.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
+                pokemonLabel.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
                 pokemonImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonImage.addMouseListener(new MouseAdapter() {
                     @Override
@@ -137,7 +127,7 @@ public class BoxPanel extends ImagePanel {
             }
         }
 
-        for(Tuple2<Object, Object> pokemonObject: this.capturedPokemon){
+        for(Tuple2<Object, Object> pokemonObject: this.capturedPokemon) {
             int pokemonId = Integer.parseInt(pokemonObject._1().toString());
             final PokemonWithLife pokemonWithLife = PokemonFactory
                     .createPokemon(Owner.TRAINER(), Optional.of(pokemonId), Optional.empty()).get();
@@ -145,7 +135,7 @@ public class BoxPanel extends ImagePanel {
                 final JButton button = new JButton("<<");
                 final JLabel pokemonImage = new JLabel(getPokemonIcon(pokemonWithLife.pokemon().imageName()));
                 final JLabel pokemonLabel = new JLabel("Lv."+pokemonWithLife.pokemon().level());
-                pokemonLabel.setFont(new Font("Verdana",Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
+                pokemonLabel.setFont(new Font(Settings.Constants$.MODULE$.FONT_NAME(),Font.PLAIN,Settings.Constants$.MODULE$.FRAME_SIDE()/45));
                 pokemonImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 pokemonImage.addMouseListener(new MouseAdapter() {
                     @Override
@@ -168,15 +158,22 @@ public class BoxPanel extends ImagePanel {
         refreshTeamAndBoxNumber();
         revalidate();
         repaint();
-
     }
 
-    private void refreshTeamAndBoxNumber(){
+    /**
+     * Refresh the number of favorite pokemon and all other pokemon in the box
+     */
+    private void refreshTeamAndBoxNumber() {
         teamLabel.setText("TEAM "+ (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)) +"/"+favoritePokemon.size());
         boxLabel.setText("BOX: "+(this.capturedPokemon.size() - (this.favoritePokemon.size() - Collections.frequency(this.favoritePokemon, 0)))+" Pokemon");
     }
 
-    private ImageIcon getPokemonIcon(String pokemonImageString){
+    /**
+     * Get the image icon of a pokemon
+     * @param pokemonImageString path of the pokemon image
+     * @return ImageIcon of the pokemon
+     */
+    private ImageIcon getPokemonIcon(String pokemonImageString) {
         Image myImage;
         ImageIcon myImageIcon = null;
         try {

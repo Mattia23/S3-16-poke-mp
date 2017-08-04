@@ -12,8 +12,17 @@ object PlayerLoginServerService {
     new PlayerLoginServerService(connection, connectedPlayers)
 }
 
+/**
+  * PlayerLoginServerService receives when a new player is connected to the game, sends to the new player all the connected
+  * players, and sends to all clients that a new player is connected
+  * @param connection instance of connection to the RabbitMQ Broker
+  * @param connectedPlayers all the players currently connected as ConnectedPlayers
+  */
 class PlayerLoginServerService(private val connection: Connection,
                                private val connectedPlayers: ConnectedPlayers) extends CommunicationService {
+  /**
+    * @inheritdoc
+    */
   override def start(): Unit = {
     val channel = connection.createChannel
 
