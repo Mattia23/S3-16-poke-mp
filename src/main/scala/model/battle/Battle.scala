@@ -151,7 +151,7 @@ class BattleImpl(override val trainer: Trainer, private val controller: BattleCo
     var pointsEarned: Int = 0
     if(won){
       battleFinished = true
-      pointsEarned = (otherPokemon.pokemon.level * math.pow(1.5,trainer.level)).toInt
+      pointsEarned = (otherPokemon.pokemon.level * math.pow(1.2,trainer.level)).toInt
       trainer.updateTrainer(pointsEarned)
     } else {
       roundFinished = true
