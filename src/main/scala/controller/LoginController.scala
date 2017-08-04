@@ -77,6 +77,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect getTrainerFromDB username
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
+      DBConnect.setMyTrainer(trainer)
       val connection = DistributedConnectionImpl().connection
       val connectedPlayers = ConnectedPlayers()
       val mapController = MapController(view, trainer, connection, connectedPlayers)

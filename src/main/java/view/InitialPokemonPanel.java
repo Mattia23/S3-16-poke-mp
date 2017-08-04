@@ -25,6 +25,7 @@ public class InitialPokemonPanel extends JPanel {
             int autoIncrementCaptured = DBConnect.getAutoIncrement("pokemon");
             final PokemonBehaviour pokemonBehaviour = new PokemonBehaviourImpl(pokemonWithLife);
             buildingController.trainer().addMetPokemon(pokemonWithLife.pokemon().id());
+            DBConnect.addCapturedPokemon(buildingController.trainer().id(),pokemonWithLife.pokemon().id());
             pokemonBehaviour.insertPokemonIntoDB(buildingController.trainer().id());
             buildingController.trainer().updateTrainer(0);
             buildingController.trainer().addFavouritePokemon(autoIncrementCaptured);
