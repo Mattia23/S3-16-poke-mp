@@ -1,7 +1,8 @@
-package view;
+package view.game_menu;
 
 import controller.GameMenuController;
 import utilities.Settings;
+import view.JUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,12 +14,11 @@ import java.io.IOException;
 public class GameMenuPanel extends JPanel{
     private static final String JOPTIONPANE_TITLE = "Logout";
     private static final String JOPTIONPANE_MESSAGE = "Do you really want to log out?";
-    private ButtonGroup buttonGroup = new ButtonGroup();
-    private final JRadioButton[] menuButtons;
 
     public GameMenuPanel(GameMenuController gameMenuController){
         setLayout(new GridLayout(0,1));
-        menuButtons = new JRadioButton[7];
+        final ButtonGroup buttonGroup = new ButtonGroup();
+        final JRadioButton[] menuButtons = new JRadioButton[7];
         menuButtons[0] = new JRadioButton("Pokédex",getImageIconByName("pokedex.png"));
         menuButtons[1] = new JRadioButton("Team",getImageIconByName("team.png"));
         menuButtons[2] = new JRadioButton("Trainer",getImageIconByName("trainer.png"));

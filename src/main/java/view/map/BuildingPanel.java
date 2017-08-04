@@ -1,8 +1,10 @@
-package view;
+package view.map;
 
 import controller.GameController;
 import model.map.BuildingMap;
 import utilities.Settings;
+import view.GamePanel;
+import view.LoadImage;
 
 import java.awt.*;
 

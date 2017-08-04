@@ -1,7 +1,9 @@
-package view;
+package view.initial_menu;
 
 import controller.InitialMenuController;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +25,7 @@ public class InitialMenuPanel extends BasePanel implements ActionListener, KeyLi
     /**
      * @param controller instance of InitialMenuController
      */
-    InitialMenuPanel(InitialMenuController controller) {
+    public InitialMenuPanel(InitialMenuController controller) {
         this.controller = controller;
         this.setLayout(new BorderLayout());
         JPanel downPanel = new JPanel(new GridBagLayout());

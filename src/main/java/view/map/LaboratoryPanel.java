@@ -1,4 +1,4 @@
-package view;
+package view.map;
 
 import controller.GameController;
 import model.map.BuildingMap;

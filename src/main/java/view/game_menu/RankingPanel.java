@@ -1,10 +1,13 @@
-package view;
+package view.game_menu;
 
 import controller.GameController;
 import controller.GameMenuController;
 import database.remote.DBConnect;
 import scala.Tuple3;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,13 +19,13 @@ import java.util.List;
  * RankingPanel print the ranking with every user in the database and put in bold the current playin trainer. In this
  * panel you can read the ranking position, the player username, his level, his experience points and his avatar.
  */
-class RankingPanel extends BasePanel {
+public class RankingPanel extends BasePanel {
 
     /**
      * @param gameMenuController instance of GameMenuController
      * @param gameController instance of GameController
      */
-    RankingPanel(GameMenuController gameMenuController, GameController gameController) {
+    public RankingPanel(GameMenuController gameMenuController, GameController gameController) {
         this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.POKEMON_PANEL_BACKGROUND());
         final JPanel mainPanel = new JPanel(new GridLayout(0,1));
         mainPanel.setOpaque(false);
