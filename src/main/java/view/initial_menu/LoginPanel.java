@@ -1,7 +1,10 @@
-package view;
+package view.initial_menu;
 
 import controller.LoginController;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +19,7 @@ public class LoginPanel extends BasePanel {
     /**
      * @param controller instance of LoginController
      */
-    LoginPanel(LoginController controller) {
+    public LoginPanel(LoginController controller) {
         this.controller = controller;
         JLabel usernameLabel = new JLabel(Settings.Strings$.MODULE$.USERNAME());
         JLabel passwordLabel = new JLabel(Settings.Strings$.MODULE$.PASSWORD());

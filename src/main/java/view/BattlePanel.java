@@ -217,16 +217,16 @@ public class BattlePanel extends ImagePanel implements BattleView {
                     if(atts[j].toString().toUpperCase() == att) {
                         switch (j) {
                             case 0 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._1());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._1());
                                 break;
                             case 1 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._2());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._2());
                                 break;
                             case 2 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._3());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._3());
                                 break;
                             case 3 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._4());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._4());
                                 break;
                         }
                     }

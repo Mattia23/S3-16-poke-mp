@@ -1,4 +1,4 @@
-package view;
+package view.map;
 
 import controller.DistributedMapController;
 import controller.GameController;
@@ -7,6 +7,8 @@ import distributed.PlayerPositionDetails;
 import model.map.Building;
 import model.map.GameMap;
 import utilities.Settings;
+import view.GamePanel;
+import view.LoadImage;
 
 import java.awt.*;
 import java.util.concurrent.ConcurrentMap;
@@ -14,7 +16,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * MapPanel shows the main map of the game and all the elements that populate it (main trainer, buildings, other trainers)
  */
-public class MapPanel extends GamePanel{
+public class MapPanel extends GamePanel {
 
     private GameMap gameMap;
     private GameController mapController;

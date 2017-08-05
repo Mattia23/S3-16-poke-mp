@@ -68,7 +68,7 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
     */
   override def launchAttack(attackId: Int): Int = {
     val attack: (String,Integer) = PokedexConnect.getPokemonAttack(attackId).get()
-    (attack._2 * pokemonWithLife.pokemon.level * ATTACK_PERCENTAGE).toInt
+    (attack._2 * math.pow(pokemonWithLife.pokemon.level,0.3)).toInt
   }
   /**
     * @inheritdoc
@@ -119,6 +119,8 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
   private def checkEvolution(newLevel: Int): Int = {
     val result = PokedexConnect.pokemonHasToEvolve(this.pokemonWithLife.pokemon.id ,newLevel)
     if(result._1) {
+      DBConnect.addMetPokemon(DBConnect.getMyTrainer.id,result._2.get().toInt)
+      DBConnect.addCapturedPokemon(DBConnect.getMyTrainer.id,result._2.get().toInt)
       result._2.get()
     } else {
       this.pokemonWithLife.pokemon.id
@@ -143,5 +145,6 @@ class PokemonBehaviourImpl(var pokemonWithLife: PokemonWithLife) extends Pokemon
     */
   override def insertPokemonIntoDB(trainerId: Int): Unit = {
     DBConnect.insertWildPokemonIntoDB(pokemonWithLife: PokemonWithLife, trainerId: Int)
+    DBConnect.addCapturedPokemon(trainerId: Int, pokemonWithLife.pokemon.id: Int)
   }
 }

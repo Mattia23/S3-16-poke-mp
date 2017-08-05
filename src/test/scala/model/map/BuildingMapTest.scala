@@ -30,8 +30,8 @@ class BuildingMapTest extends FunSuite{
 
   def testBarrier(buildingMap: BuildingMap): Unit = {
     for(matrixNotWalkable <- buildingMap.matricesNotWalkable){
-      for( i <- matrixNotWalkable.startCoordinate.x to matrixNotWalkable.endCoordinate.x){
-        for( j <- matrixNotWalkable.startCoordinate.y to matrixNotWalkable.endCoordinate.y){
+      for( i <- matrixNotWalkable._1.x to matrixNotWalkable._2.x){
+        for( j <- matrixNotWalkable._1.y to matrixNotWalkable._2.y){
           assert(buildingMap.map(i)(j).isInstanceOf[Barrier])
         }
       }
