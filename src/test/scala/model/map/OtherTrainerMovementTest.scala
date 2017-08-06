@@ -6,7 +6,6 @@ import distributed.PlayerPositionDetails
 import model.entities.TrainerSprites
 import model.environment.{CoordinateImpl, Direction}
 import org.scalatest.FunSuite
-import utilities.Settings
 
 class OtherTrainerMovementTest extends FunSuite {
 

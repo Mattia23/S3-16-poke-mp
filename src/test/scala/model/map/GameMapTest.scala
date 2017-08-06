@@ -4,7 +4,7 @@ import model.environment.CoordinateImpl
 import model.map.Tile._
 import org.scalatest.FunSuite
 
-class GameMapTest extends FunSuite{
+class GameMapTest extends FunSuite {
 
   def fixture =
     new {

@@ -9,7 +9,7 @@ import org.scalatest.FunSuite
 import utilities.Settings
 import view.map.GamePanel
 
-class MainTrainerMovementTest extends FunSuite{
+class MainTrainerMovementTest extends FunSuite {
 
   def fixture =
     new {

@@ -5,7 +5,7 @@ import model.map.CompositeElement.Lake
 import model.map.Tile._
 import org.scalatest.FunSuite
 
-class MapElementsTest extends FunSuite{
+class MapElementsTest extends FunSuite {
 
   def fixture =
     new {
