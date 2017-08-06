@@ -25,7 +25,7 @@ class ConnectedPlayersTest extends FunSuite {
     val userId = 1
     val player = createPlayer(userId)
     f.connectedPlayers.add(player.userId,player)
-    assert(f.connectedPlayers.get(player.userId) equals player)
+    assert(f.connectedPlayers.get(player.userId) == player)
   }
 
   test("A map of players should be added") {
@@ -34,7 +34,7 @@ class ConnectedPlayersTest extends FunSuite {
     val playersMap = createPlayersMap(userIds)
     f.connectedPlayers addAll playersMap
     assert( f.connectedPlayers.getAll.size() == playersMap.size())
-    userIds foreach (id => assert(f.connectedPlayers.get(id) equals playersMap.get(id)))
+    userIds foreach (id => assert(f.connectedPlayers.get(id) == playersMap.get(id)))
 
   }
 
@@ -45,7 +45,7 @@ class ConnectedPlayersTest extends FunSuite {
     f.connectedPlayers addAll playersMap
     val playersMapReturned = f.connectedPlayers.getAll
     assert( playersMapReturned.size() == playersMap.size())
-    userIds foreach (id => assert(playersMapReturned.get(id) equals playersMap.get(id)))
+    userIds foreach (id => assert(playersMapReturned.get(id) == playersMap.get(id)))
   }
 
   test("A player should be removed") {
@@ -76,7 +76,7 @@ class ConnectedPlayersTest extends FunSuite {
     f.connectedPlayers.add(player.userId,player)
     val newPosition = CoordinateImpl(20,20)
     f.connectedPlayers.updateTrainerPosition(userId, newPosition)
-    assert(f.connectedPlayers.get(userId).position equals newPosition)
+    assert(f.connectedPlayers.get(userId).position == newPosition)
   }
 
   private def createPlayer(userId: Int) = {
