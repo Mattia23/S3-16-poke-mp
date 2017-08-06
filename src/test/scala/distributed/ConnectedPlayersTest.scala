@@ -85,10 +85,7 @@ class ConnectedPlayersTest extends FunSuite {
 
   private def createPlayersMap(userIds: Seq[Int]) = {
     val playersMap = new util.HashMap[Int, Player]()
-    userIds foreach (id => {
-      val player = createPlayer(id)
-      playersMap.put(id, player)
-    })
+    userIds foreach (id => playersMap.put(id, createPlayer(id)))
     playersMap
   }
 
