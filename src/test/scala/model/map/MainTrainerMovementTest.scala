@@ -1,10 +1,10 @@
+package model.map
+
 import controller.MapController
 import model.entities.TrainerImpl
 import model.environment.{CoordinateImpl, Direction}
-import model.map.MainTrainerMovement
-import org.scalamock.scalatest.MockFactory
 import org.scalatest.FunSuite
-import view.{GamePanel, MapPanel}
+import view.map.MapPanel
 
 class MainTrainerMovementTest extends FunSuite{
 
