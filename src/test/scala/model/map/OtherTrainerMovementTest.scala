@@ -29,15 +29,15 @@ class OtherTrainerMovementTest extends FunSuite {
     val f = fixture
     assert(f.playerPositionDetails.coordinateX == f.nextPosition.x)
     assert(f.playerPositionDetails.coordinateY == f.nextPosition.y)
-    assert(f.playersPositionDetails.get(1).coordinateX == f.nextPosition.x)
-    assert(f.playersPositionDetails.get(1).coordinateY == f.nextPosition.y)
+    assert((f.playersPositionDetails get 1).coordinateX == f.nextPosition.x)
+    assert((f.playersPositionDetails get 1).coordinateY == f.nextPosition.y)
   }
 
   test("The current trainer return in the initial position after two movement (one on the right and one on the left)") {
     val f = fixture
     f.movement.walk(f.nextPosition, Direction.LEFT, f.initialPosition)
-    assert(f.playersPositionDetails.get(1).coordinateX == f.initialPosition.x)
-    assert(f.playersPositionDetails.get(1).coordinateY == f.initialPosition.y)
+    assert((f.playersPositionDetails get 1).coordinateX == f.initialPosition.x)
+    assert((f.playersPositionDetails get 1).coordinateY == f.initialPosition.y)
     assert(f.playerPositionDetails.currentSprite ==  TrainerSprites(1).leftS)
   }
 

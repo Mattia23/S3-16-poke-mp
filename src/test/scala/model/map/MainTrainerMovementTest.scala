@@ -1,6 +1,7 @@
 package model.map
 
 import java.util.Optional
+import javax.swing.JTextField
 
 import database.remote.DBConnect
 import model.entities.Trainer
@@ -9,15 +10,13 @@ import org.scalatest.FunSuite
 import utilities.Settings
 import view.map.GamePanel
 
+import scala.collection.mutable
+
 class MainTrainerMovementTest extends FunSuite {
 
   def fixture =
     new {
-      var trainer: Trainer = null
-      val optionalTrainer: Optional[Trainer] = DBConnect getTrainerFromDB "admin"
-      if(optionalTrainer.isPresent) {
-        trainer = optionalTrainer.get()
-      }
+      val trainer: Trainer = createNewTrainer()
       val gamePanel = new FakeGamePanel()
       val movement = MainTrainerMovement(trainer, gamePanel)
       val initialPosition = CoordinateImpl(0, 0)
@@ -25,20 +24,39 @@ class MainTrainerMovementTest extends FunSuite {
       movement.walk(initialPosition, Direction.RIGHT, nextPosition)
     }
 
-   test("The current trainer sprite is the one set after a movement") {
+  private def createNewTrainer(): Trainer = {
+    val map: mutable.Map[String, JTextField] = scala.collection.mutable.Map[String,JTextField]()
+    val name = new JTextField("prova")
+    val surname = new JTextField("prova")
+    val email = new JTextField("prova@prova.it")
+    val username = new JTextField("test")
+    val password = new JTextField("testtest")
+    map += "Name" -> name
+    map += "Surname" -> surname
+    map += "Email" -> email
+    map += "Username" -> username
+    map += "Password" -> password
+    DBConnect.insertCredentials(collection.JavaConverters.mapAsJavaMap(map),3)
+    (DBConnect getTrainerFromDB "test").get()
+  }
+
+  test("The current trainer sprite is the one set after a movement") {
     val f = fixture
     assert(f.trainer.currentSprite ==  f.trainer.sprites.rightS)
+    DBConnect deleteUserAndRelatedData "test"
   }
 
   test("The current trainer position is the one set after a movement") {
     val f = fixture
     assert(f.trainer.coordinate == f.nextPosition)
+    DBConnect deleteUserAndRelatedData "test"
   }
 
   test("The current trainer positions in game panel are the one set after a movement") {
     val f = fixture
     assert(f.gamePanel.currentX == 1 * Settings.Constants.TILE_PIXEL)
     assert(f.gamePanel.currentY == 0 * Settings.Constants.TILE_PIXEL)
+    DBConnect deleteUserAndRelatedData "test"
   }
 
   test("The current trainer return in the initial position after two movement (one on the right and one on the left)") {
@@ -46,6 +64,7 @@ class MainTrainerMovementTest extends FunSuite {
     f.movement.walk(f.nextPosition, Direction.LEFT, f.initialPosition)
     assert(f.trainer.coordinate ==  f.initialPosition)
     assert(f.trainer.currentSprite == f.trainer.sprites.leftS)
+    DBConnect deleteUserAndRelatedData "test"
   }
 
   private[map] class FakeGamePanel extends GamePanel {
