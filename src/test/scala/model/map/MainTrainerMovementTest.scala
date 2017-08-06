@@ -1,6 +1,5 @@
 package model.map
 
-import java.util.Optional
 import javax.swing.JTextField
 
 import database.remote.DBConnect
