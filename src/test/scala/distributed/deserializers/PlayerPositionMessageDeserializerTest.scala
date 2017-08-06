@@ -1,7 +1,6 @@
-package distributed.deserializer
+package distributed.deserializers
 
 import com.google.gson.{Gson, GsonBuilder}
-import distributed.deserializers.PlayerPositionMessageDeserializer
 import distributed.messages.{PlayerPositionMessage, PlayerPositionMessageImpl}
 import model.environment.CoordinateImpl
 import org.scalatest.FunSuite

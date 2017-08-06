@@ -1,8 +1,7 @@
-package distributed.deserializer
+package distributed.deserializers
 
 import com.google.gson.{Gson, GsonBuilder}
 import distributed.PlayerImpl
-import distributed.deserializers.PlayerMessageDeserializer
 import distributed.messages.{PlayerMessage, PlayerMessageImpl}
 import org.scalatest.FunSuite
 
