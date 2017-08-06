@@ -11,6 +11,7 @@ import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
 import view.dialogue.DialoguePanel
+import view.map.GamePanelImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -141,7 +142,7 @@ abstract class GameControllerImpl(private var view: View,
   protected var inGame = false
   protected var inPause = false
   protected var audio: Audio = _
-  protected var gamePanel: GamePanel = _
+  protected var gamePanel: GamePanelImpl = _
   protected val waitEndOfMovement: Semaphore = new Semaphore(1)
   protected var trainerMovement: Movement = _
   protected var nextPosition: Coordinate = _

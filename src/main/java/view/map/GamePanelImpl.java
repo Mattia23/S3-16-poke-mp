@@ -1,4 +1,4 @@
-package view;
+package view.map;
 
 import controller.GameKeyListener;
 import controller.GameController;
@@ -9,9 +9,9 @@ import java.awt.*;
 import java.awt.event.KeyListener;
 
 /**
- * GamePanel class provides template methods for subclasses that must paint a dynamic trainer on the map
+ * GamePanelImpl abstract class provides template methods for subclasses that must paint a dynamic trainer on the map
  */
-public abstract class GamePanel extends JPanel{
+public abstract class GamePanelImpl extends JPanel implements GamePanel {
 
     private int currentX;
     private int currentY;
@@ -19,7 +19,7 @@ public abstract class GamePanel extends JPanel{
     /**
      * @param gameController instrance of GameController
      */
-    public GamePanel(GameController gameController) {
+    public GamePanelImpl(GameController gameController) {
         this.setFocusable(true);
         this.requestFocusInWindow();
         KeyListener keyListener = GameKeyListener.apply(gameController);
@@ -41,16 +41,14 @@ public abstract class GamePanel extends JPanel{
     protected abstract void doPaint(final Graphics g);
 
     /**
-     * Updates the current trainer's coordinate x
-     * @param x new coordinate x in double
+     * @inheritdoc
      */
     public synchronized void updateCurrentX(double x) {
         this.currentX = (int)(x * Settings.Constants$.MODULE$.TILE_PIXEL());
     }
 
     /**
-     * Updates the current trainer's coordinate y
-     * @param y new coordinate y in double
+     * @inheritdoc
      */
     public synchronized void updateCurrentY(double y) {
         this.currentY = (int)(y * Settings.Constants$.MODULE$.TILE_PIXEL());
