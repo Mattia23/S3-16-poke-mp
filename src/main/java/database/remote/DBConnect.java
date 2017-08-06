@@ -35,6 +35,7 @@ public final class DBConnect {
 	private static Connection con;
 	private static Statement st;
 	private static ResultSet rs;
+	private static Trainer trainer;
 
 	private DBConnect() {}
 
@@ -422,16 +423,32 @@ public final class DBConnect {
 	}
 
     /**
-     * Add a new met Pokemon for the trainer id passed as argument.
-     * @param trainerId id of the trainer that met the Pokemon
-     * @param pokemonId id of the Pokemon met by the trainer
-     */
+	 * Add a new met Pokemon for the trainer id passed as argument.
+	 * @param trainerId id of the trainer that met the Pokemon
+	 * @param pokemonId id of the Pokemon met by the trainer
+	 */
 	public static void addMetPokemon(int trainerId, int pokemonId){
 		initConnection();
-		String q = "Insert into pokemon_met (id,id_trainer,id_pokemon) " +
-				"value (NULL,'"+trainerId+"','"+pokemonId+"')";
+		String q = "Insert into pokemon_met (id,id_trainer,id_pokemon,captured) " +
+				"value (NULL,'"+trainerId+"','"+pokemonId+"',0)";
 		try {
 			st.executeUpdate(q);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Add a captured Pokemon.
+	 * @param trainerId id of the trainer that met the Pokemon
+	 * @param pokemonId id of the Pokemon met by the trainer
+	 */
+	public static void addCapturedPokemon(int trainerId, int pokemonId){
+		initConnection();
+		String query = "update pokemon_met SET captured = 1 where id_trainer="+
+				trainerId+" and id_pokemon="+pokemonId+"";
+		try {
+			st.executeUpdate(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -526,7 +543,7 @@ public final class DBConnect {
      */
 	public static Optional<List<Int>> getCapturedPokemonIdList(int trainerId){
 		initConnection();
-		String query = "select id_pokemon from pokemon where id_trainer =  '" + trainerId + "'";
+		String query = "select id_pokemon from pokemon_met where id_trainer =  '" + trainerId + "' and captured = '1'";
 		java.util.List<Integer> pokemonList = new ArrayList<>();
 		try {
 			rs = st.executeQuery(query);
@@ -598,6 +615,21 @@ public final class DBConnect {
 
 		}
 
+	}
+
+	/**
+	 * Set the trainer
+	 * @param t ,trainer
+	 */
+	public static void setMyTrainer(Trainer t) {
+		trainer = t;
+	}
+
+	/**
+	 * @return trainer
+	 */
+	public static Trainer getMyTrainer() {
+		return trainer;
 	}
 
 }

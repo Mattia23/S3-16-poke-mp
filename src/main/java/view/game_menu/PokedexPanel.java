@@ -1,9 +1,12 @@
-package view;
+package view.game_menu;
 
 import controller.GameController;
 import controller.GameMenuController;
 import database.local.PokedexConnect;
 import utilities.Settings;
+import view.BasePanel;
+import view.JUtil;
+import view.LoadImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,7 +17,7 @@ import java.io.IOException;
  * This Panel paints a Pokedex with every Pokemon a trainer met with his id, name and image and a Pokeball if the
  * trainer has alreay captured it.
  */
-class PokedexPanel extends  BasePanel{
+public class PokedexPanel extends BasePanel {
     private static final int INFO_FONT_SIZE = Settings.Constants$.MODULE$.FRAME_SIDE()/32;
     private static final int FONT_SIZE = Settings.Constants$.MODULE$.FRAME_SIDE()/25;
     private static final int POKEMON_SIDE = (int) (Settings.Constants$.MODULE$.FRAME_SIDE()/5.8);
@@ -27,7 +30,7 @@ class PokedexPanel extends  BasePanel{
      * @param gameMenuController instance of GameMenuController
      * @param gameController instance of GameController
      */
-    PokedexPanel(GameMenuController gameMenuController, GameController gameController){
+    public PokedexPanel(GameMenuController gameMenuController, GameController gameController){
         this.imagePanel = LoadImage.load(Settings.Images$.MODULE$.POKEDEX_PANEL_BACKGROUND());
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setOpaque(false);
@@ -94,6 +97,8 @@ class PokedexPanel extends  BasePanel{
         scroll.getViewport().setOpaque(false);
         scroll.setBorder(null);
         this.add(scroll);
+        JUtil.setFocus(this);
+        JUtil.setEscClick(this, this.backButton);
     }
 
 }

@@ -217,16 +217,16 @@ public class BattlePanel extends ImagePanel implements BattleView {
                     if(atts[j].toString().toUpperCase() == att) {
                         switch (j) {
                             case 0 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._1());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._1());
                                 break;
                             case 1 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._2());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._2());
                                 break;
                             case 2 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._3());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._3());
                                 break;
                             case 3 :
-                                controller.myPokemonAttacks((int)pokemonEntities[0].pokemon().attacks()._4());
+                                controller.myPokemonAttacks((int)pokemonEntities[1].pokemon().attacks()._4());
                                 break;
                         }
                     }
@@ -239,17 +239,17 @@ public class BattlePanel extends ImagePanel implements BattleView {
                             attacksAreVisible = false;
                             changeButtons();
                             displayPanel.setVisible(true);
-                            attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" UTILIZZA " + att +"!");
+                            attackExplanation.setText(pokemonEntities[1].pokemon().name().toUpperCase()+" USES " + att +"!");
                             if(controller.isDistributedBattle()) {
                                 blockButtons(true);
                                 for(String c : trainerChoices.keySet()) {
                                     trainerChoices.get(c).setVisible(false);
                                 }
                                 Thread.sleep(3000);
-                                attackExplanation.setText("E' IL TURNO DEL TUO AVVERSARIO");
+                                attackExplanation.setText("WAITING YOUR OPPONENT'S MOVE");
                             } else {
                                 Thread.sleep(3000);
-                                attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" UTILIZZA " +
+                                attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase()+" USES " +
                                         wildPokemonAttacks[new Random().nextInt(wildPokemonAttacks.length)].toUpperCase()+"!");
                                 Thread.sleep(3000);
                                 displayPanel.setVisible(false);
@@ -317,13 +317,15 @@ public class BattlePanel extends ImagePanel implements BattleView {
         }
     }
     private void blockButtons(boolean flag) {
-        for(String c : trainerChoices.keySet()) {
-            trainerChoices.get(c).setEnabled(!flag);
-        }
-        trainerChoices.get("Pokeball").setEnabled(false);
-        trainerChoices.get("Escape").setEnabled(false);
-        for(String att : attacks.keySet()) {
-            attacks.get(att).setEnabled(!flag);
+        if(pokemonEntities[1].pokemonLife()!=0){
+            for(String c : trainerChoices.keySet()) {
+                trainerChoices.get(c).setEnabled(!flag);
+            }
+            trainerChoices.get("Pokeball").setEnabled(false);
+            trainerChoices.get("Escape").setEnabled(false);
+            for(String att : attacks.keySet()) {
+                attacks.get(att).setEnabled(!flag);
+            }
         }
     }
     private void getWildPokemonAttack() {
@@ -373,7 +375,7 @@ public class BattlePanel extends ImagePanel implements BattleView {
                 try {
                     displayPanel.setVisible(true);
                     int i = new Random().nextInt(wildPokemonAttacks.length);
-                    attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase() + " UTILIZZA " +
+                    attackExplanation.setText(pokemonEntities[0].pokemon().name().toUpperCase() + " USES " +
                         wildPokemonAttacks[i].toUpperCase() + "!");
                     Thread.sleep(3000);
                     displayPanel.setVisible(false);

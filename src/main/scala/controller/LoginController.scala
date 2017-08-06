@@ -53,12 +53,15 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     * @param password user password
     */
   override def login(username: String, password: String): Unit = {
+    view.getLoginPanel.changeLoginButton("Connecting...")
     new Thread(() => {
       if(username == "" || password == "") {
         view.showMessage(Settings.Strings.LOGIN_ERROR_USERNAME_PASSWORD_EMPTY, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+        view.getLoginPanel.changeLoginButton("Submit")
       }else{
         if (!DBConnect.checkCredentials(username, password)) {
-           view.showMessage(Settings.Strings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+          view.showMessage(Settings.Strings.LOGIN_ERROR_WRONG_USERNAME_PASSWORD, LOGIN_FAILED, JOptionPane.ERROR_MESSAGE)
+          view.getLoginPanel.changeLoginButton("Submit")
         } else {
           newGame(username)
         }
@@ -74,6 +77,7 @@ class LoginControllerImpl(private val initialMenuController: InitialMenuControll
     val optionalTrainer: Optional[Trainer] = DBConnect getTrainerFromDB username
     if(optionalTrainer.isPresent) {
       val trainer = optionalTrainer.get()
+      DBConnect.setMyTrainer(trainer)
       val connection = DistributedConnectionImpl().connection
       val connectedPlayers = ConnectedPlayers()
       val mapController = MapController(view, trainer, connection, connectedPlayers)

@@ -1,4 +1,4 @@
-package view;
+package view.dialogue;
 
 import controller.GameController;
 import database.remote.DBConnect;
@@ -9,13 +9,19 @@ import utilities.Settings;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * DoctorDialoguePanel is the dialogue of the Doctor, the trainer can choice if heal pokemon or not
+ */
 public class DoctorDialoguePanel extends DialoguePanel {
     private GameController gameController;
 
+    /**
+     * @param gameController instance of GameController
+     * @param dialogues character's dialogue
+     */
     public DoctorDialoguePanel(GameController gameController, List<String> dialogues) {
         super(dialogues);
         this.gameController = gameController;
-        if(dialogues.size() == 1) setFinalButtons();
     }
 
     @Override
@@ -35,7 +41,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
             dialogueLabel.setText(Doctor$.MODULE$.DIALOGUE_AFTER_HEAL());
             buttonPanel.removeAll();
             buttons.clear();
-            final JButton button = new JButton("bye");
+            final JButton button = new JButton(Settings.Strings$.MODULE$.FINAL_DIALOGUE_BUTTON());
             button.addActionListener(e2 -> gameController.resume());
             button.addKeyListener(this);
             buttonPanel.add(button);

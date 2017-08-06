@@ -5,6 +5,7 @@ import model.entities.PokemonWithLife;
 import model.map.BuildingMap;
 import model.map.GameMap;
 import model.entities.Trainer;
+import view.initial_menu.LoginPanel;
 
 import javax.swing.*;
 
@@ -151,5 +152,11 @@ public interface View {
      * @param messageType
      */
     void showMessage(final String error, final String title, final int messageType);
+
+    /**
+     * Return the LoginPanel
+     * @return loginPanel
+     */
+    LoginPanel getLoginPanel();
 
 }

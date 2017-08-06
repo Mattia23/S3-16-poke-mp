@@ -1,4 +1,7 @@
-package view;
+package view.dialogue;
+
+import utilities.Settings;
+import view.JUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,44 +10,55 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DialoguePanel shows the characters' dialogues in the main panel
+ */
 public abstract class DialoguePanel extends JPanel implements KeyListener{
     protected final JLabel dialogueLabel;
-    protected String response;
     protected int currentButton = 0;
     private int currentDialogue = 0;
     protected final List<JButton> buttons = new ArrayList<>();
     protected final JPanel buttonPanel = new JPanel();
 
-    public DialoguePanel(final List<String> dialogues){
+    /**
+     * @param dialogues character's dialogue
+     */
+    DialoguePanel(final List<String> dialogues){
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
+                BorderFactory.createLoweredBevelBorder()));
         dialogueLabel = new JLabel("", SwingConstants.CENTER);
-        if(dialogues.size() != currentDialogue) dialogueLabel.setText(dialogues.get(0));
         dialogueLabel.setFont(new Font("Serif", Font.PLAIN, 24));
         add(dialogueLabel, BorderLayout.CENTER);
-
         buttonPanel.setBackground(Color.WHITE);
-        final JButton buttonNext = new JButton("next");
-        buttonNext.addActionListener(e -> {
-            if (dialogues.size() > currentDialogue) {
-                currentDialogue++;
-                dialogueLabel.setText(dialogues.get(currentDialogue));
-            }
-            if (dialogues.size() - 1 == currentDialogue) {
-                currentDialogue++;
-                setFinalButtons();
-            }
-        });
-        buttons.add(buttonNext);
-        buttonNext.addKeyListener(this);
-        buttonPanel.add(buttonNext);
         add(buttonPanel, BorderLayout.SOUTH);
-        buttonNext.requestFocus();
-        JUtil.setFocus(buttonNext);
+        if(dialogues.size() != 1){
+            dialogueLabel.setText(dialogues.get(currentDialogue));
+            final JButton buttonNext = new JButton(Settings.Strings$.MODULE$.NEXT_DIALOGUE_BUTTON());
+            buttonNext.addActionListener(e -> {
+                if (dialogues.size() > currentDialogue) {
+                    currentDialogue++;
+                    dialogueLabel.setText(dialogues.get(currentDialogue));
+                }
+                if (dialogues.size() - 1 == currentDialogue) {
+                    currentDialogue++;
+                    setFinalButtons();
+                }
+            });
+            buttons.add(buttonNext);
+            buttonNext.addKeyListener(this);
+            buttonPanel.add(buttonNext);
+            buttonNext.requestFocus();
+            JUtil.setFocus(buttonNext);
+        }else{
+            setFinalButtons();
+        }
     }
 
+    /**
+     * Set the final button to end the dialogue
+     */
     protected abstract void setFinalButtons();
 
     @Override

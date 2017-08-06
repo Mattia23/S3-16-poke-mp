@@ -9,9 +9,16 @@ import model.entities.PokemonWithLife;
 import javax.swing.*;
 import java.awt.*;
 
-public class InitialPokemonPanel extends JPanel {
+/**
+ * InitialPokemonPanel shows the features of three pokemon in the laboratory at the beginning of the game
+ */
+class InitialPokemonPanel extends JPanel {
 
-    public InitialPokemonPanel(final GameController buildingController, final PokemonWithLife pokemonWithLife){
+    /**
+     * @param buildingController instance of GameController
+     * @param pokemonWithLife instance of PokemonWithLife for print its features
+     */
+    InitialPokemonPanel(final GameController buildingController, final PokemonWithLife pokemonWithLife){
         setLayout(new BorderLayout());
         final PokemonPanel pokemonPanel = new PokemonPanel();
         pokemonPanel.setPokemon(pokemonWithLife);
@@ -25,6 +32,7 @@ public class InitialPokemonPanel extends JPanel {
             int autoIncrementCaptured = DBConnect.getAutoIncrement("pokemon");
             final PokemonBehaviour pokemonBehaviour = new PokemonBehaviourImpl(pokemonWithLife);
             buildingController.trainer().addMetPokemon(pokemonWithLife.pokemon().id());
+            DBConnect.addCapturedPokemon(buildingController.trainer().id(),pokemonWithLife.pokemon().id());
             pokemonBehaviour.insertPokemonIntoDB(buildingController.trainer().id());
             buildingController.trainer().updateTrainer(0);
             buildingController.trainer().addFavouritePokemon(autoIncrementCaptured);

@@ -10,6 +10,7 @@ import model.environment.{Audio, Coordinate, CoordinateImpl, Direction}
 import model.map.{MainTrainerMovement, Movement}
 import utilities.Settings
 import view._
+import view.dialogue.DialoguePanel
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -234,6 +235,10 @@ abstract class GameControllerImpl(private var view: View,
     */
   override final def trainerInteract(direction: Direction): Unit = doInteract(direction)
 
+  /**
+    * Function called when the user wants to interact with someone in front of himself
+    * @param direction the direction towards which the trainer is watching
+    */
   protected def doInteract(direction: Direction): Unit
 
   /**

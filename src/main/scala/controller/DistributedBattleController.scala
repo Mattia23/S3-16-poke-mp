@@ -44,7 +44,7 @@ trait DistributedBattleController extends BattleController {
 class DistributedBattleControllerImpl(private val controller: GameController,
                                       private val view: View,
                                       private val otherTrainerUsername: String,
-                                      private val playerIsFirst: Boolean) extends DistributedBattleController {
+                                      private var playerIsFirst: Boolean) extends DistributedBattleController {
   private val MY_POKEMON: Int = 1
   private var battleManager: BattleClientManager = _
   private val otherTrainer: Trainer = DBConnect.getTrainerFromDB(otherTrainerUsername).get()
@@ -89,6 +89,7 @@ class DistributedBattleControllerImpl(private val controller: GameController,
     * When a trainer change pokemon, update the value in the database and change the view
     */
   private def myPokemonChanges(newPokemonId: Int): Unit = {
+    playerIsFirst = true
     battle.round.updatePokemon()
     battle.startBattleRound(newPokemonId,battle.getOtherPokemonId)
     showNewView()
@@ -99,6 +100,7 @@ class DistributedBattleControllerImpl(private val controller: GameController,
     * @param newPokemonId the id of the Pokemon chosen by the other trainer
     */
   override def otherPokemonChanges(newPokemonId: Int): Unit = {
+    playerIsFirst = false
     battle.round.updatePokemon()
     battle.startBattleRound(battle.getMyPokemonId,newPokemonId)
     showNewView()

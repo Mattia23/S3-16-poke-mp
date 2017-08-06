@@ -26,6 +26,8 @@ trait BattleClientManager {
     * equal to 0 it informs the battle controller that the battle id finished.
     */
   def receiveBattleMessage(): Unit
+
+  def closeChannels(): Unit
 }
 
 object BattleClientManager {
@@ -75,6 +77,7 @@ class BattleClientManagerImpl(private val connection: Connection,
         val battleMessage = gson.fromJson(new String(body, "UTF-8"), classOf[BattleMessageImpl])
         if(battleMessage.attackId == 0){
           if(battleMessage.pokemonId == 0){
+            closeChannels()
             controller.resumeGame()
           } else {
             controller.otherPokemonChanges(battleMessage.pokemonId)
@@ -85,5 +88,11 @@ class BattleClientManagerImpl(private val connection: Connection,
       }
     }
     channel.basicConsume(otherChannelName,true,consumer)
+  }
+
+  override def closeChannels(): Unit = {
+    channel.queueDelete(myChannelName)
+    channel.queueDelete(otherChannelName)
+    channel.close()
   }
 }
