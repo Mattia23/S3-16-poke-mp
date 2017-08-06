@@ -3,7 +3,6 @@ package view.map;
 import controller.GameController;
 import model.map.BuildingMap;
 import utilities.Settings;
-import view.GamePanel;
 import view.LoadImage;
 
 import java.awt.*;
@@ -11,7 +10,7 @@ import java.awt.*;
 /**
  * BuildingPanel shows the building inside and all the elements and static characters that populate it
  */
-public class BuildingPanel extends GamePanel {
+public class BuildingPanel extends GamePanelImpl {
     protected int centerX;
     protected int centerY;
     private BuildingMap buildingMap;

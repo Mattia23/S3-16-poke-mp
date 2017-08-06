@@ -1,9 +1,10 @@
+package model.map
+
 import model.environment.CoordinateImpl
 import model.map.Tile._
-import model.map.{GameMap, PokemonCenter}
 import org.scalatest.FunSuite
 
-class GameMapTest extends FunSuite{
+class GameMapTest extends FunSuite {
 
   def fixture =
     new {
@@ -18,7 +19,7 @@ class GameMapTest extends FunSuite{
     f.gameMap.map foreach (element => element foreach ( element2 => assert(element2.isInstanceOf[Grass])))
   }
 
-  test("A new tile is added to the map") {
+  test("A new single tile is added to the map") {
     val f = fixture
     f.gameMap.addTile(f.coordinate, f.tallGrass)
     assert(f.gameMap.map(f.coordinate.x)(f.coordinate.y) == f.tallGrass)
