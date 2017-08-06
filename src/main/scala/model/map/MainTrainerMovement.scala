@@ -2,7 +2,7 @@ package model.map
 
 import model.entities.{Sprite, Trainer, TrainerSprites}
 import model.environment.{Coordinate, CoordinateImpl}
-import view.map.GamePanelImpl
+import view.map.GamePanel
 
 /**
   * MainTrainerMovement represent the movement of the main trainer in the map
@@ -10,7 +10,7 @@ import view.map.GamePanelImpl
   * @param gamePanel instance of game panel
   */
 case class MainTrainerMovement(private val trainer: Trainer,
-                               private val gamePanel: GamePanelImpl) extends MovementImpl{
+                               private val gamePanel: GamePanel) extends MovementImpl{
   /**
     * @inheritdoc
     * @return the current trainer sprite
