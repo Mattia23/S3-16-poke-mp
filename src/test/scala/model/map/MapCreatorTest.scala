@@ -1,9 +1,10 @@
-import model.environment.CoordinateImpl
-import model.map.{MapCreator, MapElements}
-import org.scalatest.FunSuite
-import model.map.Tile._
+package model.map
 
-class MapCreatorTest extends FunSuite{
+import model.environment.CoordinateImpl
+import model.map.Tile._
+import org.scalatest.FunSuite
+
+class MapCreatorTest extends FunSuite {
 
   def fixture =
     new {

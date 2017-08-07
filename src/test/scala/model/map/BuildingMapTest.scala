@@ -1,9 +1,10 @@
+package model.map
 
-import model.map._
-import org.scalatest.FunSuite
+
 import model.map.Tile._
+import org.scalatest.FunSuite
 
-class BuildingMapTest extends FunSuite{
+class BuildingMapTest extends FunSuite {
 
   def fixture =
     new {

@@ -1,6 +1,7 @@
+package model.entities
+
 import java.util.Optional
 
-import model.entities.{Owner, PokemonFactory, PokemonWithLife}
 import database.local.PokedexConnect
 import org.scalatest.FunSuite
 
