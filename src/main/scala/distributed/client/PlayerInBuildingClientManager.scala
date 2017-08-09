@@ -72,9 +72,9 @@ class PlayerInBuildingClientManagerImpl(private val connection: Connection) exte
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
         if (playerInBuildingMessage.userId != userId && (connectedPlayers containsPlayer playerInBuildingMessage.userId))
-          (connectedPlayers get playerInBuildingMessage.userId).isVisible = playerInBuildingMessage.isInBuilding match {
-            case true => false
-            case _ => true
+          playerInBuildingMessage.isInBuilding match {
+            case true => connectedPlayers.updateTrainerIsVisible(playerInBuildingMessage.userId, false)
+            case _ => connectedPlayers.updateTrainerIsVisible(playerInBuildingMessage.userId, true)
           }
       }
 
