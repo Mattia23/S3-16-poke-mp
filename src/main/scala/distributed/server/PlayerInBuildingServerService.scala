@@ -38,10 +38,8 @@ class PlayerInBuildingServerService (private val connection: Connection,
         val playerInBuildingMessage = gson.fromJson(new String(body, "UTF-8"), classOf[PlayerInBuildingMessageImpl])
 
         if (connectedPlayers containsPlayer playerInBuildingMessage.userId) {
-          playerInBuildingMessage.isInBuilding match {
-            case true => connectedPlayers.updateTrainerIsVisible(playerInBuildingMessage.userId, false)
-            case _ => connectedPlayers.updateTrainerIsVisible(playerInBuildingMessage.userId, true)
-          }
+         connectedPlayers.updateTrainerIsVisible(playerInBuildingMessage.userId, !playerInBuildingMessage.isInBuilding)
+
 
           channel.exchangeDeclare(Constants.PLAYER_IN_BUILDING_EXCHANGE, "fanout")
           val response = gson toJson playerInBuildingMessage
