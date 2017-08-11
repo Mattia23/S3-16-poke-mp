@@ -178,12 +178,10 @@ class MapController(private val view: View,
     val random: Int = Random nextInt RANDOM_MAX_VALUE
     if(random >= MIN_VALUE_TO_FIND_POKEMON) {
       sendTrainerIsBusy(true)
-      new Thread(() => {
-        waitEndOfMovement.acquire()
-        pause()
-        waitEndOfMovement.release()
-        new BattleControllerImpl(this, view)
-      }).start()
+      waitEndOfMovement.acquire()
+      pause()
+      waitEndOfMovement.release()
+      new BattleControllerImpl(this, view)
     }
   }
 
