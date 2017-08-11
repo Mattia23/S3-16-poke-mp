@@ -51,7 +51,7 @@ public class DoctorDialoguePanel extends DialoguePanel {
         });
         buttons.get(1).addActionListener(e -> {
             this.setVisible(false);
-            gameController.setFocusableOn();
+            gameController.setFocusable(true);
         });
 
         repaint();
