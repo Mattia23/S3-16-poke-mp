@@ -72,15 +72,15 @@ abstract class BuildingController(private val view: View,
     * @inheritdoc
     */
   override protected def doPause(): Unit = {
-    setFocusableOff()
-    this.audio.stop()
+    setFocusable(false)
+    this.audio.pause()
   }
 
   /**
     * @inheritdoc
     */
   override protected def doResume(): Unit = {
-    setFocusableOn()
+    setFocusable(true)
     this.audio.loop()
   }
 
